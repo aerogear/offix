@@ -3,8 +3,7 @@
 [![circle-ci](https://img.shields.io/circleci/project/github/aerogear/aerogear-web-sdk/master.svg)](https://circleci.com/gh/aerogear/aerogear-web-sdk)
 [![License](https://img.shields.io/badge/-Apache%202.0-blue.svg)](https://opensource.org/s/Apache-2.0)
 
-AeroGear SDK for web(javascript), cordova and react native.
-
+AeroGear SDK for Java Script, Apache Cordova and React Native.
 
 ## Documentation
 
