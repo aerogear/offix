@@ -1,0 +1,12 @@
+{
+	"name": "AeroGearServicesWeb",
+	"version": "1.0.0",
+	"description": "AeroGear Services Web SDK package",
+	"main": "index.js",
+	"scripts": {
+		"test": "lerna run test"
+	},
+	"devDependencies": {
+		"lerna": "^2.9.0"
+	}
+}
