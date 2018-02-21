@@ -27,6 +27,9 @@ jobs:
           name: install-package-dependencies-after-cache
           command: npm run bootstrap
       - run:
+          name: run lint
+          command: npm run lint
+      - run:
           name: test
           command: npm test
       - store_artifacts:
