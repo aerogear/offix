@@ -15,10 +15,17 @@ jobs:
       - run:
           name: install-dependencies
           command: npm install
+      - run:
+          name: install-package-dependencies
+          command: npm run bootstrap
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
+      - run:
+          # Hoisting will cache some of the packages, but rest needs to be installed separtely
+          name: install-package-dependencies-after-cache
+          command: npm run bootstrap
       - run:
           name: test
           command: npm test
