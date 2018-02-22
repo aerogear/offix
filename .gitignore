@@ -19,6 +19,7 @@ lib-cov
 
 # Coverage directory used by tools like istanbul
 coverage_report/
+coverage
 
 .idea
 
@@ -68,3 +69,6 @@ npm-shrinkwrap.json
 package-lock.json
 
 .vscode/
+
+## Dist folders
+dist
