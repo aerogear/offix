@@ -1,1 +1,53 @@
-== Contributing guide
+= Contributing guide
+
+== Local setup
+
+1. Install required dependencies
+[source,bash]
+----
+npm install
+npm run bootstrap
+----
+2. Compile code
+[source,bash]
+----
+npm run build
+----
+3. Run tests and lint
+[source,bash]
+----
+npm run test
+npm run lint
+----
+
+=== Using core in projects
+
+1. Link resources
+[source,bash]
+----
+  cd packages/core
+  npm link .
+  npm link @aerogearservices/core
+----
+
+2. Use core in your application
+[source,javascript]
+----
+var config = require('./mobile-config.json')
+import { ConfigService } from '@aerogearservices/core'
+
+var config = new ConfigService(config);
+----
+> Note: SDK requires common.js implementation like browserify or webpack to be present
++
+3. Use core config with example SDK
++
+[source,javascript]
+----
+var keycloakConfig = config.getKeycloakConfig()
+var Keycloak = require('keycloak-js')
+
+var keycloak = Keycloak(keycloakConfig.config);
+// Use keycloak initialized. Use keycloak according to client documentation
+----
+
