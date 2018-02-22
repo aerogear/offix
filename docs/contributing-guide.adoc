@@ -34,7 +34,7 @@ npm run lint
 [source,javascript]
 ----
 var config = require('./mobile-config.json')
-import { ConfigService } from '@aerogearservices/core'
+var ConfigService = require('@aerogearservices/core').ConfigService;
 
 var config = new ConfigService(config);
 ----
