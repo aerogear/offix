@@ -1,0 +1,8 @@
+# Mac
+.DS_Store
+
+platforms/*/
+.cordova
+hooks
+merges
+plugins
