@@ -1,11 +1,12 @@
 {
   "name": "@aerogearservices/core",
   "version": "1.0.0",
-  "description": "Core configuration parser for AeroGear services",
+  "description": "Core SDK for AeroGear services",
+  "main": "dist/index.js",
+  "browser": "dist/bundle.js",
   "types": "dist/types/index.d.ts",
   "author": "Aerogear <aerogear@googlegroups.com>",
   "license": "Apache-2.0",
-  "main": "dist/index.js",
   "scripts": {
     "clean": "del coverage src/**/*.js src/**/*.map test/**/*.js test/**/*.map",
     "build": "tsc",
