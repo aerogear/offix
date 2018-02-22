@@ -1,4 +1,4 @@
-package com.aerogeardemo;
+package org.aerogear.reactnative.demo;
 
 import com.facebook.react.ReactActivity;
 
