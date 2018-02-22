@@ -1,12 +1,19 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
     "sourceMap": true,
     "strict": true,
-    "noImplicitAny": false,
     "experimentalDecorators": true,
     "strictNullChecks": true,
-    "esModuleInterop": true
-  }
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "module": "es6",
+    "target": "es5",
+    "jsx": "react",
+    //"allowJs": true,
+    "declaration": true,
+    "declarationDir": "./types"
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }
