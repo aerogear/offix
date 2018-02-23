@@ -16,9 +16,9 @@
 		"update:check": "lerna exec --concurrency 1 -- ncu",
 		"update:run": "lerna exec -- ncu -a --removeRange -x 'fh-js-sdk'",
 		"depcheck": "lerna exec --parallel --stream -- depcheck --dev --specials='mocha,bin' --ignores='ts-node,@types/*' --ignore-dirs='example'",
-    "webpack:build": "lerna exec -- webpack --config webpack.config.js",
-    "webpack:watch": "lerna exec -- webpack --watch --config webpack.config.js",
-    "webpack:release": "lerna run build && lerna exec -- webpack --config webpack.config.js"
+		"webpack:build": "lerna exec -- webpack --config webpack.config.js",
+		"webpack:watch": "lerna exec -- webpack --watch --config webpack.config.js",
+		"webpack:release": "lerna run build && lerna exec -- webpack --config webpack.config.js"
 	},
 	"devDependencies": {
 		"del-cli": "1.1.0",
