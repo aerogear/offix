@@ -27,7 +27,7 @@ class StartScreen extends Component {
           <Text style={styles.small}>
             Tap to extend drawer
           </Text>
-          <Text style="{styles.small}">
+          <Text style={styles.small}>
             keycloakConfig={JSON.stringify(keycloakConfig)}
           </Text>
         </View>
