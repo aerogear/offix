@@ -1,3 +1,5 @@
+const ConfigService = require('@aerogearservices/core').ConfigService;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -28,6 +30,7 @@ var app = {
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
         this.receivedEvent('deviceready');
+        this.loadConfig();
     },
 
     // Update DOM on a Received Event
@@ -40,6 +43,12 @@ var app = {
         receivedElement.setAttribute('style', 'display:block;');
 
         console.log('Received Event: ' + id);
+    },
+
+    loadConfig: function() {
+        const config = new ConfigService(require("../mobile-services"));
+        const configSection = document.getElementById("configArea");
+        configSection.innerText = JSON.stringify(config.getKeycloakConfig());
     }
 };
 

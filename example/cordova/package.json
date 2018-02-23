@@ -5,14 +5,17 @@
     "description": "Demo cordova example app",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "install": "node node_modules/browserify/bin/cmd.js www/js/index.js -o www/js/bundle.js",
+        "browserify": "node node_modules/browserify/bin/cmd.js www/js/index.js -o www/js/bundle.js"
     },
     "author": "Apache Cordova Team",
     "license": "Apache-2.0",
     "dependencies": {
+        "browserify": "^16.1.0",
         "cordova-android": "7.0.0",
         "cordova-ios": "4.5.4",
-        "cordova-plugin-whitelist": "^1.3.3"
+        "cordova-plugin-whitelist": "^1.3.3",
+        "@aerogearservices/core": "file:../../packages/core"
     },
     "cordova": {
         "plugins": {
