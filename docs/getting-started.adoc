@@ -1,2 +1,4 @@
 == Getting started
 
+SDK is under construction. 
+No SDK available at the moment.
