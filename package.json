@@ -1,7 +1,8 @@
 {
 	"name": "AeroGearServicesWeb",
 	"version": "1.0.0",
-	"description": "AeroGear Services Web SDK package",
+	"private": true,
+	"description": "AeroGear Services Web SDK mono repository",
 	"main": "index.js",
 	"scripts": {
 		"test": "lerna run test",
@@ -14,16 +15,21 @@
 		"clean:dependencies": "lerna clean --yes",
 		"update:check": "lerna exec --concurrency 1 -- ncu",
 		"update:run": "lerna exec -- ncu -a --removeRange -x 'fh-js-sdk'",
-		"depcheck": "lerna exec --parallel --stream -- depcheck --dev --specials='mocha,bin' --ignores='ts-node,@types/*' --ignore-dirs='example'"
+		"depcheck": "lerna exec --parallel --stream -- depcheck --dev --specials='mocha,bin' --ignores='ts-node,@types/*' --ignore-dirs='example'",
+    "webpack:build": "lerna exec -- webpack --config webpack.config.js",
+    "webpack:watch": "lerna exec -- webpack --watch --config webpack.config.js",
+    "webpack:release": "lerna run build && lerna exec -- webpack --config webpack.config.js"
 	},
 	"devDependencies": {
-		"lerna": "^2.9.0",
 		"del-cli": "1.1.0",
 		"depcheck": "^0.6.8",
+		"lerna": "^2.9.0",
 		"npm-check-updates": "2.13.0",
 		"npm-run-all": "4.1.2",
 		"opn-cli": "3.1.0",
+		"ts-loader": "^3.5.0",
 		"tslint": "5.8.0",
-		"typescript": "2.7.2"
+		"typescript": "^2.7.2",
+		"webpack": "^3.11.0"
 	}
 }

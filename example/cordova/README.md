@@ -13,7 +13,7 @@ cordova build android
 Run running platform emulator
 
 ```
-cordova platform emulate android
+cordova emulate android
 ```
 
 ## More info

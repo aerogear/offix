@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableWithoutFeedback
 } from 'react-native';
+import { ConfigService } from '@aerogearservices/core';
 
 const WELCOME_TEXT = "AeroGear SDK Demo";
 
@@ -14,6 +15,9 @@ class StartScreen extends Component {
   }
 
   render() {
+    var mobileServicesJson = require('../mobile-services.json');
+    var config = new ConfigService(mobileServicesJson);
+    var keycloakConfig = config.getKeycloakConfig();
     return (
       <TouchableWithoutFeedback onPress={this.openDrawer.bind(this)}>
         <View style={styles.container}>
@@ -22,6 +26,9 @@ class StartScreen extends Component {
           </Text>
           <Text style={styles.small}>
             Tap to extend drawer
+          </Text>
+          <Text style="{styles.small}">
+            keycloakConfig={JSON.stringify(keycloakConfig)}
           </Text>
         </View>
       </TouchableWithoutFeedback>

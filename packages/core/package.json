@@ -1,13 +1,14 @@
 {
   "name": "@aerogearservices/core",
   "version": "1.0.0",
-  "description": "Core configuration parser for AeroGear services",
-  "types": "src/index.ts",
+  "description": "Core SDK for AeroGear services",
+  "main": "dist/index.js",
+  "browser": "dist/bundle.js",
+  "types": "dist/types/index.d.ts",
   "author": "Aerogear <aerogear@googlegroups.com>",
   "license": "Apache-2.0",
-  "main": "src/",
   "scripts": {
-    "clean": "del coverage_report src/**/*.js src/**/*.map test/**/*.js test/**/*.map",
+    "clean": "del coverage src/**/*.js src/**/*.map test/**/*.js test/**/*.map",
     "build": "tsc",
     "test": "nyc mocha"
   },
@@ -28,7 +29,6 @@
       "lcov",
       "text"
     ],
-    "report-dir": "coverage_report",
     "lines": 75,
     "functions": 100,
     "branches": 80
@@ -49,7 +49,8 @@
     "sinon": "4.3.0",
     "source-map-support": "0.5.3",
     "ts-node": "4.1.0",
-    "typescript": "2.7.2"
+    "typescript": "2.7.2",
+    "webpack": "^3.11.0"
   },
   "dependencies": {
     "@types/lodash": "4.14.104",
