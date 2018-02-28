@@ -2,10 +2,16 @@
 
 ## Building
 
+Install the dependencies:
+
+```
+$ npm install
+```
+
 Add platform
 ```
-cordova platform add android
-cordova build android
+$ cordova platform add android
+$ cordova build android
 ```
 
 ## Running
@@ -13,7 +19,8 @@ cordova build android
 Run running platform emulator
 
 ```
-cordova emulate android
+$ npm run browserify
+$ cordova run android
 ```
 
 ## More info
