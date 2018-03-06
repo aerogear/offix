@@ -1,4 +1,4 @@
-# AeroGear Web SDK
+# AeroGear JS SDK
 
 [![circle-ci](https://img.shields.io/circleci/project/github/aerogear/aerogear-js-sdk/master.svg)](https://circleci.com/gh/aerogear/aerogear-js-sdk)
 [![License](https://img.shields.io/badge/-Apache%202.0-blue.svg)](https://opensource.org/s/Apache-2.0)
