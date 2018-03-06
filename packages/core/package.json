@@ -48,7 +48,8 @@
     "nyc": "11.4.1",
     "sinon": "4.3.0",
     "source-map-support": "0.5.3",
-    "typescript": "2.7.2"
+    "typescript": "2.7.2",
+    "ts-node": "5.0.1"
   },
   "dependencies": {
     "@types/lodash": "4.14.104",
