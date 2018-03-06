@@ -7,7 +7,7 @@
     "esModuleInterop": true,
     "noImplicitAny": true,
     "target": "es5",
-    "module": "UMD",
+    "module": "CommonJS",
     "jsx": "react",
     "declaration": true
   },

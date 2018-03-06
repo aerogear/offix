@@ -6,3 +6,4 @@ platforms/*/
 hooks
 merges
 plugins
+bundle.js

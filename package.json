@@ -9,8 +9,8 @@
 		"cleanInstall": "lerna exec npm install --ignore-scripts",
 		"bootstrap": "lerna bootstrap",
 		"lint": "tslint '*/*/src/**/*.ts' '*/*/test/**/*.ts'",
-    "build": "lerna run build",
-    "watch": "lerna run watch",
+		"build": "lerna run build",
+		"watch": "lerna run watch",
 		"clean": "npm-run-all clean:*",
 		"clean:packages": "lerna run clean",
 		"clean:dependencies": "lerna clean --yes",
@@ -27,6 +27,7 @@
 		"opn-cli": "3.1.0",
 		"ts-loader": "^3.5.0",
 		"tslint": "5.8.0",
-		"typescript": "^2.7.2"
+		"typescript": "^2.7.2",
+		"ts-node": "5.0.1"
 	}
 }
