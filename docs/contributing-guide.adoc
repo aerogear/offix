@@ -39,6 +39,7 @@ var ConfigService = require('@aerogearservices/core').ConfigService;
 var config = new ConfigService(config);
 ----
 > Note: SDK requires common.js implementation like browserify or webpack to be present
+
 3. Use core config with example SDK
 [source,javascript]
 ----
