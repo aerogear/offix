@@ -7,7 +7,7 @@
   "scripts": {
     "install": "node node_modules/browserify/bin/cmd.js www/js/index.js -o www/js/bundle.js",
     "browserify": "node node_modules/browserify/bin/cmd.js www/js/index.js -o www/js/bundle.js",
-    "copy-f7": "cpy node_modules/framework7/dist/js/*.* www/framework7/js && cpy node_modules/framework7/dist/css/*.* www/framework7/css && cpy node_modules/framework7-icons/fonts/*.* www/fonts && cpy node_modules/material-design-icons/iconfont/*.{eot,ttf,woff,woff2} www/fonts",
+    "copy-f7": "cpy node_modules/framework7/dist/js/*.* www/framework7/js && cpy node_modules/framework7/dist/css/*.* www/framework7/css && cpy node_modules/framework7-icons/fonts/*.* www/fonts && cpy node_modules/framework7-icons/css/framework7-icons.css www/css && cpy node_modules/material-design-icons/iconfont/*.{eot,ttf,woff,woff2} www/fonts && cpy node_modules/material-design-icons/iconfont/material-icons.css www/fonts",
     "postinstall": "npm run copy-f7"
   },
   "author": "Apache Cordova Team",
