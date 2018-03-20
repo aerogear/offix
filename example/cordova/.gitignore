@@ -7,3 +7,6 @@ hooks
 merges
 plugins
 bundle.js
+www/framework7
+www/fonts
+www/css/framework7*

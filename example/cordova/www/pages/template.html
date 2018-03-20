@@ -1,0 +1,42 @@
+<template>
+  <div class="page" data-name="auth">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="left">
+          <a href="#" class="link icon-only panel-open" data-panel="left">
+            <i class="icon f7-icons ios-only">menu</i>
+            <i class="icon material-icons md-only">menu</i>
+          </a>
+        </div>
+
+        <div class="title sliding">{{js 'return this.template[this.pageName].title'}}</div>
+      </div>
+    </div>
+    <div class="page-content">
+      <div class="block-title">{{js 'return this.template[this.pageName].blockTitle'}}</div>
+      <div class="list media-list">
+        <ul>
+          <li>
+            <a href="#" class="item-content">
+              <div class="item-media">
+                <img src="img/{{js 'return this.template[this.pageName].imageName'}}" width="50">
+              </div>
+              <div class="item-inner">
+                <div class="item-title-row">
+                  <div class="item-title">{{js 'return this.template[this.pageName].itemTitle'}}</div>
+                </div>
+                <div class="item-text">{{js 'return this.template[this.pageName].itemText'}}</div>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="block block-strong">
+        <a class="link external" href="{{js 'return this.template[this.pageName].websiteUrl'}}">
+          <i class="f7-icons">info</i>
+          <span>{{js 'return this.template[this.pageName].websiteName'}} website</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</template>
