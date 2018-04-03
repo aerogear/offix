@@ -3,7 +3,7 @@
   "rules": {
     "quotemark": [
       true,
-      "single"
+      "double"
     ],
     "only-arrow-functions": [
       false
