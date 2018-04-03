@@ -1,16 +1,12 @@
-import { DrawerNavigator } from 'react-navigation';
-import StartScreen from './components/StartScreen';
+import React, { Component } from "react";
+import NavigationController from "./components/NavigationController";
 
-// We will add more demo screens here as the SDK grows
-const App = DrawerNavigator({
-  StartScreen: {
-    screen: StartScreen,
-    navigationOptions: {
-      title: "Welcome"
-    }
+class App extends Component {
+  render() {
+    return (
+      <NavigationController />
+    );
   }
-}, {
-  initialRouteName: "StartScreen"
-});
+}
 
 export default App;
