@@ -5,19 +5,18 @@
   "description": "Demo cordova example app",
   "main": "index.js",
   "scripts": {
-    "install": "node node_modules/browserify/bin/cmd.js www/js/index.js -o www/js/bundle.js",
+    "postinstall": "npm run browserify && npm run copy-f7",
     "browserify": "node node_modules/browserify/bin/cmd.js www/js/index.js -o www/js/bundle.js",
     "copy-f7": "cpy node_modules/framework7/dist/js/*.* www/framework7/js && cpy node_modules/framework7/dist/css/*.* www/framework7/css && cpy node_modules/framework7-icons/fonts/*.* www/fonts && cpy node_modules/framework7-icons/css/framework7-icons.css www/css && cpy node_modules/material-design-icons/iconfont/*.{eot,ttf,woff,woff2} www/fonts && cpy node_modules/material-design-icons/iconfont/material-icons.css www/fonts",
-    "postinstall": "npm run copy-f7"
+    "run:android:clean": "cordova clean && rm -rf node_modules && npm install && cordova run android"
   },
-  "author": "Apache Cordova Team",
   "license": "Apache-2.0",
   "dependencies": {
-    "@aerogearservices/core": "file:../../packages/core",
+    "@aerogearservices/core-cordova": "file:../../packages/core-cordova",
     "browserify": "^16.1.0",
+    "cordova": "^8.0.0",
     "cordova-android": "^7.1.0",
     "cordova-browser": "^5.0.3",
-    "cordova-ios": "^4.5.4",
     "cordova-plugin-whitelist": "^1.3.3",
     "cpy-cli": "^1.0.1",
     "framework7": "^2.0.1",
@@ -26,12 +25,12 @@
   },
   "cordova": {
     "plugins": {
-      "cordova-plugin-whitelist": {}
+      "cordova-plugin-whitelist": {},
+      "core-cordova": {}
     },
     "platforms": [
-      "ios",
-      "android",
-      "browser"
+      "browser",
+      "android"
     ]
   }
 }

@@ -1,0 +1,65 @@
+<template>
+  <div class="page">
+
+    <!-- Navbar -->
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="left">
+          <a href="#" class="link icon-only panel-open" data-panel="left">
+            <i class="icon f7-icons ios-only">menu</i>
+            <i class="icon material-icons md-only">menu</i>
+          </a>
+        </div>
+        <div class="title sliding">Metrics</div>
+      </div>
+    </div>
+
+    <!-- Contents -->
+
+    <div class="page-content">
+      <div>
+        <h4>Metrics:</h4>
+        <p id="metrics-info">No metrics</p>
+      </div>
+
+      <div class="block block-strong">
+        <a href="#" class="button button-raised" @click="sendMetrics">Send metrics</a>
+      </div>
+
+      <div>
+        <h4>Response:</h4>
+        <p id="metrics-info"></p>
+      </div>
+    </div>
+
+  </div>
+</template>
+
+<style>
+  .page-content {
+    margin: 12px;
+  }
+</style>
+
+<script>
+  return {
+    beforeCreate() {
+      var self = this;
+      self.$("#metrics-info").html("No metrics");
+      window.MobileCore.MetricsService.getMetrics(
+        function (metrics) {
+          self.$("#metrics-info").html(JSON.stringify(metrics));
+        },
+        function (error) { self.$("#metrics-info").html(error); }
+      );
+    },
+    data: function () {
+      return {}
+    },
+    methods: {
+      sendMetrics: function (success, error) {
+        // TODO: import library and call sendAppAndDeviceMetrics
+      },
+    }
+  };
+</script>

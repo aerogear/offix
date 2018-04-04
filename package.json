@@ -2,7 +2,7 @@
 	"name": "AeroGearServicesWeb",
 	"version": "1.0.0",
 	"private": true,
-	"description": "AeroGear Services Web SDK mono repository",
+	"description": "AeroGear Services Web/Cordova SDK mono repository",
 	"main": "index.js",
 	"scripts": {
 		"test": "lerna run test",
