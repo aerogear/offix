@@ -1,4 +1,4 @@
-import { MetricsPayload } from "../model/MetricsPayload";
+import { MetricsPayload } from "../model";
 
 /**
  * Interface for classes that can publish or store metrics payload

@@ -1,6 +1,5 @@
 import { find } from "lodash";
-import { AeroGearConfiguration } from "./AerogearConfiguration";
-import { ServiceConfiguration } from "./ServiceConfiguration";
+import { AeroGearConfiguration, ServiceConfiguration } from "./";
 
 /**
  * Represents a configuration parser.
