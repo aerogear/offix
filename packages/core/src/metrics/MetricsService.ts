@@ -1,6 +1,6 @@
 import { ServiceConfiguration } from "../configuration";
 import { Metrics, MetricsPayload } from "./model";
-import { MetricsPublisher, MetricsNetworkPublisher } from "./publisher";
+import { MetricsNetworkPublisher, MetricsPublisher } from "./publisher";
 
 /**
  * AeroGear Services metrics service
