@@ -6,7 +6,7 @@ import { MetricsPublisher } from "./";
  * Metrics publisher that sends payload to remote server
  * Publisher requires remote server URL
  */
-export class MetricsNetworkPublisher implements MetricsPublisher {
+export class NetworkMetricsPublisher implements MetricsPublisher {
 
   constructor(private url: string) {
   }

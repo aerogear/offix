@@ -1,6 +1,6 @@
 import { ServiceConfiguration } from "../configuration";
 import { Metrics, MetricsPayload } from "./model";
-import { MetricsNetworkPublisher, MetricsPublisher } from "./publisher";
+import { MetricsPublisher, NetworkMetricsPublisher } from "./publisher";
 
 /**
  * AeroGear Services metrics service
@@ -10,7 +10,7 @@ export abstract class MetricsService {
     private publisher: MetricsPublisher;
 
     constructor(private readonly configuration: ServiceConfiguration) {
-        this.publisher = new MetricsNetworkPublisher(configuration.url);
+        this.publisher = new NetworkMetricsPublisher(configuration.url);
     }
 
     set metricsPublisher(publisher: MetricsPublisher) {
