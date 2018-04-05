@@ -24,11 +24,6 @@ export abstract class MetricsService {
     public abstract sendAppAndDeviceMetrics(): Promise<any>;
 
     /**
-     * Generates or gets mobile client id
-     */
-    public abstract getClientId(): string;
-
-    /**
      * Publish metrics using predefined publisher
      *
      * @param - metrics instances that should be published
@@ -47,4 +42,20 @@ export abstract class MetricsService {
         return this.publisher.publish(payload);
     }
 
+    /**
+     * Generates or gets mobile client id
+     */
+    public getClientId(): string {
+        let clientId = this.getStoredClientId();
+
+        if (!clientId) {
+            clientId = "TODO: generate a uuid";
+            this.storeClientId(clientId);
+        }
+
+        return clientId;
+    }
+
+    protected abstract getStoredClientId(): string;
+    protected abstract storeClientId(id: string): void;
 }
