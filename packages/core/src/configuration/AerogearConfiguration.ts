@@ -1,4 +1,4 @@
-import { ServiceConfiguration } from "./ServiceConfiguration";
+import { ServiceConfiguration } from "./";
 
 /**
  * Represents top level mobile configuration

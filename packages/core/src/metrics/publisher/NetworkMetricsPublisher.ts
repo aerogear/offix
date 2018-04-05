@@ -1,6 +1,6 @@
 import axios from "axios";
-import { MetricsPayload } from "../model/MetricsPayload";
-import { MetricsPublisher } from "./MetricsPublisher";
+import { MetricsPayload } from "../model";
+import { MetricsPublisher } from "./";
 
 /**
  * Metrics publisher that sends payload to remote server
