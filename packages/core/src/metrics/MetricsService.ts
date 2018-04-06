@@ -1,3 +1,4 @@
+import uuid from "uuid/v1";
 import { ServiceConfiguration } from "../configuration";
 import { Metrics, MetricsPayload } from "./model";
 import { MetricsNetworkPublisher, MetricsPublisher } from "./publisher";
@@ -46,11 +47,11 @@ export abstract class MetricsService {
      * Generates or gets mobile client id
      */
     public getClientId(): string {
-        let clientId = this.getStoredClientId();
+        let clientId: string = this.getSavedClientId();
 
         if (!clientId) {
-            clientId = "TODO: generate a uuid";
-            this.storeClientId(clientId);
+            clientId = uuid();
+            this.saveClientId(clientId);
         }
 
         return clientId;
