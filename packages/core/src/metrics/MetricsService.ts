@@ -1,3 +1,4 @@
+import uuid from "uuid/v1";
 import { ServiceConfiguration } from "../configuration";
 import { Metrics, MetricsPayload } from "./model";
 import { MetricsPublisher, NetworkMetricsPublisher } from "./publisher";
@@ -24,11 +25,6 @@ export abstract class MetricsService {
     public abstract sendAppAndDeviceMetrics(): Promise<any>;
 
     /**
-     * Generates or gets mobile client id
-     */
-    public abstract getClientId(): string;
-
-    /**
      * Publish metrics using predefined publisher
      *
      * @param - metrics instances that should be published
@@ -47,4 +43,20 @@ export abstract class MetricsService {
         return this.publisher.publish(payload);
     }
 
+    /**
+     * Generates or gets mobile client id
+     */
+    public getClientId(): string {
+        let clientId: string = this.getSavedClientId();
+
+        if (!clientId) {
+            clientId = uuid();
+            this.saveClientId(clientId);
+        }
+
+        return clientId;
+    }
+
+    protected abstract getSavedClientId(): string;
+    protected abstract saveClientId(id: string): void;
 }
