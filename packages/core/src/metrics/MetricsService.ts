@@ -56,6 +56,6 @@ export abstract class MetricsService {
         return clientId;
     }
 
-    protected abstract getStoredClientId(): string;
-    protected abstract storeClientId(id: string): void;
+    protected abstract getSavedClientId(): string;
+    protected abstract saveClientId(id: string): void;
 }
