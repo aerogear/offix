@@ -8,7 +8,7 @@ import { MetricsPublisher } from "./";
  */
 export class NetworkMetricsPublisher implements MetricsPublisher {
 
-  constructor(private url: string) {
+  constructor(public readonly url: string) {
   }
 
   /**

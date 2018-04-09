@@ -18,6 +18,10 @@ export abstract class MetricsService {
         this.publisher = publisher;
     }
 
+    get metricsPublisher(): MetricsPublisher {
+        return this.publisher;
+    }
+
     /**
      * Collect metrics for all active metrics collectors
      * Send data using metrics publisher
