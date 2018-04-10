@@ -7,6 +7,7 @@ This guide provides general information for creating applications that utilize t
 In order to develop a Cordova application utilizing the SDK you will need the following prerequisites installed:
 
  * The link:https://nodejs.org/en/download/[Node.js] runtime and NPM
+ * https://github.com/aerogear/mobile-cli[AeroGear Mobile CLI]
  * Apache link:https://cordova.apache.org/docs/en/latest/guide/cli/#installing-the-cordova-cli[Cordova CLI]
 
 == Creating an Apache Cordova application
@@ -67,6 +68,12 @@ After running the above command, your project's `package.json` and `config.xml` 
 
 
 See the link:https://cordova.apache.org/docs/en/latest/platform_plugin_versioning_ref/#plugin-versioning[Apache Cordova documentation for Plugins] for more information.
+
+== Adding the AeroGear Services Configuration file
+
+Utilize the link:https://github.com/aerogear/mobile-cli[AeroGear Mobile CLI] to generate a `mobile-services.json` file and place it inside your project's resource directory.
+
+For a Cordova project, it should be placed in `www/mobile-services.json`.
 
 == Using modules from the AeroGear JavaScript SDK in a Cordova project
 

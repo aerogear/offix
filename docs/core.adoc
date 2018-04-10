@@ -24,8 +24,6 @@ Refer to the link:./getting-started[Getting Started] guide for more information 
 
 After installation, the Core module will become available through the global `window.MobileCore` object in your project.
 
-=== API
-
 === Logging
 
 === Networking
