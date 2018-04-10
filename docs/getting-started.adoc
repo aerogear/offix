@@ -9,6 +9,10 @@ In order to develop a Cordova application utilizing the SDK you will need the fo
  * The link:https://nodejs.org/en/download/[Node.js] runtime and NPM
  * Apache link:https://cordova.apache.org/docs/en/latest/guide/cli/#installing-the-cordova-cli[Cordova CLI]
 
+== Creating an Apache Cordova application
+
+After installing the prerequisites, refer to the link:https://cordova.apache.org/docs/en/latest/guide/cli/index.html#create-the-app[App Creation] guide from Apache Cordova to create your first application.
+
 == Installing the AeroGear JavaScript SDK
 
 The services in the SDK are available as NPM packages under the `@aerogearservices` scope suffixed with a `<module name>-<platform>`.
