@@ -47,10 +47,6 @@ If you would like to help develop AeroGear you can join our [developer's mailing
 
 Also takes some time and skim the [contributor guide](CONTRIBUTING.md)
 
-## Contributing
-
-See [General Contributing Guide](./CONTRIBUTING.md)
-
 ## Questions?
 
 Join our [user mailing list](https://groups.google.com/forum/#!forum/aerogear) for any questions or help! We really hope you enjoy app development with AeroGear!
