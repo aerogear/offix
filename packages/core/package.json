@@ -12,7 +12,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "clean": "del coverage src/**/*.js src/**/*.map test/**/*.js test/**/*.map",
-    "build": "tsc && browserify src/MobileCore.js -o www/bundle.js",
+    "build": "tsc && browserify src/index.js -o www/bundle.js",
     "watch": "tsc --watch",
     "test": "nyc mocha"
   },
