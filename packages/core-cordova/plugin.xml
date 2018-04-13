@@ -9,6 +9,8 @@
     <license>Apache 2.0</license>
     <keywords>cordova,aerogear,mobile</keywords>
 
+    <dependency id="core" version="1.0.0"/>
+
     <js-module src="www/metrics.js" name="cordova-metrics">
         <clobbers target="aerogear" />
     </js-module>
