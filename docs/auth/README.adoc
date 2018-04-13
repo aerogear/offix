@@ -39,8 +39,15 @@ For an example of Keycloak configuration see the example apps link:../../example
 
 The Auth SDK will use this configuration to communicate with Keycloak.
 
-=== Auth Service Initialisation
-The `AuthService` can be retrieved by importing it. The `mobile-services.json` file must also be referenced as it contains the Keycloak configuration.
+=== Initializing the SDK
+
+For an example of Keycloak configuration see the example apps link:../../example/cordova/www/mobile-services.json[mobile-services.json].
+
+The Auth SDK will use this configuration to communicate with Keycloak.
+
+
+=== Initializing the SDK
+`AuthService` can be retrieved by importing it:
 ----
 import { AuthService } from 'aerogear/auth';
 let mobileServiceConfig = require("../mobile-services.json");
