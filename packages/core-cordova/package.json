@@ -10,9 +10,6 @@
       "android"
     ]
   },
-  "dependencies": {
-    "@aerogearservices/core": "1.0.0"
-  },
   "keywords": [
     "cordova",
     "aerogear",

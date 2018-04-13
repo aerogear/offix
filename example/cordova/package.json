@@ -12,7 +12,6 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@aerogearservices/core-cordova": "file:../../packages/core-cordova",
     "browserify": "^16.1.0",
     "cordova": "^8.0.0",
     "cordova-android": "^7.1.0",
