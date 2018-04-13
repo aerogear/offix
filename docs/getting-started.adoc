@@ -1,4 +1,89 @@
-== Getting started
+== Getting Started with AeroGear Services JavaScript SDK
 
-SDK is under construction. 
-No SDK available at the moment.
+This guide provides general information for creating applications that utilize the AeroGear Services JavaScript SDK.
+
+== Prerequisites for Apache Cordova
+
+In order to develop a Cordova application utilizing the SDK you will need the following prerequisites installed:
+
+ * The link:https://nodejs.org/en/download/[Node.js] runtime and NPM
+ * https://github.com/aerogear/mobile-cli[AeroGear Mobile CLI]
+ * Apache link:https://cordova.apache.org/docs/en/latest/guide/cli/#installing-the-cordova-cli[Cordova CLI]
+
+== Installing the AeroGear JavaScript SDK
+
+The services in the SDK are available as NPM packages under the `@aerogearservices` scope suffixed with a `<module name>-<platform>`.
+
+The Core of the SDK along with suitable native module bindings, for example, is available as `@aerogearservices/core-cordova`.
+
+=== Including native plugins on your Cordova project
+
+In order to properly install the native dependencies of the SDK in your project, use the Cordova CLI instead of plain NPM to add them as plugins:
+
+[source]
+----
+$ cordova plugin add @aerogearservices/core-cordova
+Installing "core-cordova" for android
+Android Studio project detected
+Adding core-cordova to package.json
+Saved plugin info for "core-cordova" to config.xml
+----
+
+This will link the native portions of the SDK code to your project, and allow Cordova to include them in the applications as they're built.
+
+After running the above command, your project's `package.json` and `config.xml` should have been updated to include the new plugin:
+
+* *package.json*:
+[source, javascript]
+----
+{
+  // ...
+  "dependencies": {
+    "@aerogearservices/core-cordova": "1.0.0",
+    // ...
+  },
+  "cordova": {
+    "plugins": {
+      "core-cordova": {}
+    },
+    // ...
+  }
+}
+----
+
+* *config.xml*:
+
+[source, xml]
+----
+<widget id="org.aerogear.mobile.example.cordova" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <!-- ... -->
+    <plugin name="core-cordova" spec="1.0.0" />
+</widget>
+----
+
+
+See the link:https://cordova.apache.org/docs/en/latest/platform_plugin_versioning_ref/#plugin-versioning[Apache Cordova documentation for Plugins] for more information.
+
+== Adding the AeroGear Services Configuration file
+
+Utilize the link:https://github.com/aerogear/mobile-cli[AeroGear Mobile CLI] to generate a `mobile-services.json` file and place it inside your project's resource directory.
+
+For a Cordova project, it should be placed in `www/mobile-services.json`.
+
+== Using modules from the AeroGear JavaScript SDK in a Cordova project
+
+After being correctly installed, the modules in the SDK will be available as properties in the global `window` object as `window.Mobile*` properties in a similar way to other Cordova plugins.
+
+The following snippet from the link:../../example/cordova[Cordova Example App] showcases how to utilize methods from the `MetricsService` that's bundled with Core:
+
+[source, javascript]
+----
+window.MobileCore.MetricsService.getMetrics(
+  function (metrics) {
+    $("#metrics-info").html(JSON.stringify(metrics));
+  },
+  function (error) {
+    $("#metrics-info").html(error);
+  }
+);
+----
