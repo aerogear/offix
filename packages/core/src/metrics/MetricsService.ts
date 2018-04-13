@@ -1,6 +1,6 @@
 import uuid from "uuid/v1";
 import { ServiceConfiguration } from "../configuration";
-import { Metrics, MetricsPayload } from "./model";
+import { Metrics, MetricsPayload, MetricsType } from "./model";
 import { MetricsPublisher, NetworkMetricsPublisher } from "./publisher";
 
 /**
@@ -31,11 +31,17 @@ export abstract class MetricsService {
     /**
      * Publish metrics using predefined publisher
      *
-     * @param - metrics instances that should be published
+     * @param type type of the metrics to be published
+     * @param metrics metrics instances that should be published
      */
-    public publish(metrics: Metrics[]): Promise<any> {
+    public publish(type: MetricsType, metrics: Metrics[]): Promise<any> {
+        if (!type) {
+            throw new Error(`Type is invalid: ${type}`);
+        }
+
         const payload: MetricsPayload = {
             clientId: this.getClientId(),
+            type,
             timestamp: new Date().getTime(),
             data: {}
         };
