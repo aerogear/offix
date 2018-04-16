@@ -19,7 +19,7 @@
     <div class="page-content">
       <div>
         <h4>Metrics:</h4>
-        <p id="metrics-info">No metrics</p>
+        <p id="metrics-info"></p>
       </div>
 
       <div class="block block-strong">
@@ -28,7 +28,7 @@
 
       <div>
         <h4>Response:</h4>
-        <p id="metrics-info"></p>
+        <p id="response-info"></p>
       </div>
     </div>
 
@@ -45,20 +45,31 @@
   return {
     beforeCreate() {
       var self = this;
-      self.$("#metrics-info").html("No metrics");
-      window.MobileCore.MetricsService.getMetrics(
-        function (metrics) {
+      self.$("#metrics-info").html("Fetching metrics...");
+
+      self.metricsService = new aerogear.MetricsService({ url: "http://192.168.1.6:3000/metrics" });
+      self.metricsService.getAppAndDeviceMetrics()
+        .then(metrics => {
           self.$("#metrics-info").html(JSON.stringify(metrics));
-        },
-        function (error) { self.$("#metrics-info").html(error); }
-      );
+        })
+        .catch(error => {
+          self.$("#metrics-info").html(error)
+        });
     },
     data: function () {
       return {}
     },
     methods: {
       sendMetrics: function (success, error) {
-        // TODO: import library and call sendAppAndDeviceMetrics
+        var self = this;
+        self.$("#response-info").html("Sending metrics...");
+        self.metricsService.sendAppAndDeviceMetrics()
+          .then(res => {
+            self.$("#response-info").html(JSON.stringify(res.status));
+          })
+          .catch(error => {
+            self.$("#response-info").html(JSON.stringify(error));
+          });
       },
     }
   };

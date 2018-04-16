@@ -12,7 +12,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "clean": "del coverage src/**/*.js src/**/*.map test/**/*.js test/**/*.map",
-    "build": "tsc",
+    "build": "tsc && browserify dist/index.js -o www/bundle.js",
     "watch": "tsc --watch",
     "test": "nyc mocha"
   },
@@ -40,13 +40,13 @@
   "devDependencies": {
     "@types/chai": "4.1.2",
     "@types/chai-as-promised": "7.1.0",
-    "@types/cordova-plugin-camera": "2.4.0",
     "@types/lodash.find": "^4.6.3",
     "@types/mocha": "^5.0.0",
     "@types/node": "^9.4.6",
     "@types/proxyquire": "1.3.28",
     "@types/sinon": "^4.3.1",
     "@types/uuid": "^3.4.3",
+    "browserify": "^16.2.0",
     "chai": "4.1.2",
     "chai-as-promised": "7.1.1",
     "del-cli": "1.1.0",

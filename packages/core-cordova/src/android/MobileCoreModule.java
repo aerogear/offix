@@ -29,9 +29,9 @@ public class MobileCoreModule extends CordovaPlugin {
 
   @Override
   public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
-    if (action.equals("getMetrics")) {
+    if (action.equals("getAppAndDeviceMetrics")) {
       try {
-        callbackContext.success(getMetrics());
+        callbackContext.success(getAppAndDeviceMetrics());
       } catch (Exception e) {
         callbackContext.error(e.getMessage());
       }
@@ -47,7 +47,7 @@ public class MobileCoreModule extends CordovaPlugin {
     return "MobileCore";
   }
 
-  public JSONObject getMetrics() throws NameNotFoundException, JSONException {
+  public JSONObject getAppAndDeviceMetrics() throws NameNotFoundException, JSONException {
     JSONObject metrics = new JSONObject();
 
     metrics.put("app", getAppMetrics());
