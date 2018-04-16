@@ -1,2 +1,2 @@
-export { MetricsPublisher, MetricsType } from "./MetricsPublisher";
+export { MetricsPublisher } from "./MetricsPublisher";
 export { NetworkMetricsPublisher } from "./NetworkMetricsPublisher";
