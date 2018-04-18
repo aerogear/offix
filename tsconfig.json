@@ -11,6 +11,9 @@
     "jsx": "react",
     "declaration": true
   },
+  "lib": [
+     "esnext.asynciterable"
+   ],
   "exclude": [
     "node_modules"
   ]
