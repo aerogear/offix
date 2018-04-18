@@ -1,5 +1,5 @@
 {
-  "name": "@aerogearservices/auth",
+  "name": "@aerogear/auth",
   "version": "1.0.0",
   "description": "JavaScript Auth module for AeroGear services",
   "main": "dist/index.js",
@@ -7,7 +7,11 @@
   "author": "Aerogear <aerogear@googlegroups.com>",
   "keywords": [
     "aerogear",
-    "mobile"
+    "mobile",
+    "keycloak",
+    "sso",
+    "auth",
+    "openid"
   ],
   "license": "Apache-2.0",
   "scripts": {

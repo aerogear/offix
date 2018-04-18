@@ -1,44 +1,63 @@
 import Keycloak from "keycloak-js";
+import {KeycloakError, KeycloakInitOptions, KeycloakInstance, KeycloakProfile, KeycloakPromise} from "keycloak-js";
+import { Key } from "readline";
 
-export class AuthService{
-    static auth: any = {};
+/**
+ * Wrapper class for {Keycloak.KeycloakInstance}
+ */
+export class AuthService {
 
-    loadUserProfile(): any {
-        // Retrieve User Profile
-        return new Promise((resolve, reject) => {
-            AuthService.auth.authz.loadUserProfile().success((profile: any) => {
-                resolve(<object>profile);
-            }).error(() => {
-                reject('Failed to retrieve user profile');
-            });
-        });
+    private auth: KeycloakInstance;
+
+    constructor(config: KeycloakInitOptions) {
+      this.auth = Keycloak(config);
     }
 
-    login(): void{
-        AuthService.auth.authz.login();
+  /**
+   * Called to initialize the adapter.
+   * @param initOptions Initialization options.
+   * @returns A promise to set functions to be invoked on success or error.
+   */
+  public init(initOptions: KeycloakInitOptions): KeycloakPromise<boolean, KeycloakError> {
+      if (!initOptions.onLoad) {
+        initOptions.onLoad = "check-sso";
+      }
+      return this.auth.init(initOptions);
     }
 
-    logout(): void{
-        AuthService.auth.authz.logout();
+    /**
+		 * Loads the user's profile.
+		 * @returns A promise to set functions to be invoked on success or error.
+		 */
+    public loadUserProfile(): KeycloakPromise<KeycloakProfile, void> {
+        return this.auth.loadUserProfile();
     }
 
-    isAuthenticated(): boolean{        
-        return AuthService.auth.authz.authenticated;
+    /**
+		 * Redirects to login form.
+		 * @param options Login options.
+		 */
+    public login(): KeycloakPromise<void, void> {
+      return this.auth.login();
     }
 
-    static init(keycloakConfig: any) : Promise<any> {
-        if(keycloakConfig){
-            let keycloak = Keycloak(keycloakConfig);            
-            return new Promise((resolve, reject) => {
-                keycloak.init({ onLoad: 'check-sso' }).success(() => {
-                    AuthService.auth.authz = keycloak;
-                    resolve();
-                }).error((err) => {                    
-                    reject(err);
-                });
-            });
-        }
-        
-        return new Promise((resolve: any, reject: any) => { return resolve() });
+    /**
+		 * Redirects to logout.
+		 * @param options Logout options.
+		 * @param options.redirectUri Specifies the uri to redirect to after logout.
+		 */
+    public logout(): KeycloakPromise<void, void> {
+      return this.auth.logout();
+    }
+
+    public isAuthenticated(): boolean | undefined {
+        return this.auth.authenticated;
+    }
+
+    /**
+     * Get access to wrapped Keycloak object
+     */
+    public extract(): KeycloakInstance {
+      return this.auth;
     }
 }
