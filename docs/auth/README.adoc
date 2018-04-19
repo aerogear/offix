@@ -109,4 +109,4 @@ authService.logout()
 ----
 By default, the local tokens obtained during authentication are only deleted when the logout succeeded against the authentication server.
 
-*Note:* To perform backchannel or federated logouts, you must enable the Backchannel Logout option for the federated identity provider. More information is available in the Keycloak documentation under  http://www.keycloak.org/docs/latest/server_admin/index.html#openid-connect-v1-0-identity-providers[OIDC Identity Providers].
+*Note:* To perform backchannel or federated logouts, you must enable the Backchannel Logout option for the federated identity provider. More information is available in the Keycloak documentation under  http://www.keycloak.org/docs/latest/server_admin/index.html#openid-connect-v1-0-identity-providers[OIDC Identity Providers]
