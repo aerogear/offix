@@ -1,6 +1,7 @@
 {
   "extends": "tslint:recommended",
   "rules": {
+    "jsdoc-format":false,
     "quotemark": [
       true,
       "double"
