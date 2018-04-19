@@ -74,3 +74,5 @@ package-lock.json
 dist
 types
 **/bundle.js
+
+cordova-example
