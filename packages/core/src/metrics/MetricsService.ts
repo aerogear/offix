@@ -11,7 +11,7 @@ declare var window: any;
 /**
  * AeroGear Services metrics service
  */
-export abstract class MetricsService {
+export class MetricsService {
 
   public static readonly CLIENT_ID_KEY = "aerogear_metrics_client_key";
   public static readonly DEFAULT_METRICS_TYPE = "init";
