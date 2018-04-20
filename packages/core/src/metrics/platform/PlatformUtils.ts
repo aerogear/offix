@@ -16,15 +16,3 @@ export const isMobileCordova = function() {
     !!(window["cordova"] || window["phonegap"] || window["PhoneGap"])
   );
 };
-
-/**
- * Detect React Native.
- *
- * @return {boolean} True if ReactNative environment is detected.
- */
-export const isReactNative = function() {
-  return (
-    // tslint:disable-next-line:no-string-literal
-    typeof navigator === "object" && navigator["product"] === "ReactNative"
-  );
-};
