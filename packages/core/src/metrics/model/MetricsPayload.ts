@@ -1,9 +1,8 @@
-import { MetricsType } from "./";
 
 export interface MetricsPayload {
 
   clientId: string;
-  type: MetricsType;
+  type: string;
   timestamp?: number;
   data: any;
 

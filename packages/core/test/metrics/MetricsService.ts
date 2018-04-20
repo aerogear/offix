@@ -8,10 +8,10 @@ import {
   MetricsPayload,
   MetricsPublisher,
   MetricsService,
-  MetricsType,
   NetworkMetricsPublisher
 } from "../../src/metrics";
 import testAerogearConfig from "../mobile-config.json";
+
 
 describe("MetricsService", () => {
 
