@@ -3,16 +3,26 @@ import { ServiceConfiguration } from "../configuration";
 import { Metrics, MetricsPayload, MetricsType } from "./model";
 import { MetricsPublisher, NetworkMetricsPublisher } from "./publisher";
 
+declare var localStorage: any;
+
 /**
  * AeroGear Services metrics service
  */
 export abstract class MetricsService {
 
+    public static readonly CLIENT_ID_KEY = "aerogear_metrics_client_key";
+    public static readonly DEFAULT_METRICS_TYPE = "init";
+
     private publisher: MetricsPublisher;
+
+    private readonly defaultMetrics: Metrics[];
 
     constructor(private readonly configuration: ServiceConfiguration) {
         this.publisher = new NetworkMetricsPublisher(configuration.url);
+        this.defaultMetrics = this.buildDefaultMetrics();
     }
+
+    protected abstract buildDefaultMetrics(): Metrics[];
 
     set metricsPublisher(publisher: MetricsPublisher) {
         this.publisher = publisher;
@@ -26,7 +36,9 @@ export abstract class MetricsService {
      * Collect metrics for all active metrics collectors
      * Send data using metrics publisher
      */
-    public abstract sendAppAndDeviceMetrics(): Promise<any>;
+    public sendAppAndDeviceMetrics(): Promise<any> {
+        return this.publish(MetricsService.DEFAULT_METRICS_TYPE, this.defaultMetrics);
+    }
 
     /**
      * Publish metrics using predefined publisher
@@ -57,7 +69,7 @@ export abstract class MetricsService {
      * Generates or gets mobile client id
      */
     public getClientId(): string {
-        let clientId: string = this.getSavedClientId();
+        let clientId = this.getSavedClientId();
 
         if (!clientId) {
             clientId = uuid();
@@ -67,6 +79,11 @@ export abstract class MetricsService {
         return clientId;
     }
 
-    protected abstract getSavedClientId(): string;
-    protected abstract saveClientId(id: string): void;
+    protected getSavedClientId(): string | undefined {
+      return localStorage.getItem(MetricsService.CLIENT_ID_KEY);
+    }
+
+    protected saveClientId(id: string): void {
+      localStorage.setItem(MetricsService.CLIENT_ID_KEY, id);
+    }
 }

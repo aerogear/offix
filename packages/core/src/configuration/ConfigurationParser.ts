@@ -4,7 +4,7 @@ import { AeroGearConfiguration, ServiceConfiguration } from "./";
 /**
  * List of types of all supported services.
  */
-export type ServiceType = "metrics" | "keycloak";
+export type ServiceType = "metrics" | "keycloak" | "push";
 
 /**
  * Represents a configuration parser.

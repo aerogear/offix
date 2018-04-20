@@ -7,6 +7,5 @@ export interface ServiceConfiguration {
   readonly name: string;
   readonly type: string;
   readonly url: string;
-  readonly config: Map<string, string>;
-
+  readonly config: Map<string, any>;
 }

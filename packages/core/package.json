@@ -4,7 +4,7 @@
   "description": "JavaScript Core SDK for AeroGear services",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
-  "author": "Aerogear <aerogear@googlegroups.com>",
+  "author": "AeroGear <aerogear@googlegroups.com>",
   "keywords": [
     "aerogear",
     "mobile"
@@ -12,7 +12,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "clean": "del coverage src/**/*.js src/**/*.map test/**/*.js test/**/*.map",
-    "build": "tsc && browserify dist/index.js -o www/bundle.js",
+    "build": "tsc",
     "watch": "tsc --watch",
     "test": "nyc mocha"
   },
