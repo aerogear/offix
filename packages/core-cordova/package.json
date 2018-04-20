@@ -1,11 +1,11 @@
 {
-  "name": "@aerogearservices/core-cordova",
-  "version": "1.0.0",
-  "author": "Aerogear <aerogear@googlegroups.com>",
+  "name": "@aerogear/cordova-plugin-metrics",
+  "version": "0.1.0",
+  "author": "AeroGear <aerogear@googlegroups.com>",
   "license": "Apache 2.0",
-  "description": "Aerogear Core SDK for Cordova",
+  "description": "AeroGear Metrics plugin for Cordova",
   "cordova": {
-    "id": "core-cordova",
+    "id": "cordova-plugin-metrics",
     "platforms": [
       "android"
     ]
@@ -14,6 +14,7 @@
     "cordova",
     "aerogear",
     "mobile",
+    "metrics",
     "ecosystem:cordova",
     "cordova-android"
   ],

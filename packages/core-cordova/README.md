@@ -1,16 +1,13 @@
-# Aerogear Mobile SDK for Cordova
+# AeroGear Metrics Plugin for Cordova
+
+Incorporates existing device info plugins to provide metrics information to be used with AeroGear SDK.
+
 
 ## Installation
 
-TODO
-
-<!-- You can install this plugin with Cordova CLI, from npm:
+You can install this plugin with Cordova CLI, from npm:
 
 ```
-$ cordova plugin add @aerogearservices/core-cordova
+$ cordova plugin add @aerogearservices/cordova-plugin-metrics
 $ cordova prepare
-``` -->
-
-## Supported Cordova Platforms
-
-TODO
+```

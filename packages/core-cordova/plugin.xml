@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin
     xmlns="http://apache.org/cordova/ns/plugins/1.0"
-    id="core-cordova"
-    version="1.0.0"
+    id="cordova-plugin-metrics"
+    version="0.1.0"
 >
-    <name>Aerogear Core SDK</name>
-    <description>Aerogear Core SDK for Cordova</description>
+    <name>Aerogear Metrics Plugin</name>
+    <description>Aerogear Metrics Plugin for Cordova</description>
     <license>Apache 2.0</license>
     <keywords>cordova,aerogear,mobile</keywords>
 
-    <dependency id="core" version="1.0.0"/>
+    <dependency id="cordova-plugin-device" version="2.0.2"/>
+    <dependency id="cordova-plugin-app-version" version="0.1.9"/>
+
+
 
     <js-module src="www/metrics.js" name="cordova-metrics">
         <clobbers target="aerogear" />
