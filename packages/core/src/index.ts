@@ -2,6 +2,8 @@
  * @module @aerogearservices/core
  */
 
-export { MetricsService } from "./metrics/MetricsService";
+// Configuration parsers
+export * from "./configuration";
 
-export { AppMetrics, DeviceMetrics, Metrics } from "./metrics/model";
+// Native platform metrics
+export *  from "./metrics";

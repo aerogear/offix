@@ -3,8 +3,8 @@ import { ServiceConfiguration } from "../configuration";
 import { Metrics, MetricsPayload } from "./model";
 import { CordovaAppMetrics } from "./platform/CordovaAppMetrics";
 import { CordovaDeviceMetrics } from "./platform/CordovaDeviceMetrics";
-import { MetricsPublisher, NetworkMetricsPublisher } from "./publisher";
 import { isMobileCordova } from "./platform/PlatformUtils";
+import { MetricsPublisher, NetworkMetricsPublisher } from "./publisher";
 
 declare var window: any;
 

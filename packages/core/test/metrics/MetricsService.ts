@@ -12,7 +12,6 @@ import {
 } from "../../src/metrics";
 import testAerogearConfig from "../mobile-config.json";
 
-
 describe("MetricsService", () => {
 
   const metricsConfig = new ConfigurationParser(testAerogearConfig).getConfig("metrics");
