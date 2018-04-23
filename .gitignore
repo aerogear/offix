@@ -76,3 +76,5 @@ types
 **/bundle.js
 
 cordova-example
+
+docs/api/**
