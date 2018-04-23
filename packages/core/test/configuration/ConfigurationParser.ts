@@ -40,24 +40,36 @@ describe("ConfigurationParser", () => {
     });
   });
 
-  describe("#getService", () => {
+  describe("#getConfig", () => {
 
     it("should return undefined if using an nonexistent key", () => {
-      const result = parser.getConfig("foo" as any);
+      const result = parser.getConfig("foo");
 
       assert.isUndefined(result);
     });
 
-    it("should be able to get keycloak config", () => {
-      const keycloakConfig = parser.getConfig("keycloak");
+    it("should be able to get config if its key exists", () => {
+      const result = parser.getConfig("keycloak");
 
-      assert.equal(keycloakConfig.name, "keycloak");
+      expect(result.type).to.equal("keycloak");
+    });
+
+    it("should be able to get keycloak config", () => {
+      const keycloakConfig = parser.getKeycloakConfig();
+
+      assert.equal(keycloakConfig.type, "keycloak");
     });
 
     it("should be able to get metrics config", () => {
-      const metricsConfig = parser.getConfig("metrics");
+      const metricsConfig = parser.getMetricsConfig();
 
-      assert.equal(metricsConfig.name, "metrics");
+      assert.equal(metricsConfig.type, "metrics");
+    });
+
+    it("should be able to get push config", () => {
+      const metricsConfig = parser.getPushConfig();
+
+      assert.equal(metricsConfig.type, "push");
     });
 
   });
