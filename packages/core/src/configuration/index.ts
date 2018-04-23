@@ -1,3 +1,3 @@
 export { AeroGearConfiguration } from "./AeroGearConfiguration";
-export { ConfigurationParser } from "./ConfigurationParser";
+export { ConfigurationHelper } from "./ConfigurationHelper";
 export { ServiceConfiguration } from "./ServiceConfiguration";

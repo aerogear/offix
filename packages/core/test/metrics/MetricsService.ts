@@ -2,7 +2,7 @@ import { assert, expect } from "chai";
 import mocha from "mocha";
 import sinon from "sinon";
 import uuid from "uuid/v1";
-import { ConfigurationParser, ServiceConfiguration } from "../../src/configuration";
+import { ConfigurationHelper, ServiceConfiguration } from "../../src/configuration";
 import {
   Metrics,
   MetricsPayload,
@@ -14,7 +14,7 @@ import testAerogearConfig from "../mobile-config.json";
 
 describe("MetricsService", () => {
 
-  const metricsConfig = new ConfigurationParser(testAerogearConfig).getConfig("metrics");
+  const metricsConfig = new ConfigurationHelper(testAerogearConfig).getConfig(MetricsService.ID);
   const storage = { clientId: null };
 
   let metricsService: MetricsService;

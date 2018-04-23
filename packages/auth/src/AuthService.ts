@@ -7,6 +7,8 @@ import { KeycloakError, KeycloakInitOptions, KeycloakInstance, KeycloakProfile, 
  */
 export class AuthService {
 
+  public static readonly ID: string = "keycloak";
+
   private auth: KeycloakInstance;
 
   constructor(config: any) {
@@ -58,7 +60,7 @@ export class AuthService {
     });
   }
 
-  public isAuthenticated(): boolean  {
+  public isAuthenticated(): boolean {
     return !!this.auth.authenticated;
   }
 

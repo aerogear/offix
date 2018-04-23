@@ -1,12 +1,12 @@
 import { assert, expect } from "chai";
 import mocha from "mocha";
-import { AeroGearConfiguration, ConfigurationParser, ServiceConfiguration } from "../../src/configuration";
+import { AeroGearConfiguration, ConfigurationHelper, ServiceConfiguration } from "../../src/configuration";
 import testConfigJson from "../mobile-config.json";
 
 describe("ConfigurationParser", () => {
 
   const aerogearConfig = testConfigJson as AeroGearConfiguration;
-  let parser: ConfigurationParser;
+  let parser: ConfigurationHelper;
 
   beforeEach(() => {
     parser = new MockConfigurationParser(aerogearConfig);
@@ -54,27 +54,9 @@ describe("ConfigurationParser", () => {
       expect(result.type).to.equal("keycloak");
     });
 
-    it("should be able to get keycloak config", () => {
-      const keycloakConfig = parser.getKeycloakConfig();
-
-      assert.equal(keycloakConfig.type, "keycloak");
-    });
-
-    it("should be able to get metrics config", () => {
-      const metricsConfig = parser.getMetricsConfig();
-
-      assert.equal(metricsConfig.type, "metrics");
-    });
-
-    it("should be able to get push config", () => {
-      const metricsConfig = parser.getPushConfig();
-
-      assert.equal(metricsConfig.type, "push");
-    });
-
   });
 
-  class MockConfigurationParser extends ConfigurationParser {
+  class MockConfigurationParser extends ConfigurationHelper {
 
     public getConfigurations(): ServiceConfiguration[] {
       return this.configurations;

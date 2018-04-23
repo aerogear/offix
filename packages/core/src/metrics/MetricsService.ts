@@ -15,6 +15,7 @@ export class MetricsService {
 
   public static readonly CLIENT_ID_KEY = "aerogear_metrics_client_key";
   public static readonly DEFAULT_METRICS_TYPE = "init";
+  public static readonly ID = "metrics";
 
   private publisher: MetricsPublisher;
 
@@ -37,7 +38,6 @@ export class MetricsService {
    * Collect metrics for all active metrics collectors
    * Send data using metrics publisher
    */
-  // tslint:disable-next-line:member-ordering
   public sendAppAndDeviceMetrics(): Promise<any> {
     return this.publish(MetricsService.DEFAULT_METRICS_TYPE, []);
   }
