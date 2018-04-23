@@ -1,0 +1,17 @@
+== JavaScript SDK Release process
+
+=== Prepare repository for release
+
+=====
+./scripts/prepareRelease.sh
+=====
+
+== Execute lerna publish
+
+=====
+npm run publish
+=====
+
+== Create PR with the new versions
+
+Commit local changes and create PR to update master with the latest versions
