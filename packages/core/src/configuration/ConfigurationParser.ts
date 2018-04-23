@@ -4,7 +4,11 @@ import { AeroGearConfiguration, ServiceConfiguration } from "./";
 /**
  * List of types of all supported services.
  */
-export type ServiceType = "metrics" | "keycloak" | "push" | any;
+export enum ServiceType {
+  METRICS = "metrics",
+  KEYCLOAK = "keycloak",
+  PUSH = "push"
+}
 
 /**
  * Represents a configuration parser.
@@ -21,7 +25,33 @@ export class ConfigurationParser {
     this.configurations = config.services || [];
   }
 
-  public getConfig(type: ServiceType): ServiceConfiguration | undefined {
+  /**
+   * Get Metrics service configuration object
+   */
+  public getMetricsConfig(): ServiceConfiguration | undefined {
+    return this.getConfig(ServiceType.METRICS);
+  }
+
+  /**
+   * Get Keycloak service configuration object
+   */
+  public getKeycloakConfig(): ServiceConfiguration | undefined {
+    return this.getConfig(ServiceType.KEYCLOAK);
+  }
+
+  /**
+   * Get Push service configuration object
+   */
+  public getPushConfig(): ServiceConfiguration | undefined {
+    return this.getConfig(ServiceType.PUSH);
+  }
+
+  /**
+   * Get a service configuration object, provided an existing type is given
+   * @param type string - The type of the service
+   */
+  public getConfig(type: string): ServiceConfiguration | undefined {
     return find(this.configurations, service => service.type === type);
   }
+
 }
