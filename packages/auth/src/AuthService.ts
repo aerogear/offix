@@ -81,4 +81,19 @@ export class AuthService {
   public extract(): KeycloakInstance {
     return this.auth;
   }
+
+  /**
+   * Return the users realm level roles
+   */
+  public getRealmRoles(): any{
+      return this.auth.realmAccess;
+  }
+
+  /**
+   * Check it the user has a specified realm role
+   */
+  public hasRealmRole(role: string): boolean{
+    return this.auth.hasRealmRole(role);
+  }
+
 }
