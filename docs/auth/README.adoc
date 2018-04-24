@@ -24,6 +24,11 @@ For Cordova based applications, localhost can be specified as a redirect URI in 
 
  * `http://localhost/*`
 
+==== Specifying the Redirect URI
+For Cordova based applications, localhost can be specified as a redirect URI in the Keycloak client when using an in-app browser:
+
+ * `http://localhost/*`
+
 === Adding Auth Package
 Add the Auth package with NPM:
 ----
@@ -39,9 +44,8 @@ For an example of Keycloak configuration see the example apps link:../../example
 
 The Auth SDK will use this configuration to communicate with Keycloak.
 
-
-=== Initializing the SDK
-`AuthService` can be retrieved by importing it:
+=== Auth Service Initialisation
+The `AuthService` can be retrieved by importing it. The `mobile-services.json` file must also be referenced as it contains the Keycloak configuration.
 ----
 import { AuthService } from 'aerogear/auth';
 let mobileServiceConfig = require("../mobile-services.json");
@@ -110,4 +114,8 @@ authService.logout()
 ----
 By default, the local tokens obtained during authentication are only deleted when the logout succeeded against the authentication server.
 
+<<<<<<< HEAD
 *Note:* To perform backchannel or federated logouts, you must enable the Backchannel Logout option for the federated identity provider. More information is available in the Keycloak documentation under  http://www.keycloak.org/docs/latest/server_admin/index.html#openid-connect-v1-0-identity-providers[OIDC Identity Providers]
+=======
+*Note:* To perform backchannel or federated logouts, you must enable the Backchannel Logout option for the federated identity provider. More information is available in the Keycloak documentation under  http://www.keycloak.org/docs/latest/server_admin/index.html#openid-connect-v1-0-identity-providers[OIDC Identity Providers].
+>>>>>>> add remaining auth docs
