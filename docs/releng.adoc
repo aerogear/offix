@@ -2,15 +2,17 @@
 
 === Prepare repository for release
 
-=====
+[source,bash]
+--
 ./scripts/prepareRelease.sh
-=====
+--
 
 == Execute lerna publish
 
-=====
+[source,bash]
+--
 npm run publish
-=====
+--
 
 == Create PR with the new versions
 
