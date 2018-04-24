@@ -1,5 +1,4 @@
 import { AeroGearConfiguration, ConfigurationHelper, ServiceConfiguration } from "@aerogear/core";
-import Bluebird from "bluebird";
 import Keycloak from "keycloak-js";
 import { KeycloakError, KeycloakInitOptions, KeycloakInstance, KeycloakProfile, KeycloakPromise } from "keycloak-js";
 
@@ -31,11 +30,11 @@ export class AuthService {
    * @param initOptions Initialization options.
    * @returns A promise to set functions to be invoked on success or error.
    */
-  public init(initOptions: KeycloakInitOptions): Bluebird<boolean> {
+  public init(initOptions: KeycloakInitOptions): Promise<boolean> {
     if (!initOptions.onLoad) {
       initOptions.onLoad = "check-sso";
     }
-    return new Bluebird((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       return this.auth.init(initOptions).error(reject).success(resolve);
     });
   }
@@ -44,8 +43,8 @@ export class AuthService {
    * Loads the user's profile.
    * @returns A promise to set functions to be invoked on success or error.
    */
-  public loadUserProfile(): Bluebird<KeycloakProfile> {
-    return new Bluebird((resolve, reject) => {
+  public loadUserProfile(): Promise<KeycloakProfile> {
+    return new Promise((resolve, reject) => {
       return this.auth.loadUserProfile().error(reject).success(resolve);
     });
   }
@@ -54,8 +53,8 @@ export class AuthService {
    * Redirects to login form.
    * @param options Login options.
    */
-  public login(): Bluebird<void> {
-    return new Bluebird((resolve, reject) => {
+  public login(): Promise<void> {
+    return new Promise((resolve, reject) => {
       return this.auth.login().error(reject).success(resolve);
     });
   }
@@ -65,8 +64,8 @@ export class AuthService {
    * @param options Logout options.
    * @param options.redirectUri Specifies the uri to redirect to after logout.
    */
-  public logout(): Bluebird<void> {
-    return new Bluebird((resolve, reject) => {
+  public logout(): Promise<void> {
+    return new Promise((resolve, reject) => {
       return this.auth.logout().error(reject).success(resolve);
     });
   }
