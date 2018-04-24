@@ -93,7 +93,7 @@ export class AuthService {
    * Return the users realm level roles
    */
   public getRealmRoles(): string[] {
-    if (this.auth && this.auth.realmAccess && this.auth.realmAccess.roles) {
+    if (this.auth.realmAccess && this.auth.realmAccess.roles) {
       return this.auth.realmAccess.roles;
     }
     return [];
