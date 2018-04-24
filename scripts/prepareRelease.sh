@@ -7,6 +7,10 @@ npm run bootstrap
 npm run build
 npm run test
 
-echo "Repository is ready for release.
-Please run: npm run publish"
+# don't run in CI
+if [ ! "$CI" = true ]; then
+  lerna publish --skip-git --skip-npm
+fi
+
+echo "Repository is ready for release."
 

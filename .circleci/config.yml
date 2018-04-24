@@ -40,3 +40,30 @@ jobs:
           prefix: coverage
       - store_test_results:
           path: test-results.xml
+  npm_publish:
+    working_directory: ~/aerogear
+    docker:
+      # Node 8 LTS
+      - image: circleci/node:carbon
+    steps:
+      - checkout
+      - run: CI=true npm run prep-release
+      - run: TAG=$CIRCLE_TAG npm run validate-release
+      - run: npm run publish
+
+workflows:
+  version: 2
+  build_and_release:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /.*/
+      - npm_publish:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /\d\.\d\.\d/
+            branches:
+              ignore: /.*/
