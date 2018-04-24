@@ -31,7 +31,7 @@ npm run prep-release
 
 This script will interactively prompt you and ask what version you would like to update to. Select the appropriate version according to link:https://semver.org[Semver.]
 
-[soruce,bash]
+[source,bash]
 --
 lerna info version 2.9.0
 lerna info current version 0.0.0
@@ -70,7 +70,7 @@ Commit and push these changes, then open a Pull Request to `master`.
 git commit -am 'release version x.y.z'
 --
 
-Once your changes have been merged to master, you can continue and release to Cocoapods.
+Once your changes have been merged to master, you can continue and release to npm.
 
 === How to Release
 
