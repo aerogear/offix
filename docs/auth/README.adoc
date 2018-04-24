@@ -19,14 +19,6 @@ To use the Auth SDK you'll first need to:
 This will provision the Keycloak service in the project you specified and create a public Client to be used with an app along with a bearer-only client.
 See link:http://www.keycloak.org/docs/latest/server_admin/index.html#oidc-clients[Keycloak OIDC client documentation].
 
-<<<<<<< HEAD
-==== Specifying the Redirect URI
-For Cordova based applications, localhost can be specified as a redirect URI in the Keycloak client when using an in-app browser:
-=======
-==== Standalone
->>>>>>> remove unrequired sections
-
- * `http://localhost/*`
 
 ==== Specifying the Redirect URI
 For Cordova based applications, localhost can be specified as a redirect URI in the Keycloak client when using an in-app browser:
