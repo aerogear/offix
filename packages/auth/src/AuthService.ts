@@ -85,16 +85,15 @@ export class AuthService {
   /**
    * Check it the user has a specified realm role
    */
-  public hasRealmRole(role: string): boolean{
+  public hasRealmRole(role: string): boolean {
     return this.auth.hasRealmRole(role);
   }
-
 
   /**
    * Return the users realm level roles
    */
-  public getRealmRoles():string[]{
-    if (this.auth != null && this.auth.realmAccess != null && this.auth.realmAccess.roles != null) {
+  public getRealmRoles(): string[] {
+    if (this.auth && this.auth.realmAccess && this.auth.realmAccess.roles) {
       return this.auth.realmAccess.roles;
     }
     return [];
