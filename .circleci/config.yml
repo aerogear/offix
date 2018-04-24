@@ -40,7 +40,7 @@ jobs:
           prefix: coverage
       - store_test_results:
           path: test-results.xml
-  build:
+  npm_publish:
     working_directory: ~/aerogear
     docker:
       # Node 8 LTS
