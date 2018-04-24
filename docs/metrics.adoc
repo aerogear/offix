@@ -1,0 +1,24 @@
+= AeroGear Services Metrics SDK
+
+Metrics is another service provided by Core and no further dependencies are required for its utilization.
+It provides registration of default metrics for the application such as App and Device information as well as supplying these services to other modules of the SDK.
+
+[source, javascript]
+----
+import { MetricsService } from '@aerogear/core';
+import configuration from '../mobile-services.json';
+const metrics = new MetricsService(configuration);
+metrics.sendAppAndDeviceMetrics().then(() => {
+  console.info("Metrics registered successfully");
+});
+----
+
+== App metrics record fields
+
+- *App version*: The version of your App
+- *SDK version*: The version of the Aerogear JS SDK that is used
+
+== Device metrics record fields
+
+- *Platform*: The `cordova-` prefix along with the native platform being run on
+- *Platform Version*: The runtime version of your chosen platform

@@ -24,3 +24,7 @@ You can reach us at [#aerogear](ircs://chat.freenode.net:6697/aerogear) on [Free
 - Description should contain an explanation for the proposed changes.
 - It's recommended to consult feature requests with the team before starting implementation
 - Send us a message on chat or email if you need assistance with any work.
+
+## Publishing a new version of the SDK
+
+Documentation for preparing a release for the JS sdk is available [here](./docs/releng.adoc)

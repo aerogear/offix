@@ -4,6 +4,14 @@
 [![License](https://img.shields.io/badge/-Apache%202.0-blue.svg)](https://opensource.org/s/Apache-2.0)
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lernajs.io/)
 
+|                 | Project Info                                                     |
+| --------------- | ---------------------------------------------------------------- |
+| License:        | Apache License, Version 2.0                                      |
+| Build:          | Gradle                                                           |
+| Issue tracker:  | https://issues.jboss.org/browse/AGCORDOVA                        |
+| Mailing lists:  | [aerogear-users](http://aerogear-users.1116366.n5.nabble.com/)   |
+|                 | [aerogear-dev](https://groups.google.com/forum/#!forum/aerogear) |
+
 AeroGear SDK for Java Script, Apache Cordova and React Native.
 
 ## Documentation
@@ -15,8 +23,8 @@ AeroGear SDK for Java Script, Apache Cordova and React Native.
 
 AeroGear Services SDK consist of set of separate SDKs
 
-- [Core](./docs/core/README.adoc): Common base for all SDKs
-- [Metrics](./docs/metrics/README.adoc): Mobile application metrics SDK
+- [Core](./docs/core.adoc): Common base for all SDKs
+- [Metrics](./docs/metrics.adoc): SDK module for uploading metrics data
 
 ## Contributing
 
