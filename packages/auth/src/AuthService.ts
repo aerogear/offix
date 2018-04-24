@@ -1,3 +1,4 @@
+import { AeroGearConfiguration, ConfigurationHelper, ServiceConfiguration } from "@aerogear/core";
 import Bluebird from "bluebird";
 import Keycloak from "keycloak-js";
 import { KeycloakError, KeycloakInitOptions, KeycloakInstance, KeycloakProfile, KeycloakPromise } from "keycloak-js";
@@ -11,8 +12,18 @@ export class AuthService {
 
   private auth: KeycloakInstance;
 
-  constructor(config: any) {
-    this.auth = Keycloak(config);
+  constructor(appConfig: AeroGearConfiguration) {
+    const configuration = new ConfigurationHelper(appConfig).getConfig(AuthService.ID);
+    let internalConfig;
+
+    if (!configuration) {
+      console.warn("Keycloak configuration is missing. Authentication will not work properly.");
+      internalConfig = {};
+    } else {
+      internalConfig = configuration.config;
+    }
+
+    this.auth = Keycloak(internalConfig);
   }
 
   /**

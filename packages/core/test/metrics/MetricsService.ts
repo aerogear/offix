@@ -20,7 +20,7 @@ describe("MetricsService", () => {
   let metricsService: MetricsService;
 
   beforeEach(() => {
-    metricsService = new MockMetricsService(metricsConfig);
+    metricsService = new MockMetricsService(testAerogearConfig);
     storage.clientId = null;
   });
 
