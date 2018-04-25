@@ -1,52 +1,49 @@
-= Contributing guide
+= Contributing to AeroGear JavaScript SDK
 
-== Local setup
+First, ensure you have the https://docs.npmjs.com/[latest npm] installed.
 
-1. Install required dependencies
+Then, to set everything up run in your terminal:
 [source,bash]
-----
 npm install
 npm run bootstrap
-----
-2. Compile code
+
+== Project Structure
+The SDK is made by a group of modules, each one implemented in a different NPM package and all placed under `/packages`.
+
+Each module provides an API to use a particular AeroGear service.
+
+A main package called `core` contains a shared set of interfaces, classes and other functionalities that the rest of modules depend on.
+
+== Working on modules
+
+Modules are written in https://www.typescriptlang.org/[TypeScript] and tested by https://mochajs.org/[mocha].
+
+Once the development is done, the module is built and the source code is transpiled into a `dist/` folder and published. Typings are automatically generated during this step as well.
+
+== Commands
+
+Run this commands from the repo's root directory.
+
+==== Run tests with coverage
 [source,bash]
-----
-npm run build
-----
-3. Run tests and lint
-[source,bash]
-----
 npm run test
-npm run lint
-----
 
-=== Using core in projects
-
-1. Link resources
+==== Run linter
 [source,bash]
-----
-  cd packages/core
-  npm link .
-  npm link @aerogearservices/core
-----
+npm run lint
 
-2. Use core in your application
-[source,javascript]
-----
-var config = require('./mobile-config.json')
-var ConfigService = require('@aerogearservices/core').ConfigService;
+==== Build
+[source,bash]
+npm run build
 
-var config = new ConfigService(config);
-----
-> Note: SDK requires common.js implementation like browserify or webpack to be present
+== Adding a new module
 
-3. Use core config with example SDK
-[source,javascript]
-----
-var keycloakConfig = config.getKeycloakConfig()
-var Keycloak = require('keycloak-js')
+Create a new NPM package under the packages folder with the module name: `/packages/my-module`, using our link:../templates/package.json[package.json template].
 
-var keycloak = Keycloak(keycloakConfig.config);
-// Use keycloak initialized. Use keycloak according to client documentation
-----
+Ensure to include the org scope to its name: `"name": "@aerogear/my-module"`.
 
+Finally, add the following link:../templates/tsconfig.json[`tsconfig.json`].
+
+== Publishing a module
+
+Please refer to the https://github.com/aerogear/aerogear-js-sdk/blob/master/docs/releng.adoc[Release Docs].

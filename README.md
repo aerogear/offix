@@ -7,12 +7,12 @@
 |                 | Project Info                                                     |
 | --------------- | ---------------------------------------------------------------- |
 | License:        | Apache License, Version 2.0                                      |
-| Build:          | Gradle                                                           |
+| Build:          | NPM                                                              |
 | Issue tracker:  | https://issues.jboss.org/browse/AGCORDOVA                        |
 | Mailing lists:  | [aerogear-users](http://aerogear-users.1116366.n5.nabble.com/)   |
 |                 | [aerogear-dev](https://groups.google.com/forum/#!forum/aerogear) |
 
-AeroGear SDK for Java Script, Apache Cordova and React Native.
+AeroGear SDK for JavaScript, Apache Cordova and React Native.
 
 ## Documentation
 
