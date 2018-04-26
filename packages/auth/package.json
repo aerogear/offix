@@ -5,6 +5,13 @@
   "main": "dist/index.js",
   "types": "types/index.d.ts",
   "author": "Aerogear <aerogear@googlegroups.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aerogear/aerogear-js-sdk.git"
+  },
+  "bugs": {
+    "url": "https://issues.jboss.org/projects/AGCORDOVA/issues"
+  },
   "keywords": [
     "aerogear",
     "mobile",
