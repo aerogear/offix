@@ -1,6 +1,7 @@
 import { AeroGearConfiguration, ConfigurationHelper, ServiceConfiguration } from "@aerogear/core";
 import Keycloak from "keycloak-js";
 import { KeycloakError, KeycloakInitOptions, KeycloakInstance, KeycloakProfile, KeycloakPromise } from "keycloak-js";
+import console from "loglevel";
 
 /**
  * Wrapper class for {Keycloak.KeycloakInstance}
