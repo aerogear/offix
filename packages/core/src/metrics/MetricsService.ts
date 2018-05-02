@@ -4,12 +4,12 @@ import { Metrics, MetricsPayload } from "./model";
 import { CordovaAppMetrics } from "./platform/CordovaAppMetrics";
 import { CordovaDeviceMetrics } from "./platform/CordovaDeviceMetrics";
 import { isMobileCordova } from "./platform/PlatformUtils";
-import { LogMetricsPublisher, MetricsPublisher, NetworkMetricsPublisher } from "./publisher";
+import { MetricsPublisher, NetworkMetricsPublisher } from "./publisher";
 
 declare var window: any;
 
 /**
- * AeroGear Services metrics service
+ * AeroGear Services Metrics SDK
  */
 export class MetricsService {
 
@@ -17,32 +17,28 @@ export class MetricsService {
   public static readonly DEFAULT_METRICS_TYPE = "init";
   public static readonly ID = "metrics";
 
-  private publisher: MetricsPublisher;
-
-  private readonly configuration: ServiceConfiguration;
+  protected publisher?: MetricsPublisher;
+  protected configuration?: ServiceConfiguration;
   private readonly defaultMetrics: Metrics[];
 
   constructor(appConfig: AeroGearConfiguration) {
     const configuration = new ConfigurationHelper(appConfig).getConfig(MetricsService.ID);
+    this.defaultMetrics = this.buildDefaultMetrics();
 
-    if (!configuration) {
-      console.warn("Metrics configuration is missing. Metrics will not be published to remote server.");
-      this.configuration = {} as ServiceConfiguration;
-      this.publisher = new LogMetricsPublisher();
-
-    } else {
+    if (configuration) {
       this.configuration = configuration;
       this.publisher = new NetworkMetricsPublisher(configuration.url);
+      this.sendInitialAppAndDeviceMetrics();
+    } else {
+      console.warn("Metrics configuration is missing. Metrics will not be published to remote server.");
     }
-
-    this.defaultMetrics = this.buildDefaultMetrics();
   }
 
-  set metricsPublisher(publisher: MetricsPublisher) {
+  set metricsPublisher(publisher: MetricsPublisher | undefined) {
     this.publisher = publisher;
   }
 
-  get metricsPublisher(): MetricsPublisher {
+  get metricsPublisher(): MetricsPublisher | undefined {
     return this.publisher;
   }
 
@@ -65,6 +61,12 @@ export class MetricsService {
       throw new Error(`Type is invalid: ${type}`);
     }
 
+    const { publisher } = this;
+
+    if (!publisher) {
+      return Promise.resolve();
+    }
+
     const payload: MetricsPayload = {
       clientId: this.getClientId(),
       type,
@@ -72,15 +74,14 @@ export class MetricsService {
       data: {}
     };
 
-    metrics.forEach(m => {
-      payload.data[m.identifier] = m.collect();
-    });
+    const metricsPromise = metrics.concat(this.defaultMetrics)
+      .map(m => m.collect().then(data => {
+        payload.data[m.identifier] = data;
+      }));
 
-    this.defaultMetrics.forEach(m => {
-      payload.data[m.identifier] = m.collect();
+    return Promise.all(metricsPromise).then(() => {
+      return publisher.publish(payload);
     });
-
-    return this.publisher.publish(payload);
   }
 
   /**
@@ -115,5 +116,15 @@ export class MetricsService {
     } else {
       return [];
     }
+  }
+
+  /**
+   * Sends default metrics for first time
+   */
+  protected sendInitialAppAndDeviceMetrics(): void {
+    this.sendAppAndDeviceMetrics()
+      .catch((error) => {
+        console.error("Error when sending metrics", JSON.stringify(error, Object.getOwnPropertyNames(error)));
+      });
   }
 }

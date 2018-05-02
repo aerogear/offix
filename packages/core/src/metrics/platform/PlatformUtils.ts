@@ -9,10 +9,8 @@ declare var navigator: any;
  *
  * @return {boolean} isMobileCordova
  */
-export const isMobileCordova = function() {
-  return (
-    typeof window !== "undefined" &&
-    // tslint:disable-next-line:no-string-literal
-    !!(window["cordova"] || window["phonegap"] || window["PhoneGap"])
-  );
-};
+export const isMobileCordova = () => (
+  typeof window !== "undefined" &&
+  // tslint:disable-next-line:no-string-literal
+  !!(window["cordova"] || window["phonegap"] || window["PhoneGap"])
+);

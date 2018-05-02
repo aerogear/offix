@@ -14,5 +14,5 @@ export interface Metrics {
    *
    * @return metrics dictionary object that contains metrics data
    */
-  collect(): any;
+  collect(): Promise<any>;
 }

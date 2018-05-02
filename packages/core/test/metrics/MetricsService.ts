@@ -20,17 +20,11 @@ describe("MetricsService", () => {
   let metricsService: MetricsService;
 
   beforeEach(() => {
-    metricsService = new MockMetricsService(testAerogearConfig);
+    metricsService = new DummyMetricsService(testAerogearConfig);
     storage.clientId = null;
   });
 
   describe("#constructor", () => {
-
-    it("should have a NetworkMetricsPublisher by default", () => {
-      const defaultPublisher = metricsService.metricsPublisher;
-
-      expect(defaultPublisher).to.be.instanceOf(NetworkMetricsPublisher);
-    });
 
     it("should instantiate NetworkMetricsPublisher with configuration url", () => {
       const { url } = metricsConfig;
@@ -38,6 +32,16 @@ describe("MetricsService", () => {
 
       assert.equal(url, publisher.url);
     });
+
+    it("should publish default metrics");
+
+    it("should not throw an error when not being able to publish default metrics", () => {
+      const test = () => new MockMetricsService(testAerogearConfig);
+
+      expect(test).to.not.throw();
+    });
+
+    it("should create Android and iOS default metrics when in a Cordova app");
 
   });
 
@@ -55,6 +59,30 @@ describe("MetricsService", () => {
 
   });
 
+  describe("#sendAppAndDeviceMetrics", () => {
+
+    it("should publish default metrics", async () => {
+      const mockPublisher = new MockMetricsPublisher();
+      const spy = sinon.spy(mockPublisher, "publish");
+      metricsService.metricsPublisher = mockPublisher;
+
+      const type = DummyMetricsService.DEFAULT_METRICS_TYPE;
+
+      const defaultMatcher: MetricsPayload = {
+        clientId: metricsService.getClientId(),
+        type,
+        data: {
+          default: "default"
+        }
+      };
+
+      await metricsService.sendAppAndDeviceMetrics();
+
+      sinon.assert.calledWithMatch(spy, defaultMatcher);
+    });
+
+  });
+
   describe("#publish", () => {
 
     it("should publish a MetricsPayload from an array of Metrics", async () => {
@@ -62,10 +90,13 @@ describe("MetricsService", () => {
       const spy = sinon.spy(mockPublisher, "publish");
       metricsService.metricsPublisher = mockPublisher;
 
+      const someNumber = Promise.resolve(123);
+      const someString = Promise.resolve("foo");
+
       const type = "init";
       const metrics: Metrics[] = [
-        { identifier: "someNumber", collect: () => 123 },
-        { identifier: "someString", collect: () => "foo" }
+        { identifier: "someNumber", collect: () => someNumber },
+        { identifier: "someString", collect: () => someString }
       ];
       const matcher: MetricsPayload = {
         clientId: metricsService.getClientId(),
@@ -76,21 +107,28 @@ describe("MetricsService", () => {
         }
       };
 
-      metricsService.publish(type, metrics);
+      await metricsService.publish(type, metrics);
 
       sinon.assert.calledWithMatch(spy, matcher);
     });
 
-    it("should throw an error is type is null", () => {
+    it("should throw an error if type is null", () => {
       const test = () => metricsService.publish(null, []);
 
       expect(test).to.throw("Type is invalid: null");
     });
 
-    it("should throw an error is type is undefined", () => {
+    it("should throw an error if type is undefined", () => {
       const test = () => metricsService.publish(undefined, []);
 
       expect(test).to.throw("Type is invalid: undefined");
+    });
+
+    it("should not throw an error if publisher is undefined", () => {
+      metricsService.metricsPublisher = undefined;
+      const test = () => metricsService.publish("type", []);
+
+      expect(test).to.not.throw();
     });
 
   });
@@ -128,20 +166,33 @@ describe("MetricsService", () => {
 
   });
 
+  /**
+   * Test MetricsService that mocks all browser or device functionality
+   */
   class MockMetricsService extends MetricsService {
 
-    public sendAppAndDeviceMetrics(): Promise<any> {
-      return null;
-    }
-
-    // Mocked
     protected getSavedClientId(): string {
       return storage.clientId;
     }
 
-    // Mocked
     protected saveClientId(id: string): void {
       storage.clientId = id;
+    }
+
+    protected buildDefaultMetrics(): Metrics[] {
+      return [
+        { identifier: "default", collect: () => Promise.resolve("default") }
+      ];
+    }
+  }
+
+  /**
+   * Mocked MetricsService that doesn't publish
+   */
+  class DummyMetricsService extends MockMetricsService {
+
+    protected sendInitialAppAndDeviceMetrics() {
+      return Promise.resolve();
     }
 
   }
@@ -149,7 +200,7 @@ describe("MetricsService", () => {
   class MockMetricsPublisher implements MetricsPublisher {
 
     public publish(metrics: MetricsPayload): Promise<any> {
-      return new Promise(resolve => resolve({ statusCode: 204 }));
+      return Promise.resolve({ statusCode: 204 });
     }
   }
 
