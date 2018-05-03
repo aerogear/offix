@@ -1,0 +1,29 @@
+{
+  "name": "@aerogear/security",
+  "version": "0.1.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "types/index.d.ts",
+  "scripts": {
+    "clean": "del coverage src/**/*.js src/**/*.map test/**/*.js test/**/*.map",
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "test": "nyc mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aerogear/aerogear-js-sdk.git"
+  },
+  "keywords": [
+    "aerogear",
+    "security",
+    "trust"
+  ],
+  "author": "AeroGear",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/aerogear/aerogear-js-sdk/issues"
+  },
+  "homepage": "https://github.com/aerogear/aerogear-js-sdk#readme",
+  "dependencies": {}
+}

@@ -1,0 +1,22 @@
+{
+  "name": "@aerogear/cordova-plugin-aerogear-security",
+  "version": "0.1.0",
+  "description": "Cordova plugin for AeroGear Security",
+  "cordova": {
+    "id": "cordova-plugin-aerogear-security",
+    "platforms": []
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aerogear/aerogear-js-sdk.git"
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "AeroGear <aerogear@googlegroups.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/aerogear/aerogear-js-sdk/issues"
+  },
+  "homepage": "https://github.com/aerogear/aerogear-js-sdk#readme"
+}
