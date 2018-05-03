@@ -22,12 +22,12 @@ export class MetricsService {
   private readonly defaultMetrics: Metrics[];
 
   constructor(appConfig: AeroGearConfiguration) {
-    const configuration = new ConfigurationHelper(appConfig).getConfig(MetricsService.ID);
+    const configuration = new ConfigurationHelper(appConfig).getConfigByType(MetricsService.ID);
     this.defaultMetrics = this.buildDefaultMetrics();
 
-    if (configuration) {
-      this.configuration = configuration;
-      this.publisher = new NetworkMetricsPublisher(configuration.url);
+    if (configuration && configuration.length > 0) {
+      this.configuration = configuration[0];
+      this.publisher = new NetworkMetricsPublisher(this.configuration.url);
       this.sendInitialAppAndDeviceMetrics();
     } else {
       console.warn("Metrics configuration is missing. Metrics will not be published to remote server.");

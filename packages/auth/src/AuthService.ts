@@ -13,14 +13,14 @@ export class AuthService {
   private auth: KeycloakInstance;
 
   constructor(appConfig: AeroGearConfiguration) {
-    const configuration = new ConfigurationHelper(appConfig).getConfig(AuthService.ID);
+    const configuration = new ConfigurationHelper(appConfig).getConfigByType(AuthService.ID);
     let internalConfig;
 
-    if (!configuration) {
+    if (!configuration || configuration.length === 0) {
       console.warn("Keycloak configuration is missing. Authentication will not work properly.");
       internalConfig = {};
     } else {
-      internalConfig = configuration.config;
+      internalConfig = configuration[0].config;
     }
 
     this.auth = Keycloak(internalConfig);

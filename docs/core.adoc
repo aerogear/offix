@@ -38,6 +38,6 @@ import { ConfigurationHelper } from '@aerogear/core';
 import appConfiguration from '../mobile-services.json';
 
 const helper = new ConfigurationHelper(appConfiguration);
-const metricsConfig = helper.getConfig(MetricsService.ID);
+const metricsConfig = helper.getConfigByType(MetricsService.ID);
 ----
 

@@ -43,15 +43,15 @@ describe("ConfigurationParser", () => {
   describe("#getConfig", () => {
 
     it("should return undefined if using an nonexistent key", () => {
-      const result = parser.getConfig("foo");
+      const result = parser.getConfigByType("foo");
 
-      assert.isUndefined(result);
+      assert.isArray(result);
+      assert.isOk(result.length === 0);
     });
 
     it("should be able to get config if its key exists", () => {
-      const result = parser.getConfig("keycloak");
-
-      expect(result.type).to.equal("keycloak");
+      const result = parser.getConfigByType("keycloak");
+      expect(result[0].type).to.equal("keycloak");
     });
 
   });
