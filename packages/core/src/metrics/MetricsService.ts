@@ -15,14 +15,14 @@ export class MetricsService {
 
   public static readonly CLIENT_ID_KEY = "aerogear_metrics_client_key";
   public static readonly DEFAULT_METRICS_TYPE = "init";
-  public static readonly ID = "metrics";
+  public static readonly TYPE = "metrics";
 
   protected publisher?: MetricsPublisher;
   protected configuration?: ServiceConfiguration;
   private readonly defaultMetrics: Metrics[];
 
   constructor(appConfig: AeroGearConfiguration) {
-    const configuration = new ConfigurationHelper(appConfig).getConfigByType(MetricsService.ID);
+    const configuration = new ConfigurationHelper(appConfig).getConfigByType(MetricsService.TYPE);
     this.defaultMetrics = this.buildDefaultMetrics();
 
     if (configuration && configuration.length > 0) {

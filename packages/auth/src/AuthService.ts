@@ -8,12 +8,12 @@ import console from "loglevel";
  */
 export class AuthService {
 
-  public static readonly ID: string = "keycloak";
+  public static readonly TYPE: string = "keycloak";
 
   private auth: KeycloakInstance;
 
   constructor(appConfig: AeroGearConfiguration) {
-    const configuration = new ConfigurationHelper(appConfig).getConfigByType(AuthService.ID);
+    const configuration = new ConfigurationHelper(appConfig).getConfigByType(AuthService.TYPE);
     let internalConfig;
 
     if (!configuration || configuration.length === 0) {
