@@ -1,6 +1,6 @@
 {
   "name": "@aerogear/cordova-plugin-aerogear-metrics",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Cordova plugin for @aerogear/metrics",
   "cordova": {
     "id": "cordova-plugin-aerogear-metrics",
