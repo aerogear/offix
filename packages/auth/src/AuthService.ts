@@ -11,19 +11,19 @@ export class AuthService {
   public static readonly TYPE: string = "keycloak";
 
   private auth: KeycloakInstance;
+  private internalConfig: any;
 
   constructor(appConfig: AeroGearConfiguration) {
     const configuration = new ConfigurationHelper(appConfig).getConfigByType(AuthService.TYPE);
-    let internalConfig;
 
     if (!configuration || configuration.length === 0) {
       console.warn("Keycloak configuration is missing. Authentication will not work properly.");
-      internalConfig = {};
+      this.internalConfig = {};
     } else {
-      internalConfig = configuration[0].config;
+      this.internalConfig = configuration[0].config;
     }
 
-    this.auth = Keycloak(internalConfig);
+    this.auth = Keycloak(this.internalConfig);
   }
 
   /**
@@ -97,5 +97,11 @@ export class AuthService {
       return this.auth.realmAccess.roles;
     }
     return [];
+  }
+  /**
+   * Return the config used for the auth service
+   */
+  public getConfig(): string[] {
+    return this.internalConfig;
   }
 }
