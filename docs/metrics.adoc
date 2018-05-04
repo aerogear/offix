@@ -1,23 +1,9 @@
-= AeroGear Services Metrics SDK
+= AeroGear Services Metrics documentation
 
-Metrics is another service provided by Core and no further dependencies are required for its utilization.
-It provides registration of default metrics for the application such as App and Device information as well as supplying these services to other modules of the SDK.
+This document explains how to use the AeroGear Metrics SDK and integrate it with an App.
+Metrics are available automatically when metrics service is available in `mobile-services.json` configration.
 
-== Usage
-With an instance of the `MetricsService` class, it is possible to send a set of default metrics to an https://github.com/aerogear/aerogear-app-metrics[Aerogear App Metrics] instance.
 
-[source, javascript]
-----
-import { Metrics, MetricsService } from '@aerogear/core';
-import configuration from '../mobile-services.json';
-
-const metrics = new MetricsService(configuration);
-
-metrics.sendAppAndDeviceMetrics()
-  .then(() => {
-    console.info("Metrics registered successfully");
-  });
-----
 
 == Default metrics
 
