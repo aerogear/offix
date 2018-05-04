@@ -16,10 +16,18 @@ export class ConfigurationHelper {
   }
 
   /**
-   * Get a service configuration object, provided an existing id is given
-   * @param id string - The id of the service
+   * Get a service configuration object, provided an existing type is given
+   * @param type - The type of the service
    */
-  public getConfig(id: string): ServiceConfiguration | undefined {
+  public getConfigByType(type: string): ServiceConfiguration[] | undefined {
+    return this.configurations.filter(service => service.type.toLowerCase() === type.toLowerCase());
+  }
+
+  /**
+   * Get a service configuration object, provided an existing id is given
+   * @param id - unique id of the service
+   */
+  public getConfigById(id: string): ServiceConfiguration | undefined {
     return find(this.configurations, service => service.id.toLowerCase() === id.toLowerCase());
   }
 
