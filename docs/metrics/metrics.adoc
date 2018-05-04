@@ -1,9 +1,10 @@
 = AeroGear Services Metrics documentation
 
 This document explains how to use the AeroGear Metrics SDK and integrate it with an App.
-Metrics are available automatically when metrics service is available in `mobile-services.json` configration.
 
+== Usage
 
+Metrics are available automatically when metrics service is available in `mobile-services.json` configuration.
 
 == Default metrics
 
@@ -11,7 +12,7 @@ They are composed by the following fields:
 
 App metrics::
 - *App version*: The version of your App
-- *SDK version*: The version of the Aerogear JS SDK that is used
+- *SDK version*: The version of the AeroGear JS SDK that is used
 
 Device metrics::
 - *Platform*: The `cordova-` prefix along with the native platform being run on
