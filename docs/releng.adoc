@@ -41,14 +41,17 @@ lerna info Checking for prereleased packages...
 ? Select a new version (currently 0.0.0) Patch (0.0.1)
 
 Changes:
- - @aerogear/auth: 0.1.0 => 0.0.1
- - @aerogear/core: 0.1.0 => 0.0.1
+ - @aerogear/auth: 0.0.0 => 0.0.1
+ - @aerogear/core: 0.0.0 => 0.0.1
+ - @aerogear/cordova-plugin-aerogear-metrics: 0.0.0 => 0.0.1
 
 ? Are you sure you want to publish the above changes? Yes
 Repository is ready for release.
 --
 
 Use `git status` to verify that the version numbers in the correct files have been updated.
+
+**Note**: After the version number is updated, also update it manually in `packages/metrics-cordova/plugin.xml`.
 
 [source, bash]
 --
@@ -61,6 +64,8 @@ Changes not staged for commit:
         modified:   lerna.json
         modified:   packages/auth/package.json
         modified:   packages/core/package.json
+        modified:   packages/metrics-cordova/package.json
+        modified:   packages/metrics-cordova/plugin.xml
 --
 
 Commit and push these changes, then open a Pull Request to `master`.
