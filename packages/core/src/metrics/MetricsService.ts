@@ -1,10 +1,10 @@
 import console from "loglevel";
 import uuid from "uuid/v1";
 import { AeroGearConfiguration, ConfigurationHelper, ServiceConfiguration } from "../configuration";
+import { isMobileCordova, isNative } from "../PlatformUtils";
 import { Metrics, MetricsPayload } from "./model";
 import { CordovaAppMetrics } from "./platform/CordovaAppMetrics";
 import { CordovaDeviceMetrics } from "./platform/CordovaDeviceMetrics";
-import { isMobileCordova } from "./platform/PlatformUtils";
 import { MetricsPublisher, NetworkMetricsPublisher } from "./publisher";
 declare var window: any;
 
@@ -64,6 +64,12 @@ export class MetricsService {
     const { publisher } = this;
 
     if (!publisher) {
+      console.info("Metrics server configuration is missing. Metrics will be disabled.");
+      return Promise.resolve();
+    }
+
+    if (!isNative()) {
+      console.info("Metrics implementation is disabled for browser platform ");
       return Promise.resolve();
     }
 
@@ -114,6 +120,9 @@ export class MetricsService {
     if (isMobileCordova()) {
       return [new CordovaAppMetrics(), new CordovaDeviceMetrics()];
     } else {
+      // No support of other platforms in default implementation.
+      // Please extend MetricsService class.
+      console.warn("Current platform is not supported by metrics.");
       return [];
     }
   }

@@ -14,3 +14,10 @@ export const isMobileCordova = () => (
   // tslint:disable-next-line:no-string-literal
   !!(window["cordova"] || window["phonegap"] || window["PhoneGap"])
 );
+
+/**
+ * Detect if device is running in native environment as opposite to browser platform
+ *
+ * @return {boolean} Is running in native
+ */
+export const isNative = () => isMobileCordova();
