@@ -1,7 +1,7 @@
 {
   "name": "@aerogear/cordova-plugin-aerogear-security",
   "version": "0.1.0",
-  "description": "Cordova plugin for AeroGear Security",
+  "description": "Cordova plugin for self defence checks for Android and iOS devices.",
   "cordova": {
     "id": "cordova-plugin-aerogear-security",
     "platforms": []

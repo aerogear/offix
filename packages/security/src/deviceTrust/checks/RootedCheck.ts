@@ -6,7 +6,7 @@ declare var IRoot: any;
 export class RootedCheck implements SecurityCheck {
   public readonly name = "Rooted Check";
 
-  public test(): Promise<SecurityCheckResult> {
+  public check(): Promise<SecurityCheckResult> {
     return new Promise((resolve, reject) => {
       if (!IRoot) {
         reject(new Error("Could not find plugin IRoot."));

@@ -5,7 +5,7 @@ export class MockCheck implements SecurityCheck {
 
   constructor(readonly shouldPass: bool) {}
 
-  public test(): Promise<SecurityCheckResult> {
+  public check(): Promise<SecurityCheckResult> {
     return new Promise((resolve, reject) => {
       const checkResult: SecurityCheckResult = { name: this.name, passed: this.shouldPass };
       resolve(checkResult);

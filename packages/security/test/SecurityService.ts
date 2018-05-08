@@ -12,24 +12,18 @@ describe("SecurityService", () => {
     securityService = new SecurityService();
   });
 
-  describe("#test", () => {
+  describe("#check", () => {
 
-    it("should pass", (done) => {
+    it("should pass if the provided check passes", async () => {
       const mockCheck = new MockCheck(true);
-      securityService.check(mockCheck)
-      .then((result) => {
-        assert(result.passed);
-        expect(result.name).to.equal(mockCheck.name);
-        done();
-      }).catch((err) => done(err));
+      const result = await securityService.check(mockCheck);
+      assert(result.passed);
+      expect(result.name).to.equal(mockCheck.name);
     });
 
-    it("should fail", (done) => {
-      securityService.check(new MockCheck(false))
-      .then((result) => {
-        assert.isFalse(result.passed);
-        done();
-      }).catch((err) => done(err));
+    it("should fail if the provided check fails", async () => {
+      const result = await securityService.check(new MockCheck(false));
+      assert.isFalse(result.passed);
     });
  });
 });
