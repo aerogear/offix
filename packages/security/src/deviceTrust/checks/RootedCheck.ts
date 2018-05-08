@@ -14,7 +14,7 @@ export class RootedCheck implements SecurityCheck {
       }
 
       IRoot.isRooted((rooted: number) => {
-        const result = new SecurityCheckResult(this.name, !!rooted);
+        const result: SecurityCheckResult = { name: this.name, passed: !!rooted};
         return resolve(result);
       }, (error: string) => reject(error));
     });

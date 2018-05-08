@@ -15,10 +15,11 @@ describe("SecurityService", () => {
   describe("#test", () => {
 
     it("should pass", (done) => {
-      securityService.check(new MockCheck(true))
+      const mockCheck = new MockCheck(true);
+      securityService.check(mockCheck)
       .then((result) => {
         assert(result.passed);
-        expect(result.name).to.equal(MockCheck.name);
+        expect(result.name).to.equal(mockCheck.name);
         done();
       }).catch((err) => done(err));
     });

@@ -1,4 +1,4 @@
-export class SecurityCheckResult {
-
-  constructor(readonly name: string, readonly passed: boolean) {}
+export interface SecurityCheckResult {
+  name: string;
+  passed: bool;
 }
