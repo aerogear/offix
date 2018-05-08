@@ -12,11 +12,19 @@ import {
 } from "../../src/metrics";
 import testAerogearConfig from "../mobile-config.json";
 
+declare var global: any;
+
+global.window = {
+  cordova: {}
+};
+
 describe("MetricsService", () => {
-
-  const metricsConfig = new ConfigurationHelper(testAerogearConfig).getConfigByType(MetricsService.TYPE)[0];
+  const configs = new ConfigurationHelper(testAerogearConfig).getConfigByType(MetricsService.TYPE);
+  let metricsConfig = {};
+  if (configs) {
+    metricsConfig = configs[0];
+  }
   const storage = { clientId: null };
-
   let metricsService: MetricsService;
 
   beforeEach(() => {
