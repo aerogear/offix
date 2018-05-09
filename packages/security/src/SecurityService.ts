@@ -12,9 +12,18 @@ export class SecurityService {
   /**
    * Execute the provided security check and return the result.
    *
-   * @returns The result of the provided check.
+   * @returns A result for the security check provided.
    */
   public check(check: SecurityCheck): Promise<SecurityCheckResult> {
     return check.check();
+  }
+
+  /**
+   * Execute the provided security checks and return the results in an array.
+   *
+   * @returns An array of results for the provided checks.
+   */
+  public checkMany(...checks: SecurityCheck): Promise<SecurityCheckResult[]> {
+    return Promise.all(checks.map(check => check.check()));
   }
 }

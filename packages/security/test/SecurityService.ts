@@ -13,7 +13,6 @@ describe("SecurityService", () => {
   });
 
   describe("#check", () => {
-
     it("should pass if the provided check passes", async () => {
       const mockCheck = new MockCheck(true);
       const result = await securityService.check(mockCheck);
@@ -25,5 +24,19 @@ describe("SecurityService", () => {
       const result = await securityService.check(new MockCheck(false));
       assert.isFalse(result.passed);
     });
- });
+  });
+
+  describe("#checkMany", () => {
+    it("should allow for no arguments", async () => {
+      const results = await securityService.checkMany();
+      expect(results.length).to.equal(0);
+    });
+
+    it("should run multiple checks", async () => {
+      const results = await securityService.checkMany(new MockCheck(true), new MockCheck(false));
+      expect(results.length).to.equal(2);
+      assert(results[0].passed);
+      assert.isFalse(results[1].passed);
+    });
+  });
 });
