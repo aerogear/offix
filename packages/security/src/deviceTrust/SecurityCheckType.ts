@@ -1,7 +1,6 @@
 import { RootedCheck } from "./checks";
 
-export class SecurityCheckType {
-  public static readonly IsRooted = new RootedCheck();
-
-  private constructor() {}
-}
+/**
+ * Detect whether a device is rooted (Android) or Jailbroken (iOS).
+ */
+export const isRooted = new RootedCheck();
