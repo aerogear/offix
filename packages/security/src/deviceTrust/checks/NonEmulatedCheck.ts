@@ -15,7 +15,7 @@ export class NonEmulatedCheck implements SecurityCheck {
   }
 
   /**
-   * Determine whether an app is being run in an emulator or not.
+   * Determine whether a device is being run in an emulator or not.
    * If the device is *not* running in an emulator then the check will pass.
    *
    * @returns The result of the check.
