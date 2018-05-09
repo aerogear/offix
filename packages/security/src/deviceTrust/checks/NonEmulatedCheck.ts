@@ -6,6 +6,7 @@ declare var device: any;
 export class NonEmulatedCheck implements SecurityCheck {
   public readonly name = "Emulator Check";
 
+  /** Detects whether an app is being run in an emulator or not */
   public check(): Promise<SecurityCheckResult> {
     return new Promise((resolve, reject) => {
       if (!device) {
