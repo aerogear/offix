@@ -40,16 +40,19 @@ For an example of Keycloak configuration see the example apps link:../../example
 
 The Auth SDK will use this configuration to communicate with Keycloak.
 
-=== Auth Service Initialisation
+=== Auth Service Initialization
 The `AuthService` can be retrieved by importing it. The `mobile-services.json` file must also be referenced as it contains the Keycloak configuration.
 ----
-import { AuthService } from 'aerogear/auth';
+import { AuthService } from '@aerogear/auth';
+import { init } from '@aerogear/app';
+
 let mobileServiceConfig = require("../mobile-services.json");
+init(mobileServiceConfig);
 ----
 Before the `AuthService` can be used, the `init` function must be invoked once in an app.
 
 ----
-let authService = new AuthService(mobileServiceConfig);
+let authService = new AuthService();
 
 let initOptions = {onLoad: "login-required"};
 authService.init(initOptions)
@@ -57,7 +60,7 @@ authService.init(initOptions)
         // successful init & authentication
     })
     .catch((err) => {
-        // initialisation error
+        // initialization error
     });
 ----
 
