@@ -1,8 +1,6 @@
 import { assert, expect } from "chai";
-import { init } from "../src/index";
+import mocha from "mocha";
 
-describe("Test app", () => {
-  it("test api", () => {
-    assert(init);
-  });
+describe("Test app  module", () => {
+  it("Add tests here");
 });
