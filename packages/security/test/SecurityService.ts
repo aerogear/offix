@@ -2,7 +2,10 @@ import { assert, expect } from "chai";
 import mocha from "mocha";
 
 import { SecurityService } from "../src";
-import { MockCheck } from "./MockCheck";
+import mobileConfigJson from "./config/mobile-services.json";
+import { MockCheck } from "./mocks/MockCheck";
+import { MockMetricsPublisher } from "./mocks/MockMetricsPublisher";
+import { MockMetricsService } from "./mocks/MockMetricsService";
 
 let securityService: SecurityService;
 
@@ -37,6 +40,25 @@ describe("SecurityService", () => {
       expect(results.length).to.equal(2);
       assert(results[0].passed);
       assert.isFalse(results[1].passed);
+    });
+  });
+
+  describe("#publishCheckResults", () => {
+    it("should return null if no results are provided", async () => {
+      const publishResult = await securityService.publishCheckResultMetrics();
+      assert.isNull(publishResult);
+    });
+
+    it("should complete if custom metrics publisher is provided", async () => {
+      const mockMetricsService = new MockMetricsService(mobileConfigJson);
+      mockMetricsService.metricsPublisher = new MockMetricsPublisher();
+
+      const results = await securityService.checkMany(new MockCheck(true), new MockCheck(false));
+      const publishResult = await securityService.publishCheckResultMetrics(results, mockMetricsService);
+
+      expect(publishResult.resultMetrics.length).to.equal(2);
+      assert(publishResult.resultMetrics[0].passed);
+      assert.isFalse(publishResult.resultMetrics[1].passed);
     });
   });
 });
