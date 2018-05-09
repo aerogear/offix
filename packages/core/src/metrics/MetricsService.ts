@@ -21,19 +21,19 @@ export class MetricsService {
 
   protected publisher?: MetricsPublisher;
   protected configuration?: ServiceConfiguration;
-  private readonly defaultMetrics: Metrics[];
+  private readonly defaultMetrics?: Metrics[];
 
   constructor() {
     const configuration = coreInstance.getConfigByType(MetricsService.TYPE);
-    this.defaultMetrics = this.buildDefaultMetrics();
-
     if (configuration && configuration.length > 0) {
+      this.defaultMetrics = this.buildDefaultMetrics();
       this.configuration = configuration[0];
       this.publisher = new NetworkMetricsPublisher(this.configuration.url);
       this.sendInitialAppAndDeviceMetrics();
     } else {
-      console.warn("Metrics configuration is missing. Metrics will not be published to remote server.",
-      coreInstance);
+      console.warn("Metrics configuration is missing." +
+        "Metrics will not be published to remote server.",
+        coreInstance);
     }
   }
 
@@ -66,7 +66,7 @@ export class MetricsService {
 
     const { publisher } = this;
 
-    if (!publisher) {
+    if (!publisher || !this.defaultMetrics) {
       console.info("Metrics server configuration is missing. Metrics will be disabled.");
       return Promise.resolve();
     }
