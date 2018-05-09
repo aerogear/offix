@@ -1,1 +1,1 @@
-export { RootedCheck } from "./RootedCheck";
+export { NonRootedCheck } from "./NonRootedCheck";

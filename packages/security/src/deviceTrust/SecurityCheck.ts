@@ -1,7 +1,7 @@
 import { SecurityCheckResult } from "./SecurityCheckResult";
 
 /**
- * Interface for a device security single check that can be executed.
+ * Interface for a device security single security check that can be executed.
  */
 export interface SecurityCheck {
   /**
@@ -10,9 +10,9 @@ export interface SecurityCheck {
   name: string;
 
   /**
-   * Execute the check.
+   * Execute the security check.
    *
-   * @returns {Promise<SecurityCheckResult>}
+   * @returns The result of the check.
    */
   check(): Promise<SecurityCheckResult>;
 }
