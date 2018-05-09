@@ -14,6 +14,6 @@ export class NonEmulatedCheck implements SecurityCheck {
       }
       const result: SecurityCheckResult = { name: this.name, passed: !device.isVirtual };
       return resolve(result);
-    })
+    });
   }
 }
