@@ -23,7 +23,7 @@ export class SecurityService {
    *
    * @returns An array of results for the provided checks.
    */
-  public checkMany(...checks: SecurityCheck): Promise<SecurityCheckResult[]> {
+  public checkMany(...checks: SecurityCheck[]): Promise<SecurityCheckResult[]> {
     return Promise.all(checks.map(check => check.check()));
   }
 }
