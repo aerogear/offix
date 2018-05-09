@@ -6,7 +6,7 @@ declare let cordova: any;
 /**
  * A check for whether a debugger is attached to the current application
  */
-export class DebuggerCheck implements SecurityCheck {
+export class NonDebugCheck implements SecurityCheck {
     public readonly name = "Is Debugger Check";
 
     /**
@@ -14,7 +14,7 @@ export class DebuggerCheck implements SecurityCheck {
      */
     public check(): Promise<SecurityCheckResult> {
         return new Promise((resolve, reject) => {
-            if (!cordova.plugins.IsDebug) {
+            if (!cordova || !cordova.plugins || !cordova.plugins.IsDebug) {
                 reject(new Error("Could not find plugin isDebug."));
                 return;
             }

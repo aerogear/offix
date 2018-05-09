@@ -1,4 +1,4 @@
-import { NonEmulatedCheck, NonRootedCheck, DebuggerCheck } from "./checks";
+import { NonEmulatedCheck, NonRootedCheck, NonDebugCheck } from "./checks";
 
 /**
  * Detect whether a device is rooted (Android) or Jailbroken (iOS).
@@ -9,9 +9,9 @@ export const notRooted = new NonRootedCheck();
  */
 export const notEmulated = new NonEmulatedCheck();
   /**
-   * A check for whether a debugger is attached to the current application
+   * Detect whether a device is running in debug mode.
    */
-export const IsDebuggerConnected = new DebuggerCheck();
+export const notDebugMode = new NonDebugCheck();
 
 
 
