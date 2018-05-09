@@ -3,10 +3,23 @@ import { SecurityCheckResult } from "../SecurityCheckResult";
 
 declare var device: any;
 
+/**
+ * Security check to detect if a device is running in an emulator.
+ */
 export class NonEmulatedCheck implements SecurityCheck {
-  public readonly name = "Emulator Check";
+  /**
+   * Get the name of the check.
+   */
+  get name(): string {
+    return "Emulator Check";
+  }
 
-  /** Detects whether an app is being run in an emulator or not */
+  /**
+   * Determine whether an app is being run in an emulator or not.
+   * If the device is *not* running in an emulator then the check will pass.
+   *
+   * @returns The result of the check.
+   */
   public check(): Promise<SecurityCheckResult> {
     return new Promise((resolve, reject) => {
       if (!device) {
