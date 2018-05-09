@@ -1,6 +1,8 @@
 import console from "loglevel";
 import uuid from "uuid/v1";
-import { AeroGearConfiguration, ConfigurationHelper, ServiceConfiguration } from "../configuration";
+import { AeroGearConfiguration, ServiceConfiguration } from "../config";
+import { coreInstance } from "../Core";
+
 import { isMobileCordova, isNative } from "../PlatformUtils";
 import { Metrics, MetricsPayload } from "./model";
 import { CordovaAppMetrics } from "./platform/CordovaAppMetrics";
@@ -21,8 +23,8 @@ export class MetricsService {
   protected configuration?: ServiceConfiguration;
   private readonly defaultMetrics: Metrics[];
 
-  constructor(appConfig: AeroGearConfiguration) {
-    const configuration = new ConfigurationHelper(appConfig).getConfigByType(MetricsService.TYPE);
+  constructor() {
+    const configuration = coreInstance.getConfigByType(MetricsService.TYPE);
     this.defaultMetrics = this.buildDefaultMetrics();
 
     if (configuration && configuration.length > 0) {
@@ -30,7 +32,8 @@ export class MetricsService {
       this.publisher = new NetworkMetricsPublisher(this.configuration.url);
       this.sendInitialAppAndDeviceMetrics();
     } else {
-      console.warn("Metrics configuration is missing. Metrics will not be published to remote server.");
+      console.warn("Metrics configuration is missing. Metrics will not be published to remote server.",
+      coreInstance);
     }
   }
 

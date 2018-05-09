@@ -2,7 +2,7 @@ import { assert } from "chai";
 import mocha from "mocha";
 import * as mockttp from "mockttp";
 import uuid from "uuid/v1";
-import { ConfigurationParser, ServiceConfiguration } from "../../../src/configuration";
+import { ServiceConfiguration } from "../../../src/config";
 import {
   Metrics,
   MetricsPayload,

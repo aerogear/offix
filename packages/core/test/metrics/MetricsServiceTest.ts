@@ -2,7 +2,8 @@ import { assert, expect } from "chai";
 import mocha from "mocha";
 import sinon from "sinon";
 import uuid from "uuid/v1";
-import { ConfigurationHelper, ServiceConfiguration } from "../../src/configuration";
+import { ServiceConfiguration } from "../../src/config";
+import { coreInstance } from "../../src/Core";
 import {
   Metrics,
   MetricsPayload,
@@ -19,16 +20,15 @@ global.window = {
 };
 
 describe("MetricsService", () => {
-  const configs = new ConfigurationHelper(testAerogearConfig).getConfigByType(MetricsService.TYPE);
-  let metricsConfig = {};
-  if (configs) {
-    metricsConfig = configs[0];
-  }
+  coreInstance.init(testAerogearConfig);
+  const configs = coreInstance.getConfigByType(MetricsService.TYPE);
+  const metricsConfig = configs[0];
+
   const storage = { clientId: null };
   let metricsService: MetricsService;
 
   beforeEach(() => {
-    metricsService = new DummyMetricsService(testAerogearConfig);
+    metricsService = new DummyMetricsService();
     storage.clientId = null;
   });
 
@@ -41,15 +41,11 @@ describe("MetricsService", () => {
       assert.equal(url, publisher.url);
     });
 
-    it("should publish default metrics");
-
     it("should not throw an error when not being able to publish default metrics", () => {
-      const test = () => new MockMetricsService(testAerogearConfig);
+      const test = () => new MockMetricsService();
 
       expect(test).to.not.throw();
     });
-
-    it("should create Android and iOS default metrics when in a Cordova app");
 
   });
 
