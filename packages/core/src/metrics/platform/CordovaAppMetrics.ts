@@ -26,7 +26,8 @@ export class CordovaAppMetrics implements Metrics {
       .then(results => ({
         appId: results[0],
         appVersion: results[1],
-        sdkVersion: version
+        sdkVersion: version,
+        framework: "cordova"
       }));
   }
 }
