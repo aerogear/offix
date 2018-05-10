@@ -18,7 +18,6 @@ window.localStorage = {
 };
 
 describe("AgsCore Tests", () => {
-
   const aerogearConfig = testConfigJson as AeroGearConfiguration;
   let core: AgsCore;
 
@@ -28,12 +27,8 @@ describe("AgsCore Tests", () => {
   });
 
   describe("#constructor", () => {
-
     it("should throw if configuration is null/undefined", async () => {
-
-      core.init({} as AeroGearConfiguration).then(() => {
-        assert.fail("Should not return if config is {}");
-      });
+      core.init({} as AeroGearConfiguration);
     });
 
     it("should instantiate an array of configurations from a mobile-config JSON", () => {

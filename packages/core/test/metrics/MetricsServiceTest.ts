@@ -13,11 +13,29 @@ import {
 } from "../../src/metrics";
 import testAerogearConfig from "../mobile-config.json";
 
-declare var global: any;
+global.window = {};
 
-global.window = {
-  cordova: {}
+window.device = {};
+window.cordova = {
+
+  getAppVersion: {
+    getPackageName: () => {
+      console.info("");
+    },
+    getVersionNumber: () => {
+      console.info("");
+    }
+  }
 };
+window.localStorage = {
+  getItem: () => {
+    console.info("");
+  },
+  setItem: () => {
+    console.info("");
+  }
+};
+
 
 describe("MetricsService", () => {
   coreInstance.init(testAerogearConfig);
