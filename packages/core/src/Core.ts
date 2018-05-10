@@ -16,15 +16,12 @@ export class AgsCore {
    *
    * @param config configuration that should be injected to all available SDK's
    */
-  public init(config: AeroGearConfiguration): Promise<void> {
-    return new Promise((resolve, reject) => {
-      if (!config || !config.services || config.services.length === 0) {
-        return reject("Invalid configuration format for AeroGear SDK");
-      }
-      this.configurations = config.services;
-      this.metrics = new MetricsService();
-      return resolve();
-    });
+  public init(config: AeroGearConfiguration): void {
+    if (!config || !config.services || config.services.length === 0) {
+      return console.error("Invalid configuration format for AeroGear SDK");
+    }
+    this.configurations = config.services;
+    this.metrics = new MetricsService();
   }
 
   /**
