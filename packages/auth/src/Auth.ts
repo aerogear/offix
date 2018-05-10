@@ -4,9 +4,10 @@ import { KeycloakError, KeycloakInitOptions, KeycloakInstance, KeycloakProfile, 
 import console from "loglevel";
 
 /**
+ * AeroGear Auth SDK.
  * Wrapper class for {Keycloak.KeycloakInstance}
  */
-export class AuthService {
+export class Auth {
 
   public static readonly TYPE: string = "keycloak";
 
@@ -14,7 +15,7 @@ export class AuthService {
   private internalConfig: any;
 
   constructor() {
-    const configuration = coreInstance.getConfigByType(AuthService.TYPE);
+    const configuration = coreInstance.getConfigByType(Auth.TYPE);
     if (!configuration || configuration.length === 0) {
       console.warn("Keycloak configuration is missing. Authentication will not work properly.");
       this.internalConfig = {};

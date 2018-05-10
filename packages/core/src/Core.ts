@@ -9,21 +9,21 @@ import { MetricsService } from "./metrics";
 export class AgsCore {
 
   public configurations?: ServiceConfiguration[];
-  private metrics?: MetricsService;
+  public metrics?: MetricsService;
+
   /**
    * Initialize all AeroGear services SDK's
    *
    * @param config configuration that should be injected to all available SDK's
    */
   public init(config: AeroGearConfiguration): Promise<void> {
-    if (!config || !config.services || config.services.length === 0) {
-      return Promise.reject("Invalid configuration format");
-    }
-    this.configurations = config.services;
-
     return new Promise((resolve, reject) => {
+      if (!config || !config.services || config.services.length === 0) {
+        return reject("Invalid configuration format for AeroGear SDK");
+      }
+      this.configurations = config.services;
       this.metrics = new MetricsService();
-      resolve();
+      return resolve();
     });
   }
 
@@ -48,6 +48,7 @@ export class AgsCore {
     }
     console.error("Configuration not initialized.");
   }
+
 }
 
 export let coreInstance = new AgsCore();

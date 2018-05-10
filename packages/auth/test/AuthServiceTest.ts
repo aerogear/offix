@@ -1,5 +1,5 @@
 import { assert, expect } from "chai";
 
-describe("AuthService test", () => {
+describe("Auth test", () => {
   it("needs some tests ;)");
 });
