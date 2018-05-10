@@ -1,7 +1,7 @@
 {
   "name": "@aerogear/app",
-  "version": "0.2.1",
-  "description": "",
+  "version": "0.2.1-alpha.81e3b443",
+  "description": "Aero Gear SDK application module",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
   "scripts": {
@@ -18,7 +18,7 @@
     "aerogear",
     "aerogear services"
   ],
-  "author": "AeroGear",
+  "author": "Aero Gear",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/aerogear/aerogear-js-sdk/issues"

@@ -41,18 +41,18 @@ For an example of Keycloak configuration see the example apps link:../../example
 The Auth SDK will use this configuration to communicate with Keycloak.
 
 === Auth Service Initialization
-The `AuthService` can be retrieved by importing it. The `mobile-services.json` file must also be referenced as it contains the Keycloak configuration.
+The `Auth` can be retrieved by importing it. The `mobile-services.json` file must also be referenced as it contains the Keycloak configuration.
 ----
-import { AuthService } from '@aerogear/auth';
+import { Auth } from '@aerogear/auth';
 import { init } from '@aerogear/app';
 
 let mobileServiceConfig = require("../mobile-services.json");
 init(mobileServiceConfig);
 ----
-Before the `AuthService` can be used, the `init` function must be invoked once in an app.
+Before the `Auth` can be used, the `init` function must be invoked once in an app.
 
 ----
-let authService = new AuthService();
+let authService = new Auth();
 
 let initOptions = {onLoad: "login-required"};
 authService.init(initOptions)
@@ -73,7 +73,7 @@ By default, the `check-sso` option is used. To enable the `login-required` actio
 authService.init({onLoad: "login-required"})
 ```
 
-*Note*: Initialising the `AuthService` will also perform the authentication action.
+*Note*: Initialising the `Auth` will also perform the authentication action.
 
 *Note*: In AngularJS, it is necessary to initialise the Auth SDK before bootstrapping Angular to prevent Redirect looping issues after authentication.
 An example of how to perform this in Angular 4 is available in the Aerogear Cordova Showcase App's https://github.com/aerogear/cordova-showcase-template/blob/master/src/app/main.ts[main.ts].

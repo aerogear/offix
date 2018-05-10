@@ -25,6 +25,9 @@
     "url": "https://github.com/aerogear/aerogear-js-sdk/issues"
   },
   "homepage": "https://github.com/aerogear/aerogear-js-sdk#readme",
+  "peerDependencies": {
+    "@aerogear/core": "0.2.1"
+  },
   "devDependencies": {
     "mocha": "^5.1.1",
     "@types/chai": "^4.1.3",
