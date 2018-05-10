@@ -1,9 +1,10 @@
+import console from "loglevel";
 import { AppMetrics, Metrics } from "../model";
 
 // tslint:disable-next-line:no-var-requires
 const version = require("../../../package.json").version;
 
-declare var cordova: any;
+declare var window: any;
 
 export class CordovaAppMetrics implements Metrics {
 
@@ -17,7 +18,10 @@ export class CordovaAppMetrics implements Metrics {
    * @returns {Promise<AppMetrics>} A promise containing the app metrics
    */
   public collect(): Promise<AppMetrics> {
-    const app = cordova.getAppVersion;
+    if (!window && !window.cordova && !window.cordova.getAppVersion) {
+      return Promise.reject("Missing required plugin to collect metrics");
+    }
+    const app = window.cordova.getAppVersion;
 
     return Promise.all([
       app.getPackageName(),
