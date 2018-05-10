@@ -1,4 +1,4 @@
-import { coreInstance, ServiceConfiguration } from "@aerogear/core";
+import { INSTANCE, ServiceConfiguration } from "@aerogear/core";
 import Keycloak from "keycloak-js";
 import { KeycloakError, KeycloakInitOptions, KeycloakInstance, KeycloakProfile, KeycloakPromise } from "keycloak-js";
 import console from "loglevel";
@@ -15,7 +15,7 @@ export class Auth {
   private internalConfig: any;
 
   constructor() {
-    const configuration = coreInstance.getConfigByType(Auth.TYPE);
+    const configuration = INSTANCE.getConfigByType(Auth.TYPE);
     if (!configuration || configuration.length === 0) {
       console.warn("Keycloak configuration is missing. Authentication will not work properly.");
       this.internalConfig = {};

@@ -1,7 +1,7 @@
 import console from "loglevel";
 import uuid from "uuid/v1";
 import { AeroGearConfiguration, ServiceConfiguration } from "../config";
-import { coreInstance } from "../Core";
+import { INSTANCE } from "../Core";
 
 import { isMobileCordova, isNative } from "../PlatformUtils";
 import { Metrics, MetricsPayload } from "./model";
@@ -25,7 +25,7 @@ export class MetricsService {
   private readonly defaultMetrics?: Metrics[];
 
   constructor() {
-    const configuration = coreInstance.getConfigByType(MetricsService.TYPE);
+    const configuration = INSTANCE.getConfigByType(MetricsService.TYPE);
     if (configuration && configuration.length > 0) {
       this.defaultMetrics = this.buildDefaultMetrics();
       this.configuration = configuration[0];

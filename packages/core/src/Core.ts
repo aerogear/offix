@@ -48,4 +48,4 @@ export class AgsCore {
 
 }
 
-export let coreInstance = new AgsCore();
+export let INSTANCE = new AgsCore();

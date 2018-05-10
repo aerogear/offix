@@ -3,7 +3,7 @@ import mocha from "mocha";
 import sinon from "sinon";
 import uuid from "uuid/v1";
 import { ServiceConfiguration } from "../../src/config";
-import { coreInstance } from "../../src/Core";
+import { INSTANCE } from "../../src/Core";
 import {
   Metrics,
   MetricsPayload,
@@ -36,10 +36,9 @@ window.localStorage = {
   }
 };
 
-
 describe("MetricsService", () => {
-  coreInstance.init(testAerogearConfig);
-  const configs = coreInstance.getConfigByType(MetricsService.TYPE);
+  INSTANCE.init(testAerogearConfig);
+  const configs = INSTANCE.getConfigByType(MetricsService.TYPE);
   const metricsConfig = configs[0];
 
   const storage = { clientId: null };

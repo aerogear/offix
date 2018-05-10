@@ -1,6 +1,6 @@
 {
   "name": "@aerogear/app",
-  "version": "0.2.1-alpha.81e3b443",
+  "version": "0.2.1",
   "description": "Aero Gear SDK application module",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
