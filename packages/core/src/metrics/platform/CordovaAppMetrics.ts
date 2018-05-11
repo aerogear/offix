@@ -5,6 +5,7 @@ import { AppMetrics, Metrics } from "../model";
 const version = require("../../../package.json").version;
 
 declare var window: any;
+declare var document: any;
 
 export class CordovaAppMetrics implements Metrics {
 
@@ -18,20 +19,29 @@ export class CordovaAppMetrics implements Metrics {
    * @returns {Promise<AppMetrics>} A promise containing the app metrics
    */
   public collect(): Promise<AppMetrics> {
-    if (!window || !window.cordova || !window.cordova.getAppVersion) {
-      return Promise.reject("Missing required plugin to collect metrics");
-    }
-    const app = window.cordova.getAppVersion;
-
-    return Promise.all([
-      app.getPackageName(),
-      app.getVersionNumber()
-    ])
-      .then(results => ({
-        appId: results[0],
-        appVersion: results[1],
-        sdkVersion: version,
-        framework: "cordova"
-      }));
+    return new Promise((resolve, reject) => {
+      if (!document) {
+        return Promise.reject("Metrics not running in browser environment");
+      }
+      document.addEventListener("deviceready", () => {
+        if (!window || !window.cordova || !window.cordova.getAppVersion) {
+          return reject("Missing required plugin to collect metrics");
+        }
+        const app = window.cordova.getAppVersion;
+        Promise.all([
+          app.getPackageName(),
+          app.getVersionNumber()
+        ])
+          .then(function(results) {
+            const payload = {
+              appId: results[0],
+              appVersion: results[1],
+              sdkVersion: version,
+              framework: "cordova"
+            };
+            resolve(payload);
+          });
+      }, false);
+    });
   }
 }
