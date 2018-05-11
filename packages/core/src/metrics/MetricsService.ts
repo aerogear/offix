@@ -1,6 +1,8 @@
 import console from "loglevel";
 import uuid from "uuid/v1";
-import { AeroGearConfiguration, ConfigurationHelper, ServiceConfiguration } from "../configuration";
+import { AeroGearConfiguration, ServiceConfiguration } from "../config";
+import { INSTANCE } from "../Core";
+
 import { isMobileCordova, isNative } from "../PlatformUtils";
 import { Metrics, MetricsPayload } from "./model";
 import { CordovaAppMetrics } from "./platform/CordovaAppMetrics";
@@ -9,7 +11,8 @@ import { MetricsPublisher, NetworkMetricsPublisher } from "./publisher";
 declare var window: any;
 
 /**
- * AeroGear Services Metrics SDK
+ * AeroGear Metrics SDK
+ * Provides internal api for metrics that are sent to metrics server.
  */
 export class MetricsService {
 
@@ -19,18 +22,18 @@ export class MetricsService {
 
   protected publisher?: MetricsPublisher;
   protected configuration?: ServiceConfiguration;
-  private readonly defaultMetrics: Metrics[];
+  private readonly defaultMetrics?: Metrics[];
 
-  constructor(appConfig: AeroGearConfiguration) {
-    const configuration = new ConfigurationHelper(appConfig).getConfigByType(MetricsService.TYPE);
-    this.defaultMetrics = this.buildDefaultMetrics();
-
+  constructor() {
+    const configuration = INSTANCE.getConfigByType(MetricsService.TYPE);
     if (configuration && configuration.length > 0) {
+      this.defaultMetrics = this.buildDefaultMetrics();
       this.configuration = configuration[0];
       this.publisher = new NetworkMetricsPublisher(this.configuration.url);
-      this.sendInitialAppAndDeviceMetrics();
+      this.sendAppAndDeviceMetrics();
     } else {
-      console.warn("Metrics configuration is missing. Metrics will not be published to remote server.");
+      console.warn("Metrics configuration is missing." +
+        "Metrics will not be published to remote server.");
     }
   }
 
@@ -40,14 +43,6 @@ export class MetricsService {
 
   get metricsPublisher(): MetricsPublisher | undefined {
     return this.publisher;
-  }
-
-  /**
-   * Collect metrics for all active metrics collectors
-   * Send data using metrics publisher
-   */
-  public sendAppAndDeviceMetrics(): Promise<any> {
-    return this.publish(MetricsService.DEFAULT_METRICS_TYPE, []);
   }
 
   /**
@@ -63,7 +58,7 @@ export class MetricsService {
 
     const { publisher } = this;
 
-    if (!publisher) {
+    if (!publisher || !this.defaultMetrics) {
       console.info("Metrics server configuration is missing. Metrics will be disabled.");
       return Promise.resolve();
     }
@@ -91,9 +86,19 @@ export class MetricsService {
   }
 
   /**
+   * Collect metrics for all active metrics collectors
+   * Send data using metrics publisher
+   */
+  protected sendAppAndDeviceMetrics(): Promise<any> {
+    return this.publish(MetricsService.DEFAULT_METRICS_TYPE, []).catch((error) => {
+      console.error("Error when sending metrics", JSON.stringify(error, Object.getOwnPropertyNames(error)));
+    });
+  }
+
+  /**
    * Generates or gets mobile client id
    */
-  public getClientId(): string {
+  protected getClientId(): string {
     let clientId = this.getSavedClientId();
 
     if (!clientId) {
@@ -125,15 +130,5 @@ export class MetricsService {
       console.warn("Current platform is not supported by metrics.");
       return [];
     }
-  }
-
-  /**
-   * Sends default metrics for first time
-   */
-  protected sendInitialAppAndDeviceMetrics(): void {
-    this.sendAppAndDeviceMetrics()
-      .catch((error) => {
-        console.error("Error when sending metrics", JSON.stringify(error, Object.getOwnPropertyNames(error)));
-      });
   }
 }

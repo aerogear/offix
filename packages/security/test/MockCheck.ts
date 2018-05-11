@@ -3,7 +3,7 @@ import { SecurityCheck, SecurityCheckResult } from "../src";
 export class MockCheck implements SecurityCheck {
   public name = "Mock check";
 
-  constructor(readonly shouldPass: bool) {}
+  constructor(readonly shouldPass: boolean) {}
 
   public check(): Promise<SecurityCheckResult> {
     return new Promise((resolve, reject) => {
