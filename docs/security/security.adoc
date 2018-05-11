@@ -1,0 +1,84 @@
+= Cordova Security - Self Defence Checks
+
+As part of the Aerogear JS SDK module, there is a security self defence check package for cordova projects. This package offers multiple security checks that can be used to analyse the security of the device. This can be useful for apps to detect vulnerablities and react accordingly. For example, if the app detects security issue *X* then do *Y*, where *X* could be no lock screen is set and *Y* is show a system prompt to setup the lock screen.
+
+This package offers:
+
+1. A suite of self-defence checks to detect a compromised environment.
+2. Integration with the AeroGear Services Metrics SDK to report self-defence checks data.
+3. Interfaces to access the results of self-defence checks and take appropriate action in application code.
+
+== Installation
+
+The `@aerogear/security` module is available via NPM:
+
+---
+npm install @aerogear/security@latest --save
+---
+
+After node module installation via NPM use the Cordova CLI to add `cordova-plugin-aerogear-security`
+
+---
+cordova plugin add cordova-plugin-aerogear-security
+---
+
+This will install the packages needed with their native dependencies from the NPM registry and properly link all native dependencies to the project's cordova Platforms.
+
+== Usage
+
+To begin using the self defence checks in your app, you'll need to import the following `SecurityService`, `SecurityCheckType` and `SecurityCheckResult` from `@aerogear/security`:
+
+---
+import { SecurityService, SecurityCheckType, SecurityCheckResult } from '@aerogear/security'; 
+---
+
+You will also need to retrieve an instance of `SecurityService`:
+
+---
+const securityService = new SecurityService();
+---
+
+=== Provided Self Defence Checks
+
+The following are the self defence checks provided by the SDK.
+
+*Important* A successful `check` means that the environment the application is running in is more secure than otherwise, as opposed to signalling if a certain feature is enabled.
+
+For example, a check for whether the device is Rooted should return `true` when it is *not* rooted, since this would be the more secure condition.
+
+==== Emulator Detection Check (notEmulated)
+
+To detect if the app is being run on an emulator the `notEmulated` function can be used. If the device is *not* running in an emulator then the check will pass.
+
+==== Root Access Detection Check (notRooted)
+
+To help prevent your app running in a device that has been rooted/jailbroken the `notRooted` function can be used. If the device is *not* rooted/jailbroken then the check will pass.
+
+==== Debug Mode Check (notDebugMode)
+
+To detect if the app is runing in debug mode the `notDebugMode` function can be used. If the device is *not* running in debug mode then the check will pass.
+
+==== Device Lock Check (hasDeviceLock)
+
+To detect if a device has a lock screen set the `hasDeviceLock` function can be used. If the device *has* a screen lock enabled then this check will pass
+
+
+=== Invoking a Single Self Defence Check
+
+The `SecurityService.check` function is used to invoke a check which returns a promise of type `SecurityCheckResult`. The `check` function takes a paramater of type `SecurityCheckType` which will specify the type of check to be invoked:
+
+---
+securityService.check(SecurityCheckType.notEmulated).then((result) => {
+    // -> add your logic to handle the result
+})
+---
+
+=== Invoking Multiple Self Defence Checks
+
+To chain multiple checks together the `SecurityService.checkMany` function is used. This returns an array of `SecurityCheckResult` objects in the order they`re provided in:
+
+---
+const checkResults = await securityService.checkMany(SecurityCheckType.notRooted, SecurityCheckType.notEmulated);
+---
+
+=== Reporting Self Defence Checks Results Via the Metrics Service
