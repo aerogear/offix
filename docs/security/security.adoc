@@ -12,9 +12,10 @@ This package offers:
 
 The `@aerogear/security` module is available via NPM:
 
----
+[source,javascript]
+--
 npm install @aerogear/security@latest --save
----
+--
 
 After node module installation via NPM use the Cordova CLI to add `cordova-plugin-aerogear-security`
 
@@ -28,15 +29,17 @@ This will install the packages needed with their native dependencies from the NP
 
 To begin using the self defence checks in your app, you'll need to import the following `SecurityService`, `SecurityCheckType` and `SecurityCheckResult` from `@aerogear/security`:
 
----
+[source,javascript]
+--
 import { SecurityService, SecurityCheckType, SecurityCheckResult } from '@aerogear/security'; 
----
+--
 
 You will also need to retrieve an instance of `SecurityService`:
 
----
+[source,javascript]
+--
 const securityService = new SecurityService();
----
+--
 
 === Provided Self Defence Checks
 
@@ -67,18 +70,20 @@ To detect if a device has a lock screen set the `hasDeviceLock` function can be 
 
 The `SecurityService.check` function is used to invoke a check which returns a promise of type `SecurityCheckResult`. The `check` function takes a paramater of type `SecurityCheckType` which will specify the type of check to be invoked:
 
----
+[source,javascript]
+--
 securityService.check(SecurityCheckType.notEmulated).then((result) => {
     // -> add your logic to handle the result
 })
----
+--
 
 === Invoking Multiple Self Defence Checks
 
 To chain multiple checks together the `SecurityService.checkMany` function is used. This returns an array of `SecurityCheckResult` objects in the order they`re provided in:
 
----
+[source,javascript]
+--
 const checkResults = await securityService.checkMany(SecurityCheckType.notRooted, SecurityCheckType.notEmulated);
----
+--
 
 === Reporting Self Defence Checks Results Via the Metrics Service
