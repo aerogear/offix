@@ -19,9 +19,10 @@ npm install @aerogear/security@latest --save
 
 After node module installation via NPM use the Cordova CLI to add `cordova-plugin-aerogear-security`
 
----
+[source,javascript]
+--
 cordova plugin add cordova-plugin-aerogear-security
----
+--
 
 This will install the packages needed with their native dependencies from the NPM registry and properly link all native dependencies to the project's cordova Platforms.
 
