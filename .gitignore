@@ -8,6 +8,13 @@ yarn-error.log*
 lerna-debug.log*
 dump.rdb
 
+# antora
+
+/docs/build/
+/docs/node_modules/
+/docs/.cache/
+
+
 # Runtime data
 pids
 *.pid
