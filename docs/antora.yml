@@ -1,5 +1,5 @@
 name: cordova
-title: AeroGear CI/CD Mobile Service
+title: AeroGear Cordova SDK
 version: 'latest'
 start_ROOT: ROOT:index.adoc
 nav:
