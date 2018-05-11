@@ -13,7 +13,7 @@ export class CordovaDeviceMetrics implements Metrics {
    * @returns {Promise<DeviceMetrics>} The device metrics
    */
   public collect(): Promise<DeviceMetrics> {
-    if (!window && !window.device) {
+    if (!window || !window.device) {
       return Promise.reject("Missing required plugin to collect metrics");
     }
     return Promise.resolve({

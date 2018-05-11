@@ -18,7 +18,7 @@ export class CordovaAppMetrics implements Metrics {
    * @returns {Promise<AppMetrics>} A promise containing the app metrics
    */
   public collect(): Promise<AppMetrics> {
-    if (!window && !window.cordova && !window.cordova.getAppVersion) {
+    if (!window || !window.cordova || !window.cordova.getAppVersion) {
       return Promise.reject("Missing required plugin to collect metrics");
     }
     const app = window.cordova.getAppVersion;
