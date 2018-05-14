@@ -66,6 +66,7 @@ To detect if the app is runing in debug mode the `notDebugMode` function can be 
 
 To detect if a device has a lock screen set the `hasDeviceLock` function can be used. If the device *has* a screen lock enabled then this check will pass.
 
+NOTE: For iOS devices this check requires iOS 8 or above.
 
 === Invoking a Single Self Defence Check
 
