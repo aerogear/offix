@@ -33,17 +33,8 @@ export class DeviceLockCheck implements SecurityCheck {
           reject(new Error("Could not find plugin PinCheck"));
         }
 
-        cordova.plugins.PinCheck.isPinSetup((pinIsSet: string) => {
-          const result: SecurityCheckResult = { name: this.name, passed: !!pinIsSet };
-          return resolve(result);
-        }, (error: Error) => {
-          if (error.toString() === "NO_PIN_SETUP") {
-            const result: SecurityCheckResult = { name: this.name, passed: !error };
-            return resolve(result);
-          } else {
-            return reject(error);
-          }
-        });
+        cordova.plugins.PinCheck.isPinSetup(() => resolve({ name: this.name, passed: true }),
+          () => resolve({ name: this.name, passed: false }));
       }, false);
     });
   }
