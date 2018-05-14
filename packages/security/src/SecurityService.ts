@@ -1,6 +1,6 @@
-import { AeroGearConfiguration, MetricsPublisher, MetricsService } from "@aerogear/core";
+import { INSTANCE } from "@aerogear/core";
 import { SecurityCheck, SecurityCheckResult } from "./deviceTrust";
-import { CheckResultMetrics } from "./metrics";
+import { CheckResultMetrics, SecurityCheckResultMetric } from "./metrics";
 
 /**
  * Service module for handling performing and reporting  possible security
@@ -22,6 +22,17 @@ export class SecurityService {
   }
 
   /**
+   * Execute the provided security check and publish the result as a metric.
+   *
+   * @return The sent metric for the check result.
+   */
+  public checkAndPublishMetric(check: SecurityCheck): Promise<SecurityCheckResultMetric> {
+    return this.check(check)
+    .then(checkResult => this.publishCheckResultMetrics(checkResult))
+    .then(checkMetrics => checkMetrics[0]);
+  }
+
+  /**
    * Execute the provided security checks and return the results in an array.
    *
    * @returns An array of results for the provided checks.
@@ -31,19 +42,33 @@ export class SecurityService {
   }
 
   /**
+   * Execute the provided security checks and publish the results as metrics.
+   *
+   * @return An array of the sent metrics.
+   */
+  public checkManyAndPublishMetric(...checks: SecurityCheck[]): Promise<SecurityCheckResultMetric[]> {
+    return this.checkMany(...checks)
+    .then(checkResults => this.publishCheckResultMetrics(...checkResults));
+  }
+
+  /**
    * Publish metrics results from self defence checks to a metrics service.
    * Application configuration must be provided to the security service on
    * creation, otherwise metrics sending will always fail.
    *
    * @return Promise with the result of the underlying metrics publisher.
    */
-  public publishCheckResultMetrics(results: SecurityCheckResult[], metricsService: MetricsService): Promise<any>  {
+  private publishCheckResultMetrics(...results: SecurityCheckResult[]): Promise<SecurityCheckResultMetric[]>  {
     if (!results || results.length === 0) {
-      return Promise.resolve(null);
+      return Promise.resolve([]);
     }
 
     const checkResultMetrics = new CheckResultMetrics(results);
-    return metricsService.publish(SecurityService.METRICS_KEY, [checkResultMetrics])
-    .then(() => checkResultMetrics);
+    if (!INSTANCE || !INSTANCE.metrics) {
+      return Promise.reject(new Error("Metrics module not found."));
+    }
+
+    return INSTANCE.metrics.publish(SecurityService.METRICS_KEY, [checkResultMetrics])
+    .then(() => checkResultMetrics.collect());
   }
 }

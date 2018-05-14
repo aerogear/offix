@@ -1,11 +1,10 @@
-import { Metrics } from "@aerogear/core";
 import { SecurityCheckResult } from "../deviceTrust";
 import { SecurityCheckResultMetric } from "./SecurityCheckResultMetric";
 
 /**
  * Collects metrics for security check results.
  */
-export class CheckResultMetrics implements Metrics {
+export class CheckResultMetrics {
   public readonly identifier = "security";
 
   private readonly resultMetrics: SecurityCheckResultMetric[];
