@@ -28,8 +28,8 @@ export class SecurityService {
    */
   public checkAndPublishMetric(check: SecurityCheck): Promise<SecurityCheckResultMetric> {
     return this.check(check)
-    .then(checkResult => this.publishCheckResultMetrics(checkResult))
-    .then(checkMetrics => checkMetrics[0]);
+      .then(checkResult => this.publishCheckResultMetrics(checkResult))
+      .then(checkMetrics => checkMetrics[0]);
   }
 
   /**
@@ -48,7 +48,7 @@ export class SecurityService {
    */
   public checkManyAndPublishMetric(...checks: SecurityCheck[]): Promise<SecurityCheckResultMetric[]> {
     return this.checkMany(...checks)
-    .then(checkResults => this.publishCheckResultMetrics(...checkResults));
+      .then(checkResults => this.publishCheckResultMetrics(...checkResults));
   }
 
   /**
@@ -69,6 +69,6 @@ export class SecurityService {
     }
 
     return INSTANCE.metrics.publish(SecurityService.METRICS_KEY, [checkResultMetrics])
-    .then(() => checkResultMetrics.collect());
+      .then(() => checkResultMetrics.collect());
   }
 }
