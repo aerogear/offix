@@ -1,6 +1,6 @@
 {
   "name": "@aerogear/app",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Aero Gear SDK application module",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -25,12 +25,12 @@
   },
   "homepage": "https://github.com/aerogear/aerogear-js-sdk#readme",
   "devDependencies": {
-    "mocha": "^5.1.1",
     "@types/chai": "^4.1.3",
     "chai": "^4.1.2",
+    "mocha": "^5.1.1",
     "nyc": "^11.7.1"
   },
   "dependencies": {
-    "@aerogear/core": "0.2.1"
+    "@aerogear/core": "0.3.0"
   }
 }

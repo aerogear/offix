@@ -65,7 +65,7 @@ export class SecurityService {
 
     const checkResultMetrics = new CheckResultMetrics(results);
     if (!INSTANCE || !INSTANCE.metrics) {
-      return Promise.reject(new Error("Metrics module not found."));
+      return Promise.reject(new Error("Metrics configuration is not available."));
     }
 
     return INSTANCE.metrics.publish(SecurityService.METRICS_KEY, [checkResultMetrics])
