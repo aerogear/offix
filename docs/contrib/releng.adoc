@@ -50,8 +50,7 @@ Repository is ready for release.
 --
 
 Use `git status` to verify that the version numbers in the correct files have been updated.
-
-**Note**: After the version number is updated, also update it manually in `packages/metrics-cordova/plugin.xml`.
+This includes the `version` attribute in the `plugin.xml` files for packages that contain cordova plugins.
 
 [source, bash]
 --
