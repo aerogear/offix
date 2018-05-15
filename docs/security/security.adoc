@@ -89,3 +89,24 @@ const checkResults = await securityService.checkMany(SecurityCheckType.notRooted
 --
 
 === Reporting Self Defence Checks Results Via the Metrics Service
+
+The results of security checks can be published to the AeroGear metrics service.
+
+To perform a single check and publish its result to the metrics service:
+
+[source,javascript]
+----
+securityService.checkAndPublishMetric(SecurityCheckType.notRooted).then((result) => {
+    // -> Handle the security result metric.
+    // Security result metric structure: { id: 'isRooted', name: 'isRooted', passed: true }.
+})
+----
+
+To perform multiple checks and publish their results to the metrics service:
+
+[source,javascript]
+----
+securityService.checkManyAndPublishMetric(SecurityCheckType.notRooted, SecurityCheckType.notEmulated).then((result) => {
+    // -> Handle the array of security result metrics
+})
+----

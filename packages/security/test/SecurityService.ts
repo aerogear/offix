@@ -2,7 +2,8 @@ import { assert, expect } from "chai";
 import mocha from "mocha";
 
 import { SecurityService } from "../src";
-import { MockCheck } from "./MockCheck";
+import mobileConfigJson from "./config/mobile-services.json";
+import { MockCheck } from "./mocks/MockCheck";
 
 let securityService: SecurityService;
 

@@ -33,5 +33,8 @@
     "@types/chai": "^4.1.3",
     "chai": "^4.1.2",
     "nyc": "^11.7.1"
+  },
+  "dependencies": {
+    "@aerogear/core": "^0.2.1"
   }
 }
