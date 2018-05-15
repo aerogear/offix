@@ -2,6 +2,7 @@ import { SecurityCheck } from "../SecurityCheck";
 import { SecurityCheckResult } from "../SecurityCheckResult";
 
 declare var device: any;
+declare var document: any;
 
 /**
  * Security check to detect if a device is running in an emulator.
@@ -22,12 +23,18 @@ export class NonEmulatedCheck implements SecurityCheck {
    */
   public check(): Promise<SecurityCheckResult> {
     return new Promise((resolve, reject) => {
-      if (!device) {
-        reject(new Error("Could not find plugin device."));
-        return;
+      if (!document) {
+        reject(new Error("Cordova not fully loaded"));
       }
-      const result: SecurityCheckResult = { name: this.name, passed: !device.isVirtual };
-      return resolve(result);
+
+      document.addEventListener("deviceready", () => {
+        if (!device) {
+          reject(new Error("Could not find plugin device."));
+          return;
+        }
+        const result: SecurityCheckResult = { name: this.name, passed: !device.isVirtual };
+        return resolve(result);
+      }, false);
     });
   }
 }

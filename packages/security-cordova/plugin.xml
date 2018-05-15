@@ -13,5 +13,5 @@
 
     <dependency id="cordova-plugin-is-debug" version="^1.0.0" />
 
-
+    <dependency id="cordova-plugin-pincheck" version="0.0.5" />
 </plugin>
