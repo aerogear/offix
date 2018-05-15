@@ -28,3 +28,7 @@ You can reach us at [#aerogear](ircs://chat.freenode.net:6697/aerogear) on [Free
 ## Publishing a new version of the SDK
 
 Documentation for preparing a release for the JS sdk is available [here](./docs/releng.adoc)
+
+## JS SDK contributor documentation
+
+See [Contributor documentation](./docs/contrib)

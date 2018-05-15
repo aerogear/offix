@@ -17,19 +17,20 @@ AeroGear SDK for JavaScript, Apache Cordova and React Native.
 ## Documentation
 
 1. [End User Getting Started Guide](./docs/getting-started.adoc)
-1. [Service Contributor Guide](./docs/contributing-guide.adoc)
+
 
 ### List of SDKs
 
 AeroGear Services SDK consist of set of separate SDKs
 
-- [Core](./docs/core/core.adoc): Common base for all SDKs
 - [Auth](./docs/auth/README.adoc): Mobile Auth SDK
 - [Metrics](./docs/metrics/metrics.adoc): Mobile application metrics SDK
+- [Security](./docs/security/security.adoc): Mobile Security Checks SDK
 
 ## Contributing
 
 See [General Contributing Guide](./CONTRIBUTING.md)
+For implementation details see [Service Contributor Guide](./docs/contrib/contributing-guide.adoc)
 
 ## License
 
