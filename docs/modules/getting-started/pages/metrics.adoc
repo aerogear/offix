@@ -1,0 +1,47 @@
+== AeroGear JavaScript Metrics SDK
+
+Mobile metrics SDK to collect analytics and useful data from an AeroGear app.
+
+=== Installation
+
+In order to collect and display the metrics from you application, you'll need to:
+
+1. Add the AeroGear Metrics plugin for Cordova:
++
+----
+cordova plugin add @aerogear/cordova-plugin-aerogear-metrics
+----
+
+2. Have an instance of Metrics. Follow the next steps to set it up using Openshift:
+
+.. If you do not have mobile services enabled in your Openshift cluster follow this link:https://github.com/aerogear/mobile-core/blob/master/docs/walkthroughs/local-setup.adoc[Local Setup] guide.
+
+.. Navigate to your Openshift cluster and in the Service Catalog search for the Metrics service.
+
+.. Click on the Metrics service and you will be prompted to fill in details about your app.  For now you can leave these as they are.  Navigate through the setup and click Create.
+This will provision the Metrics service in the project you specified.
+
+3. Generate again the app configuration file to use during xref:getting-started.adoc[app initialization]. For an example of Metrics configuration see the example app's link:https://github.com/aerogear/cordova-showcase-template/blob/master/src/mobile-services.json[mobile-services.json].
+
+=== Usage
+
+As part of the SDK initialization, the relevant metrics will be sent to the server automatically. Metrics is designed to send the data only on app startup, hence it shouldn't (and can't) be used manually.
+
+Even if these requirements are not met, or the configuration does not include a metrics service, AeroGear will try to log all available metrics in the console.
+
+=== Provided Metrics
+
+The default metrics contain app and device metrics and possibly other types will be added in the future.
+
+A client id and a timestamp are added to the top level of the metrics object for categorization and visualization purposes.
+The client id will be generated and stored on the device when the app is started the first time.
+
+App Metrics::
+* *App ID*: The package name of your App
+* *App version*: The version of your App as defined in the top level `build.gradle`
+* *SDK version*: The version of the Aerogear SDK that is used
+* *Framework*: Framework used for development ("cordova" in this case)
+
+Device Metrics::
+* *Platform*: Hardcoded to `cordova`
+* *Platform Version*: The API level of the device

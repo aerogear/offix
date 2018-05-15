@@ -1,6 +1,6 @@
-= Cordova Security - Self Defence Checks
+== AeroGear JavaScript Security SDK
 
-AeroGear JavaScript SDK offers a set of security features that will make sure that your application is meeting the modern OWASP recomendations. All security features are available as part of the separate `@aerogear/security`. This package offers multiple security checks that can be used to analyse the security of the device. This can be useful for developers to detect vulnerablities and react accordingly. For example, if the app detects security issue *X* then do *Y*, where *X* could be no lock screen is set and *Y* is show a system prompt to setup the lock screen.
+AeroGear JavaScript SDK offers a set of security features that will make sure that your application is meeting the modern OWASP recomendations. All security features are available as part of the separate package `@aerogear/security`. This package offers multiple security checks that can be used to analyse the security of the device. This can be useful for developers to detect vulnerabilities and react accordingly. For example, if the app detects security issue *X* then do *Y*, where *X* could be no lock screen is set and *Y* is show a system prompt to setup the lock screen.
 
 This package offers:
 
@@ -10,19 +10,17 @@ This package offers:
 
 == Installation
 
-The `@aerogear/security` module is available via NPM:
+1. Install the Security package, available via NPM:
++
+----
+npm install @aerogear/security
+----
 
-[source,javascript]
---
-npm install @aerogear/security@latest --save
---
-
-After node module installation via NPM use the Cordova CLI to add `cordova-plugin-aerogear-security`
-
-[source,javascript]
---
+2. Add the AeroGear Security plugin for Cordova:
++
+----
 cordova plugin add cordova-plugin-aerogear-security
---
+----
 
 This will install the packages needed with their native dependencies from the NPM registry and properly link all native dependencies to the project's cordova Platforms.
 
@@ -31,16 +29,16 @@ This will install the packages needed with their native dependencies from the NP
 To begin using the self defence checks in your app, you'll need to import `SecurityService` from `@aerogear/security`:
 
 [source,javascript]
---
+----
 import { SecurityService } from '@aerogear/security'; 
---
+----
 
 You will also need to retrieve an instance of `SecurityService`:
 
 [source,javascript]
---
+----
 const securityService = new SecurityService();
---
+----
 
 == Provided Self Defence Checks
 
@@ -73,20 +71,20 @@ NOTE: For iOS devices this check requires iOS 8 or above.
 The `SecurityService.check` function is used to invoke a check which returns a promise of type `SecurityCheckResult`. The `check` function takes a paramater of type `SecurityCheckType` which will specify the type of check to be invoked:
 
 [source,javascript]
---
+----
 securityService.check(SecurityCheckType.notEmulated).then((result) => {
     // -> add your logic to handle the result
 })
---
+----
 
 === Invoking Multiple Self Defence Checks
 
 To chain multiple checks together the `SecurityService.checkMany` function is used. This returns an array of `SecurityCheckResult` objects in the order they`re provided in:
 
 [source,javascript]
---
+----
 const checkResults = await securityService.checkMany(SecurityCheckType.notRooted, SecurityCheckType.notEmulated);
---
+----
 
 === Reporting Self Defence Checks Results Via the Metrics Service
 
