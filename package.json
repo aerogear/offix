@@ -16,6 +16,7 @@
     "updateXml": "lerna exec -- \\$LERNA_ROOT_PATH/scripts/updatePluginXmlVersion.sh",
     "publish:canary": "lerna publish --canary",
     "publish": "lerna exec npm publish",
+    "link": "lerna exec npm link .",
     "clean": "npm-run-all clean:*",
     "clean:packages": "lerna run clean",
     "clean:dependencies": "lerna clean --yes",
