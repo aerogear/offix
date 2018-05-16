@@ -8,7 +8,7 @@ This package offers:
 2. Integration with the AeroGear Services Metrics SDK to report self-defence checks data.
 3. Callbacks to access the results of self-defence checks and take appropriate action in application code.
 
-== Installation
+=== Installation
 
 1. Install the Security package, available via NPM:
 +
@@ -24,7 +24,7 @@ cordova plugin add cordova-plugin-aerogear-security
 
 This will install the packages needed with their native dependencies from the NPM registry and properly link all native dependencies to the project's cordova Platforms.
 
-== Usage
+=== Usage
 
 To begin using the self defence checks in your app, you'll need to import `SecurityService` from `@aerogear/security`:
 
@@ -40,7 +40,7 @@ You will also need to retrieve an instance of `SecurityService`:
 const securityService = new SecurityService();
 ----
 
-== Provided Self Defence Checks
+=== Provided Self Defence Checks
 
 The following are the self defence checks provided by the SDK.
 
@@ -65,6 +65,25 @@ To detect if the app is runing in debug mode the `notDebugMode` function can be 
 To detect if a device has a lock screen set the `hasDeviceLock` function can be used. If the device *has* a screen lock enabled then this check will pass.
 
 NOTE: For iOS devices this check requires iOS 8 or above.
+
+=== Custom Self Defence Checks
+
+Custom self defence checks can be used with the Security SDK. Custom self defence checks must implement the link:https://github.com/aerogear/aerogear-js-sdk/blob/master/packages/security/src/deviceTrust/SecurityCheck.ts[SecurityCheck] interface.
+
+An example of a custom check structure in TypeScript:
+
+[source,typescript]
+----
+class CustomSecurityCheck implements SecurityCheck {
+    get name(): string {
+        return "My Custom Check";
+    }
+
+    public check(): Promise<SecurityCheckResult> {
+        // Perform check logic.
+    }
+}
+----
 
 === Invoking a Single Self Defence Check
 
