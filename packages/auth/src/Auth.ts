@@ -23,6 +23,7 @@ export class Auth {
       this.internalConfig = configuration[0].config;
       // create a resource field containing the clientID. The keycloak JS adapter expects a clientId.
       this.internalConfig.clientId = this.internalConfig.resource;
+      this.internalConfig.url = configuration[0].url
     }
     this.auth = Keycloak(this.internalConfig);
   }
