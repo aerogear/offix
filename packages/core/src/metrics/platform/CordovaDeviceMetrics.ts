@@ -20,7 +20,10 @@ export class CordovaDeviceMetrics implements Metrics {
       }
       document.addEventListener("deviceready", () => {
         if (!window || !window.device) {
-          return reject("Missing required plugin to collect metrics");
+          return reject(
+            "Missing required plugin to collect metrics. Verify the " +
+            "@aerogear/cordova-plugin-aerogear-metrics plugin is installed."
+          );
         }
         return resolve({
           platform: window.device.platform,
