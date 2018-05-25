@@ -31,7 +31,7 @@ To begin using the self defence checks in your app, you'll need to import `Secur
 
 [source,javascript]
 ----
-import { SecurityService } from '@aerogear/security'; 
+import { SecurityService } from '@aerogear/security';
 ----
 
 You will also need to retrieve an instance of `SecurityService`:
@@ -109,6 +109,8 @@ const checkResults = await securityService.checkMany(SecurityCheckType.notRooted
 === Reporting Self Defence Checks Results Via the Metrics Service
 
 The results of security checks can be published to the AeroGear metrics service.
+
+This functionality requires the cordova plugin @aerogear/cordova-plugin-aerogear-security to be installed.
 
 To perform a single check and publish its result to the metrics service:
 
