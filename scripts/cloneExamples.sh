@@ -1,7 +1,7 @@
 set -eo pipefail
 
 echo "Development script that clones example application to be available in the repository"
-git clone git@github.com:aerogear/cordova-showcase-template.git cordova-example
+git clone git@github.com:aerogear/cordova-showcase-template.git cordova-example-prod
 
 cd cordova-example
 npm install
