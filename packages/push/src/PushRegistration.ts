@@ -1,7 +1,6 @@
 
 import { AeroGearConfiguration, INSTANCE, isCordovaAndroid, isCordovaIOS } from "@aerogear/core";
 import axios from "axios";
-import { PushConfig } from "./PushConfig";
 
 declare var window: any;
 declare var document: any;
