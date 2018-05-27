@@ -1,4 +1,4 @@
-## AeroGear Metrics Cordova plugin
+## AeroGear Push Cordova plugin
 
 Wrapper for existing push plugin phonegap-plugin-push
 

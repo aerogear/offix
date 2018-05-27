@@ -43,8 +43,8 @@ export class PushRegistration {
       return Promise.reject("Registration requires cordova plugin. Verify the " +
         "@aerogear/cordova-plugin-aerogear-metrics plugin is installed.");
     }
-    if (!this.pushConfig && !this.pushConfig.config && !this.pushConfig.url) {
-      Promise.reject("UPS registration: configuration is invalid");
+    if (!this.pushConfig || !this.pushConfig.config || !this.pushConfig.url) {
+      return Promise.reject("UPS registration: configuration is invalid");
     }
     let platformConfig;
     const url = this.pushConfig.url;
@@ -60,8 +60,9 @@ export class PushRegistration {
       return Promise.reject("UPS registration: Platform is configured." +
         "Please add UPS variant and generate mobile - config.json again");
     }
-
-    const authToken = window.atob(`${platformConfig.variantId}:${platformConfig.variantSecret}`);
+    const encodedVariant = window.btoa(platformConfig.variantId);
+    const encodedSecret = window.btoa(platformConfig.variantSecret);
+    const authToken = `${encodedVariant}:${encodedSecret}`;
     const postData = {
       "deviceToken": deviceToken,
       "deviceType": window.device.model,
@@ -76,7 +77,7 @@ export class PushRegistration {
       headers: { "Authorization": `Basic ${authToken}` }
     });
     return new Promise((resolve, reject) => {
-      return axios.post(PushRegistration.API_PATH, postData).then(() => resolve()).catch(reject);
+      return instance.post(PushRegistration.API_PATH, postData).then(() => resolve()).catch(reject);
     });
   }
 }
