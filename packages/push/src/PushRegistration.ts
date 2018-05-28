@@ -36,9 +36,9 @@ export class PushRegistration {
    *
    * @param deviceToken token that will be sent to Unified Push server
    * @param alias device alias used for registration
-   * @param categories coma separate list of categories that device should be register to.
+   * @param categories array list of categories that device should be register to.
    */
-  public register(deviceToken: string, alias: string = "", categories: string = ""): Promise<void> {
+  public register(deviceToken: string, alias: string = "", categories: string[] = []): Promise<void> {
     if (!window || !window.device) {
       return Promise.reject("Registration requires cordova plugin. Verify the " +
         "@aerogear/cordova-plugin-aerogear-metrics plugin is installed.");
@@ -60,9 +60,7 @@ export class PushRegistration {
       return Promise.reject("UPS registration: Platform is configured." +
         "Please add UPS variant and generate mobile - config.json again");
     }
-    const encodedVariant = window.btoa(platformConfig.variantId);
-    const encodedSecret = window.btoa(platformConfig.variantSecret);
-    const authToken = `${encodedVariant}:${encodedSecret}`;
+    const authToken = window.btoa(`${platformConfig.variantId}:${platformConfig.variantSecret}`);
     const postData = {
       "deviceToken": deviceToken,
       "deviceType": window.device.model,
