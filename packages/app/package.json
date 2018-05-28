@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "types/index.d.ts",
   "scripts": {
-    "clean": "del coverage src/**/*.js src/**/*.map test/**/*.js test/**/*.map",
+    "clean": "del coverage src/**/*.js src/**/*.map test/**/*.js test/**/*.map dist types",
     "build": "tsc",
     "watch": "tsc --watch",
     "test": "nyc mocha"
