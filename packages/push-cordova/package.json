@@ -1,0 +1,25 @@
+{
+  "name": "@aerogear/cordova-plugin-aerogear-push",
+  "version": "0.3.0",
+  "description": "Cordova plugin for AeroGear Push Notifications",
+  "cordova": {
+    "id": "cordova-plugin-aerogear-push",
+    "platforms": []
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aerogear/aerogear-js-sdk.git"
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "Aerogear <aerogear@googlegroups.com>",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://issues.jboss.org/projects/AGCORDOVA/issues"
+  },
+  "homepage": "https://github.com/aerogear/aerogear-js-sdk#readme"
+}

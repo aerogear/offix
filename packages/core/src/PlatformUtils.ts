@@ -21,3 +21,11 @@ export const isMobileCordova = () => (
  * @return {boolean} Is running in native
  */
 export const isNative = () => isMobileCordova();
+
+export const isCordovaAndroid = () => (
+  window.device.platform === "Android"
+);
+
+export const isCordovaIOS = () => (
+  window.device.platform === "iOS"
+);

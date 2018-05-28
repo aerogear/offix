@@ -1,7 +1,7 @@
 {
-  "name": "@aerogear/app",
+  "name": "@aerogear/push",
   "version": "0.3.0",
-  "description": "Aero Gear SDK application module",
+  "description": "AeroGear Unified Push Registration SDK",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
   "scripts": {
@@ -31,6 +31,7 @@
     "nyc": "^11.7.1"
   },
   "dependencies": {
-    "@aerogear/core": "0.3.0"
+    "@aerogear/core": "0.3.0",
+    "axios": "^0.18.0"
   }
 }

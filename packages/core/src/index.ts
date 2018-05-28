@@ -10,3 +10,5 @@ console.setDefaultLevel(console.levels.WARN);
 export * from "./config";
 
 export * from "./Core";
+
+export * from "./PlatformUtils";
