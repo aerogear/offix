@@ -16,7 +16,7 @@ export class CordovaDeviceMetrics implements Metrics {
   public collect(): Promise<DeviceMetrics> {
     return new Promise((resolve, reject) => {
       if (!document) {
-        return Promise.reject("Metrics not running in browser environment");
+        return Promise.reject(new Error("Metrics not running in browser environment"));
       }
       document.addEventListener("deviceready", () => {
         if (!window || !window.device) {

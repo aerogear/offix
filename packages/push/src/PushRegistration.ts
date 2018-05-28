@@ -19,7 +19,7 @@ export class PushRegistration {
   public static readonly TYPE: string = "push";
   public static readonly API_PATH: string = "rest/registry/device";
 
-  private pushConfig: any;
+  public pushConfig: any;
 
   constructor() {
     const configuration = INSTANCE.getConfigByType(PushRegistration.TYPE);
@@ -40,11 +40,14 @@ export class PushRegistration {
    */
   public register(deviceToken: string, alias: string = "", categories: string[] = []): Promise<void> {
     if (!window || !window.device) {
-      return Promise.reject("Registration requires cordova plugin. Verify the " +
-        "@aerogear/cordova-plugin-aerogear-metrics plugin is installed.");
+      return Promise.reject(new Error("Registration requires cordova plugin. Verify the " +
+        "@aerogear/cordova-plugin-aerogear-metrics plugin is installed."));
     }
     if (!this.pushConfig || !this.pushConfig.config || !this.pushConfig.url) {
-      return Promise.reject("UPS registration: configuration is invalid");
+      return Promise.reject(new Error("UPS registration: configuration is invalid"));
+    }
+    if (!deviceToken ) {
+      return Promise.reject(new Error("Device token should not be empty"));
     }
     let platformConfig;
     const url = this.pushConfig.url;
@@ -53,12 +56,12 @@ export class PushRegistration {
     } else if (isCordovaIOS()) {
       platformConfig = this.pushConfig.config.ios;
     } else {
-      return Promise.reject("UPS registration: Platform is not supported.");
+      return Promise.reject(new Error("UPS registration: Platform is not supported."));
     }
 
     if (!platformConfig) {
-      return Promise.reject("UPS registration: Platform is configured." +
-        "Please add UPS variant and generate mobile - config.json again");
+      return Promise.reject(new Error("UPS registration: Platform is configured." +
+        "Please add UPS variant and generate mobile - config.json again"));
     }
     const authToken = window.btoa(`${platformConfig.variantId}:${platformConfig.variantSecret}`);
     const postData = {
