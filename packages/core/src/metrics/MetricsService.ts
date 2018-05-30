@@ -59,13 +59,15 @@ export class MetricsService {
     const { publisher } = this;
 
     if (!publisher || !this.defaultMetrics) {
-      console.info("Metrics server configuration is missing. Metrics will be disabled.");
-      return Promise.resolve();
+      const err = new Error("Metrics server configuration is missing. Metrics will be disabled.");
+      console.warn(err);
+      return Promise.reject(err);
     }
 
     if (!isNative()) {
-      console.info("Metrics implementation is disabled for browser platform ");
-      return Promise.resolve();
+      const err = new Error("Metrics implementation is disabled for browser platform.");
+      console.warn(err);
+      return Promise.reject(err);
     }
 
     const payload: MetricsPayload = {
