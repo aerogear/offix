@@ -26,7 +26,7 @@ export class CordovaDeviceMetrics implements Metrics {
           );
         }
         return resolve({
-          platform: window.device.platform,
+          platform: window.device.platform.toLowerCase(),
           platformVersion: window.device.version,
           device: window.device.model
         });
