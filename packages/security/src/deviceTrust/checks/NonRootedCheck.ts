@@ -1,10 +1,9 @@
 import { SecurityCheck } from "../SecurityCheck";
 import { SecurityCheckResult } from "../SecurityCheckResult";
+import { isCordovaAndroid } from "@aerogear/core";
 
 declare var IRoot: any;
 declare var document: any;
-declare var device: any;
-declare var platform: any;
 
 /**
  * Check to detect whether a device is rooted (Android) or jailbroken (iOS).
@@ -30,11 +29,11 @@ export class NonRootedCheck implements SecurityCheck {
       }
 
       document.addEventListener("deviceready", () => {
-        if (!IRoot || !device) {
-          reject(new Error("Could not find plugin for Root Check"));
+        if (!IRoot) {
+          reject(new Error("Could not find plugin IRoot"));
           return;
         }
-        const isRootedCheck = device.platform === "Android" ? IRoot.isRootedRedBeer : IRoot.isRooted;
+        const isRootedCheck = isCordovaAndroid ? IRoot.isRootedRedBeer : IRoot.isRooted;
         isRootedCheck((rooted: number) => {
           const result: SecurityCheckResult = { name: this.name, passed: !rooted };
           return resolve(result);
