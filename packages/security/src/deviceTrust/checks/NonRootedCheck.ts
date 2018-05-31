@@ -3,6 +3,8 @@ import { SecurityCheckResult } from "../SecurityCheckResult";
 
 declare var IRoot: any;
 declare var document: any;
+declare var device: any;
+declare var platform: any;
 
 /**
  * Check to detect whether a device is rooted (Android) or jailbroken (iOS).
@@ -28,12 +30,12 @@ export class NonRootedCheck implements SecurityCheck {
       }
 
       document.addEventListener("deviceready", () => {
-        if (!IRoot) {
-          reject(new Error("Could not find plugin IRoot."));
+        if (!IRoot || !device) {
+          reject(new Error("Could not find plugin for Root Check"));
           return;
         }
-
-        IRoot.isRooted((rooted: number) => {
+        const isRootedCheck = device.platform === "Android" ? IRoot.isRootedRedBeer : IRoot.isRooted;
+        isRootedCheck((rooted: number) => {
           const result: SecurityCheckResult = { name: this.name, passed: !rooted };
           return resolve(result);
         }, (error: string) => reject(error));
