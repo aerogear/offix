@@ -1,3 +1,4 @@
+import { isCordovaAndroid } from "@aerogear/core";
 import { SecurityCheck } from "../SecurityCheck";
 import { SecurityCheckResult } from "../SecurityCheckResult";
 
@@ -29,11 +30,11 @@ export class NonRootedCheck implements SecurityCheck {
 
       document.addEventListener("deviceready", () => {
         if (!IRoot) {
-          reject(new Error("Could not find plugin IRoot."));
+          reject(new Error("Could not find plugin IRoot"));
           return;
         }
-
-        IRoot.isRooted((rooted: number) => {
+        const isRootedCheck = isCordovaAndroid ? IRoot.isRootedRedBeer : IRoot.isRooted;
+        isRootedCheck((rooted: number) => {
           const result: SecurityCheckResult = { name: this.name, passed: !rooted };
           return resolve(result);
         }, (error: string) => reject(error));
