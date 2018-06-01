@@ -1,6 +1,6 @@
+import { isCordovaAndroid } from "@aerogear/core";
 import { SecurityCheck } from "../SecurityCheck";
 import { SecurityCheckResult } from "../SecurityCheckResult";
-import { isCordovaAndroid } from "@aerogear/core";
 
 declare var IRoot: any;
 declare var document: any;
