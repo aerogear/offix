@@ -4,11 +4,15 @@
   "description": "AeroGear Unified Push Registration SDK",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
+  "author": "Aerogear <aerogear@googlegroups.com>",
   "scripts": {
     "clean": "del coverage src/**/*.js src/**/*.map test/**/*.js test/**/*.map dist types",
     "build": "tsc",
     "watch": "tsc --watch",
     "test": "nyc mocha"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "repository": {
     "type": "git",
@@ -16,12 +20,11 @@
   },
   "keywords": [
     "aerogear",
-    "aerogear services"
+    "ups"
   ],
-  "author": "Aero Gear",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/aerogear/aerogear-js-sdk/issues"
+    "url": "https://issues.jboss.org/projects/AGCORDOVA/issues"
   },
   "homepage": "https://github.com/aerogear/aerogear-js-sdk#readme",
   "devDependencies": {
