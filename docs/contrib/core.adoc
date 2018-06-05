@@ -25,7 +25,7 @@ cordova plugin add @aerogear/cordova-plugin-aerogear-metrics
 
 This will install the packages with these native dependencies from the NPM registry and properly link all native dependencies to the project's cordova Platforms.
 
-Refer to the link:./getting-started[Getting Started] guide for more information on installing the AeroGear SDK.
+Refer to the link:../modules/ROOT/pages/getting-started.adoc[Getting Started] guide for more information on installing the AeroGear SDK.
 
 == Usage
 
