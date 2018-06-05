@@ -52,8 +52,8 @@ jobs:
       - checkout
         # Allows us to authenticate with the npm registry
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-      - run: CI=true npm run prep-release
-      - run: TAG=$CIRCLE_TAG npm run validate-release
+      - run: CI=true npm run release:prep
+      - run: TAG=$CIRCLE_TAG npm run release:validate
       - run: npm run publish
 
 workflows:
