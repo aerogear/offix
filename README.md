@@ -23,14 +23,13 @@ To try out the latest release of the SDK go to our [Cordova Showcase Template Ap
 
 This Aerogear SDK consists of a set of Modules.
 
-- [Auth](./docs/modules/ROOT/pages/auth.adoc): Mobile Application Auth Module
-- [Metrics](./docs/modules/ROOT/pages/metrics.adoc): Mobile Application Metrics Module
-- [Security](./docs/modules/ROOT/pages/security.adoc): Mobile Application Security Module
+- [Auth](./docs/modules/ROOT/pages/using-auth-sdk.adoc): Mobile Application Auth Module
+- [Metrics](./docs/modules/ROOT/pages/using-metrics-sdk.adoc): Mobile Application Metrics Module
+- [Security](./docs/modules/ROOT/pages/adding-security-checks.adoc): Mobile Application Security Module
 
 ## Contributing
 
 - [General Contributing Guide](./CONTRIBUTING.md)
-- [Getting Started Guide](./docs/modules/ROOT/pages/getting-started.adoc)
 - [Service Contributor Guide](./docs/contrib/contributing-guide.adoc)
 
 ## License
