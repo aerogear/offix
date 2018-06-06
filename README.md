@@ -13,8 +13,6 @@
 | Issue tracker:  | https://issues.jboss.org/browse/AEROGEAR                        |
 | Mailing lists:  | [aerogear-dev](https://groups.google.com/forum/#!forum/aerogear) |
 
-AeroGear SDK for JavaScript, Apache Cordova and React Native.
-
 ## Showcase application
 
 To try out the latest release of the SDK go to our [Cordova Showcase Template Application](https://github.com/aerogear/cordova-showcase-template)
@@ -23,9 +21,9 @@ To try out the latest release of the SDK go to our [Cordova Showcase Template Ap
 
 This Aerogear SDK consists of a set of Modules.
 
-- [Auth](./docs/modules/ROOT/pages/using-auth-sdk.adoc): Mobile Application Auth Module
-- [Metrics](./docs/modules/ROOT/pages/using-metrics-sdk.adoc): Mobile Application Metrics Module
-- [Security](./docs/modules/ROOT/pages/adding-security-checks.adoc): Mobile Application Security Module
+- Auth - Mobile Application Auth Module
+- Metrics - Mobile Application Metrics Module
+- Security - Mobile Application Security Module
 
 ## Contributing
 
