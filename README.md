@@ -8,40 +8,31 @@
 | --------------- | ---------------------------------------------------------------- |
 | License:        | Apache License, Version 2.0                                      |
 | Build:          | NPM                                                              |
-| Issue tracker:  | https://issues.jboss.org/browse/AGCORDOVA                        |
-| Mailing lists:  | [aerogear-users](http://aerogear-users.1116366.n5.nabble.com/)   |
-|                 | [aerogear-dev](https://groups.google.com/forum/#!forum/aerogear) |
+| End User Documentation:  | https://docs.aerogear.org - Under construction - [Github Link](./docs/modules/ROOT/pages/)|
+| Community Documentation: | https://aerogear.org             |
+| Issue tracker:  | https://issues.jboss.org/browse/AEROGEAR                        |
+| Mailing lists:  | [aerogear-dev](https://groups.google.com/forum/#!forum/aerogear) |
 
-AeroGear SDK for JavaScript, Apache Cordova and React Native.
+## Showcase application
 
-## Documentation
+To try out the latest release of the SDK go to our [Cordova Showcase Template Application](https://github.com/aerogear/cordova-showcase-template)
 
-1. [End User Getting Started Guide](./docs/getting-started.adoc)
+### List of Modules
 
+This Aerogear SDK consists of a set of Modules.
 
-### List of SDKs
-
-AeroGear Services SDK consist of set of separate SDKs
-
-- [Auth](./docs/auth/README.adoc): Mobile Auth SDK
-- [Metrics](./docs/metrics/metrics.adoc): Mobile application metrics SDK
-- [Security](./docs/security/security.adoc): Mobile Security Checks SDK
+- Auth - Mobile Application Auth Module
+- Metrics - Mobile Application Metrics Module
+- Security - Mobile Application Security Module
 
 ## Contributing
 
-See [General Contributing Guide](./CONTRIBUTING.md)
-For implementation details see [Service Contributor Guide](./docs/contrib/contributing-guide.adoc)
+- [General Contributing Guide](./CONTRIBUTING.md)
+- [Service Contributor Guide](./docs/contrib/contributing-guide.adoc)
 
 ## License
 
  See [LICENSE file](./LICENSE)
-
-
-## Development
-
-If you would like to help develop AeroGear you can join our [developer's mailing list](https://groups.google.com/forum/#!forum/aerogear), join #aerogear on Freenode, or shout at us on Twitter @aerogears.
-
-Also takes some time and skim the [contributor guide](CONTRIBUTING.md)
 
 ## Questions?
 
@@ -49,4 +40,4 @@ Join our [user mailing list](https://groups.google.com/forum/#!forum/aerogear) f
 
 ## Found a bug?
 
-If you found a bug please create a ticket for us on [Jira](https://issues.jboss.org/browse/AGJS) with some steps to reproduce it.
+If you found a bug please create a ticket for us on [Jira](https://issues.jboss.org/browse/AEROGEAR) with some steps to reproduce it.
