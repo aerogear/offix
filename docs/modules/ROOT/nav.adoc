@@ -1,5 +1,5 @@
-
 * xref:getting-started.adoc[Getting Started]
-** xref:using-auth-sdk.adoc[Auth]
-** xref:adding-security-checks.adoc[Security]
-** xref:using-metrics-checks.adoc[Metrics]
+** xref:auth.adoc[Auth]
+** xref:security-checks.adoc[Security]
+** xref:metrics.adoc[Metrics]
+** xref:push.adoc[Push]
