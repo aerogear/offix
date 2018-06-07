@@ -19,11 +19,12 @@ To try out the latest release of the SDK go to our [Cordova Showcase Template Ap
 
 ### List of Modules
 
-This Aerogear SDK consists of a set of Modules.
+This Aerogear SDK consists of a set of SDK's.
 
-- Auth - Mobile Application Auth Module
-- Metrics - Mobile Application Metrics Module
-- Security - Mobile Application Security Module
+- Auth - Mobile Application Auth SDK
+- Metrics - Mobile Application Metrics SDK
+- Security - Mobile Application Security SDK
+- Push - Unified Push Server SDK
 
 ## Contributing
 
