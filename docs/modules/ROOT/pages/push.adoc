@@ -85,7 +85,7 @@ pushObject.on('registration').subscribe(data => {
 });
 
 // Notification handler
-PushService.pushObject.on('notification').subscribe(notification => {
+pushObject.on('notification').subscribe(notification => {
   // Handle notification here
 });
 ----
