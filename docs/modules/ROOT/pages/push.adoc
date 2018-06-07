@@ -74,6 +74,7 @@ const pushObject = new Push().init({
     }
 });
 
+// Registration handler
 pushObject.on('registration').subscribe(data => {
   // PushRegistration will handle the device registration with the Unifiedpush Server
   new PushRegistration().register(data.registrationId).then(() => {
@@ -81,6 +82,11 @@ pushObject.on('registration').subscribe(data => {
   }).catch(err => {
     // Error on device registration
   });
+});
+
+// Notification handler
+PushService.pushObject.on('notification').subscribe(notification => {
+  // Handle notification here
 });
 ----
 
