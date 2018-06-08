@@ -69,6 +69,6 @@ workflows:
             - build
           filters:
             tags:
-              only: /\d\.\d\.\d/
+              only: /.*/ # allow anything because tag syntax is validated as part of validate-release.sh
             branches:
               ignore: /.*/
