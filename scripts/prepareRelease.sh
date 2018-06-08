@@ -11,7 +11,7 @@ npm run test
 # don't run in CI
 if [ ! "$CI" = true ]; then
   lerna publish --skip-git --skip-npm
-  # npm run updateXml
+  npm run updateXml
 fi
 
 echo "Repository is ready for release."
