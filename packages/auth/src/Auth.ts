@@ -23,11 +23,11 @@ export class Auth {
       const serviceConfiguration: ServiceConfiguration = configuration[0];
       this.internalConfig = serviceConfiguration.config;
       // create a resource field containing the clientID. The keycloak JS adapter expects a clientId.
-      if (this.internalConfig.clientId === undefined){
+      if (!this.internalConfig.clientId) {
         this.internalConfig.clientId = this.internalConfig.resource;
       }
       // use the top level keycloak url in the mobile services json
-      this.internalConfig.url = serviceConfiguration.url
+      this.internalConfig.url = serviceConfiguration.url;
     }
     this.auth = Keycloak(this.internalConfig);
   }
