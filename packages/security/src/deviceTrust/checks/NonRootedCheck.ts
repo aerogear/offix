@@ -33,7 +33,7 @@ export class NonRootedCheck implements SecurityCheck {
           reject(new Error("Could not find plugin IRoot"));
           return;
         }
-        const isRootedCheck = isCordovaAndroid ? IRoot.isRootedRedBeer : IRoot.isRooted;
+        const isRootedCheck = isCordovaAndroid() ? IRoot.isRootedRedBeer : IRoot.isRooted;
         isRootedCheck((rooted: number) => {
           const result: SecurityCheckResult = { name: this.name, passed: !rooted };
           return resolve(result);
