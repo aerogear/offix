@@ -41,7 +41,7 @@ export class AgsCore {
    */
   public getConfigById(id: string): ServiceConfiguration | undefined {
     if (this.configurations) {
-      return find(this.configurations, service => !!service.type && service.id.toLowerCase() === id.toLowerCase());
+      return find(this.configurations, service => !!service.id && service.id.toLowerCase() === id.toLowerCase());
     }
     console.error("Configuration not initialized.");
   }
