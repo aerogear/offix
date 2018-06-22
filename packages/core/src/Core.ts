@@ -30,7 +30,7 @@ export class AgsCore {
    */
   public getConfigByType(type: string): ServiceConfiguration[] | undefined {
     if (this.configurations) {
-      return this.configurations.filter(service => service.type.toLowerCase() === type.toLowerCase());
+      return this.configurations.filter(service => service.type && service.type.toLowerCase() === type.toLowerCase());
     }
     console.error("Configuration not initialized.");
   }
@@ -41,7 +41,7 @@ export class AgsCore {
    */
   public getConfigById(id: string): ServiceConfiguration | undefined {
     if (this.configurations) {
-      return find(this.configurations, service => service.id.toLowerCase() === id.toLowerCase());
+      return find(this.configurations, service => !!service.id && service.id.toLowerCase() === id.toLowerCase());
     }
     console.error("Configuration not initialized.");
   }
