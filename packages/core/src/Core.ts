@@ -30,7 +30,12 @@ export class AgsCore {
    */
   public getConfigByType(type: string): ServiceConfiguration[] | undefined {
     if (this.configurations) {
-      return this.configurations.filter(service => service.type.toLowerCase() === type.toLowerCase());
+      return this.configurations.filter(service => {
+        if (!service.type) {
+          return false;
+        }
+        return service.type.toLowerCase() === type.toLowerCase()
+      });
     }
     console.error("Configuration not initialized.");
   }
