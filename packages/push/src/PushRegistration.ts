@@ -19,7 +19,7 @@ export class PushRegistration {
   public static readonly TYPE: string = "push";
   public static readonly API_PATH: string = "rest/registry/device";
 
-  public pushConfig: any;
+  private pushConfig: any;
 
   constructor() {
     const configuration = INSTANCE.getConfigByType(PushRegistration.TYPE);
@@ -80,5 +80,20 @@ export class PushRegistration {
     return new Promise((resolve, reject) => {
       return instance.post(PushRegistration.API_PATH, postData).then(() => resolve()).catch(reject);
     });
+  }
+
+  /**
+   * Return the config used for the push service
+   */
+  public getConfig(): any {
+    return this.pushConfig;
+  }
+
+  /**
+   * Return true if config is present
+   */
+  public hasConfig(): any {
+    const configuration = INSTANCE.getConfigByType(PushRegistration.TYPE);
+    return (!configuration || configuration.length === 0) ? false : true;
   }
 }

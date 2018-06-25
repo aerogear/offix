@@ -110,4 +110,12 @@ export class Auth {
   public getConfig(): string[] {
     return this.internalConfig;
   }
+
+  /**
+   * Return true if config is present
+   */
+  public hasConfig(): any {
+    const configuration = INSTANCE.getConfigByType(Auth.TYPE);
+    return (!configuration || configuration.length === 0) ? false : true;
+  }
 }
