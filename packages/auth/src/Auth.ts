@@ -1,6 +1,6 @@
 import { INSTANCE, ServiceConfiguration } from "@aerogear/core";
 import Keycloak from "keycloak-js";
-import { KeycloakError, KeycloakInitOptions, KeycloakInstance, KeycloakProfile, KeycloakPromise } from "keycloak-js";
+import { KeycloakInitOptions, KeycloakInstance, KeycloakProfile } from "keycloak-js";
 import console from "loglevel";
 
 /**
@@ -116,6 +116,6 @@ export class Auth {
    */
   public hasConfig(): boolean {
     const configuration = INSTANCE.getConfigByType(Auth.TYPE);
-    return (!configuration || configuration.length === 0) ? false : true;
+    return !!(configuration && configuration.length);
   }
 }

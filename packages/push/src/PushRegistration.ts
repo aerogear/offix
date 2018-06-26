@@ -1,5 +1,5 @@
 
-import { AeroGearConfiguration, INSTANCE, isCordovaAndroid, isCordovaIOS } from "@aerogear/core";
+import { INSTANCE, isCordovaAndroid, isCordovaIOS, ServiceConfiguration } from "@aerogear/core";
 import axios from "axios";
 
 declare var window: any;
@@ -19,13 +19,19 @@ export class PushRegistration {
   public static readonly TYPE: string = "push";
   public static readonly API_PATH: string = "rest/registry/device";
 
-  private pushConfig: any;
+  private pushConfig: ServiceConfiguration;
 
   constructor() {
     const configuration = INSTANCE.getConfigByType(PushRegistration.TYPE);
     if (!configuration || configuration.length === 0) {
       console.warn("Push configuration is missing. UPS server registration will not work.");
-      this.pushConfig = {};
+      this.pushConfig = {
+        id: "",
+        name: "",
+        type: "",
+        url: "",
+        config: ""
+      }
     } else {
       this.pushConfig = configuration[0];
     }
@@ -85,7 +91,7 @@ export class PushRegistration {
   /**
    * Return the config used for the push service
    */
-  public getConfig(): any {
+  public getConfig(): ServiceConfiguration {
     return this.pushConfig;
   }
 
@@ -94,6 +100,6 @@ export class PushRegistration {
    */
   public hasConfig(): boolean {
     const configuration = INSTANCE.getConfigByType(PushRegistration.TYPE);
-    return (!configuration || configuration.length === 0) ? false : true;
+    return !!(configuration && configuration.length);
   }
 }
