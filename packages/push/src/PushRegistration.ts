@@ -19,21 +19,14 @@ export class PushRegistration {
   public static readonly TYPE: string = "push";
   public static readonly API_PATH: string = "rest/registry/device";
 
-  private pushConfig: ServiceConfiguration;
+  private pushConfig?: ServiceConfiguration;
 
   constructor() {
     const configuration = INSTANCE.getConfigByType(PushRegistration.TYPE);
-    if (!configuration || configuration.length === 0) {
-      console.warn("Push configuration is missing. UPS server registration will not work.");
-      this.pushConfig = {
-        id: "",
-        name: "",
-        type: "",
-        url: "",
-        config: ""
-      };
-    } else {
+    if (configuration && configuration.length > 0) {
       this.pushConfig = configuration[0];
+    } else {
+      console.warn("Push configuration is missing. UPS server registration will not work.");
     }
   }
 
@@ -91,7 +84,7 @@ export class PushRegistration {
   /**
    * Return the config used for the push service
    */
-  public getConfig(): ServiceConfiguration {
+  public getConfig(): ServiceConfiguration | undefined {
     return this.pushConfig;
   }
 
@@ -100,6 +93,6 @@ export class PushRegistration {
    */
   public hasConfig(): boolean {
     const configuration = INSTANCE.getConfigByType(PushRegistration.TYPE);
-    return !!(configuration && configuration.length);
+    return !!(configuration && configuration.length > 0);
   }
 }
