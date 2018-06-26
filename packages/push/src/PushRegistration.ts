@@ -31,7 +31,7 @@ export class PushRegistration {
         type: "",
         url: "",
         config: ""
-      }
+      };
     } else {
       this.pushConfig = configuration[0];
     }
