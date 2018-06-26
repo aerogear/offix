@@ -114,7 +114,7 @@ export class Auth {
   /**
    * Return true if config is present
    */
-  public hasConfig(): any {
+  public hasConfig(): boolean {
     const configuration = INSTANCE.getConfigByType(Auth.TYPE);
     return (!configuration || configuration.length === 0) ? false : true;
   }
