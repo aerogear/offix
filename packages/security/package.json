@@ -1,6 +1,6 @@
 {
   "name": "@aerogear/security",
-  "version": "1.0.0-alpha",
+  "version": "1.0.0-alpha.1",
   "description": "AeroGear Services JavaScript Security SDK",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -32,6 +32,6 @@
     "nyc": "^11.7.1"
   },
   "dependencies": {
-    "@aerogear/core": "1.0.0-alpha"
+    "@aerogear/core": "1.0.0-alpha.1"
   }
 }
