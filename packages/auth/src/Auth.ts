@@ -1,6 +1,6 @@
 import { INSTANCE, ServiceConfiguration } from "@aerogear/core";
 import Keycloak from "keycloak-js";
-import { KeycloakError, KeycloakInitOptions, KeycloakInstance, KeycloakProfile, KeycloakPromise } from "keycloak-js";
+import { KeycloakInitOptions, KeycloakInstance, KeycloakProfile } from "keycloak-js";
 import console from "loglevel";
 
 /**
@@ -16,10 +16,7 @@ export class Auth {
 
   constructor() {
     const configuration = INSTANCE.getConfigByType(Auth.TYPE);
-    if (!configuration || configuration.length === 0) {
-      console.warn("Keycloak configuration is missing. Authentication will not work properly.");
-      this.internalConfig = {};
-    } else {
+    if (configuration && configuration.length > 0) {
       const serviceConfiguration: ServiceConfiguration = configuration[0];
       this.internalConfig = serviceConfiguration.config;
       // create a resource field containing the clientID. The keycloak JS adapter expects a clientId.
@@ -28,6 +25,8 @@ export class Auth {
       }
       // use the top level keycloak url in the mobile services json
       this.internalConfig.url = serviceConfiguration.url;
+    } else {
+      console.warn("Keycloak configuration is missing. Authentication will not work properly.");
     }
     this.auth = Keycloak(this.internalConfig);
   }
@@ -109,5 +108,13 @@ export class Auth {
    */
   public getConfig(): string[] {
     return this.internalConfig;
+  }
+
+  /**
+   * Return true if config is present
+   */
+  public hasConfig(): boolean {
+    const configuration = INSTANCE.getConfigByType(Auth.TYPE);
+    return !!(configuration && configuration.length > 0);
   }
 }
