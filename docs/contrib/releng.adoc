@@ -26,7 +26,7 @@ git checkout -b release-x.y.z
 
 [source, bash]
 --
-npm run prep-release
+npm run release:prep
 --
 
 This script will interactively prompt you and ask what version you would like to update to. Select the appropriate version according to link:https://semver.org[Semver.]
