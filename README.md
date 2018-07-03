@@ -8,8 +8,8 @@
 | --------------- | ---------------------------------------------------------------- |
 | License:        | Apache License, Version 2.0                                      |
 | Build:          | NPM                                                              |
-| End User Documentation:  | https://docs.aerogear.org - Under construction - [Github Link](./docs/modules/ROOT/pages/)|
-| Community Documentation: | https://aerogear.org             |
+| End User Documentation:  | https://docs.aerogear.org|
+| Community Documentation: | https://www.aerogear.org             |
 | Issue tracker:  | https://issues.jboss.org/browse/AEROGEAR                        |
 | Mailing lists:  | [aerogear-dev](https://groups.google.com/forum/#!forum/aerogear) |
 
@@ -28,12 +28,12 @@ This Aerogear SDK consists of a set of SDK's.
 
 ## Contributing
 
-- [General Contributing Guide](./CONTRIBUTING.md)
-- [Service Contributor Guide](./docs/contrib/contributing-guide.adoc)
+- [General Contributing Guide](https://github.com/aerogear/aerogear-js-sdk/blob/master/CONTRIBUTING.md)
+- [Service Contributor Guide](https://github.com/aerogear/aerogear-js-sdk/blob/master/docs/contrib/contributing-guide.adoc)
 
 ## License
 
- See [LICENSE file](./LICENSE)
+ See [LICENSE file](https://github.com/aerogear/aerogear-js-sdk/blob/master/LICENSE)
 
 ## Questions?
 
