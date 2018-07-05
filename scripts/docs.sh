@@ -16,15 +16,8 @@ else
     rm -rf $DOCS_LOCATION
 fi
 
-echo "Piping Config to lerna.json"
-# Ensure the package names are correct
-echo "{\"lerna\": \"2.9.0\",\"packages\": [\"packages/app\",\"packages/auth\",\"packages/core\",\"packages/push\",\"packages/security\"],\"commands\": {\"publish\": {\"exact\": true}},\"version\": \"1.0.0-alpha.1\"}" > ${PWD}/lerna.json 
-
 echo "Generate documentation for packages"
-${PWD}/node_modules/.bin/lerna exec -- $TYPEDOC --mode file --out $DOCS_LOCATION/\${LERNA_PACKAGE_NAME:10} --excludePrivate --excludeExternals src/
-
-echo "Restoring lerna.json"
-echo "{\"lerna\": \"2.9.0\",\"packages\": [\"packages/*\"],\"commands\": {\"publish\": {\"exact\": true}},\"version\": \"1.0.0-alpha.1\"}" > ${PWD}/lerna.json
+${PWD}/node_modules/.bin/lerna exec --ignore "@aerogear/cordova-*" -- $TYPEDOC --mode file --out $DOCS_LOCATION/\${LERNA_PACKAGE_NAME:10} --excludePrivate --excludeExternals src/
 
 echo "Documentation was generated. Go to docs -> docs.aerogear.org to view new documentation"
 
