@@ -2,13 +2,22 @@
 ## Script for generating core modules documentation
 
 VERSION=1.1.0
-DOC_FOLDER=docs
-DOCS_LOCATION=${PWD}/$DOC_FOLDER/api
+DOC_FOLDER=docs.aerogear.org
+DOCS_LOCATION=${PWD}/docs/$DOC_FOLDER/api/cordova/latest
 TYPEDOC=${PWD}/node_modules/.bin/typedoc # Need to use root typedoc to pick up typedoc plugin
 
-rm -rf $DOCS_LOCATION
+echo "Setting up Docs.Aerogear.org"
+if [ ! -d "$DOCS_LOCATION" ]; then
+    git clone git@github.com:aerogear/docs.aerogear.org.git
+    echo "Moving repo to docs folder"
+    mv ${PWD}/$DOC_FOLDER ${PWD}/docs/
+else 
+    echo "Removing existing documentation"
+    rm -rf $DOCS_LOCATION
+fi
 
 echo "Generate documentation for packages"
-${PWD}/node_modules/.bin/lerna exec -- $TYPEDOC --mode file --out $DOCS_LOCATION/\$LERNA_PACKAGE_NAME --excludePrivate --excludeExternals src/
+${PWD}/node_modules/.bin/lerna exec --ignore "@aerogear/cordova-*" -- $TYPEDOC --mode file --out $DOCS_LOCATION/\${LERNA_PACKAGE_NAME:10} --excludePrivate --excludeExternals src/
 
-echo "Documentation was generated. Please continue website relase directly in documentation repository"
+echo "Documentation was generated. Go to docs -> docs.aerogear.org to view new documentation"
+
