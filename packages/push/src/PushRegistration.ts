@@ -40,7 +40,7 @@ export class PushRegistration {
   public register(deviceToken: string, alias: string = "", categories: string[] = []): Promise<void> {
     if (!window || !window.device) {
       return Promise.reject(new Error("Registration requires cordova plugin. Verify the " +
-        "@aerogear/cordova-plugin-aerogear-metrics plugin is installed."));
+        "@aerogear/cordova-plugin-aerogear-push plugin is installed."));
     }
     if (!this.pushConfig || !this.pushConfig.config || !this.pushConfig.url) {
       return Promise.reject(new Error("UPS registration: configuration is invalid"));
