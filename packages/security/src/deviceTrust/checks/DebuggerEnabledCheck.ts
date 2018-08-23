@@ -1,5 +1,5 @@
-import { SecurityCheck } from "../SecurityCheck";
-import { SecurityCheckResult } from "../SecurityCheckResult";
+import { DeviceCheck } from "../DeviceCheck";
+import { DeviceCheckResult } from "../DeviceCheckResult";
 
 declare let cordova: any;
 declare var document: any;
@@ -7,14 +7,14 @@ declare var document: any;
 /**
  * A check for whether a device is running in debug mode
  */
-export class NonDebugCheck implements SecurityCheck {
+export class DebuggerEnabledCheck implements DeviceCheck {
     /**
      * Get the name of the check.
      */
     get name(): string {
         return "Debugger Check";
     }
-    public check(): Promise<SecurityCheckResult> {
+    public check(): Promise<DeviceCheckResult> {
         return new Promise((resolve, reject) => {
             if (!document) {
                 reject(new Error("Cordova not fully loaded"));
@@ -27,7 +27,7 @@ export class NonDebugCheck implements SecurityCheck {
                 }
 
                 cordova.plugins.IsDebug.getIsDebug((passed: boolean) => {
-                    const result: SecurityCheckResult = { name: this.name, passed: !passed };
+                    const result: DeviceCheckResult = { name: this.name, passed };
                     return resolve(result);
                 }, (error: string) => reject(error));
             }, false);

@@ -1,5 +1,5 @@
 
-export { NonRootedCheck } from "./NonRootedCheck";
-export { NonEmulatedCheck } from "./NonEmulatedCheck";
-export { NonDebugCheck } from "./NonDebugCheck";
-export { DeviceLockCheck } from "./DeviceLockCheck";
+export { RootEnabledCheck } from "./RootEnabledCheck";
+export { IsEmulatorCheck } from "./IsEmulatorCheck";
+export { DebuggerEnabledCheck } from "./DebuggerEnabledCheck";
+export { ScreenLockEnabledCheck } from "./ScreenLockEnabledCheck";

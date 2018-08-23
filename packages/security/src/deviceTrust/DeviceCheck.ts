@@ -1,9 +1,9 @@
-import { SecurityCheckResult } from "./SecurityCheckResult";
+import { DeviceCheckResult } from "./DeviceCheckResult";
 
 /**
  * Interface for a device security single security check that can be executed.
  */
-export interface SecurityCheck {
+export interface DeviceCheck {
   /**
    * The name of the check. This can be used for reporting the checks results.
    */
@@ -14,5 +14,5 @@ export interface SecurityCheck {
    *
    * @returns The result of the check.
    */
-  check(): Promise<SecurityCheckResult>;
+  check(): Promise<DeviceCheckResult>;
 }

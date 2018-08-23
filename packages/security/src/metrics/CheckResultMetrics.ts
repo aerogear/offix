@@ -1,4 +1,4 @@
-import { SecurityCheckResult } from "../deviceTrust";
+import { DeviceCheckResult } from "../deviceTrust";
 import { SecurityCheckResultMetric } from "./SecurityCheckResultMetric";
 
 /**
@@ -9,7 +9,7 @@ export class CheckResultMetrics {
 
   private readonly resultMetrics: SecurityCheckResultMetric[];
 
-  constructor(results: SecurityCheckResult[]) {
+  constructor(results: DeviceCheckResult[]) {
     this.resultMetrics = results.map(result => this.convertResultToMetric(result));
   }
 
@@ -27,7 +27,7 @@ export class CheckResultMetrics {
    *
    * @return Metric for the provided security check result.
    */
-  private convertResultToMetric(result: SecurityCheckResult): SecurityCheckResultMetric {
+  private convertResultToMetric(result: DeviceCheckResult): SecurityCheckResultMetric {
     return {
       id: result.name,
       name: result.name,
