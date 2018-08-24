@@ -10,7 +10,7 @@ npm run test
 
 # don't run in CI
 if [ ! "$CI" = true ]; then
-  lerna publish --skip-git --force-publish * --skip-npm
+  lerna publish --skip-git --force-publish=* --skip-npm
   npm run updateXml
 fi
 
