@@ -1,5 +1,5 @@
 import { INSTANCE } from "@aerogear/core";
-import { SecurityCheck, SecurityCheckResult } from "./deviceTrust";
+import { DeviceCheck, DeviceCheckResult } from "./deviceTrust";
 import { CheckResultMetrics, SecurityCheckResultMetric } from "./metrics";
 
 /**
@@ -17,7 +17,7 @@ export class SecurityService {
    *
    * @returns The result of the provided check.
    */
-  public check(check: SecurityCheck): Promise<SecurityCheckResult> {
+  public check(check: DeviceCheck): Promise<DeviceCheckResult> {
     return check.check();
   }
 
@@ -26,7 +26,7 @@ export class SecurityService {
    *
    * @return The sent metric for the check result.
    */
-  public checkAndPublishMetric(check: SecurityCheck): Promise<SecurityCheckResultMetric> {
+  public checkAndPublishMetric(check: DeviceCheck): Promise<SecurityCheckResultMetric> {
     return this.check(check)
       .then(checkResult => this.publishCheckResultMetrics(checkResult))
       .then(checkMetrics => checkMetrics[0]);
@@ -37,7 +37,7 @@ export class SecurityService {
    *
    * @returns An array of results for the provided checks.
    */
-  public checkMany(...checks: SecurityCheck[]): Promise<SecurityCheckResult[]> {
+  public checkMany(...checks: DeviceCheck[]): Promise<DeviceCheckResult[]> {
     return Promise.all(checks.map(check => check.check()));
   }
 
@@ -46,7 +46,7 @@ export class SecurityService {
    *
    * @return An array of the sent metrics.
    */
-  public checkManyAndPublishMetric(...checks: SecurityCheck[]): Promise<SecurityCheckResultMetric[]> {
+  public checkManyAndPublishMetric(...checks: DeviceCheck[]): Promise<SecurityCheckResultMetric[]> {
     return this.checkMany(...checks)
       .then(checkResults => this.publishCheckResultMetrics(...checkResults));
   }
@@ -58,7 +58,7 @@ export class SecurityService {
    *
    * @return Promise with the result of the underlying metrics publisher.
    */
-  private publishCheckResultMetrics(...results: SecurityCheckResult[]): Promise<SecurityCheckResultMetric[]>  {
+  private publishCheckResultMetrics(...results: DeviceCheckResult[]): Promise<SecurityCheckResultMetric[]>  {
     if (!results || results.length === 0) {
       return Promise.resolve([]);
     }

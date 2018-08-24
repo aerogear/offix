@@ -1,5 +1,5 @@
-import { SecurityCheck } from "../SecurityCheck";
-import { SecurityCheckResult } from "../SecurityCheckResult";
+import { DeviceCheck } from "../DeviceCheck";
+import { DeviceCheckResult } from "../DeviceCheckResult";
 
 declare var cordova: any;
 declare var document: any;
@@ -7,12 +7,12 @@ declare var document: any;
 /**
  * Security check to detect if a device has a screen lock set or not.
  */
-export class DeviceLockCheck implements SecurityCheck {
+export class ScreenLockEnabledCheck implements DeviceCheck {
   /**
    * Get the name of the check.
    */
   get name(): string {
-    return "Device Lock Check";
+    return "Screen Lock Check";
   }
 
   /**
@@ -22,7 +22,7 @@ export class DeviceLockCheck implements SecurityCheck {
    *
    * @returns The result of the check.
    */
-  public check(): Promise<SecurityCheckResult> {
+  public check(): Promise<DeviceCheckResult> {
     return new Promise((resolve, reject) => {
       if (!document) {
         reject(new Error("Cordova not fully loaded"));

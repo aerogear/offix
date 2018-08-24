@@ -1,6 +1,6 @@
 import { isCordovaAndroid } from "@aerogear/core";
-import { SecurityCheck } from "../SecurityCheck";
-import { SecurityCheckResult } from "../SecurityCheckResult";
+import { DeviceCheck } from "../DeviceCheck";
+import { DeviceCheckResult } from "../DeviceCheckResult";
 
 declare var IRoot: any;
 declare var document: any;
@@ -8,7 +8,7 @@ declare var document: any;
 /**
  * Check to detect whether a device is rooted (Android) or jailbroken (iOS).
  */
-export class NonRootedCheck implements SecurityCheck {
+export class RootEnabledCheck implements DeviceCheck {
   /**
    * Get the name of the check.
    */
@@ -18,11 +18,11 @@ export class NonRootedCheck implements SecurityCheck {
 
   /**
    * Determine whether the device is rooted (Android) or jailbroken (iOS).
-   * If the device is *not* rooted/jailbroken then the check will pass.
+   * If the device is rooted/jailbroken then the check will pass.
    *
    * @returns The result of the check.
    */
-  public check(): Promise<SecurityCheckResult> {
+  public check(): Promise<DeviceCheckResult> {
     return new Promise((resolve, reject) => {
       if (!document) {
         reject(new Error("Cordova not fully loaded"));
@@ -35,7 +35,7 @@ export class NonRootedCheck implements SecurityCheck {
         }
         const isRootedCheck = isCordovaAndroid() ? IRoot.isRootedRedBeer : IRoot.isRooted;
         isRootedCheck((rooted: number) => {
-          const result: SecurityCheckResult = { name: this.name, passed: !rooted };
+          const result: DeviceCheckResult = { name: this.name, passed: !!rooted };
           return resolve(result);
         }, (error: string) => reject(error));
       }, false);
