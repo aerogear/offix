@@ -1,4 +1,4 @@
-## AeroGear Services App SDK
+## AeroGear Services Sync SDK
 
 Package maintained as part of AeroGear Services SDK.
 
