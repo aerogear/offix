@@ -3,7 +3,7 @@ import { ApolloLink } from "apollo-link";
 /**
  * Apollo Link builder
  */
-export class LinksBulder {
+export class LinkChainBuilder {
 
   public links: ApolloLink[];
 

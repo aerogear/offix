@@ -1,3 +1,3 @@
-import { clientFactory } from "../src/index";
+import { clientCreator } from "../src/index";
 
-const client = clientFactory();
+const client = clientCreator();
