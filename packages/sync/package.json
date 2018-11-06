@@ -19,7 +19,7 @@
     "aerogear services",
     "graphql"
   ],
-  "author": "Aero Gear",
+  "author": "AeroGear",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/aerogear/aerogear-js-sdk/issues"
