@@ -7,10 +7,11 @@ declare var window: any;
  * @see DefaultOptions for defaults
  */
 export interface DataSyncClientOptions {
+
   /**
    * Describes name of the field used as ID
    */
-  defaultObjectIdField?: string;
+  objectIdField?: string;
 
   /**
    * Storage solution
