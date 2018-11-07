@@ -42,7 +42,7 @@ export class SyncConfig implements IDataSyncConfig {
   }
 
   public validate(userConfig: IDataSyncConfig) {
-    if (userConfig.httpUrl) {
+    if (!userConfig.httpUrl) {
       throw new ConfigError("Missing server URL", "httpUrl");
     }
   }
