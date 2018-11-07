@@ -1,3 +1,9 @@
-import { clientCreator } from "../src/index";
+import { createClient } from "../src/index";
 
-const client = clientCreator();
+// const clientPromise = createClient();
+
+// clientPromise.then((client) => {
+
+// }).then((error) => {
+
+// })

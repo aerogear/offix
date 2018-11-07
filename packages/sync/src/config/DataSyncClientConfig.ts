@@ -1,4 +1,6 @@
+import { LinkChainBuilder } from "../links/LinksBuilder";
 import { PersistedData, PersistentStore } from "../PersistentStore";
+import { IDataSyncConfig } from "./DataSyncClientConfig";
 
 /**
  * Contains all configuration options required to initialize SDK
@@ -25,4 +27,9 @@ export interface IDataSyncConfig {
    * Storage solution
    */
   storage?: PersistentStore<PersistedData>;
+
+  /**
+   * Enables providing custom Apollo Link for processing requests
+   */
+  customLinkBuilder?: LinkChainBuilder;
 }

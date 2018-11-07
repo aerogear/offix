@@ -1,4 +1,5 @@
 import { INSTANCE, ServiceConfiguration } from "@aerogear/core";
+import { ConfigError } from "./ConfigError";
 import { IDataSyncConfig } from "./DataSyncClientConfig";
 
 declare var window: any;
@@ -42,7 +43,7 @@ export class SyncConfig implements IDataSyncConfig {
 
   public validate(userConfig: IDataSyncConfig) {
     if (userConfig.httpUrl) {
-      throw new Error("Missing url");
+      throw new ConfigError("Missing server URL", "httpUrl");
     }
   }
 }
