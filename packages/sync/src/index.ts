@@ -1,3 +1,2 @@
-
-export * from "./ClientBuilder";
-export * from "./DataSyncClientOptions";
+export * from "./ClientCreator";
+export * from "./config/DataSyncClientConfig";
