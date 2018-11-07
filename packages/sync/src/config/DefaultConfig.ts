@@ -12,7 +12,7 @@ const TYPE: string = "sync";
  * Default config is applied on top of user provided configuration
  */
 export class SyncConfig implements IDataSyncConfig {
-  // Explicitly use id as id field :)
+  // Explicitly use id as id field
   public dataIdFromObject = "id";
   // Use browser storage by default
   public storage = window.localStorage;
