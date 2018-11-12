@@ -1,7 +1,7 @@
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { persistCache } from "apollo-cache-persist";
 import { ApolloClient } from "apollo-client";
-import { IDataSyncConfig } from "./config/DataSyncConfig";
+import { DataSyncConfig } from "./config/DataSyncConfig";
 import { SyncConfig } from "./config/DefaultConfig";
 import { defaultLinkBuilder as buildLink} from "./links/LinksBuilder";
 import { PersistedData, PersistentStore } from "./PersistentStore";
@@ -11,7 +11,7 @@ import { PersistedData, PersistentStore } from "./PersistentStore";
  *
  * @param options options object used to build client
  */
-export const createClient = async (userConfig?: IDataSyncConfig) => {
+export const createClient = async (userConfig?: DataSyncConfig) => {
 
   const clientConfig = extractConfig(userConfig);
   const cache = await buildStorage(clientConfig);
@@ -23,7 +23,7 @@ export const createClient = async (userConfig?: IDataSyncConfig) => {
 /**
  * Extract configuration from user and external sources
  */
-function extractConfig(userConfig: IDataSyncConfig | undefined) {
+function extractConfig(userConfig: DataSyncConfig | undefined) {
   const config = new SyncConfig();
   const clientConfig = config.merge(userConfig);
   config.applyPlatformConfig(clientConfig);
@@ -36,7 +36,7 @@ function extractConfig(userConfig: IDataSyncConfig | undefined) {
  *
  * @param clientConfig
  */
-async function buildStorage(clientConfig: IDataSyncConfig) {
+async function buildStorage(clientConfig: DataSyncConfig) {
   const cache = new InMemoryCache({
     dataIdFromObject: () =>  clientConfig.dataIdFromObject
   });
