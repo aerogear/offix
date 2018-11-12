@@ -1,3 +1,4 @@
 export * from "./createClient";
-export * from "./config/DataSyncClientConfig";
+export * from "./config/DataSyncConfig";
 export * from "./links/LinksBuilder";
+export * from "./conflicts/strategies";

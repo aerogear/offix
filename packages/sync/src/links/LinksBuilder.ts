@@ -1,7 +1,7 @@
 import { ApolloLink, split } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { getMainDefinition } from "apollo-utilities";
-import { IDataSyncConfig } from "../config/DataSyncClientConfig";
+import { IDataSyncConfig } from "../config/DataSyncConfig";
 import { defaultWebSocketLink } from "./WebsocketLink";
 
 /**

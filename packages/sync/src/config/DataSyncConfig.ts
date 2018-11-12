@@ -1,13 +1,13 @@
+import { ConflictResolutionStrategy } from "../conflicts/strategies";
 import { LinkChainBuilder } from "../links/LinksBuilder";
 import { PersistedData, PersistentStore } from "../PersistentStore";
-import { IDataSyncConfig } from "./DataSyncClientConfig";
 
 /**
  * Contains all configuration options required to initialize SDK
  *
  * @see DefaultOptions for defaults
  */
-export interface IDataSyncConfig {
+export interface DataSyncConfig {
   /**
    * Http server url
    */
@@ -27,6 +27,11 @@ export interface IDataSyncConfig {
    * Storage solution
    */
   storage?: PersistentStore<PersistedData>;
+
+  /**
+   * Conflict resolution strategy
+   */
+  conflictStrategy?: ConflictResolutionStrategy;
 
   /**
    * Enables providing custom Apollo Link for processing requests

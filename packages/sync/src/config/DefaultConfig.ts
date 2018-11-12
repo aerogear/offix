@@ -1,6 +1,6 @@
 import { INSTANCE, ServiceConfiguration } from "@aerogear/core";
 import { ConfigError } from "./ConfigError";
-import { IDataSyncConfig } from "./DataSyncClientConfig";
+import { DataSyncConfig } from "./DataSyncConfig";
 
 declare var window: any;
 
@@ -11,7 +11,7 @@ const TYPE: string = "sync";
  * Class for managing user and default configuration.
  * Default config is applied on top of user provided configuration
  */
-export class SyncConfig implements IDataSyncConfig {
+export class SyncConfig implements DataSyncConfig {
   // Explicitly use id as id field
   public dataIdFromObject = "id";
   // Use browser storage by default
@@ -24,7 +24,7 @@ export class SyncConfig implements IDataSyncConfig {
   /**
    * Method used to join user configuration with defaults
    */
-  public merge(clientOptions?: IDataSyncConfig): IDataSyncConfig {
+  public merge(clientOptions?: DataSyncConfig): DataSyncConfig {
     return Object.assign(this, clientOptions);
   }
 
@@ -33,7 +33,7 @@ export class SyncConfig implements IDataSyncConfig {
    *
    * @param config user supplied configuration
    */
-  public applyPlatformConfig(config: IDataSyncConfig) {
+  public applyPlatformConfig(config: DataSyncConfig) {
     const configuration = INSTANCE.getConfigByType(TYPE);
     if (configuration && configuration.length > 0) {
       const serviceConfiguration: ServiceConfiguration = configuration[0];
@@ -41,7 +41,7 @@ export class SyncConfig implements IDataSyncConfig {
     }
   }
 
-  public validate(userConfig: IDataSyncConfig) {
+  public validate(userConfig: DataSyncConfig) {
     if (!userConfig.httpUrl) {
       throw new ConfigError("Missing server URL", "httpUrl");
     }
