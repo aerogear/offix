@@ -1,20 +1,20 @@
 import { ApolloLink, split } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { getMainDefinition } from "apollo-utilities";
-import { IDataSyncConfig } from "../config/DataSyncConfig";
+import { DataSyncConfig } from "../config/DataSyncConfig";
 import { defaultWebSocketLink } from "./WebsocketLink";
 
 /**
  * Function used to build apollo link
  */
-export type LinkChainBuilder = (config: IDataSyncConfig) => ApolloLink;
+export type LinkChainBuilder = (config: DataSyncConfig) => ApolloLink;
 
 /**
  * Default Apollo Link builder
  * Provides out of the box functionality for the users
  */
 export const defaultLinkBuilder: LinkChainBuilder =
-  (config: IDataSyncConfig): ApolloLink => {
+  (config: DataSyncConfig): ApolloLink => {
     if (config.customLinkBuilder) {
       return config.customLinkBuilder(config);
     }
