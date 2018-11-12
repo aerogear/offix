@@ -1,41 +1,14 @@
-import { ApolloLink } from "apollo-link";
 import { onError } from "apollo-link-error";
 import { GraphQLError } from "graphql";
 import { DataSyncConfig } from "../config/DataSyncConfig";
-import { ConflictResolutionData, strategies } from "./strategies";
+import { ConflictResolutionData, ConflictResolutionStrategy, strategies } from "./strategies";
 
-export class ConflictLink {
-    private config: DataSyncConfig;
-
-    constructor(config: DataSyncConfig) {
-        this.config = config;
-    }
-
-    /**
-     * Initialise the conflict link
-     * @returns An apollo link capable of detecting errors
-     */
-    public init(): ApolloLink {
-        const link = onError(({ graphQLErrors, operation, forward }) => {
-            const data = this.getConflictData(graphQLErrors);
-            if (!this.config.conflictStrategy) {
-                this.config.conflictStrategy = strategies.diffMergeClientWins;
-            }
-            const resolvedConflict = this.config.conflictStrategy(data, operation.variables);
-            // TODO Notify
-            resolvedConflict.version = data.version;
-            operation.variables = resolvedConflict;
-            return forward(operation);
-        });
-
-        return link;
-    }
-
+export const conflictLink = (config: DataSyncConfig) => {
     /**
     * Fetch conflict data from the errors returned from the server
     * @param graphQLErrors array of errors to retrieve conflicted data from
     */
-    private getConflictData = (graphQLErrors?: ReadonlyArray<GraphQLError>): ConflictResolutionData => {
+    const getConflictData = (graphQLErrors?: ReadonlyArray<GraphQLError>): ConflictResolutionData => {
         if (graphQLErrors) {
             for (const err of graphQLErrors) {
                 if (err.extensions) {
@@ -46,6 +19,26 @@ export class ConflictLink {
                 }
             }
         }
-    }
+    };
 
-}
+    /**
+     * Fetch the conflict strategy if one is provided, if not return client wins.
+     */
+    const getConflictStrategy = (): ConflictResolutionStrategy => {
+        if (config.conflictStrategy) {
+            return config.conflictStrategy;
+        } else {
+            return strategies.diffMergeClientWins;
+        }
+    };
+
+    return onError(({ graphQLErrors, operation, forward }) => {
+        const data = getConflictData(graphQLErrors);
+        const resolvedConflict = getConflictStrategy()(data, operation.variables);
+        // TODO Notify
+        resolvedConflict.version = data.version;
+        operation.variables = resolvedConflict;
+        return forward(operation);
+    });
+
+};
