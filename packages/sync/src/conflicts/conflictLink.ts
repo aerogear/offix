@@ -20,7 +20,7 @@ export const conflictLink = (config: DataSyncConfig) => {
                 }
             }
         }
-    }
+    };
     /**
      * Fetch the conflict strategy if one is provided, if not return client wins.
      */
@@ -30,7 +30,7 @@ export const conflictLink = (config: DataSyncConfig) => {
         } else {
             return strategies.diffMergeClientWins;
         }
-    }
+    };
 
     return onError(({ operation, forward, graphQLErrors }) => {
         const data = getConflictData(graphQLErrors);
