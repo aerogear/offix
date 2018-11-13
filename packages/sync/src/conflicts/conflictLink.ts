@@ -1,3 +1,4 @@
+import { ApolloLink, FetchResult, NextLink, Observable, Operation } from "apollo-link";
 import { onError } from "apollo-link-error";
 import { GraphQLError } from "graphql";
 import { DataSyncConfig } from "../config/DataSyncConfig";
@@ -19,8 +20,7 @@ export const conflictLink = (config: DataSyncConfig) => {
                 }
             }
         }
-    };
-
+    }
     /**
      * Fetch the conflict strategy if one is provided, if not return client wins.
      */
@@ -30,9 +30,9 @@ export const conflictLink = (config: DataSyncConfig) => {
         } else {
             return strategies.diffMergeClientWins;
         }
-    };
+    }
 
-    return onError(({ graphQLErrors, operation, forward }) => {
+    return onError(({ operation, forward, graphQLErrors }) => {
         const data = getConflictData(graphQLErrors);
         const resolvedConflict = getConflictStrategy()(data, operation.variables);
         // TODO Notify
@@ -40,5 +40,4 @@ export const conflictLink = (config: DataSyncConfig) => {
         operation.variables = resolvedConflict;
         return forward(operation);
     });
-
 };
