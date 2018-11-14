@@ -32,7 +32,6 @@ export class AgsCore {
     if (this.configurations) {
       return this.configurations.filter(service => service.type && service.type.toLowerCase() === type.toLowerCase());
     }
-    console.error("Configuration not initialized.");
   }
 
   /**
