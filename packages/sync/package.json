@@ -42,7 +42,7 @@
     "apollo-link-http": "^1.5.5",
     "apollo-link-ws": "^1.0.9",
     "graphql": "^14.0.2",
-    "deepmerge": "^2.2.1"
+    "deepmerge": "^2.2.1",
     "graphql-tag": "^2.10.0",
     "subscriptions-transport-ws": "^0.9.15"
   }
