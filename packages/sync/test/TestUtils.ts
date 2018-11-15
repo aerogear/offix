@@ -42,7 +42,7 @@ export interface Unsubscribable {
 export const assertObservableSequence = (
   observable: Observable<ExecutionResult>,
   sequence: ObservableValue[],
-  initializer: (sub: Unsubscribable) => void = () => undefined,
+  initializer: (sub: Unsubscribable) => void = () => undefined
 ): Promise<boolean | Error> => {
   let index = 0;
   if (sequence.length === 0) {
