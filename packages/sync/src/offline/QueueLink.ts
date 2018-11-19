@@ -7,8 +7,9 @@ import {
 } from "apollo-link";
 
 import { Observer } from "zen-observable-ts";
+import { PersistentStore, PersistedData } from "../PersistentStore";
 
-interface OperationQueueEntry {
+export interface OperationQueueEntry {
     operation: Operation;
     forward: NextLink;
     observer: Observer<FetchResult>;
@@ -18,8 +19,17 @@ interface OperationQueueEntry {
 export default class QueueLink extends ApolloLink {
     private opQueue: OperationQueueEntry[] = [];
     private isOpen: boolean = true;
+    private storage: PersistentStore<PersistedData>;
+    private key: string;
+
+    constructor(storage: PersistentStore<PersistedData>, key: string){
+        super()
+        this.storage = storage;
+        this.key = key;
+    }
 
     public open() {
+        console.log("OPENING NETWORK LINK")
         this.isOpen = true;
         this.opQueue.forEach(({ operation, forward, observer }) => {
             forward(operation).subscribe(observer);
@@ -28,6 +38,7 @@ export default class QueueLink extends ApolloLink {
     }
 
     public close() {
+        console.log("CLOSING NETWORK LINK")
         this.isOpen = false;
     }
 
@@ -47,9 +58,11 @@ export default class QueueLink extends ApolloLink {
 
     private cancelOperation(entry: OperationQueueEntry) {
         this.opQueue = this.opQueue.filter(e => e !== entry);
+        this.storage.setItem(this.key, JSON.stringify(this.opQueue));
     }
 
     private enqueue(entry: OperationQueueEntry) {
         this.opQueue.push(entry);
+        this.storage.setItem(this.key, JSON.stringify(this.opQueue));
     }
 }
