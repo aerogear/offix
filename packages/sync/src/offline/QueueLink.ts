@@ -29,7 +29,6 @@ export default class QueueLink extends ApolloLink {
     }
 
     public open() {
-        console.log("OPENING NETWORK LINK")
         this.isOpen = true;
         this.opQueue.forEach(({ operation, forward, observer }) => {
             forward(operation).subscribe(observer);
@@ -38,7 +37,6 @@ export default class QueueLink extends ApolloLink {
     }
 
     public close() {
-        console.log("CLOSING NETWORK LINK")
         this.isOpen = false;
     }
 

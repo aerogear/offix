@@ -15,6 +15,19 @@ export class SyncOfflineMutation {
         this.storageKey = storageKey;
     }
 
+    public async init() {
+        const stored = await this.getOfflineData();
+        if (stored) {
+            this.offlineData = JSON.parse(stored.toString());
+        } else {
+            this.offlineData = [];
+        }
+    }
+
+    private getOfflineData = async () => {
+        return this.storage.getItem(this.storageKey);
+    }
+
     private hasOfflineData() {
         return !!(this.offlineData && this.offlineData.length > 0);
     }
