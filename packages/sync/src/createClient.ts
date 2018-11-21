@@ -18,11 +18,11 @@ export const createClient = async (userConfig?: DataSyncConfig) => {
   const { cache, storage } = await buildStorage(clientConfig);
   const link = buildLink(clientConfig, storage);
   const options: ApolloClientOptions<NormalizedCacheObject> = {
-    link: link,
-    cache: cache
-  }
+    link,
+    cache
+  };
   const apolloClient = new ApolloClient<NormalizedCacheObject>(options);
-  const syncOfflineMutations = new SyncOfflineMutation(apolloClient, storage, 'offline-mutation-store')
+  const syncOfflineMutations = new SyncOfflineMutation(apolloClient, storage, "offline-mutation-store");
   await syncOfflineMutations.init();
   await syncOfflineMutations.sync();
   return apolloClient;

@@ -1,10 +1,11 @@
 import { ApolloLink, split } from "apollo-link";
+import DebounceLink from "./DebounceLink";
 import { HttpLink } from "apollo-link-http";
 import { getMainDefinition } from "apollo-utilities";
-import { DataSyncConfig } from "../config/DataSyncConfig";
 import { conflictLink } from "../conflicts/conflictLink";
+import { DataSyncConfig } from "../config/DataSyncConfig";
 import { defaultWebSocketLink } from "./WebsocketLink";
-import QueueLink from "../offline/QueueLink";
+import QueueLink from "./QueueLink";
 import { PersistentStore, PersistedData } from "../PersistentStore";
 import NetworkStatus from "../offline/NetworkStatus";
 
@@ -26,20 +27,18 @@ export const defaultLinkBuilder: LinkChainBuilder =
     const httpLink = new HttpLink({ uri: config.httpUrl });
     // TODO drop your links here
     let compositeLink;
-
-    const links: [ApolloLink] = [httpLink];
     const queueMutationsLink = new QueueLink(storage, "offline-mutation-store");
+    const debounceLink = new DebounceLink();
+    let links: ApolloLink[] = [queueMutationsLink, debounceLink, conflictLink(config), httpLink];
 
     // TODO to be replaced by network interface check when ready
     NetworkStatus.whenOnline(() => queueMutationsLink.open());
     NetworkStatus.whenOffline(() => queueMutationsLink.close());
-    if (config.conflictStrategy) {
-      links.unshift(conflictLink(config));
+
+    if (!config.conflictStrategy) {
+      links = [queueMutationsLink, debounceLink, httpLink];
     }
 
-    // TODO this only works for now because there is only one link.
-    // Will need a better strategy for when there are multiple links passed wrt ordering.
-    links.unshift(queueMutationsLink);
     compositeLink = ApolloLink.from(links);
     if (config.wsUrl) {
       const wsLink = defaultWebSocketLink({ uri: config.wsUrl });

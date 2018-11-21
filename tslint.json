@@ -38,6 +38,7 @@
     "no-unused-variable": true,
     "interface-name": [
       false
-    ]
+    ],
+    "ordered-imports": false
   }
 }

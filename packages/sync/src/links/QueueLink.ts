@@ -7,7 +7,7 @@ import {
 } from "apollo-link";
 
 import { Observer } from "zen-observable-ts";
-import { PersistentStore, PersistedData } from "../PersistentStore";
+import { PersistedData, PersistentStore } from "../PersistentStore";
 
 export interface OperationQueueEntry {
     operation: Operation;
@@ -22,8 +22,8 @@ export default class QueueLink extends ApolloLink {
     private storage: PersistentStore<PersistedData>;
     private key: string;
 
-    constructor(storage: PersistentStore<PersistedData>, key: string){
-        super()
+    constructor(storage: PersistentStore<PersistedData>, key: string) {
+        super();
         this.storage = storage;
         this.key = key;
     }
