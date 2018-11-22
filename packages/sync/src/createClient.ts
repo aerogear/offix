@@ -46,7 +46,7 @@ function extractConfig(userConfig: DataSyncConfig | undefined) {
  */
 async function buildStorage(clientConfig: DataSyncConfig) {
   const cache = new InMemoryCache({
-    dataIdFromObject: () =>  clientConfig.dataIdFromObject
+    dataIdFromObject: (object) =>  object.id
   });
   const storage = clientConfig.storage as PersistentStore<PersistedData>;
   await persistCache({

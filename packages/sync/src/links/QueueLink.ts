@@ -41,10 +41,8 @@ export default class QueueLink extends ApolloLink {
     }
 
     public request(operation: Operation, forward: NextLink ) {
-        if (this.isOpen) {
-            return forward(operation);
-        }
-        if (operation.getContext().skipQueue) {
+        // TODO split this conditional and add a handler to notify of online only cases
+        if (this.isOpen || operation.getContext().onlineOnly) {
             return forward(operation);
         }
         return new Observable(observer => {
