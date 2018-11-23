@@ -5,7 +5,7 @@ import {
     Observable,
     Operation
 } from "apollo-link";
-
+import { hasDirectives } from "apollo-utilities";
 import { Observer } from "zen-observable-ts";
 import { PersistedData, PersistentStore } from "../PersistentStore";
 
@@ -42,7 +42,7 @@ export default class QueueLink extends ApolloLink {
 
     public request(operation: Operation, forward: NextLink ) {
         // TODO split this conditional and add a handler to notify of online only cases
-        if (this.isOpen || operation.getContext().onlineOnly) {
+        if (this.isOpen || hasDirectives(["onlineOnly"], operation.query)) {
             return forward(operation);
         }
         return new Observable(observer => {
