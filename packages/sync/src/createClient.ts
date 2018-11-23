@@ -10,7 +10,7 @@ import { SyncOfflineMutation } from "./offline/SyncOfflineMutation";
 /**
  * Factory for creating Apollo Client
  *
- * @param options options object used to build client
+ * @param userConfig options object used to build client
  */
 export const createClient = async (userConfig?: DataSyncConfig) => {
 

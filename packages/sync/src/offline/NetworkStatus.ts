@@ -1,25 +1,24 @@
-class NetworkStatus {
-
-  /**
-   *
-   * Trigger a function whenever the user switches into "Online Mode"
-   *
-   * @param fn Function to be called when got online
-   */
-  public static whenOnline(fn: any): void {
-    window.addEventListener("online", fn, false);
-  }
-
-  /**
-   *
-   * Trigger a function whenever the user switches into "Offline Mode"
-   *
-   * @param fn Function to be called when got offline
-   */
-  public static whenOffline(fn: any): void {
-    window.addEventListener("offline", fn, false);
-  }
-
+export interface NetworkInfo {
+  online: boolean;
 }
 
-export default NetworkStatus;
+export interface NetworkStatusChangeCallback {
+  onStatusChange(info: NetworkInfo): void;
+}
+
+/**
+ * Responsable to handle Networks status
+ */
+export interface NetworkStatus {
+  /**
+   * Trigger callback whenever the network status change
+   *
+   * @param callback Callback to be called when network status change
+   */
+  onStatusChangeListener(callback: NetworkStatusChangeCallback): void;
+
+  /**
+   * Check if device is offline
+   */
+  isOffline(): boolean;
+}
