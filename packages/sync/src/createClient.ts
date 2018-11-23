@@ -2,7 +2,7 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import { persistCache } from "apollo-cache-persist";
 import { ApolloClient } from "apollo-client";
 import { DataSyncConfig } from "./config/DataSyncConfig";
-import { SyncConfig } from "./config/DefaultConfig";
+import { SyncConfig } from "./config/SyncConfig";
 import { defaultLinkBuilder as buildLink} from "./links/LinksBuilder";
 import { PersistedData, PersistentStore } from "./PersistentStore";
 

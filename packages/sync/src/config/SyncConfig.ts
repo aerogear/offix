@@ -1,6 +1,7 @@
 import { INSTANCE, ServiceConfiguration } from "@aerogear/core";
 import { ConfigError } from "./ConfigError";
 import { DataSyncConfig } from "./DataSyncConfig";
+import { PersistedData, PersistentStore } from "../PersistentStore";
 
 declare var window: any;
 
@@ -14,11 +15,12 @@ const TYPE: string = "sync";
 export class SyncConfig implements DataSyncConfig {
   // Explicitly use id as id field
   public dataIdFromObject = "id";
-  // Use browser storage by default
-  public storage = window.localStorage;
+  public storage?: PersistentStore<PersistedData>;
 
   constructor() {
-    // Default config can depend on parameters
+    // if (window) {
+    //   this.storage = window.localStorage;
+    // }
   }
 
   /**
