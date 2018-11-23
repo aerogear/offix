@@ -22,8 +22,7 @@ export const createClient = async (userConfig?: DataSyncConfig) => {
     cache
   };
   const apolloClient = new ApolloClient<NormalizedCacheObject>(options);
-  const syncOfflineMutations = new SyncOfflineMutation(apolloClient, storage, "offline-mutation-store");
-  await syncOfflineMutations.init();
+  const syncOfflineMutations = new SyncOfflineMutation(apolloClient, storage, clientConfig.mutationsQueueName);
   await syncOfflineMutations.sync();
   return apolloClient;
 };
@@ -46,7 +45,12 @@ function extractConfig(userConfig: DataSyncConfig | undefined) {
  */
 async function buildStorage(clientConfig: DataSyncConfig) {
   const cache = new InMemoryCache({
-    dataIdFromObject: (object) =>  object.id
+    dataIdFromObject: (object) =>  {
+      if ( clientConfig.dataIdFromObject) {
+          return clientConfig.dataIdFromObject(object);
+      }
+      return object.id;
+     }
   });
   const storage = clientConfig.storage as PersistentStore<PersistedData>;
   await persistCache({

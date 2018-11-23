@@ -16,6 +16,7 @@ export class SyncConfig implements DataSyncConfig {
   // Explicitly use id as id field
   public dataIdFromObject = "id";
   public storage?: PersistentStore<PersistedData>;
+  public mutationsQueueName = "offline-mutation-store";
 
   constructor() {
     if (window) {

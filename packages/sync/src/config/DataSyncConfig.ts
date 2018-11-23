@@ -37,4 +37,9 @@ export interface DataSyncConfig {
    * Enables providing custom Apollo Link for processing requests
    */
   customLinkBuilder?: LinkChainBuilder;
+
+  /**
+   * The name of the queue to store offline mutations in
+   */
+  mutationsQueueName?: string | any;
 }

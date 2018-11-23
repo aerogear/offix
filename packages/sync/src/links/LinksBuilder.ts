@@ -27,7 +27,7 @@ export const defaultLinkBuilder: LinkChainBuilder =
     const httpLink = new HttpLink({ uri: config.httpUrl });
     // TODO drop your links here
     let compositeLink;
-    const queueMutationsLink = new QueueLink(storage, "offline-mutation-store");
+    const queueMutationsLink = new QueueLink(storage, config.mutationsQueueName);
     const debounceLink = new DebounceLink();
     let links: ApolloLink[] = [queueMutationsLink, debounceLink, conflictLink(config), httpLink];
 

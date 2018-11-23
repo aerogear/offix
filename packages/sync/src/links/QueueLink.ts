@@ -5,9 +5,10 @@ import {
     Observable,
     Operation
 } from "apollo-link";
-import { hasDirectives } from "apollo-utilities";
+import { hasDirectives, getDirectiveNames } from "apollo-utilities";
 import { Observer } from "zen-observable-ts";
 import { PersistedData, PersistentStore } from "../PersistentStore";
+import { Directives } from "../config/Constants";
 
 export interface OperationQueueEntry {
     operation: Operation;
@@ -42,7 +43,7 @@ export default class QueueLink extends ApolloLink {
 
     public request(operation: Operation, forward: NextLink ) {
         // TODO split this conditional and add a handler to notify of online only cases
-        if (this.isOpen || hasDirectives(["onlineOnly"], operation.query)) {
+        if (this.isOpen || hasDirectives([Directives.ONLINE_ONLY], operation.query)) {
             return forward(operation);
         }
         return new Observable(observer => {
