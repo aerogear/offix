@@ -4,6 +4,11 @@ import { INSTANCE } from "@aerogear/core"
 
 import { expect } from "chai";
 
+declare var global: any;
+declare var window: any;
+
+global.window = {};
+
 describe("OnOffLink", () => {
   const clientConfig = { httpUrl: "test" };
 

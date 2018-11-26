@@ -18,9 +18,9 @@ export class SyncConfig implements DataSyncConfig {
   public storage?: PersistentStore<PersistedData>;
 
   constructor() {
-    // if (window) {
-    //   this.storage = window.localStorage;
-    // }
+    if (window) {
+      this.storage = window.localStorage;
+    }
   }
 
   /**
