@@ -1,7 +1,7 @@
 import { ConflictResolutionStrategy } from "../conflicts/strategies";
 import { LinkChainBuilder } from "../links/LinksBuilder";
 import { PersistedData, PersistentStore } from "../PersistentStore";
-import {NetworkStatus} from "../offline/NetworkStatus";
+import { NetworkStatus } from "../offline/NetworkStatus";
 
 /**
  * Contains all configuration options required to initialize SDK
@@ -43,7 +43,7 @@ export interface DataSyncConfig {
    * Network Status
    */
   networkStatus: NetworkStatus;
-  
+
   /**
    * The name of the queue to store offline mutations in
    */
