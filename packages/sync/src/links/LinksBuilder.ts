@@ -1,5 +1,4 @@
 import { ApolloLink, split } from "apollo-link";
-import DebounceLink from "./DebounceLink";
 import { HttpLink } from "apollo-link-http";
 import { getMainDefinition } from "apollo-utilities";
 import { conflictLink } from "../conflicts/conflictLink";
@@ -28,8 +27,7 @@ export const defaultLinkBuilder: LinkChainBuilder =
     // TODO drop your links here
     let compositeLink;
     const queueMutationsLink = new QueueLink(storage, config.mutationsQueueName);
-    const debounceLink = new DebounceLink();
-    let links: ApolloLink[] = [queueMutationsLink, debounceLink, conflictLink(config), httpLink];
+    let links: ApolloLink[] = [queueMutationsLink, conflictLink(config), httpLink];
 
     config.networkStatus.onStatusChangeListener({
         onStatusChange(networkInfo: NetworkInfo) {
@@ -43,7 +41,7 @@ export const defaultLinkBuilder: LinkChainBuilder =
     );
 
     if (!config.conflictStrategy) {
-      links = [queueMutationsLink, debounceLink, httpLink];
+      links = [queueMutationsLink, httpLink];
     }
 
     compositeLink = ApolloLink.from(links);
