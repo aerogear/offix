@@ -1,6 +1,6 @@
 // tslint:disable-next-line:ordered-imports
+import { INSTANCE } from "@aerogear/core";
 import { SyncConfig } from "../src/config/SyncConfig";
-import { INSTANCE } from "@aerogear/core"
 
 import { expect } from "chai";
 

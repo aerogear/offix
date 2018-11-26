@@ -1,7 +1,7 @@
 import { INSTANCE, ServiceConfiguration } from "@aerogear/core";
+import { PersistedData, PersistentStore } from "../PersistentStore";
 import { ConfigError } from "./ConfigError";
 import { DataSyncConfig } from "./DataSyncConfig";
-import { PersistedData, PersistentStore } from "../PersistentStore";
 
 declare var window: any;
 
