@@ -43,7 +43,7 @@ describe("OnOffLink", () => {
 
   beforeEach(() => {
     testLink = new TestLink();
-    onOffLink = new QueueLink(localStorage, "test");
+    onOffLink = new QueueLink({ mutationsQueueName: "test", storage: localStorage });
     link = ApolloLink.from([onOffLink, testLink]);
   });
 

@@ -14,6 +14,7 @@ export type LinkChainBuilder = (config: DataSyncConfig) => ApolloLink;
 /**
  * Default Apollo Link builder
  * Provides out of the box functionality for:
+ *
  * - Subscription handling
  * - Offline/Online queue
  * - Conflict resolution
@@ -25,7 +26,6 @@ export const defaultLinkBuilder: LinkChainBuilder =
       return config.customLinkBuilder(config);
     }
     const httpLink = new HttpLink({ uri: config.httpUrl });
-
     const queueMutationsLink = new QueueLink(config);
     let links: ApolloLink[] = [queueMutationsLink, conflictLink(config), httpLink];
 
