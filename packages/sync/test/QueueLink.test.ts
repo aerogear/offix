@@ -3,13 +3,25 @@ import {
   ApolloLink, execute, GraphQLRequest
 } from "apollo-link";
 import gql from "graphql-tag";
-import QueueLink from "../src/offline/QueueLink";
+import QueueLink from "../src/links/QueueLink";
 import {
-  assertObservableSequence,
   TestLink
 } from "./TestUtils";
 
 import { expect } from "chai";
+import { PersistentStore, PersistedData } from "../src/PersistentStore";
+
+const localStorage: PersistentStore<PersistedData> = {
+  getItem: (key: string) => {
+    return {};
+  },
+  setItem: (key: string, data: PersistedData) => {
+    console.info("save data", data);
+  },
+  removeItem: (key: string) => {
+    console.info("remove data", key);
+  }
+};
 
 describe("OnOffLink", () => {
   let link: ApolloLink;
@@ -31,7 +43,7 @@ describe("OnOffLink", () => {
 
   beforeEach(() => {
     testLink = new TestLink();
-    onOffLink = new QueueLink();
+    onOffLink = new QueueLink(localStorage, "test");
     link = ApolloLink.from([onOffLink, testLink]);
   });
 
@@ -48,63 +60,12 @@ describe("OnOffLink", () => {
       });
     });
   });
-  it("skips the queue when asked to", () => {
-    const opWithSkipQueue: GraphQLRequest = {
-      query: gql`{ hello }`,
-      context: {
-        skipQueue: true
-      }
-    };
-    onOffLink.close();
-    return new Promise((resolve, reject) => {
-      execute(link, opWithSkipQueue).subscribe({
-        next: (data) => undefined,
-        error: (error) => reject(error),
-        complete: () => {
-          expect(testLink.operations.length).eq(1);
-          expect(testLink.operations[0].query).eq(op.query);
-          resolve();
-        }
-      });
-    });
-  });
-  it("passes through errors", () => {
-    const testError = new Error("Hello darkness my old friend");
-    const opWithError: GraphQLRequest = {
-      query: gql`{ hello }`,
-      context: {
-        testError
-      }
-    };
-    return new Promise((resolve, reject) => {
-      resolve(assertObservableSequence(
-        execute(link, opWithError),
-        [
-          { type: "error", value: testError }
-        ]
-      ));
-    });
-  });
+
   it("holds requests when you close it", () => {
     onOffLink.close();
     const sub = execute(link, op).subscribe(() => null);
     expect(testLink.operations.length).eq(0);
     sub.unsubscribe();
-  });
-
-  it("releases held requests when you open it", () => {
-    onOffLink.close();
-    return assertObservableSequence(
-      execute(link, op),
-      [
-        { type: "next", value: testResponse },
-        { type: "complete" }
-      ],
-      () => {
-        expect(testLink.operations.length).eq(0);
-        onOffLink.open();
-      }
-    );
   });
 
   it("removes operations from the queue that are cancelled while closed", () => {
