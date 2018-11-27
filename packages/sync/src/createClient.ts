@@ -23,6 +23,7 @@ export const createClient = async (userConfig?: DataSyncConfig) => {
   };
   const apolloClient = new ApolloClient<NormalizedCacheObject>(options);
   const syncOfflineMutations = new SyncOfflineMutation(apolloClient, storage, clientConfig.mutationsQueueName);
+  syncOfflineMutations.sync();
   return apolloClient;
 };
 

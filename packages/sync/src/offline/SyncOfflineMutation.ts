@@ -20,10 +20,9 @@ export class SyncOfflineMutation {
     } else {
       this.offlineData = [];
     }
-    this.sync();
   }
 
-  private sync = async () => {
+  public sync = async () => {
     // if there is no offline data  then just exit
     if (!this.hasOfflineData()) { return; }
 

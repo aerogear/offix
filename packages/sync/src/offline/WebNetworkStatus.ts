@@ -1,4 +1,4 @@
-import {NetworkStatus, NetworkStatusChangeCallback} from "./NetworkStatus";
+import { NetworkStatus, NetworkStatusChangeCallback } from "./NetworkStatus";
 
 declare var window: any;
 
@@ -11,9 +11,10 @@ export class WebNetworkStatus implements NetworkStatus {
     const networkInfo = {
       online: !this.isOffline()
     };
-
-    window.addEventListener("online", () => callback.onStatusChange(networkInfo), false);
-    window.addEventListener("offline", () => callback.onStatusChange(networkInfo), false);
+    if (window) {
+      window.addEventListener("online", () => callback.onStatusChange(networkInfo), false);
+      window.addEventListener("offline", () => callback.onStatusChange(networkInfo), false);
+    }
   }
 
   public isOffline(): boolean {

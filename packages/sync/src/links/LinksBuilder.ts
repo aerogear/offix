@@ -6,7 +6,7 @@ import { DataSyncConfig } from "../config/DataSyncConfig";
 import { defaultWebSocketLink } from "./WebsocketLink";
 import QueueLink from "./QueueLink";
 import { PersistentStore, PersistedData } from "../PersistentStore";
-import {NetworkInfo} from "../offline/NetworkStatus";
+import { NetworkInfo } from "../offline/NetworkStatus";
 
 /**
  * Function used to build apollo link
@@ -28,8 +28,8 @@ export const defaultLinkBuilder: LinkChainBuilder =
     let compositeLink;
     const queueMutationsLink = new QueueLink(storage, config.mutationsQueueName);
     let links: ApolloLink[] = [queueMutationsLink, conflictLink(config), httpLink];
-
-    config.networkStatus.onStatusChangeListener({
+    if (config.networkStatus) {
+      config.networkStatus.onStatusChangeListener({
         onStatusChange(networkInfo: NetworkInfo) {
           if (networkInfo.online) {
             queueMutationsLink.open();
@@ -38,7 +38,8 @@ export const defaultLinkBuilder: LinkChainBuilder =
           }
         }
       }
-    );
+      );
+    }
 
     if (!config.conflictStrategy) {
       links = [queueMutationsLink, httpLink];

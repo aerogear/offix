@@ -1,4 +1,4 @@
-import {NetworkStatus, NetworkStatusChangeCallback} from "./NetworkStatus";
+import { NetworkStatus, NetworkStatusChangeCallback } from "./NetworkStatus";
 
 declare var document: any;
 declare var navigator: any;
@@ -16,8 +16,10 @@ export class CordovaNetworkStatus implements NetworkStatus {
       online: !this.isOffline()
     };
 
-    document.addEventListener("online", () => callback.onStatusChange(networkInfo), false);
-    document.addEventListener("offline", () => callback.onStatusChange(networkInfo), false);
+    if (document) {
+      document.addEventListener("online", () => callback.onStatusChange(networkInfo), false);
+      document.addEventListener("offline", () => callback.onStatusChange(networkInfo), false);
+    }
   }
 
   public isOffline(): boolean {
