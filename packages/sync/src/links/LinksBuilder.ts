@@ -13,7 +13,11 @@ export type LinkChainBuilder = (config: DataSyncConfig) => ApolloLink;
 
 /**
  * Default Apollo Link builder
- * Provides out of the box functionality for the users
+ * Provides out of the box functionality for:
+ * - Subscription handling
+ * - Offline/Online queue
+ * - Conflict resolution
+ * - Error handling
  */
 export const defaultLinkBuilder: LinkChainBuilder =
   (config: DataSyncConfig): ApolloLink => {
