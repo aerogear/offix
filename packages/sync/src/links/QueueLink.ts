@@ -10,6 +10,8 @@ import { Observer } from "zen-observable-ts";
 import { PersistedData, PersistentStore } from "../PersistentStore";
 import { Directives } from "../config/Constants";
 import { OperationDefinitionNode, NameNode } from "graphql";
+import { DataSyncConfig } from "../config/DataSyncConfig";
+import { NetworkStatus, NetworkInfo } from "../offline/NetworkStatus";
 
 export interface OperationQueueEntry {
   operation: Operation;
@@ -23,11 +25,16 @@ export default class QueueLink extends ApolloLink {
   private isOpen: boolean = true;
   private storage: PersistentStore<PersistedData>;
   private key: string;
+  private networkStatus?: NetworkStatus;
 
-  constructor(storage: PersistentStore<PersistedData>, key: string) {
+  constructor(config: DataSyncConfig) {
     super();
-    this.storage = storage;
-    this.key = key;
+    this.storage = config.storage as PersistentStore<PersistedData>;
+    this.key = config.mutationsQueueName;
+    this.networkStatus = config.networkStatus;
+    this.setNetworkStateHandlers();
+    // const syncOfflineMutations = new SyncOfflineMutation(apolloClient, clientConfig.storage, clientConfig.mutationsQueueName);
+    // syncOfflineMutations.sync();
   }
 
   public open() {
@@ -68,7 +75,7 @@ export default class QueueLink extends ApolloLink {
   * Merge offline operations that are made on the same object.
   * Equality of operation is done by checking operationName and object id.
   */
-  private squashOperations = (entry: OperationQueueEntry) => {
+  private squashOperations(entry: OperationQueueEntry): OperationQueueEntry[] {
     const { query, variables } = entry.operation;
     let operationName: NameNode;
 
@@ -99,5 +106,25 @@ export default class QueueLink extends ApolloLink {
       this.opQueue.push(entry);
     }
     return this.opQueue;
+  }
+
+  private setNetworkStateHandlers(): void {
+    const self = this;
+    if (this.networkStatus) {
+      if (this.networkStatus.isOffline()) {
+        this.close();
+      } else {
+        this.open();
+      }
+      this.networkStatus.onStatusChangeListener({
+        onStatusChange(networkInfo: NetworkInfo) {
+          if (networkInfo.online) {
+            self.open();
+          } else {
+            self.close();
+          }
+        }
+      });
+    }
   }
 }

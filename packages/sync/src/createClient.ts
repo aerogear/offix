@@ -3,7 +3,7 @@ import { persistCache } from "apollo-cache-persist";
 import { ApolloClient, ApolloClientOptions } from "apollo-client";
 import { DataSyncConfig } from "./config/DataSyncConfig";
 import { SyncConfig } from "./config/SyncConfig";
-import { defaultLinkBuilder as buildLink} from "./links/LinksBuilder";
+import { defaultLinkBuilder as buildLink } from "./links/LinksBuilder";
 import { PersistedData, PersistentStore } from "./PersistentStore";
 import { SyncOfflineMutation } from "./offline/SyncOfflineMutation";
 
@@ -13,17 +13,13 @@ import { SyncOfflineMutation } from "./offline/SyncOfflineMutation";
  * @param userConfig options object used to build client
  */
 export const createClient = async (userConfig?: DataSyncConfig) => {
-
   const clientConfig = extractConfig(userConfig);
-  const { cache, storage } = await buildStorage(clientConfig);
-  const link = buildLink(clientConfig, storage);
-  const options: ApolloClientOptions<NormalizedCacheObject> = {
+  const { cache } = await buildCachePersistence(clientConfig);
+  const link = buildLink(clientConfig);
+  const apolloClient = new ApolloClient<NormalizedCacheObject>({
     link,
     cache
-  };
-  const apolloClient = new ApolloClient<NormalizedCacheObject>(options);
-  const syncOfflineMutations = new SyncOfflineMutation(apolloClient, storage, clientConfig.mutationsQueueName);
-  syncOfflineMutations.sync();
+  });
   return apolloClient;
 };
 
@@ -43,12 +39,11 @@ function extractConfig(userConfig: DataSyncConfig | undefined) {
  *
  * @param clientConfig
  */
-async function buildStorage(clientConfig: DataSyncConfig) {
+async function buildCachePersistence(clientConfig: DataSyncConfig) {
   const cache = new InMemoryCache();
-  const storage = clientConfig.storage as PersistentStore<PersistedData>;
   await persistCache({
     cache,
-    storage
+    storage: clientConfig.storage as PersistentStore<PersistedData>
   });
-  return {cache, storage};
+  return { cache };
 }

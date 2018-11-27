@@ -1,61 +1,38 @@
 import { ApolloLink, split } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
-import { getMainDefinition } from "apollo-utilities";
 import { conflictLink } from "../conflicts/conflictLink";
 import { DataSyncConfig } from "../config/DataSyncConfig";
 import { defaultWebSocketLink } from "./WebsocketLink";
 import QueueLink from "./QueueLink";
-import { PersistentStore, PersistedData } from "../PersistentStore";
-import { NetworkInfo } from "../offline/NetworkStatus";
+import { isSubscription } from "../utils/helpers";
 
 /**
- * Function used to build apollo link
+ * Function used to build Apollo link
  */
-export type LinkChainBuilder = (config: DataSyncConfig, storage: PersistentStore<PersistedData>) => ApolloLink;
+export type LinkChainBuilder = (config: DataSyncConfig) => ApolloLink;
 
 /**
  * Default Apollo Link builder
  * Provides out of the box functionality for the users
  */
 export const defaultLinkBuilder: LinkChainBuilder =
-  (config: DataSyncConfig, storage: PersistentStore<PersistedData>): ApolloLink => {
+  (config: DataSyncConfig): ApolloLink => {
     if (config.customLinkBuilder) {
-      return config.customLinkBuilder(config, storage);
+      return config.customLinkBuilder(config);
     }
-
     const httpLink = new HttpLink({ uri: config.httpUrl });
-    // TODO drop your links here
-    let compositeLink;
-    const queueMutationsLink = new QueueLink(storage, config.mutationsQueueName);
+
+    const queueMutationsLink = new QueueLink(config);
     let links: ApolloLink[] = [queueMutationsLink, conflictLink(config), httpLink];
-    if (config.networkStatus) {
-      config.networkStatus.onStatusChangeListener({
-        onStatusChange(networkInfo: NetworkInfo) {
-          if (networkInfo.online) {
-            queueMutationsLink.open();
-          } else {
-            queueMutationsLink.close();
-          }
-        }
-      }
-      );
-    }
 
     if (!config.conflictStrategy) {
       links = [queueMutationsLink, httpLink];
     }
 
-    compositeLink = ApolloLink.from(links);
+    let compositeLink = ApolloLink.from(links);
     if (config.wsUrl) {
       const wsLink = defaultWebSocketLink({ uri: config.wsUrl });
-      compositeLink = split(
-        ({ query }) => {
-          const { kind, operation } = getMainDefinition(query) as any;
-          return kind === "OperationDefinition" && operation === "subscription";
-        },
-        wsLink,
-        compositeLink
-      );
+      compositeLink = split(isSubscription, wsLink, compositeLink);
     }
     return compositeLink;
   };
