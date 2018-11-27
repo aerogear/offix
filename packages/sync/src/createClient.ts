@@ -5,7 +5,7 @@ import { DataSyncConfig } from "./config/DataSyncConfig";
 import { SyncConfig } from "./config/SyncConfig";
 import { defaultLinkBuilder as buildLink } from "./links/LinksBuilder";
 import { PersistedData, PersistentStore } from "./PersistentStore";
-import { SyncOfflineMutation } from "./offline/SyncOfflineMutation";
+import { OfflineRestoreHandler } from "./offline/OfflineRestoreHandler";
 
 /**
  * Factory for creating Apollo Client
@@ -20,6 +20,11 @@ export const createClient = async (userConfig?: DataSyncConfig) => {
     link,
     cache
   });
+  const storage = clientConfig.storage as PersistentStore<PersistedData>;
+  const offlineMutationHandler = new OfflineRestoreHandler(apolloClient,
+    storage,
+    clientConfig.mutationsQueueName);
+  offlineMutationHandler.replyOfflineMutations();
   return apolloClient;
 };
 

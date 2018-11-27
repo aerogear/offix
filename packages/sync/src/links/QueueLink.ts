@@ -33,8 +33,6 @@ export default class QueueLink extends ApolloLink {
     this.key = config.mutationsQueueName;
     this.networkStatus = config.networkStatus;
     this.setNetworkStateHandlers();
-    // const syncOfflineMutations = new SyncOfflineMutation(apolloClient, clientConfig.storage, clientConfig.mutationsQueueName);
-    // syncOfflineMutations.sync();
   }
 
   public open() {

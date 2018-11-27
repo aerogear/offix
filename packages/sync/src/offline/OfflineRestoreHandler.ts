@@ -1,22 +1,29 @@
 import ApolloClient from "apollo-client";
-import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
+import { NormalizedCacheObject } from "apollo-cache-inmemory";
 import { PersistentStore, PersistedData } from "../PersistentStore";
 import { OperationQueueEntry } from "../links/QueueLink";
 
-export class SyncOfflineMutation {
+/**
+ * Class used to restore offline queue after page/application restarts.
+ * It will trigger saved offline mutations using client to
+ * restore all elements in the link.
+ */
+export class OfflineRestoreHandler {
+
   private apolloClient: ApolloClient<NormalizedCacheObject>;
   private storage: PersistentStore<PersistedData>;
   private storageKey: string;
   private offlineData: OperationQueueEntry[] = [];
 
   constructor(apolloClient: ApolloClient<NormalizedCacheObject>,
-              storage: PersistentStore<PersistedData>, storageKey: string) {
+              storage: PersistentStore<PersistedData>,
+              storageKey: string) {
     this.apolloClient = apolloClient;
     this.storage = storage;
     this.storageKey = storageKey;
   }
 
-  public sync = async () => {
+  public replyOfflineMutations = async () => {
     const stored = await this.getOfflineData();
     if (stored) {
       this.offlineData = JSON.parse(stored.toString());
@@ -47,7 +54,6 @@ export class SyncOfflineMutation {
 
     // then add again the uncommited storage
     this.addOfflineData(uncommittedOfflineMutation);
-
   }
   private getOfflineData = async () => {
     return this.storage.getItem(this.storageKey);
