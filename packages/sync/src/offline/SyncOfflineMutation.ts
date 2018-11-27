@@ -14,15 +14,15 @@ export class SyncOfflineMutation {
     this.apolloClient = apolloClient;
     this.storage = storage;
     this.storageKey = storageKey;
-    const stored = this.getOfflineData();
+  }
+
+  public sync = async () => {
+    const stored = await this.getOfflineData();
     if (stored) {
       this.offlineData = JSON.parse(stored.toString());
     } else {
       this.offlineData = [];
     }
-  }
-
-  public sync = async () => {
     // if there is no offline data  then just exit
     if (!this.hasOfflineData()) { return; }
 
