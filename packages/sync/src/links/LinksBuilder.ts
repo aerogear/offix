@@ -3,7 +3,7 @@ import { HttpLink } from "apollo-link-http";
 import { conflictLink } from "../conflicts/conflictLink";
 import { DataSyncConfig } from "../config/DataSyncConfig";
 import { defaultWebSocketLink } from "./WebsocketLink";
-import QueueLink from "./QueueLink";
+import { OfflineQueueLink } from "./OfflineQueueLink";
 import { isSubscription } from "../utils/helpers";
 
 /**
@@ -26,7 +26,10 @@ export const defaultLinkBuilder: LinkChainBuilder =
       return config.customLinkBuilder(config);
     }
     const httpLink = new HttpLink({ uri: config.httpUrl });
-    const queueMutationsLink = new QueueLink(config);
+    const queueMutationsLink = new OfflineQueueLink(config, "mutation");
+    // Enable network based queuing
+    queueMutationsLink.openQueueOnNetworkStateUpdates();
+
     let links: ApolloLink[] = [queueMutationsLink, conflictLink(config), httpLink];
 
     if (!config.conflictStrategy) {

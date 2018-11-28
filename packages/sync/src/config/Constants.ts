@@ -1,8 +1,12 @@
+/**
+ * Server side defined directives
+ */
 export enum Directives {
   ONLINE_ONLY = "onlineOnly",
   NO_SQUASH = "noSquash"
 }
 
-export enum Constants {
-  CONFLICT_ERROR = "AgSync:DataConflict"
-}
+/**
+ * Config error type used to determine if conflict happened
+ */
+export const CONFLICT_ERROR = "AgSync:DataConflict";

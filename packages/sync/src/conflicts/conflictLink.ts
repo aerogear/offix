@@ -2,7 +2,7 @@ import { ApolloLink, FetchResult, NextLink, Observable, Operation } from "apollo
 import { onError } from "apollo-link-error";
 import { GraphQLError } from "graphql";
 import { DataSyncConfig } from "../config/DataSyncConfig";
-import { Constants } from "../config/Constants";
+import { CONFLICT_ERROR } from "../config/Constants";
 import { ConflictResolutionData, ConflictResolutionStrategy, strategies } from "./strategies";
 
 export const conflictLink = (config: DataSyncConfig) => {
@@ -15,7 +15,7 @@ export const conflictLink = (config: DataSyncConfig) => {
       for (const err of graphQLErrors) {
         if (err.extensions) {
           // TODO need to add flag to check if conflict was resolved on the server
-          if (err.extensions.exception.type === Constants.CONFLICT_ERROR) {
+          if (err.extensions.exception.type === CONFLICT_ERROR) {
             return err.extensions.exception.data;
           }
         }

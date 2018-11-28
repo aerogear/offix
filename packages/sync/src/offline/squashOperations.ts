@@ -1,6 +1,6 @@
 import { OperationDefinitionNode, NameNode } from "graphql";
 
-import { OperationQueueEntry } from "../links/QueueLink";
+import { OperationQueueEntry } from "../links/OfflineQueueLink";
 /**
  * Merge offline operations that are made on the same object.
  * Equality of operation is done by checking operationName and object id.
