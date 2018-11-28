@@ -24,7 +24,7 @@ export const createClient = async (userConfig?: DataSyncConfig) => {
   const offlineMutationHandler = new OfflineRestoreHandler(apolloClient,
     storage,
     clientConfig.mutationsQueueName);
-  offlineMutationHandler.replyOfflineMutations();
+  offlineMutationHandler.replayOfflineMutations();
   return apolloClient;
 };
 

@@ -22,8 +22,12 @@ export class OfflineRestoreHandler {
     this.storage = storage;
     this.storageKey = storageKey;
   }
-
-  public replyOfflineMutations = async () => {
+  /**
+   * Replay mutations to client.
+   * This operation will help to rebuild Apollo Link observer chain
+   * after page refresh/app restart
+   */
+  public replayOfflineMutations = async () => {
     const stored = await this.getOfflineData();
     if (stored) {
       this.offlineData = JSON.parse(stored.toString());
