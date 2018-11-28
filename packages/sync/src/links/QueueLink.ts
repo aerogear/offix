@@ -87,7 +87,8 @@ export default class QueueLink extends ApolloLink {
     if (this.opQueue.length > 0 && objectID) {
       // find the index of the operation in the array matching the incoming one
       const index = this.opQueue.findIndex(queueEntry => {
-        if (queueEntry.operation.operationName === operationName.value && queueEntry.operation.variables === objectID) {
+        if (queueEntry.operation.operationName === operationName.value &&
+            queueEntry.operation.variables.id === objectID) {
           return true;
         }
         return false;
