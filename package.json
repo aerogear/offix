@@ -39,6 +39,6 @@
     "typescript": "^2.7.2"
   },
   "dependencies": {
-    "@antora/site-generator-default": "^1.0.1"
+    "@types/mocha": "^5.2.5"
   }
 }
