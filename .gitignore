@@ -77,8 +77,6 @@ typings/
 npm-shrinkwrap.json
 package-lock.json
 
-.vscode/
-
 ## Dist folders
 dist
 types
