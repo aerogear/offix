@@ -5,9 +5,8 @@ import { squashOperations } from "../src/offline/squashOperations";
 
 import { OperationQueueEntry } from "../src/links/OfflineQueueLink";
 import { expect } from "chai";
-import { assertAbstractType } from "graphql";
 
-let operation: Operation = {
+const operation: Operation = {
   variables: {
     name: "User 1",
     id: 5,
@@ -34,7 +33,7 @@ let operation: Operation = {
   toKey: {} as any
 };
 
-let operationDifferentQuery: Operation = {
+const operationDifferentQuery: Operation = {
   variables: {
     name: "User 1",
     id: 5,
@@ -61,13 +60,13 @@ let operationDifferentQuery: Operation = {
   toKey: {} as any
 };
 
-let queueEntry: OperationQueueEntry = {
+const queueEntry: OperationQueueEntry = {
   operation,
   forward: {} as any,
   observer: {} as any
 };
 
-let queueEntryDifferentID: OperationQueueEntry = {
+const queueEntryDifferentID: OperationQueueEntry = {
   operation: {...operation, variables: {
     name: "User 1",
     id: 44,
@@ -77,13 +76,25 @@ let queueEntryDifferentID: OperationQueueEntry = {
   }},
   forward: {} as any,
   observer: {} as any
-}
+};
 
-let queueEntryDifferentQuery: OperationQueueEntry = {
+const queueEntryNewVars: OperationQueueEntry = {
+  operation: {...operation, variables: {
+    name: "User 1",
+    id: 5,
+    dateOfBirth: "12/12/18",
+    address: "GraphQL Lane",
+    version: 1
+  }},
+  forward: {} as any,
+  observer: {} as any
+};
+
+const queueEntryDifferentQuery: OperationQueueEntry = {
   operation: operationDifferentQuery,
   forward: {} as any,
   observer: {} as any
-}
+};
 
 describe("SquashOperations", () => {
   let opQueue: OperationQueueEntry[] = [];
@@ -110,7 +121,14 @@ describe("SquashOperations", () => {
     expect(opQueue.length).eqls(1);
   });
 
-  it("check queue contains two operation when query name differs", () => {
+  it("check vars are over ridden", () => {
+    opQueue = squashOperations(queueEntry, opQueue);
+    opQueue = squashOperations(queueEntryNewVars, opQueue);
+    expect(opQueue.length).eqls(1);
+    expect(opQueue[0].operation.variables).eqls(queueEntryNewVars.operation.variables);
+  });
+
+  it("check queue contains two operations when query name differs", () => {
     opQueue = squashOperations(queueEntry, opQueue);
     opQueue = squashOperations(queueEntryDifferentQuery, opQueue);
     expect(opQueue.length).eqls(2);
