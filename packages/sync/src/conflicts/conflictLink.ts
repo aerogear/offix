@@ -3,8 +3,9 @@ import { GraphQLError } from "graphql";
 import { DataSyncConfig } from "../config/DataSyncConfig";
 import { CONFLICT_ERROR } from "../config/Constants";
 import { ConflictResolutionData, ConflictResolutionStrategy, strategies } from "./strategies";
+import { ApolloLink } from "apollo-link";
 
-export const conflictLink = (config: DataSyncConfig) => {
+export const conflictLink = (config: DataSyncConfig): ApolloLink => {
   /**
   * Fetch conflict data from the errors returned from the server
   * @param graphQLErrors array of errors to retrieve conflicted data from
