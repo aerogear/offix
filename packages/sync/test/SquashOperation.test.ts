@@ -1,6 +1,3 @@
-import {
-  Operation, NextLink, execute
-} from "apollo-link";
 import { squashOperations } from "../src/offline/squashOperations";
 import { OfflineQueueLink as QueueLink, OperationQueueEntry } from "../src/links/OfflineQueueLink";
 import { expect } from "chai";
