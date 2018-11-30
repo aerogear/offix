@@ -73,7 +73,6 @@ export class OfflineQueueLink extends ApolloLink {
   }
 
   public request(operation: Operation, forward: NextLink) {
-    // TODO split this conditional and add a handler to notify of online only cases
     if (this.isOpen) {
       logger("Forwarding request");
       return forward(operation);
