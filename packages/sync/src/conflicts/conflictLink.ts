@@ -1,4 +1,3 @@
-import { ApolloLink, FetchResult, NextLink, Observable, Operation } from "apollo-link";
 import { onError } from "apollo-link-error";
 import { GraphQLError } from "graphql";
 import { DataSyncConfig } from "../config/DataSyncConfig";
