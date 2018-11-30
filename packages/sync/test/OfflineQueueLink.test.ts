@@ -1,7 +1,7 @@
 // tslint:disable-next-line:ordered-imports
 /// <reference types="@types/mocha" />
 import {
-  ApolloLink, execute, GraphQLRequest, Operation, NextLink
+  ApolloLink, execute, GraphQLRequest
 } from "apollo-link";
 import gql from "graphql-tag";
 import { OfflineQueueLink as QueueLink } from "../src/links/OfflineQueueLink";
@@ -42,48 +42,6 @@ describe("OnOffLink", () => {
     }
   };
 
-  const opDirective: Operation = {
-    variables: {
-      name: "User 1",
-      dateOfBirth: "Fri Nov 30 2018 09:43:22 GMT+0000",
-      id: "1",
-      version: 3
-    },
-    operationName: "updateUser",
-    query: {
-      kind: "Document",
-      definitions: [{
-        kind: "OperationDefinition",
-        operation: "mutation",
-        name: {
-          kind: "Name",
-          value: "updateUser"
-        },
-        selectionSet: {
-          kind: "SelectionSet",
-          selections: [{
-            kind: "Field",
-            name: {
-              kind: "Name",
-              value: "updateUser"
-            },
-            directives: [{
-              kind: "Directive",
-              name: {
-                kind: "Name",
-                value: "noSquash"
-              },
-              arguments: []
-            }]
-          }]
-        }
-      }]
-    },
-    extensions: {} as any,
-    setContext: {} as any,
-    getContext: {} as any,
-    toKey: {} as any
-  };
   const config = { mutationsQueueName: "test", storage: localStorage };
   beforeEach(() => {
     testLink = new TestLink();
@@ -188,25 +146,4 @@ describe("OnOffLink", () => {
     expect(testLink.operations.length).equal(1);
   });
 
-  it("noSquash Directive test", () => {
-    let operations: any[] = [];
-    const storageEngine = {
-      getItem() {
-        return operations;
-      },
-      removeItem() {
-        operations = [];
-      },
-      setItem(key: string, content: any) {
-        console.info(content);
-        operations = JSON.parse(content);
-      }
-    };
-    const localConfig = { mutationsQueueName: "test", storage: storageEngine };
-    const queueLink = new QueueLink(localConfig);
-    queueLink.close();
-    queueLink.request(opDirective, {} as NextLink).subscribe({});
-    queueLink.request(opDirective, {} as NextLink).subscribe({});
-    expect(localConfig.storage.getItem().length).eqls(2);
-  });
 });

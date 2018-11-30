@@ -1,97 +1,48 @@
 import {
-  Operation
+  Operation, NextLink
 } from "apollo-link";
 import { squashOperations } from "../src/offline/squashOperations";
-
-import { OperationQueueEntry } from "../src/links/OfflineQueueLink";
+import { OfflineQueueLink as QueueLink, OperationQueueEntry } from "../src/links/OfflineQueueLink";
 import { expect } from "chai";
 
-const operation: Operation = {
-  variables: {
-    name: "User 1",
-    id: 5,
-    dateOfBirth: "1/1/18",
-    address: "GraphQL Lane",
-    version: 1
-  },
-  operationName: "updateUser",
-  query: {
-    kind: "Document",
-    definitions: [{
-      kind: "OperationDefinition",
-      selectionSet: {} as any,
-      operation: "mutation",
-      name: {
-        kind: "Name",
-        value: "updateUser"
-      }
-    }]
-  },
-  extensions: {} as any,
-  setContext: {} as any,
-  getContext: {} as any,
-  toKey: {} as any
-};
-
-const operationDifferentQuery: Operation = {
-  variables: {
-    name: "User 1",
-    id: 5,
-    dateOfBirth: "1/1/18",
-    address: "GraphQL Lane",
-    version: 1
-  },
-  operationName: "createUser",
-  query: {
-    kind: "Document",
-    definitions: [{
-      kind: "OperationDefinition",
-      selectionSet: {} as any,
-      operation: "mutation",
-      name: {
-        kind: "Name",
-        value: "createUser"
-      }
-    }]
-  },
-  extensions: {} as any,
-  setContext: {} as any,
-  getContext: {} as any,
-  toKey: {} as any
-};
+import { op, opWithDirective, opWithDifferentQuery } from "./operations";
 
 const queueEntry: OperationQueueEntry = {
-  operation,
+  operation: op,
   forward: {} as any,
   observer: {} as any
 };
 
 const queueEntryDifferentID: OperationQueueEntry = {
-  operation: {...operation, variables: {
-    name: "User 1",
-    id: 44,
-    dateOfBirth: "1/1/18",
-    address: "GraphQL Lane",
-    version: 1
-  }},
+  operation: {
+    ...op, variables: {
+      name: "User 1",
+      id: 44,
+      dateOfBirth: "1/1/18",
+      address: "GraphQL Lane",
+      version: 1
+    }
+  },
   forward: {} as any,
   observer: {} as any
 };
 
 const queueEntryNewVars: OperationQueueEntry = {
-  operation: {...operation, variables: {
-    name: "User 1",
-    id: 5,
-    dateOfBirth: "12/12/18",
-    address: "GraphQL Lane",
-    version: 1
-  }},
+  operation: {
+    ...op, variables: {
+      name: "User 1",
+      id: 5,
+      dateOfBirth: "12/12/18",
+      address: "GraphQL Lane",
+      version: 1
+    }
+  },
   forward: {} as any,
   observer: {} as any
 };
 
 const queueEntryDifferentQuery: OperationQueueEntry = {
-  operation: operationDifferentQuery,
+  operation: opWithDifferentQuery,
   forward: {} as any,
   observer: {} as any
 };
@@ -142,5 +93,26 @@ describe("SquashOperations", () => {
     opQueue = squashOperations(queueEntryDifferentID, opQueue);
     expect(opQueue.length).eqls(3);
 
+  });
+
+  it("test noSquash Directive", () => {
+    let operations: any[] = [];
+    const storageEngine = {
+      getItem() {
+        return operations;
+      },
+      removeItem() {
+        operations = [];
+      },
+      setItem(key: string, content: any) {
+        operations = JSON.parse(content);
+      }
+    };
+    const localConfig = { mutationsQueueName: "test", storage: storageEngine };
+    const queueLink = new QueueLink(localConfig);
+    queueLink.close();
+    queueLink.request(opWithDirective, {} as NextLink).subscribe({});
+    queueLink.request(opWithDirective, {} as NextLink).subscribe({});
+    expect(localConfig.storage.getItem().length).eqls(2);
   });
 });
