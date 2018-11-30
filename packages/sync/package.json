@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "@aerogear/core": "2.0.0",
+    "@types/debug": "0.0.31",
     "@types/graphql": "^14.0.3",
     "@types/mocha": "^5.2.5",
     "@types/ws": "^6.0.1",
@@ -45,6 +46,7 @@
     "apollo-link-error": "^1.1.1",
     "apollo-link-http": "^1.5.5",
     "apollo-link-ws": "^1.0.9",
+    "debug": "^4.1.0",
     "deepmerge": "^2.2.1",
     "graphql": "^14.0.2",
     "graphql-tag": "^2.10.0",
