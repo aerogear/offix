@@ -1,5 +1,5 @@
 import {
-  Operation, NextLink
+  Operation, NextLink, execute
 } from "apollo-link";
 import { squashOperations } from "../src/offline/squashOperations";
 import { OfflineQueueLink as QueueLink, OperationQueueEntry } from "../src/links/OfflineQueueLink";
@@ -9,6 +9,12 @@ import { op, opWithDirective, opWithDifferentQuery } from "./operations";
 
 const queueEntry: OperationQueueEntry = {
   operation: op,
+  forward: {} as any,
+  observer: {} as any
+};
+
+const queueEntryWithDirective: OperationQueueEntry = {
+  operation: opWithDirective,
   forward: {} as any,
   observer: {} as any
 };
@@ -92,27 +98,23 @@ describe("SquashOperations", () => {
     expect(opQueue.length).eqls(3);
     opQueue = squashOperations(queueEntryDifferentID, opQueue);
     expect(opQueue.length).eqls(3);
-
   });
 
   it("test noSquash Directive", () => {
-    let operations: any[] = [];
-    const storageEngine = {
-      getItem() {
-        return operations;
-      },
-      removeItem() {
-        operations = [];
-      },
-      setItem(key: string, content: any) {
-        operations = JSON.parse(content);
-      }
-    };
-    const localConfig = { mutationsQueueName: "test", storage: storageEngine };
-    const queueLink = new QueueLink(localConfig);
-    queueLink.close();
-    queueLink.request(opWithDirective, {} as NextLink).subscribe({});
-    queueLink.request(opWithDirective, {} as NextLink).subscribe({});
-    expect(localConfig.storage.getItem().length).eqls(2);
+    opQueue = squashOperations(queueEntryWithDirective, opQueue);
+    opQueue = squashOperations(queueEntryWithDirective, opQueue);
+    expect(opQueue.length).eqls(2);
+    opQueue = squashOperations(queueEntry, opQueue);
+    opQueue = squashOperations(queueEntry, opQueue);
+    expect(opQueue.length).eqls(3);
+  });
+
+  it("test noSquash after squash has already happened", () => {
+    opQueue = squashOperations(queueEntry, opQueue);
+    opQueue = squashOperations(queueEntry, opQueue);
+    expect(opQueue.length).eqls(1);
+    opQueue = squashOperations(queueEntryWithDirective, opQueue);
+    opQueue = squashOperations(queueEntryWithDirective, opQueue);
+    expect(opQueue.length).eqls(3);
   });
 });

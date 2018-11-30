@@ -93,11 +93,7 @@ export class OfflineQueueLink extends ApolloLink {
   }
 
   private enqueue(entry: OperationQueueEntry) {
-    if (hasDirectives([Directives.NO_SQUASH], entry.operation.query)) {
-      this.opQueue.push(entry);
-    } else {
-      this.opQueue = squashOperations(entry, this.opQueue);
-    }
+    this.opQueue = squashOperations(entry, this.opQueue);
     this.storage.setItem(this.key, JSON.stringify(this.opQueue));
   }
 

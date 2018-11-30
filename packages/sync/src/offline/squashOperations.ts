@@ -1,11 +1,16 @@
 import { OperationDefinitionNode, NameNode } from "graphql";
-
+import { hasDirectives } from "apollo-utilities";
+import { Directives } from "../config/Constants";
 import { OperationQueueEntry } from "../links/OfflineQueueLink";
 /**
  * Merge offline operations that are made on the same object.
  * Equality of operation is done by checking operationName and object id.
  */
 export function squashOperations(entry: OperationQueueEntry, opQueue: OperationQueueEntry[]): OperationQueueEntry[] {
+  if (hasDirectives([Directives.NO_SQUASH], entry.operation.query)) {
+    opQueue.push(entry);
+    return opQueue;
+  }
   const { query, variables } = entry.operation;
   let operationName: NameNode;
 
