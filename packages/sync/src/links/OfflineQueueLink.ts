@@ -8,10 +8,13 @@ import {
 import { hasDirectives } from "apollo-utilities";
 import { Observer } from "zen-observable-ts";
 import { PersistedData, PersistentStore } from "../PersistentStore";
-import { Directives } from "../config/Constants";
+import { Directives, MUTATION_QUEUE_LOGGER } from "../config/Constants";
 import { NetworkStatus, NetworkInfo } from "../offline/NetworkStatus";
 import { DataSyncConfig } from "../config/DataSyncConfig";
 import { squashOperations } from "../offline/squashOperations";
+import debug from "debug";
+
+export const logger = debug(MUTATION_QUEUE_LOGGER);
 
 export interface OperationQueueEntry {
   operation: Operation;
@@ -56,6 +59,7 @@ export class OfflineQueueLink extends ApolloLink {
   }
 
   public open() {
+    logger("MutationQueue is open", this.opQueue);
     this.isOpen = true;
     this.opQueue.forEach(({ operation, forward, observer }) => {
       forward(operation).subscribe(observer);
@@ -64,15 +68,18 @@ export class OfflineQueueLink extends ApolloLink {
   }
 
   public close() {
+    logger("MutationQueue is closed");
     this.isOpen = false;
   }
 
   public request(operation: Operation, forward: NextLink) {
     // TODO split this conditional and add a handler to notify of online only cases
     if (this.isOpen) {
+      logger("Forwarding request");
       return forward(operation);
     }
     if (hasDirectives([Directives.ONLINE_ONLY], operation.query)) {
+      logger("Online only request");
       return forward(operation);
     }
 
@@ -93,6 +100,7 @@ export class OfflineQueueLink extends ApolloLink {
   }
 
   private enqueue(entry: OperationQueueEntry) {
+    logger("Adding new operation to offline queue");
     this.opQueue = squashOperations(entry, this.opQueue);
     this.storage.setItem(this.key, JSON.stringify(this.opQueue));
   }

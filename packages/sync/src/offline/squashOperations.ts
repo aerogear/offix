@@ -2,6 +2,10 @@ import { OperationDefinitionNode, NameNode } from "graphql";
 import { hasDirectives } from "apollo-utilities";
 import { Directives } from "../config/Constants";
 import { OperationQueueEntry } from "../links/OfflineQueueLink";
+import { MUTATION_QUEUE_LOGGER } from "../config/Constants";
+import debug from "debug";
+
+export const logger = debug(MUTATION_QUEUE_LOGGER);
 /**
  * Merge offline operations that are made on the same object.
  * Equality of operation is done by checking operationName and object id.
@@ -34,6 +38,7 @@ export function squashOperations(entry: OperationQueueEntry, opQueue: OperationQ
     if (index === -1) {
       opQueue.push(entry);
     } else {
+      logger("Squashing operation with existing item");
       // else if found, merge the variables
       const newOperationVariables = Object.assign(opQueue[index].operation.variables, variables);
       opQueue[index].operation.variables = newOperationVariables;
