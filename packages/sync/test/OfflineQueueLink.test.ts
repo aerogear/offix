@@ -41,6 +41,7 @@ describe("OnOffLink", () => {
       testResponse
     }
   };
+
   const config = { mutationsQueueName: "test", storage: localStorage };
   beforeEach(() => {
     testLink = new TestLink();
@@ -120,6 +121,7 @@ describe("OnOffLink", () => {
     onOffLinkFilter.open();
     expect(testLink.operations.length).equal(1);
   });
+
   it("store test promises", () => {
     let operations: any[] = [];
     const storageEngine = {
@@ -143,4 +145,5 @@ describe("OnOffLink", () => {
     onOffLinkFilter.open();
     expect(testLink.operations.length).equal(1);
   });
+
 });

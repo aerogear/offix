@@ -1,6 +1,6 @@
 import { ApolloLink, split } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
-import { conflictLink } from "../conflicts/conflictLink";
+import { conflictLink } from "../conflicts";
 import { DataSyncConfig } from "../config/DataSyncConfig";
 import { defaultWebSocketLink } from "./WebsocketLink";
 import { OfflineQueueLink } from "./OfflineQueueLink";

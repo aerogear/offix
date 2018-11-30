@@ -1,6 +1,6 @@
 import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
 import { persistCache } from "apollo-cache-persist";
-import { ApolloClient, ApolloClientOptions } from "apollo-client";
+import { ApolloClient } from "apollo-client";
 import { DataSyncConfig } from "./config/DataSyncConfig";
 import { SyncConfig } from "./config/SyncConfig";
 import { defaultLinkBuilder as buildLink } from "./links/LinksBuilder";
