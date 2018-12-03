@@ -2,9 +2,9 @@ import { INSTANCE, ServiceConfiguration } from "@aerogear/core";
 import { PersistedData, PersistentStore } from "../PersistentStore";
 import { ConfigError } from "./ConfigError";
 import { DataSyncConfig } from "./DataSyncConfig";
-import { WebNetworkStatus } from "../offline/WebNetworkStatus";
+import { WebNetworkStatus } from "../offline";
 import { isMobileCordova } from "@aerogear/core";
-import { CordovaNetworkStatus } from "../offline/CordovaNetworkStatus";
+import { CordovaNetworkStatus } from "../offline";
 
 declare var window: any;
 

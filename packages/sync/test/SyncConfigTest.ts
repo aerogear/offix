@@ -1,11 +1,8 @@
-// tslint:disable-next-line:ordered-imports
 import { INSTANCE } from "@aerogear/core";
 import { SyncConfig } from "../src/config/SyncConfig";
-
 import { expect } from "chai";
 
 declare var global: any;
-declare var window: any;
 
 global.window = {};
 

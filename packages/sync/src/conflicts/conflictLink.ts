@@ -1,6 +1,6 @@
 import { onError } from "apollo-link-error";
 import { GraphQLError } from "graphql";
-import { DataSyncConfig } from "../config/DataSyncConfig";
+import { DataSyncConfig } from "../config";
 import { CONFLICT_ERROR } from "../config/Constants";
 import { ConflictResolutionData, ConflictResolutionStrategy, strategies } from "./strategies";
 import { ApolloLink } from "apollo-link";

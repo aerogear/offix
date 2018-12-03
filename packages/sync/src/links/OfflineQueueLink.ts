@@ -9,8 +9,8 @@ import { hasDirectives } from "apollo-utilities";
 import { Observer } from "zen-observable-ts";
 import { PersistedData, PersistentStore } from "../PersistentStore";
 import { Directives, MUTATION_QUEUE_LOGGER } from "../config/Constants";
-import { NetworkStatus, NetworkInfo } from "../offline/NetworkStatus";
-import { DataSyncConfig } from "../config/DataSyncConfig";
+import { NetworkStatus, NetworkInfo } from "../offline";
+import { DataSyncConfig } from "../config";
 import { squashOperations } from "../offline/squashOperations";
 import debug from "debug";
 
@@ -41,9 +41,9 @@ export class OfflineQueueLink extends ApolloLink {
   private opQueue: OperationQueueEntry[] = [];
   private isOpen: boolean = true;
   private storage: PersistentStore<PersistedData>;
-  private key: string;
-  private networkStatus?: NetworkStatus;
-  private operationFilter?: TYPE_MUTATION;
+  private readonly key: string;
+  private readonly networkStatus?: NetworkStatus;
+  private readonly operationFilter?: TYPE_MUTATION;
 
   /**
    *

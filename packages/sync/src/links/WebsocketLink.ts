@@ -2,7 +2,7 @@ import { WebSocketLink } from "apollo-link-ws";
 
 export const defaultWebSocketLink = (config: WebSocketLink.Configuration) => {
   const options = config.options || {};
-  const wsLink = new WebSocketLink({
+  return new WebSocketLink({
     uri: config.uri,
     options: {
       // Params that can be used to send authentication token etc.
@@ -19,5 +19,4 @@ export const defaultWebSocketLink = (config: WebSocketLink.Configuration) => {
       lazy: true
     }
   });
-  return wsLink;
 };

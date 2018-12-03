@@ -1,7 +1,7 @@
 import { squashOperations } from "../src/offline/squashOperations";
 import { OperationQueueEntry } from "../src/links/OfflineQueueLink";
 import { expect } from "chai";
-import { op, opWithSquashDirective, opWithDifferentQuery } from "./operations";
+import { op, opWithDifferentQuery, opWithSquashDirective } from "./operations";
 
 const queueEntry: OperationQueueEntry = {
   operation: op,
@@ -78,7 +78,8 @@ describe("SquashOperations", () => {
     opQueue = squashOperations(queueEntry, opQueue);
     opQueue = squashOperations(queueEntryNewVars, opQueue);
     expect(opQueue.length).eqls(1);
-    expect(opQueue[0].operation.variables).eqls(queueEntryNewVars.operation.variables);
+    expect(opQueue[0].operation.variables).
+      eqls(queueEntryNewVars.operation.variables);
   });
 
   it("check queue contains two operations when query name differs", () => {

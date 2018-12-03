@@ -1,13 +1,5 @@
-import {
-  ApolloLink,
-  Observable,
-  Operation
-} from "apollo-link";
-import {
-  ExecutionResult
-} from "graphql";
-
-import { expect } from "chai";
+import { ApolloLink, Observable, Operation } from "apollo-link";
+import { ExecutionResult } from "graphql";
 
 export class TestLink extends ApolloLink {
   public operations: Operation[];

@@ -1,7 +1,7 @@
-import { ConflictResolutionStrategy } from "../conflicts/strategies";
-import { LinkChainBuilder } from "../links/LinksBuilder";
+import { ConflictResolutionStrategy } from "../conflicts";
+import { LinkChainBuilder } from "../links";
 import { PersistedData, PersistentStore } from "../PersistentStore";
-import { NetworkStatus } from "../offline/NetworkStatus";
+import { NetworkStatus } from "../offline";
 
 /**
  * Contains all configuration options required to initialize SDK
