@@ -1,8 +1,7 @@
 import { squashOperations } from "../src/offline/squashOperations";
-import { OfflineQueueLink as QueueLink, OperationQueueEntry } from "../src/links/OfflineQueueLink";
+import { OperationQueueEntry } from "../src/links/OfflineQueueLink";
 import { expect } from "chai";
-
-import { op, opWithDirective, opWithDifferentQuery } from "./operations";
+import { op, opWithSquashDirective, opWithDifferentQuery } from "./operations";
 
 const queueEntry: OperationQueueEntry = {
   operation: op,
@@ -11,7 +10,7 @@ const queueEntry: OperationQueueEntry = {
 };
 
 const queueEntryWithDirective: OperationQueueEntry = {
-  operation: opWithDirective,
+  operation: opWithSquashDirective,
   forward: {} as any,
   observer: {} as any
 };

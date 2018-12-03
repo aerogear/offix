@@ -8,7 +8,7 @@ import { OfflineQueueLink as QueueLink } from "../src/links/OfflineQueueLink";
 import {
   TestLink
 } from "./TestUtils";
-
+import { opWithOnlineDirective } from "./operations";
 import { expect } from "chai";
 import { PersistentStore, PersistedData } from "../src/PersistentStore";
 
@@ -96,6 +96,48 @@ describe("OnOffLink", () => {
     });
     onOffLinkFilter.open();
     expect(testLink.operations.length).eqls(1);
+  });
+
+  it("test online only directive skips queue", () => {
+    let operations: any[] = [];
+    const storageEngine = {
+      getItem() {
+        return operations;
+      },
+      removeItem() {
+        operations = [];
+      },
+      setItem(key: string, content: any) {
+        operations = JSON.parse(content);
+      }
+    };
+    const localConfig = { mutationsQueueName: "test", storage: storageEngine };
+    const queueLink = new QueueLink(localConfig);
+    queueLink.close();
+    const customLink = ApolloLink.from([queueLink, testLink]);
+    execute(customLink, opWithOnlineDirective).subscribe({});
+    expect(storageEngine.getItem.length).equal(0);
+  });
+
+  it("test online only operation makes it to termination", () => {
+    let operations: any[] = [];
+    const storageEngine = {
+      getItem() {
+        return operations;
+      },
+      removeItem() {
+        operations = [];
+      },
+      setItem(key: string, content: any) {
+        operations = JSON.parse(content);
+      }
+    };
+    const localConfig = { mutationsQueueName: "test", storage: storageEngine };
+    const queueLink = new QueueLink(localConfig);
+    queueLink.close();
+    const customLink = ApolloLink.from([queueLink, testLink]);
+    execute(customLink, opWithOnlineDirective).subscribe({});
+    expect(testLink.operations.length).equal(1);
   });
 
   it("store test", () => {

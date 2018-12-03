@@ -1,4 +1,4 @@
-import { Operation } from "apollo-link";
+import { Operation, GraphQLRequest } from "apollo-link";
 
 const op: Operation = {
   variables: {
@@ -27,7 +27,7 @@ const op: Operation = {
   toKey: {} as any
 };
 
-const opWithDirective: Operation = {
+const opWithSquashDirective: Operation = {
   variables: {
     name: "User 1",
     dateOfBirth: "Fri Nov 30 2018 09:43:22 GMT+0000",
@@ -70,6 +70,46 @@ const opWithDirective: Operation = {
   toKey: {} as any
 };
 
+const opWithOnlineDirective: GraphQLRequest = {
+  variables: {
+    name: "User 1",
+    dateOfBirth: "Fri Nov 30 2018 09:43:22 GMT+0000",
+    id: "1",
+    version: 3
+  },
+  operationName: "updateUser",
+  query: {
+    kind: "Document",
+    definitions: [{
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: {
+        kind: "Name",
+        value: "updateUser"
+      },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [{
+          kind: "Field",
+          name: {
+            kind: "Name",
+            value: "updateUser"
+          },
+          directives: [{
+            kind: "Directive",
+            name: {
+              kind: "Name",
+              value: "onlineOnly"
+            },
+            arguments: []
+          }]
+        }]
+      }
+    }]
+  },
+  extensions: {} as any
+};
+
 const opWithDifferentQuery: Operation = {
   variables: {
     name: "User 1",
@@ -97,4 +137,4 @@ const opWithDifferentQuery: Operation = {
   toKey: {} as any
 };
 
-export { op, opWithDifferentQuery, opWithDirective };
+export { op, opWithDifferentQuery, opWithSquashDirective, opWithOnlineDirective };
