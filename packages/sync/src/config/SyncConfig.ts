@@ -20,6 +20,7 @@ export class SyncConfig implements DataSyncConfig {
   public dataIdFromObject = "id";
   public storage?: PersistentStore<PersistedData>;
   public mutationsQueueName = "offline-mutation-store";
+  public squashing = true;
 
   public networkStatus = (isMobileCordova()) ? new CordovaNetworkStatus() : new WebNetworkStatus();
 

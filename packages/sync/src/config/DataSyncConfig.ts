@@ -48,4 +48,9 @@ export interface DataSyncConfig {
    * The name of the queue to store offline mutations in
    */
   mutationsQueueName?: string | any;
+
+  /**
+   * Whether or not to enable squashing of queries
+   */
+  mergeOfflineMutations?: boolean;
 }
