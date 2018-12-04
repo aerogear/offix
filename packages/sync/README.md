@@ -34,7 +34,7 @@ declare var window: any;
 
 let config: DataSyncConfig = {
   httpUrl: "my-custom-url",
-  wsUrl: "my-custom-ws-url"
+  wsUrl: "my-custom-ws-url",
   dataIdFromObject: "id",
   storage: window.localStorage,
   conflictStrategy: strategies.diffMergeClientWins,
@@ -44,6 +44,19 @@ let config: DataSyncConfig = {
   squashing: true
 }
 ```
+
+Config | Description | Default
+------ | ------ | ------
+httpUrl | The URL of your http server | N/A
+wsUrl | The URL of your websocket | N/A
+dataIdFromObject | The name of the field to be used as ID | "id"
+storage | The storage you want your client to use | window.localStorage
+conflictStrategy | The conflict resolution strategy your client should use | N/A
+customLinkBuilder | Enables providing custom Apollo Link for processing requests | See `LinksBuilder`
+networkStatus | Implementation of `NetworkStatus` Interface | See `WebNetworkStatus` and `CordovaNetworkStatus`
+mutationsQueueName | The name to store requests under in your offline queue | "offline-mutation-store"
+squashing | Whether or not you wish to squash mutations in your queue | true
+
 
 # Creating a Client
 ```javascript
@@ -68,6 +81,21 @@ let config = {
   conflictStrategy: clientWins
 ...
 }
+```
+
+## Implementing Custom Apollo Links
+To use your own custom apollo links to create your own network flow, simply follow the documentation for creating links here: https://www.apollographql.com/docs/link/index.html. You can pass this building mechanism to your client in the config, under the `customLinkBuilder` parameter.
+
+```javascript
+export const linkBuilder: LinkChainBuilder = (): ApolloLink => {
+    const httpLink = new HttpLink({ uri: "someUri" });
+    const customLink = new YourCustomLink();
+
+    let links: ApolloLink[] = [customLink, httpLink];
+
+    let compositeLink = ApolloLink.from(links);
+    return compositeLink;
+  };
 ```
 
 ## Online Only Queries
