@@ -52,5 +52,5 @@ export interface DataSyncConfig {
   /**
    * Whether or not to enable squashing of queries
    */
-  squashing?: boolean;
+  mergeOfflineMutations?: boolean;
 }

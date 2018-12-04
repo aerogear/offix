@@ -152,7 +152,7 @@ describe("OnOffLink", () => {
         operations = JSON.parse(content);
       }
     };
-    const localConfig = { mutationsQueueName: "test", storage: storageEngine, squashing: false };
+    const localConfig = { mutationsQueueName: "test", storage: storageEngine, mergeOfflineMutations: false };
     const queueLink = new QueueLink(localConfig);
     queueLink.close();
     const customLink = ApolloLink.from([queueLink, testLink]);

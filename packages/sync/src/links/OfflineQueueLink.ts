@@ -44,7 +44,7 @@ export class OfflineQueueLink extends ApolloLink {
   private readonly key: string;
   private readonly networkStatus?: NetworkStatus;
   private readonly operationFilter?: TYPE_MUTATION;
-  private readonly squashing?: boolean;
+  private readonly mergeOfflineMutations?: boolean;
   /**
    *
    * @param config configuration for queue
@@ -54,7 +54,7 @@ export class OfflineQueueLink extends ApolloLink {
     super();
     this.storage = config.storage as PersistentStore<PersistedData>;
     this.key = config.mutationsQueueName;
-    this.squashing = config.squashing;
+    this.mergeOfflineMutations = config.mergeOfflineMutations;
     this.networkStatus = config.networkStatus;
     this.operationFilter = filter;
   }
@@ -101,7 +101,7 @@ export class OfflineQueueLink extends ApolloLink {
 
   private enqueue(entry: OperationQueueEntry) {
     logger("Adding new operation to offline queue");
-    if (this.squashing) {
+    if (this.mergeOfflineMutations) {
       this.opQueue = squashOperations(entry, this.opQueue);
     } else {
       this.opQueue.push(entry);
