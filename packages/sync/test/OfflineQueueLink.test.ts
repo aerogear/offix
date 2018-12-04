@@ -28,6 +28,7 @@ describe("OnOffLink", () => {
   let link: ApolloLink;
   let onOffLink: QueueLink;
   let testLink: TestLink;
+  let operations: any[] = [];
 
   const testResponse = {
     data: {
@@ -47,6 +48,7 @@ describe("OnOffLink", () => {
     testLink = new TestLink();
     onOffLink = new QueueLink(config);
     link = ApolloLink.from([onOffLink, testLink]);
+    operations = [];
   });
 
   it("forwards the operation", () => {
@@ -99,7 +101,6 @@ describe("OnOffLink", () => {
   });
 
   it("test online only directive skips queue", () => {
-    let operations: any[] = [];
     const storageEngine = {
       getItem() {
         return operations;
@@ -120,7 +121,6 @@ describe("OnOffLink", () => {
   });
 
   it("test online only operation makes it to termination", () => {
-    let operations: any[] = [];
     const storageEngine = {
       getItem() {
         return operations;
@@ -140,8 +140,28 @@ describe("OnOffLink", () => {
     expect(testLink.operations.length).equal(1);
   });
 
+  it("test turning off squashing in queue", () => {
+    const storageEngine = {
+      getItem() {
+        return operations;
+      },
+      removeItem() {
+        operations = [];
+      },
+      setItem(key: string, content: any) {
+        operations = JSON.parse(content);
+      }
+    };
+    const localConfig = { mutationsQueueName: "test", storage: storageEngine, squashing: false };
+    const queueLink = new QueueLink(localConfig);
+    queueLink.close();
+    const customLink = ApolloLink.from([queueLink, testLink]);
+    execute(customLink, op).subscribe({});
+    execute(customLink, op).subscribe({});
+    expect(localConfig.storage.getItem().length).equal(2);
+  });
+
   it("store test", () => {
-    let operations: any[] = [];
     const storageEngine = {
       getItem() {
         return JSON.stringify(operations);
@@ -165,7 +185,6 @@ describe("OnOffLink", () => {
   });
 
   it("store test promises", () => {
-    let operations: any[] = [];
     const storageEngine = {
       getItem() {
         return Promise.resolve(JSON.stringify(operations));
