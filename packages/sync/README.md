@@ -48,7 +48,6 @@ Config | Description | Default
 ------ | ------ | ------
 httpUrl | The URL of your http server | N/A
 wsUrl | The URL of your websocket | N/A
-dataIdFromObject | The name of the field to be used as ID | "id"
 storage | The storage you want your client to use | window.localStorage
 conflictStrategy | The conflict resolution strategy your client should use | N/A
 customLinkBuilder | Enables providing custom Apollo Link for processing requests | See `LinksBuilder`
