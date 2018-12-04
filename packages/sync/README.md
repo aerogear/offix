@@ -111,13 +111,7 @@ To use your own custom network checks, implement the [NetworkStatus](https://git
 AeroGear Sync SDK provides offline mutations out of the box. By default it uses localStorage to do this and mutations are stored under the cache key of 'offline-mutations-queue'.
 
 ### Online Only Queries
-To ensure certain queries are not queued and are always delivered to the network layer, you must make use of Graphql directives. To do so define a directive on your schema type definitions like so:
-
-```
-directive @onlineOnly on FIELD
-```
-
-Next, on your client, ensure the query has the annotation attached like so:
+To ensure certain queries are not queued and are always delivered to the network layer, you must make use of Graphql directives.To do so on your client, ensure the query has the annotation attached like so:
 
 ```
 exampleQuery(...) @onlineOnly {
@@ -140,13 +134,7 @@ let config = {
 ```
 
 #### Mutation Level Squashing
-To disable this feature at a mutation level be sure to create a directive on your schema type definitions like so:
-
-```
-directive @noSquash on FIELD
-```
-
-Next, on your client, ensure the mutation has the annotation attached like so:
+To disable this feature at a mutation level be sure to include the annotation on the mutation like so:
 
 ```
 exampleMutation(...) @noSquash {
