@@ -35,7 +35,6 @@ declare var window: any;
 let config: DataSyncConfig = {
   httpUrl: "my-custom-url",
   wsUrl: "my-custom-ws-url",
-  dataIdFromObject: "id",
   storage: window.localStorage,
   conflictStrategy: strategies.diffMergeClientWins,
   customLinkBuilder: customLinkBuilder,
@@ -99,7 +98,8 @@ export const linkBuilder: LinkChainBuilder = (): ApolloLink => {
 ```
 
 ## Implementing Custom Network Status checks
-To use your own custom netork checks, implement the NetworkStatus interface which provides two functions;
+To use your own custom network checks, implement the [NetworkStatus](https://github.com/aerogear/aerogear-js-sdk/blob/master/packages/sync/src/offline/NetworkStatus.ts)
+ interface which provides two functions;
 
 ```javascript
   onStatusChangeListener(callback: NetworkStatusChangeCallback): void;
@@ -126,8 +126,8 @@ exampleQuery(...) @onlineOnly {
 }
 ```
 
-### Squashing Queries
-By default AeroGear Sync SDK provides squashing of mutations out of the box. This means that if your client is offline and the same mutation is run twice with different parameters they will be squashed into one mutation. This is beneficial as the client will not have to queue a large amount of mutations to replay once it returns online.
+### Squashing Mutations
+Multiple changes performed on the same object ID and with the same mutation will automatically be joined by the AeroGear Sync SDK when your client is offline. This is beneficial as the client will not have to queue a large amount of mutations to replay once it returns online.
 
 #### Global Squashing
 This feature is on by default at a global level. To disable it on a global level simply do so in your config:
@@ -140,17 +140,17 @@ let config = {
 }
 ```
 
-#### Query Level Squashing
-To disable this feature at a query level be sure to create a directive on your schema type definitions like so:
+#### Mutation Level Squashing
+To disable this feature at a mutation level be sure to create a directive on your schema type definitions like so:
 
 ```
 directive @noSquash on FIELD
 ```
 
-Next, on your client, ensure the query has the annotation attached like so:
+Next, on your client, ensure the mutation has the annotation attached like so:
 
 ```
-exampleQuery(...) @noSquash {
+exampleMutation(...) @noSquash {
   ...
 }
 ```
