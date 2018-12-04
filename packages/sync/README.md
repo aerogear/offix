@@ -98,7 +98,20 @@ export const linkBuilder: LinkChainBuilder = (): ApolloLink => {
   };
 ```
 
-## Online Only Queries
+## Implementing Custom Network Status checks
+To use your own custom netork checks, implement the NetworkStatus interface which provides two functions;
+
+```javascript
+  onStatusChangeListener(callback: NetworkStatusChangeCallback): void;
+
+  isOffline(): boolean;
+```
+
+## Offline Mutations
+
+AeroGear Sync SDK provides offline mutations out of the box. By default it uses localStorage to do this and mutations are stored under the cache key of 'offline-mutations-queue'.
+
+### Online Only Queries
 To ensure certain queries are not queued and are always delivered to the network layer, you must make use of Graphql directives. To do so define a directive on your schema type definitions like so:
 
 ```
@@ -113,10 +126,10 @@ exampleQuery(...) @onlineOnly {
 }
 ```
 
-## Squashing Queries
+### Squashing Queries
 By default AeroGear Sync SDK provides squashing of mutations out of the box. This means that if your client is offline and the same mutation is run twice with different parameters they will be squashed into one mutation. This is beneficial as the client will not have to queue a large amount of mutations to replay once it returns online.
 
-### Global Squashing
+#### Global Squashing
 This feature is on by default at a global level. To disable it on a global level simply do so in your config:
 
 ```javascript
@@ -127,7 +140,7 @@ let config = {
 }
 ```
 
-### Query Level Squashing
+#### Query Level Squashing
 To disable this feature at a query level be sure to create a directive on your schema type definitions like so:
 
 ```
