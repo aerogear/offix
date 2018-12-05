@@ -1,6 +1,6 @@
 {
   "name": "@aerogear/datasync-js",
-  "version": "2.0.0",
+  "version": "0.0.1-alpha",
   "description": "Aero Gear DataSync SDK",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -25,6 +25,9 @@
     "url": "https://github.com/aerogear/aerogear-js-sdk/issues"
   },
   "homepage": "https://github.com/aerogear/aerogear-js-sdk#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "@types/chai": "^4.1.3",
     "@types/debug": "0.0.31",
