@@ -27,6 +27,7 @@
   "homepage": "https://github.com/aerogear/aerogear-js-sdk#readme",
   "devDependencies": {
     "@types/chai": "^4.1.3",
+    "@types/debug": "0.0.31",
     "chai": "^4.1.2",
     "mocha": "^5.1.1",
     "nyc": "^11.7.1",
@@ -35,7 +36,6 @@
   },
   "dependencies": {
     "@aerogear/core": "2.0.0",
-    "@types/debug": "0.0.31",
     "@types/graphql": "^14.0.3",
     "@types/mocha": "^5.2.5",
     "@types/ws": "^6.0.1",
