@@ -1,7 +1,7 @@
-import { ApolloLink, split } from "apollo-link";
+import { ApolloLink, split, concat } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { conflictLink } from "../conflicts";
-import { DirectiveLink } from "../links/DirectiveLink";
+import { LocalDirectiveFilterLink } from "./LocalDirectiveFilterLink";
 import { DataSyncConfig } from "../config";
 import { defaultWebSocketLink } from "./WebsocketLink";
 import { OfflineQueueLink } from "./OfflineQueueLink";
@@ -28,14 +28,14 @@ export const defaultLinkBuilder: LinkChainBuilder =
     }
     const httpLink = new HttpLink({ uri: config.httpUrl });
     const queueMutationsLink = new OfflineQueueLink(config, "mutation");
-    const directiveLink = new DirectiveLink();
+    const directiveLink = new LocalDirectiveFilterLink();
     // Enable network based queuing
     queueMutationsLink.openQueueOnNetworkStateUpdates();
-
-    let links: ApolloLink[] = [directiveLink, queueMutationsLink, conflictLink(config), httpLink];
+    const compositeQueueLink: ApolloLink = concat(queueMutationsLink, directiveLink);
+    let links: ApolloLink[] = [compositeQueueLink, conflictLink(config), httpLink];
 
     if (!config.conflictStrategy) {
-      links = [queueMutationsLink, httpLink];
+      links = [compositeQueueLink, httpLink];
     }
 
     let compositeLink = ApolloLink.from(links);

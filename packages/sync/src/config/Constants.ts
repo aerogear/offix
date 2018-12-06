@@ -1,7 +1,7 @@
 /**
- * Server side defined directives
+ * Client side defined directives
  */
-export enum Directives {
+export enum LocalDirectives {
   ONLINE_ONLY = "onlineOnly",
   NO_SQUASH = "noSquash"
 }
