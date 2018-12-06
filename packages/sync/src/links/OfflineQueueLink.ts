@@ -74,6 +74,7 @@ export class OfflineQueueLink extends ApolloLink {
   }
 
   public request(operation: Operation, forward: NextLink) {
+    logger("IN QUEUE LINK, OPERATION:", operation);
     if (this.isOpen) {
       logger("Forwarding request");
       return forward(operation);
