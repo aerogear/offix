@@ -10,7 +10,7 @@ import { OfflineRestoreHandler } from "./offline/OfflineRestoreHandler";
 /**
  * @see ApolloClient
  */
-type VoyagerClient = ApolloClient<NormalizedCacheObject>;
+export type VoyagerClient = ApolloClient<NormalizedCacheObject>;
 
 /**
  * Factory for creating Apollo Client
