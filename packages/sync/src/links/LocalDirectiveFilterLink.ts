@@ -4,7 +4,7 @@ import {
   Operation
 } from "apollo-link";
 import { hasDirectives, removeDirectivesFromDocument } from "apollo-utilities";
-import { LocalDirectivesArray, MUTATION_QUEUE_LOGGER } from "../config/Constants";
+import { localDirectivesArray, MUTATION_QUEUE_LOGGER } from "../config/Constants";
 import debug from "debug";
 
 export const logger = debug(MUTATION_QUEUE_LOGGER);
@@ -15,13 +15,13 @@ export class LocalDirectiveFilterLink extends ApolloLink {
   constructor() {
     super();
     this.directiveRemovalConfig = [];
-    LocalDirectivesArray.forEach((directive) => {
+    localDirectivesArray.forEach((directive) => {
       this.directiveRemovalConfig.push({name: directive});
     });
   }
   public request(operation: Operation, forward: NextLink) {
     logger("Checking if client directives need to be removed on ", operation);
-    const clientDirectivesPresent = hasDirectives( LocalDirectivesArray, operation.query);
+    const clientDirectivesPresent = hasDirectives( localDirectivesArray, operation.query);
     if (!clientDirectivesPresent) {
       return forward(operation);
     } else {
