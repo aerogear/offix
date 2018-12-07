@@ -9,7 +9,7 @@ import {
 import { hasDirectives } from "apollo-utilities";
 import { Observer } from "zen-observable-ts";
 import { PersistedData, PersistentStore } from "../PersistentStore";
-import { LocalDirectives, MUTATION_QUEUE_LOGGER } from "../config/Constants";
+import { localDirectives, MUTATION_QUEUE_LOGGER } from "../config/Constants";
 import { NetworkStatus, NetworkInfo } from "../offline";
 import { DataSyncConfig } from "../config";
 import { squashOperations } from "../offline/squashOperations";
@@ -79,7 +79,7 @@ export class OfflineQueueLink extends ApolloLink {
       logger("Forwarding request");
       return forward(operation);
     }
-    if (hasDirectives([LocalDirectives.ONLINE_ONLY], operation.query)) {
+    if (hasDirectives([localDirectives.ONLINE_ONLY], operation.query)) {
       logger("Online only request");
       return forward(operation);
     }
