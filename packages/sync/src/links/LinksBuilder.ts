@@ -6,6 +6,7 @@ import { DataSyncConfig } from "../config";
 import { defaultWebSocketLink } from "./WebsocketLink";
 import { OfflineQueueLink } from "./OfflineQueueLink";
 import { isSubscription } from "../utils/helpers";
+import { compositeQueueLink } from "./compositeQueueLink";
 
 /**
  * Function used to build Apollo link
@@ -27,15 +28,11 @@ export const defaultLinkBuilder: LinkChainBuilder =
       return config.customLinkBuilder(config);
     }
     const httpLink = new HttpLink({ uri: config.httpUrl });
-    const queueMutationsLink = new OfflineQueueLink(config, "mutation");
-    const directiveLink = new LocalDirectiveFilterLink();
-    // Enable network based queuing
-    queueMutationsLink.openQueueOnNetworkStateUpdates();
-    const compositeQueueLink: ApolloLink = concat(queueMutationsLink, directiveLink);
-    let links: ApolloLink[] = [compositeQueueLink, conflictLink(config), httpLink];
+    const localLink: ApolloLink = compositeQueueLink(config, "mutation");
+    let links: ApolloLink[] = [localLink, conflictLink(config), httpLink];
 
     if (!config.conflictStrategy) {
-      links = [compositeQueueLink, httpLink];
+      links = [localLink, httpLink];
     }
 
     let compositeLink = ApolloLink.from(links);
