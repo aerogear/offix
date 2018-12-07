@@ -17,7 +17,6 @@ const TYPE: string = "sync";
  */
 export class SyncConfig implements DataSyncConfig {
   // Explicitly use id as id field
-  public dataIdFromObject = "id";
   public storage?: PersistentStore<PersistedData>;
   public mutationsQueueName = "offline-mutation-store";
   public squashing = true;
