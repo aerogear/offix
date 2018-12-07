@@ -70,7 +70,7 @@ const opWithSquashDirective: Operation = {
   toKey: {} as any
 };
 
-const opWithOnlineDirective: GraphQLRequest = {
+const requestWithOnlineDirective: GraphQLRequest = {
   variables: {
     name: "User 1",
     dateOfBirth: "Fri Nov 30 2018 09:43:22 GMT+0000",
@@ -177,4 +177,4 @@ const opWithDifferentQuery: Operation = {
   toKey: {} as any
 };
 
-export { op, opWithDifferentQuery, opWithSquashDirective, opWithOnlineDirective, requestWithNoSquashDirective };
+export { op, opWithDifferentQuery, opWithSquashDirective, requestWithOnlineDirective, requestWithNoSquashDirective };

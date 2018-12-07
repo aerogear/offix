@@ -11,6 +11,12 @@ import debug from "debug";
 export const logger = debug(MUTATION_QUEUE_LOGGER);
 
 export class LocalDirectiveFilterLink extends ApolloLink {
+  private connectionRemoveOnlineOnly = {
+    name: "onlineOnly"
+  };
+  private connectionRemoveNoSquash = {
+    name: "noSquash"
+  };
   constructor() {
     super();
   }
@@ -26,17 +32,12 @@ export class LocalDirectiveFilterLink extends ApolloLink {
     if (!clientDirectivesPresent) {
       return forward(operation);
     } else {
-      const connectionRemoveOnlineOnly = {
-        name: "onlineOnly"
-      };
-      const connectionRemoveNoSquash = {
-        name: "noSquash"
-      };
+
       checkDocument(operation.query);
       const newDoc = removeDirectivesFromDocument(
         [
-          connectionRemoveOnlineOnly,
-          connectionRemoveNoSquash
+          this.connectionRemoveOnlineOnly,
+          this.connectionRemoveNoSquash
         ],
         operation.query
       );
