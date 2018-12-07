@@ -141,3 +141,8 @@ exampleMutation(...) @noSquash {
   ...
 }
 ```
+
+## Designing your types
+
+When designing your GraphQL schema types `id` field is always required.
+Library will perform business logic assumming that `id` field will be supplied and returned from server. Without this field some offline functionalities will not work properly.
