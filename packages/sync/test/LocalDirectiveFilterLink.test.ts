@@ -1,5 +1,9 @@
 import { expect } from "chai";
-import { requestWithOnlineDirective, requestWithNoSquashDirective } from "./operations";
+import {
+  requestWithOnlineDirective,
+  requestWithNoSquashDirective,
+  requestWithBothDirectives
+} from "./operations";
 import {
   TestLink
 } from "./TestUtils";
@@ -29,5 +33,12 @@ describe("LocalDirectives", () => {
     execute(link, requestWithNoSquashDirective).subscribe({});
     expect(testLink.operations.length).equal(1);
     expect(!(hasDirectives(["noSquash"], testLink.operations[0].query)));
+  });
+
+  it("ensures multiple directives do not exist after local link", () => {
+    expect(hasDirectives(["noSquash", "onlineOnly"], requestWithBothDirectives.query));
+    execute(link, requestWithBothDirectives).subscribe({});
+    expect(testLink.operations.length).equal(1);
+    expect(!(hasDirectives(["noSquash", "onlineOnly"], testLink.operations[0].query)));
   });
 });
