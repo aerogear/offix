@@ -1,11 +1,12 @@
 /**
- * Server side defined directives
+ * Client side defined directives
  */
-export enum Directives {
+export enum localDirectives {
   ONLINE_ONLY = "onlineOnly",
   NO_SQUASH = "noSquash"
 }
 
+export const localDirectivesArray = [ localDirectives.ONLINE_ONLY, localDirectives.NO_SQUASH ];
 /**
  * Config error type used to determine if conflict happened
  */

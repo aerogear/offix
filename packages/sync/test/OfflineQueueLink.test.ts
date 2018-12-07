@@ -4,13 +4,14 @@ import {
   ApolloLink, execute, GraphQLRequest
 } from "apollo-link";
 import gql from "graphql-tag";
-import { OfflineQueueLink as QueueLink } from "../src/links/OfflineQueueLink";
+import { OfflineQueueLink as QueueLink, OperationQueueEntry } from "../src/links/OfflineQueueLink";
 import {
   TestLink
 } from "./TestUtils";
-import { opWithOnlineDirective } from "./operations";
+import { requestWithOnlineDirective } from "./operations";
 import { expect } from "chai";
 import { PersistentStore, PersistedData } from "../src/PersistentStore";
+import { opWithSquashDirective } from "./operations";
 
 const localStorage: PersistentStore<PersistedData> = {
   getItem: (key: string) => {
@@ -41,6 +42,12 @@ describe("OnOffLink", () => {
     context: {
       testResponse
     }
+  };
+
+  const queueEntryWithDirective: OperationQueueEntry = {
+    operation: opWithSquashDirective,
+    forward: {} as any,
+    observer: {} as any
   };
 
   const config = { mutationsQueueName: "test", storage: localStorage };
@@ -116,7 +123,7 @@ describe("OnOffLink", () => {
     const queueLink = new QueueLink(localConfig);
     queueLink.close();
     const customLink = ApolloLink.from([queueLink, testLink]);
-    execute(customLink, opWithOnlineDirective).subscribe({});
+    execute(customLink, requestWithOnlineDirective).subscribe({});
     expect(storageEngine.getItem.length).equal(0);
   });
 
@@ -136,7 +143,7 @@ describe("OnOffLink", () => {
     const queueLink = new QueueLink(localConfig);
     queueLink.close();
     const customLink = ApolloLink.from([queueLink, testLink]);
-    execute(customLink, opWithOnlineDirective).subscribe({});
+    execute(customLink, requestWithOnlineDirective).subscribe({});
     expect(testLink.operations.length).equal(1);
   });
 
