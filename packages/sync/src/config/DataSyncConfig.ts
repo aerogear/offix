@@ -20,11 +20,6 @@ export interface DataSyncConfig {
   wsUrl?: string;
 
   /**
-   * Describes name of the field used as ID
-   */
-  dataIdFromObject?: string | any;
-
-  /**
    * Storage solution
    */
   storage?: PersistentStore<PersistedData>;
