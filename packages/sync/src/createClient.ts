@@ -8,15 +8,20 @@ import { PersistedData, PersistentStore } from "./PersistentStore";
 import { OfflineRestoreHandler } from "./offline/OfflineRestoreHandler";
 
 /**
+ * @see ApolloClient
+ */
+type VoyagerClient = ApolloClient<NormalizedCacheObject>;
+
+/**
  * Factory for creating Apollo Client
  *
  * @param userConfig options object used to build client
  */
-export const createClient = async (userConfig?: DataSyncConfig) => {
+export const createClient = async (userConfig?: DataSyncConfig): Promise<VoyagerClient> => {
   const clientConfig = extractConfig(userConfig);
   const { cache } = await buildCachePersistence(clientConfig);
   const link = buildLink(clientConfig);
-  const apolloClient = new ApolloClient<NormalizedCacheObject>({
+  const apolloClient = new ApolloClient({
     link,
     cache
   });
