@@ -47,7 +47,7 @@ export class OfflineQueueLink extends ApolloLink {
   private readonly networkStatus?: NetworkStatus;
   private readonly operationFilter?: TYPE_MUTATION;
   private readonly mergeOfflineMutations?: boolean;
-  private readonly listener: OfflineQueueListener;
+  private readonly listener?: OfflineQueueListener;
   /**
    *
    * @param config configuration for queue
@@ -70,7 +70,7 @@ export class OfflineQueueLink extends ApolloLink {
       forward(operation).subscribe(observer);
     });
     this.opQueue = [];
-    if (this.listener.queueCleared) {
+    if (this.listener && this.listener.queueCleared) {
       this.listener.queueCleared();
     }
   }
@@ -107,7 +107,7 @@ export class OfflineQueueLink extends ApolloLink {
 
   private enqueue(entry: OperationQueueEntry) {
     logger("Adding new operation to offline queue");
-    if (this.listener.onOperationEnqueued) {
+    if (this.listener && this.listener.onOperationEnqueued) {
       this.listener.onOperationEnqueued(entry);
     }
     if (this.mergeOfflineMutations) {
