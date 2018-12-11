@@ -2,6 +2,7 @@ import { ConflictResolutionStrategy } from "../conflicts";
 import { LinkChainBuilder } from "../links";
 import { PersistedData, PersistentStore } from "../PersistentStore";
 import { NetworkStatus } from "../offline";
+import { OfflineQueueListener } from "../offline/OfflineQueueListener";
 
 /**
  * Contains all configuration options required to initialize SDK
@@ -35,17 +36,23 @@ export interface DataSyncConfig {
   customLinkBuilder?: LinkChainBuilder;
 
   /**
-   * Network Status
+   * Inteface for detecting changes in network status
    */
   networkStatus?: NetworkStatus;
 
   /**
-   * The name of the queue to store offline mutations in
+   * The key used to store offline mutations
    */
   mutationsQueueName?: string | any;
 
   /**
-   * Whether or not to enable squashing of queries
+   * Whether or not to enable squashing offline mutations
    */
   mergeOfflineMutations?: boolean;
+
+  /**
+   * User provided listener that contains set of methods that can be used to detect
+   * when operations were added to queue
+   */
+  offlineQueueListener: OfflineQueueListener;
 }

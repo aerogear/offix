@@ -14,6 +14,7 @@ import { NetworkStatus, NetworkInfo } from "../offline";
 import { DataSyncConfig } from "../config";
 import { squashOperations } from "../offline/squashOperations";
 import debug from "debug";
+import { OfflineQueueListener } from "../offline/OfflineQueueListener";
 
 export const logger = debug(MUTATION_QUEUE_LOGGER);
 
@@ -46,6 +47,7 @@ export class OfflineQueueLink extends ApolloLink {
   private readonly networkStatus?: NetworkStatus;
   private readonly operationFilter?: TYPE_MUTATION;
   private readonly mergeOfflineMutations?: boolean;
+  private readonly listener: OfflineQueueListener;
   /**
    *
    * @param config configuration for queue
@@ -57,6 +59,7 @@ export class OfflineQueueLink extends ApolloLink {
     this.key = config.mutationsQueueName;
     this.mergeOfflineMutations = config.mergeOfflineMutations;
     this.networkStatus = config.networkStatus;
+    this.listener = config.offlineQueueListener;
     this.operationFilter = filter;
   }
 
@@ -67,6 +70,9 @@ export class OfflineQueueLink extends ApolloLink {
       forward(operation).subscribe(observer);
     });
     this.opQueue = [];
+    if (this.listener.queueCleared) {
+      this.listener.queueCleared();
+    }
   }
 
   public close() {
@@ -101,6 +107,9 @@ export class OfflineQueueLink extends ApolloLink {
 
   private enqueue(entry: OperationQueueEntry) {
     logger("Adding new operation to offline queue");
+    if (this.listener.onOperationEnqueued) {
+      this.listener.onOperationEnqueued(entry);
+    }
     if (this.mergeOfflineMutations) {
       this.opQueue = squashOperations(entry, this.opQueue);
     } else {
