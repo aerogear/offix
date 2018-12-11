@@ -3,7 +3,7 @@ import { NetworkStatus, NetworkStatusChangeCallback } from "./NetworkStatus";
 declare var window: any;
 
 /**
- * Cordova networks status implementation based on: Mozilla
+ * Web networks status implementation based on: Mozilla
  * See: https://developer.mozilla.org/en-US/docs/Web/API/NavigatorOnLine/onLine
  */
 export class WebNetworkStatus implements NetworkStatus {
