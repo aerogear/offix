@@ -54,5 +54,5 @@ export interface DataSyncConfig {
    * User provided listener that contains set of methods that can be used to detect
    * when operations were added to queue
    */
-  offlineQueueListener: OfflineQueueListener;
+  offlineQueueListener?: OfflineQueueListener;
 }
