@@ -3,9 +3,9 @@ import { NormalizedCacheObject } from "apollo-cache-inmemory";
 import { PersistentStore, PersistedData } from "../PersistentStore";
 import { OperationQueueEntry } from "../links/OfflineQueueLink";
 import { MUTATION_QUEUE_LOGGER } from "../config/Constants";
-import debug from "debug";
+import * as debug from "debug";
 
-export const logger = debug(MUTATION_QUEUE_LOGGER);
+export const logger = debug.default(MUTATION_QUEUE_LOGGER);
 /**
  * Class used to restore offline queue after page/application restarts.
  * It will trigger saved offline mutations using client to

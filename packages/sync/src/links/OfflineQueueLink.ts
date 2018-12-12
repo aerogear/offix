@@ -13,10 +13,10 @@ import { localDirectives, MUTATION_QUEUE_LOGGER } from "../config/Constants";
 import { NetworkStatus, NetworkInfo } from "../offline";
 import { DataSyncConfig } from "../config";
 import { squashOperations } from "../offline/squashOperations";
-import debug from "debug";
+import * as debug from "debug";
 import { OfflineQueueListener } from "../offline/OfflineQueueListener";
 
-export const logger = debug(MUTATION_QUEUE_LOGGER);
+export const logger = debug.default(MUTATION_QUEUE_LOGGER);
 
 export interface OperationQueueEntry {
   operation: Operation;

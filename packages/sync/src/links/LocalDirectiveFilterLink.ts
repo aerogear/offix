@@ -5,9 +5,9 @@ import {
 } from "apollo-link";
 import { hasDirectives, removeDirectivesFromDocument } from "apollo-utilities";
 import { localDirectivesArray, MUTATION_QUEUE_LOGGER } from "../config/Constants";
-import debug from "debug";
+import * as debug from "debug";
 
-export const logger = debug(MUTATION_QUEUE_LOGGER);
+export const logger = debug.default(MUTATION_QUEUE_LOGGER);
 
 export class LocalDirectiveFilterLink extends ApolloLink {
   private directiveRemovalConfig: any= [];
