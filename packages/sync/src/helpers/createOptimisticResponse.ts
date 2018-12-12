@@ -32,7 +32,7 @@ const generateId = (length = 8) => {
  * @param type type that is going to be returned
  * @param data actual data passed to function
  */
-export const createNewOptimisticResponse = (operation: string, typeName: string, data: any, idField: string = "id") => {
+export const createOptimisticResponse = (operation: string, typeName: string, data: any, idField: string = "id") => {
   const optimisticResponse: any = {
     __typename: "Mutation"
   };
