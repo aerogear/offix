@@ -20,5 +20,5 @@ export interface NetworkStatus {
   /**
    * Check if device is offline
    */
-  isOffline(): boolean;
+  isOffline(): Promise<boolean>;
 }
