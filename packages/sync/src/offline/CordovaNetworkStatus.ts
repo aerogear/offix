@@ -16,7 +16,10 @@ export class CordovaNetworkStatus implements NetworkStatus {
 
   public isOffline(): Promise<boolean> {
     return new Promise((resolve) => {
-      resolve(!window.navigator.onLine);
+      document.addEventListener("deviceready", () => {
+        resolve(!window.navigator.onLine);
+      }, false);
     });
   }
+
 }
