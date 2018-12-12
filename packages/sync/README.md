@@ -128,6 +128,25 @@ exampleMutation(...) @noSquash {
 When designing your GraphQL schema types `id` field is always required.
 Library will perform business logic assuming that `id` field will be supplied and returned from server. Without this field some offline functionalities will not work properly.
 
+## Optimistic UI
+
+By default user changes that are made when offline will not appear in the app
+until they going to be synced to server. In some circumstances users may want to see them instantly to perform various operations on the data
+When performing mutations users can decide to supply `optimisticResponse` object that will
+appear instantly in the application UI. SDK provides helper method to work with optimistic responses.
+
+```
+ import { createOptimisticResponse } from "@aerogear/datasync-js";
+
+ createOptimisticResponse("updateTest", "Test", { data: "test" });
+```
+
+Users can detect if the provided data is optimistic response by checking `optimisticResponse` flag is set to true.
+This can be used in UI to show pending changes.
+
+> Note: pending changes created by helper are read only. Performing any additional
+operations on pending objects will result in error due to fact that next changes will be missing actual ID that can be created on server side.
+
 # Contribution guide
 
 ## Logging debug messages
