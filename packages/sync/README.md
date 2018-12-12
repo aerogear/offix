@@ -30,17 +30,10 @@ import {
 To provide custom configuration to the client, the following options are available. If you wish, these are also available by using the `DataSyncConfig` interface from the SDK.
 
 ```javascript
-declare var window: any;
 
 let config: DataSyncConfig = {
-  httpUrl: "my-custom-url",
-  wsUrl: "my-custom-ws-url",
-  storage: window.localStorage,
-  conflictStrategy: strategies.diffMergeClientWins,
-  customLinkBuilder: customLinkBuilder,
-  networkStatus: customNetworkStatus,
-  mutationsQueueName: "offline-mutations-queue",
-  squashing: true
+  httpUrl: "http://localhost:4000/graphql",
+  wsUrl: "ws://localhost:4000/graphql",
 }
 ```
 
@@ -54,7 +47,7 @@ customLinkBuilder | Enables providing custom Apollo Link for processing requests
 networkStatus | Implementation of `NetworkStatus` Interface | See `WebNetworkStatus` and `CordovaNetworkStatus`
 mutationsQueueName | The name to store requests under in your offline queue | "offline-mutation-store"
 squashing | Whether or not you wish to squash mutations in your queue | true
-
+offlineQueueListener| listener that can be configured to receive events from offline queue
 
 # Creating a Client
 ```javascript
@@ -120,6 +113,7 @@ exampleQuery(...) @onlineOnly {
 ```
 
 ### Squashing Mutations
+
 Multiple changes performed on the same object ID and with the same mutation will automatically be joined by the AeroGear Sync SDK when your client is offline. This is beneficial as the client will not have to queue a large amount of mutations to replay once it returns online.
 
 #### Global Squashing
@@ -145,4 +139,4 @@ exampleMutation(...) @noSquash {
 ## Designing your types
 
 When designing your GraphQL schema types `id` field is always required.
-Library will perform business logic assumming that `id` field will be supplied and returned from server. Without this field some offline functionalities will not work properly.
+Library will perform business logic assuming that `id` field will be supplied and returned from server. Without this field some offline functionalities will not work properly.
