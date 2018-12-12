@@ -29,7 +29,7 @@ export const createClient = async (userConfig?: DataSyncConfig): Promise<Voyager
   const offlineMutationHandler = new OfflineRestoreHandler(apolloClient,
     storage,
     clientConfig.mutationsQueueName);
-  offlineMutationHandler.replayOfflineMutations();
+  await offlineMutationHandler.replayOfflineMutations();
   return apolloClient;
 };
 
