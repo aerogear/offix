@@ -5,19 +5,6 @@ Package maintained as part of AeroGear Services SDK.
 See: https://github.com/aerogear/aerogear-js-sdk for documentation
 
 
-# Contribution guide
-
-## Logging debug messages
-
-Sync package is using debug package to print out debug messages
-
-To enable debug please execute in console
-`localStorage.debug = 'AeroGearSync:*'`
-
-Some certain features can be enabled separately
-
-`localStorage.debug = 'AeroGearSync:OfflineMutations*'`
-
 # Importing the package
 ```javascript
 import {
@@ -140,3 +127,16 @@ exampleMutation(...) @noSquash {
 
 When designing your GraphQL schema types `id` field is always required.
 Library will perform business logic assuming that `id` field will be supplied and returned from server. Without this field some offline functionalities will not work properly.
+
+# Contribution guide
+
+## Logging debug messages
+
+Sync package is using debug package to print out debug messages
+
+To enable debug please execute in console
+`localStorage.debug = 'AeroGearSync:*'`
+
+Some certain features can be enabled separately
+
+`localStorage.debug = 'AeroGearSync:OfflineMutations*'`
