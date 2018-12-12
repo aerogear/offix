@@ -135,11 +135,14 @@ export class OfflineQueueLink extends ApolloLink {
   public openQueueOnNetworkStateUpdates(): void {
     const self = this;
     if (this.networkStatus) {
-      if (this.networkStatus.isOffline()) {
-        this.close();
-      } else {
-        this.open();
-      }
+      this.networkStatus.isOffline().then(offline => {
+        if (offline) {
+          this.close();
+        } else {
+          this.open();
+        }
+      });
+
       this.networkStatus.onStatusChangeListener({
         onStatusChange(networkInfo: NetworkInfo) {
           if (networkInfo.online) {
