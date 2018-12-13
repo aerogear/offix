@@ -87,7 +87,15 @@ Please follow chapters bellow for more information.
 By default client will save all performed query results in the cache.
 Data will be available to be used when application goes offline.
 Queries are cached out of the box based on the type and `id` field.
-When performing mutations that affects some queries users can use `refetchQueries` or `update` fields when performing mutations.
+When performing mutations that affects some queries users can use `refetchQueries` or `update` fields when performing mutations:
+
+```
+    client.mutate<Task>({
+      mutation: ADD_TASK, variables: item,
+      optimisticResponse: createOptimisticResponse('createTask', 'Task', item),
+      update: this.updateCacheOnAdd
+    });
+```
 
 ## Making modifications when offline
 
