@@ -1,4 +1,4 @@
-import { createOptimisticResponse } from "../src/helpers/createOptimisticResponse";
+import { createOptimisticResponse } from "../src/cache/createOptimisticResponse";
 import { expect } from "chai";
 
 describe("SquashOperations", () => {
