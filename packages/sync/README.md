@@ -1,4 +1,6 @@
-# AeroGear Apollo GraphQL Client
+# AeroGear Apollo GraphQL Voyager client
+
+Client SDK for [Apollo Voyager Server](https://github.com/aerogear/apollo-voyager-server)
 
 # Getting Started
 
