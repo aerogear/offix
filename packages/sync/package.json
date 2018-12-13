@@ -1,7 +1,7 @@
 {
   "name": "@aerogear/datasync-js",
   "version": "0.0.4-alpha",
-  "description": "Aero Gear DataSync SDK",
+  "description": "AeroGear Apollo GraphQL Voyager client",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
   "scripts": {
