@@ -1,11 +1,8 @@
-## AeroGear Services Sync SDK
+# AeroGear Apollo GraphQL Client
 
-Package maintained as part of AeroGear Services SDK.
+# Getting Started
 
-See: https://github.com/aerogear/aerogear-js-sdk for documentation
-
-
-# Importing the package
+## Importing the package
 ```javascript
 import {
   createClient,
@@ -13,7 +10,8 @@ import {
 } from '@aerogear/datasync-js';
 ```
 
-# Configuration
+## Configuration
+
 To provide custom configuration to the client, the following options are available. If you wish, these are also available by using the `DataSyncConfig` interface from the SDK.
 
 ```javascript
@@ -34,64 +32,73 @@ customLinkBuilder | Enables providing custom Apollo Link for processing requests
 networkStatus | Implementation of `NetworkStatus` Interface | See `WebNetworkStatus` and `CordovaNetworkStatus`
 mutationsQueueName | The name to store requests under in your offline queue | "offline-mutation-store"
 squashing | Whether or not you wish to squash mutations in your queue | true
-offlineQueueListener| listener that can be configured to receive events from offline queue
+offlineQueueListener| listener that can be configured to receive events from offline queue | undefined
 
-# Creating a Client
+## Creating a Client
 ```javascript
 let client = createClient(config);
 ```
+# Example application
+
+Try SDK using sample application:
+https://github.com/aerogear/apollo-voyager-ionic-example
 
 
-## Conflict strategies
-You can provide your custom conflict resolution strategies to the client in the config by using the provided `ConflictResolutionStrategy` type from the SDK. An example custom strategy is shown below.
+# Basic concepts
 
-```javascript
-let clientWins = (serverData, clientData) => {
-  return Object.assign(server, client);
-};
-```
+Client is basing on Apollo GraphQL client that can be used with various web and mobile frameworks.
+We provide version for web and Apache Cordova.
+For basic concepts about Apollo GraphQL please refer to documentation for your own platform.
 
-To use this strategy pass this function as conflictStrategy in your config object like so:
+For React:
+https://www.apollographql.com/docs/react/
 
-```javascript
-let config = {
-...
-  conflictStrategy: clientWins
-...
-}
-```
+For Angular:
+https://www.apollographql.com/docs/angular/
 
-## Implementing Custom Apollo Links
-To use your own custom apollo links to create your own network flow, simply follow the documentation for creating links here: https://www.apollographql.com/docs/link/index.html. You can pass this building mechanism to your client in the config, under the `customLinkBuilder` parameter.
 
-```javascript
-export const linkBuilder: LinkChainBuilder = (): ApolloLink => {
-    const httpLink = new HttpLink({ uri: "someUri" });
-    const customLink = new YourCustomLink();
+## Cache
 
-    let links: ApolloLink[] = [customLink, httpLink];
+Client is strongly leveraging Apollo Cache layer.
+Please follow documentation for more information about caching in Apollo GraphQL
 
-    let compositeLink = ApolloLink.from(links);
-    return compositeLink;
-  };
-```
+https://www.apollographql.com/docs/react/advanced/caching.html
 
-## Implementing Custom Network Status checks
-To use your own custom network checks, implement the [NetworkStatus](https://github.com/aerogear/aerogear-js-sdk/blob/master/packages/sync/src/offline/NetworkStatus.ts)
- interface which provides two functions;
 
-```javascript
-  onStatusChangeListener(callback: NetworkStatusChangeCallback): void;
+## Designing your types
 
-  isOffline(): boolean;
-```
+When designing your GraphQL schema types `id` field will be always required.
+We also expect that id will be always queried back from server.
+Library will perform business logic assuming that `id` field will be supplied and returned from server. Without this field some offline functionalities will not work properly.
 
-## Offline Mutations
 
-AeroGear Sync SDK provides offline mutations out of the box. By default it uses localStorage to do this and mutations are stored under the cache key of 'offline-mutations-queue'.
+# Offline support
+
+SDK provides first class support for performing GraphQL operations while offline.
+Queries and mutations are hold in queue that is being configured to hold requests when client goes offline.
+When client goes offline for long periods of time clients will be able still negotiate local updates
+with the server state thanks to powerful conflict resolution strategies.
+Please follow chapters bellow for more information.
+
+## Querying local cache
+
+By default client will save all performed query results in the cache.
+Data will be available to be used when application goes offline.
+Queries are cached out of the box based on the type and `id` field.
+When performing mutations that affects some queries users can use `refetchQueries` or `update` fields when performing mutations.
+
+## Making modifications when offline
+
+AeroGear Sync SDK provides queue that stores mutations performed when offline.
+By default queue saves data in storage to be available after application restarts.
+Queue will hold requests until application will come back online.
+
+Developers can adjust how queue will process new mutations by supplying custom `NetworkStatus` implementation.
 
 ### Online Only Queries
-To ensure certain queries are not queued and are always delivered to the network layer, you must make use of Graphql directives.To do so on your client, ensure the query has the annotation attached like so:
+
+To ensure certain queries are not queued and are always delivered to the network layer, you must make use of Graphql directives.
+To do so on your client, ensure the query has the annotation attached like so:
 
 ```
 exampleQuery(...) @onlineOnly {
@@ -123,10 +130,71 @@ exampleMutation(...) @noSquash {
 }
 ```
 
-## Designing your types
+## Conflicts
 
-When designing your GraphQL schema types `id` field is always required.
-Library will perform business logic assuming that `id` field will be supplied and returned from server. Without this field some offline functionalities will not work properly.
+TODO
+
+### Conflict strategies
+
+You can provide your custom conflict resolution strategies to the client in the config by using the provided `ConflictResolutionStrategy` type from the SDK. An example custom strategy is shown below.
+
+```javascript
+let clientWins = (serverData, clientData) => {
+  return Object.assign(server, client);
+};
+```
+
+To use this strategy pass this function as conflictStrategy in your config object like so:
+
+```javascript
+let config = {
+...
+  conflictStrategy: clientWins
+...
+}
+```
+
+# Advanced topics
+
+## Implementing Custom Apollo Links
+
+To use your own custom apollo links to create your own set of operation processors, simply follow the documentation for creating links here: https://www.apollographql.com/docs/link/index.html. You can pass this building mechanism to your client in the config, under the `customLinkBuilder` parameter.
+
+```javascript
+export const linkBuilder: LinkChainBuilder = (): ApolloLink => {
+    const httpLink = new HttpLink({ uri: "someUri" });
+    const customLink = new YourCustomLink();
+
+    let links: ApolloLink[] = [customLink, httpLink];
+
+    let compositeLink = ApolloLink.from(links);
+    return compositeLink;
+  };
+```
+
+## Implementing Custom Network Status checks
+
+To use your own custom network checks, implement the [NetworkStatus](https://github.com/aerogear/aerogear-js-sdk/blob/master/packages/sync/src/offline/NetworkStatus.ts)
+ interface which provides two functions;
+
+```javascript
+  onStatusChangeListener(callback: NetworkStatusChangeCallback): void;
+
+  isOffline(): boolean;
+```
+
+## Logging debug messages
+
+Sync package is using debug package to print out debug messages
+
+To enable debug please execute in console
+`localStorage.debug = 'AeroGearSync:*'`
+
+Some certain features can be enabled separately
+
+`localStorage.debug = 'AeroGearSync:OfflineMutations*'`
+
+
 
 ## Optimistic UI
 
@@ -147,15 +215,4 @@ This can be used in UI to show pending changes.
 > Note: pending changes created by helper are read only. Performing any additional
 operations on pending objects will result in error due to fact that next changes will be missing actual ID that can be created on server side.
 
-# Contribution guide
 
-## Logging debug messages
-
-Sync package is using debug package to print out debug messages
-
-To enable debug please execute in console
-`localStorage.debug = 'AeroGearSync:*'`
-
-Some certain features can be enabled separately
-
-`localStorage.debug = 'AeroGearSync:OfflineMutations*'`
