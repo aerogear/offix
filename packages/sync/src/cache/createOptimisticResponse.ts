@@ -32,6 +32,7 @@ const generateId = (length = 8) => {
  * @param type type that is going to be returned
  * @param data actual data passed to function
  * @param addId generate client id for response
+ * @param idField name of id field (default:id)
  */
 export const createOptimisticResponse =
   (operation: string, typeName: string, data: any, addId: boolean = true, idField: string = "id") => {
