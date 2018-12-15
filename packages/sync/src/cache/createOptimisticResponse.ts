@@ -29,20 +29,26 @@ const generateId = (length = 8) => {
  *
  *
  * @param operation operation that is being performed (update)
- * @param type type that is going to be returned
+ * @param typeName type that is going to be returned
  * @param data actual data passed to function
+ * @param addId generate client id for response
+ * @param idField name of id field (default:id)
  */
-export const createOptimisticResponse = (operation: string, typeName: string, data: any, idField: string = "id") => {
-  const optimisticResponse: any = {
-    __typename: "Mutation"
-  };
+export const createOptimisticResponse =
+  (operation: string, typeName: string, data: any, addId: boolean = true, idField: string = "id") => {
+    const optimisticResponse: any = {
+      __typename: "Mutation"
+    };
 
-  optimisticResponse[operation] = {
-    __typename: typeName,
-    ...data,
-    version: 1,
-    optimisticResponse: true
+    optimisticResponse[operation] = {
+      __typename: typeName,
+      ...data,
+      version: 1,
+      optimisticResponse: true
+    };
+    if (addId) {
+      optimisticResponse[operation][idField] = generateId();
+    }
+
+    return optimisticResponse;
   };
-  optimisticResponse[operation][idField] = generateId();
-  return optimisticResponse;
-};
