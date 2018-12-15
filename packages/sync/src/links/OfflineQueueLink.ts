@@ -3,18 +3,17 @@ import {
   FetchResult,
   NextLink,
   Observable,
-  Operation,
-  concat
+  Operation
 } from "apollo-link";
 import { hasDirectives } from "apollo-utilities";
 import { Observer } from "zen-observable-ts";
 import { PersistedData, PersistentStore } from "../PersistentStore";
 import { localDirectives, MUTATION_QUEUE_LOGGER } from "../config/Constants";
-import { NetworkStatus, NetworkInfo } from "../offline";
+import { NetworkInfo, NetworkStatus } from "../offline";
 import { DataSyncConfig } from "../config";
 import { squashOperations } from "../offline/squashOperations";
 import * as debug from "debug";
-import { OfflineQueueListener } from "../offline/OfflineQueueListener";
+import { OfflineQueueListener } from "../offline";
 
 export const logger = debug.default(MUTATION_QUEUE_LOGGER);
 

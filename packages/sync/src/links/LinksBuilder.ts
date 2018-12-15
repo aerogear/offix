@@ -1,10 +1,8 @@
-import { ApolloLink, split, concat } from "apollo-link";
+import { ApolloLink, split } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { conflictLink } from "../conflicts";
-import { LocalDirectiveFilterLink } from "./LocalDirectiveFilterLink";
 import { DataSyncConfig } from "../config";
 import { defaultWebSocketLink } from "./WebsocketLink";
-import { OfflineQueueLink } from "./OfflineQueueLink";
 import { isSubscription } from "../utils/helpers";
 import { compositeQueueLink } from "./compositeQueueLink";
 
