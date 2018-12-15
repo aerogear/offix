@@ -1,4 +1,4 @@
-import { createOptimisticResponse } from "../src/cache/createOptimisticResponse";
+import { createOptimisticResponse } from "../src";
 import { expect } from "chai";
 import { should } from "chai";
 

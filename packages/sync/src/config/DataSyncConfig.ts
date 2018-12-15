@@ -2,7 +2,7 @@ import { ConflictResolutionStrategy } from "../conflicts";
 import { LinkChainBuilder } from "../links";
 import { PersistedData, PersistentStore } from "../PersistentStore";
 import { NetworkStatus } from "../offline";
-import { OfflineQueueListener } from "../offline/OfflineQueueListener";
+import { OfflineQueueListener } from "../offline";
 
 /**
  * Contains all configuration options required to initialize SDK
