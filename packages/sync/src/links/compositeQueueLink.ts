@@ -7,6 +7,5 @@ export const compositeQueueLink = (config: DataSyncConfig, filter?: TYPE_MUTATIO
   const offlineLink = new OfflineQueueLink(config, filter);
   offlineLink.openQueueOnNetworkStateUpdates();
   const localLink = new LocalDirectiveFilterLink();
-  const compositeLink = concat(offlineLink, localLink);
-  return compositeLink;
+  return concat(offlineLink, localLink);
 };
