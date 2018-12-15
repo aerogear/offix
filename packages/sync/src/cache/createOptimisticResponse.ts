@@ -29,7 +29,7 @@ const generateId = (length = 8) => {
  *
  *
  * @param operation operation that is being performed (update)
- * @param type type that is going to be returned
+ * @param typeName type that is going to be returned
  * @param data actual data passed to function
  * @param addId generate client id for response
  * @param idField name of id field (default:id)
