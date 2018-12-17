@@ -66,6 +66,21 @@ Please follow documentation for more information about caching in Apollo GraphQL
 
 https://www.apollographql.com/docs/react/advanced/caching.html
 
+### Querying your data
+
+Cache is used to hold data that can be fetched when client is offline.
+To effectively work with cache users can use `cache-first` fetchPolicy
+when performing queries. This policy will try to use local cache in
+situations when cache was already populated with the server side data.
+
+```
+    return this.apollo.watchQuery<YourType>({
+      query: YOUR_QUERY,
+      fetchPolicy: 'cache-first',
+    });
+```
+
+Cache is going to be refueled by subscriptions, pooling or regular queries happening in UI.
 
 ## Designing your types
 
@@ -229,8 +244,8 @@ When using `OptimisticReponse` helper from SDK specific mutations that create ne
 
 ## Listening to the offline queue events
 
-Developers can implement `offlineQueueListener` that can be passed as config element. 
-This listener is going to be notified about new items that were added to offline queue. 
+Developers can implement `offlineQueueListener` that can be passed as config element.
+This listener is going to be notified about new items that were added to offline queue.
 Listener can be used to build UI support and show pending changes.
 This feature can be mixed together with `OptimisticResponse` to deliver great offline experience
 See example application for more information.
