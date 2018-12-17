@@ -33,7 +33,7 @@ conflictStrategy | The conflict resolution strategy your client should use | N/A
 customLinkBuilder | Enables providing custom Apollo Link for processing requests | See `LinksBuilder`
 networkStatus | Implementation of `NetworkStatus` Interface | See `WebNetworkStatus` and `CordovaNetworkStatus`
 mutationsQueueName | The name to store requests under in your offline queue | "offline-mutation-store"
-squashing | Whether or not you wish to squash mutations in your queue | true
+mergeOfflineMutations | Whether or not you wish to squash mutations in your queue | true
 offlineQueueListener| listener that can be configured to receive events from offline queue | undefined
 
 ## Creating a Client
@@ -141,7 +141,7 @@ This feature is on by default at a global level. To disable it on a global level
 ```javascript
 let config = {
 ...
-  squashing: false
+  mergeOfflineMutations: false
 ...
 }
 ```
