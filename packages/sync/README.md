@@ -225,7 +225,7 @@ operations on pending objects will result in error due to fact that next changes
 
 ### Mapping Client and Server ID for Optimistic Reponses
 
-When using `OptimisticReponse` helper from SDK specific mutations that create new element response is going to have client side generated id. Subsequent edits for this objects will also refer to this id. When becoming all offline changes are going to be performed in specific order invalidating client side id. If edits for objects created when offline are required developers need to support a way to map them inside resolvers. 
+When using `OptimisticReponse` helper from SDK specific mutations that create new element response is going to have client side generated id. Subsequent edits for this objects will also refer to this id. When becoming online, all offline changes are going to be performed in specific order invalidating client side id for subsequent edits. If edits for objects created when offline are required, developers need to support a way to map them in their resolvers.
 
 ## Listening to the offline queue events
 
@@ -234,7 +234,4 @@ This listener is going to be notified about new items that were added to offline
 Listener can be used to build UI support and show pending changes.
 This feature can be mixed together with `OptimisticResponse` to deliver great offline experience
 See example application for more information.
-
-
-This ID 
 
