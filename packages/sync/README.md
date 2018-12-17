@@ -142,7 +142,7 @@ exampleMutation(...) @noSquash {
 
 ## Conflicts
 
-TODO
+SDK offers way to detect conflicts that happened on the server.
 
 ### Conflict strategies
 
@@ -204,8 +204,6 @@ Some certain features can be enabled separately
 
 `localStorage.debug = 'AeroGearSync:OfflineMutations*'`
 
-
-
 ## Optimistic UI
 
 By default user changes that are made when offline will not appear in the app
@@ -220,9 +218,20 @@ appear instantly in the application UI. SDK provides helper method to work with 
 ```
 
 Users can detect if the provided data is optimistic response by checking `optimisticResponse` flag is set to true.
-This can be used in UI to show pending changes.
 
 > Note: pending changes created by helper are read only. Performing any additional
 operations on pending objects will result in error due to fact that next changes will be missing actual ID that can be created on server side.
 
+
+### Mapping Client and Server ID for Optimistic Reponses
+
+When using `OptimisticReponse` helper from SDK specific mutations that create new element response is going to have client side generated id. Subsequent edits for this objects will also refer to this id. When becoming online, all offline changes are going to be performed in specific order invalidating client side id for subsequent edits. If edits for objects created when offline are required, developers need to support a way to map them in their resolvers.
+
+## Listening to the offline queue events
+
+Developers can implement `offlineQueueListener` that can be passed as config element. 
+This listener is going to be notified about new items that were added to offline queue. 
+Listener can be used to build UI support and show pending changes.
+This feature can be mixed together with `OptimisticResponse` to deliver great offline experience
+See example application for more information.
 
