@@ -1,6 +1,6 @@
 {
   "name": "@aerogear/datasync-js",
-  "version": "0.1.0-alpha",
+  "version": "0.1.0",
   "description": "AeroGear Apollo GraphQL Voyager client",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
