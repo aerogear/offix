@@ -93,8 +93,17 @@ Library will perform business logic assuming that `id` field will be supplied an
 
 SDK provides first class support for performing GraphQL operations while offline.
 Queries and mutations are hold in queue that is being configured to hold requests when client goes offline.
-When client goes offline for long periods of time clients will be able still negotiate local updates
-with the server state thanks to powerful conflict resolution strategies.
+When client goes offline for long periods of time clients will be able still negotiate local updates with the server state thanks to powerful conflict resolution strategies.
+
+![](./resources/features.png)
+
+Client offers comprehensive set of features to perform data operations when offline.
+Thanks to offline mutation store users can stage their changes to be replicated back
+to server when becoming online:
+
+![](./resources/going_offline.png)
+
+
 Please follow chapters bellow for more information.
 
 ## Querying local cache
@@ -102,7 +111,7 @@ Please follow chapters bellow for more information.
 By default client will save all performed query results in the cache.
 Data will be available to be used when application goes offline.
 Queries are cached out of the box based on the type and `id` field.
-When performing mutations that affects some queries users can use `refetchQueries` or `update` fields when performing mutations:
+When performing mutations that affects some queries users can use `refetchQueries` or `update` methods:
 
 ```
     client.mutate<Task>({
