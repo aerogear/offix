@@ -5,11 +5,13 @@ import { DataSyncConfig } from "../config";
 import { defaultWebSocketLink } from "./WebsocketLink";
 import { isSubscription } from "../utils/helpers";
 import { compositeQueueLink } from "./compositeQueueLink";
+import { AuditLoggingLink } from "./AuditLoggingLink";
+import { MetricsBuilder } from "@aerogear/core";
 
 /**
  * Function used to build Apollo link
  */
-export type LinkChainBuilder = (config: DataSyncConfig) => ApolloLink;
+export type LinkChainBuilder = (config: DataSyncConfig) => Promise<ApolloLink>;
 
 /**
  * Default Apollo Link builder
@@ -19,18 +21,30 @@ export type LinkChainBuilder = (config: DataSyncConfig) => ApolloLink;
  * - Offline/Online queue
  * - Conflict resolution
  * - Error handling
+ * - Audit logging
  */
 export const defaultLinkBuilder: LinkChainBuilder =
-  (config: DataSyncConfig): ApolloLink => {
+  async (config: DataSyncConfig): Promise<ApolloLink> => {
     if (config.customLinkBuilder) {
       return config.customLinkBuilder(config);
     }
-    const httpLink = new HttpLink({ uri: config.httpUrl });
+    const httpLink = new HttpLink({ uri: config.httpUrl, includeExtensions: config.auditLogging });
     const localLink: ApolloLink = compositeQueueLink(config, "mutation");
     let links: ApolloLink[] = [localLink, conflictLink(config), httpLink];
 
     if (!config.conflictStrategy) {
       links = [localLink, httpLink];
+    }
+
+    if(config.auditLogging){
+      const metricsBuilder:MetricsBuilder = new MetricsBuilder();
+      const metricsPayload: {[key:string]:any} = {};
+      const metrics = metricsBuilder.buildDefaultMetrics();
+      for(let metric of metrics){
+        metricsPayload[metric.identifier] = await metric.collect();
+      }
+      const auditLoggingLink = new AuditLoggingLink(metricsBuilder.getClientId(), metricsPayload);
+      links.unshift(auditLoggingLink);  // prepend
     }
 
     let compositeLink = ApolloLink.from(links);

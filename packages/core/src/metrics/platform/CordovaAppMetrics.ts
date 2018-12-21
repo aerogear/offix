@@ -11,6 +11,8 @@ export class CordovaAppMetrics implements Metrics {
 
   public identifier = "app";
 
+  private cachedPayload:any = undefined;
+
   /**
    * Get app metrics, to be called after deviceReady event.
    *
@@ -20,6 +22,10 @@ export class CordovaAppMetrics implements Metrics {
    */
   public collect(): Promise<AppMetrics> {
     return new Promise((resolve, reject) => {
+      if(this.cachedPayload){
+        return resolve(this.cachedPayload);
+      }
+
       if (!document) {
         return Promise.reject(new Error("Metrics not running in browser environment"));
       }
@@ -35,14 +41,14 @@ export class CordovaAppMetrics implements Metrics {
           app.getPackageName(),
           app.getVersionNumber()
         ])
-          .then(function(results) {
-            const payload = {
+          .then((results)=>{
+            this.cachedPayload = {
               appId: results[0],
               appVersion: results[1],
               sdkVersion: version,
               framework: "cordova"
             };
-            resolve(payload);
+            resolve(this.cachedPayload);
           });
       }, false);
     });

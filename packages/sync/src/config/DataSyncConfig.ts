@@ -55,4 +55,9 @@ export interface DataSyncConfig {
    * when operations were added to queue
    */
   offlineQueueListener?: OfflineQueueListener;
+
+  /**
+   * If set to true, GraphGL requests will include some additional data to audit log in the server side.
+   */
+  auditLogging?: boolean;
 }

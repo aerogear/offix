@@ -7,6 +7,8 @@ export class CordovaDeviceMetrics implements Metrics {
 
   public identifier = "device";
 
+  private cachedPayload:any = undefined;
+
   /**
    * Get device metrics, to be called after deviceReady event
    *
@@ -15,6 +17,10 @@ export class CordovaDeviceMetrics implements Metrics {
    */
   public collect(): Promise<DeviceMetrics> {
     return new Promise((resolve, reject) => {
+      if(this.cachedPayload){
+        return resolve(this.cachedPayload);
+      }
+
       if (!document) {
         return Promise.reject(new Error("Metrics not running in browser environment"));
       }
@@ -25,11 +31,12 @@ export class CordovaDeviceMetrics implements Metrics {
             "@aerogear/cordova-plugin-aerogear-metrics plugin is installed."
           );
         }
-        return resolve({
+        this.cachedPayload = {
           platform: window.device.platform.toLowerCase(),
           platformVersion: window.device.version,
           device: window.device.model
-        });
+        };
+        return resolve(this.cachedPayload);
       }, false);
     });
   }

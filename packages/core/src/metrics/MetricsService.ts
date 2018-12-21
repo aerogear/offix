@@ -1,13 +1,12 @@
 import console from "loglevel";
-import uuid from "uuid/v1";
-import { AeroGearConfiguration, ServiceConfiguration } from "../config";
+import { ServiceConfiguration } from "../config";
 import { INSTANCE } from "../Core";
 
-import { isMobileCordova, isNative } from "../PlatformUtils";
+import { isNative } from "../PlatformUtils";
 import { Metrics, MetricsPayload } from "./model";
-import { CordovaAppMetrics } from "./platform/CordovaAppMetrics";
-import { CordovaDeviceMetrics } from "./platform/CordovaDeviceMetrics";
 import { MetricsPublisher, NetworkMetricsPublisher } from "./publisher";
+import { MetricsBuilder } from "./MetricsBuilder";
+
 declare var window: any;
 
 /**
@@ -20,14 +19,16 @@ export class MetricsService {
   public static readonly DEFAULT_METRICS_TYPE = "init";
   public static readonly TYPE = "metrics";
 
+  protected metricsBuilder: MetricsBuilder;
   protected publisher?: MetricsPublisher;
   protected configuration?: ServiceConfiguration;
   private readonly defaultMetrics?: Metrics[];
 
   constructor() {
     const configuration = INSTANCE.getConfigByType(MetricsService.TYPE);
+    this.metricsBuilder = new MetricsBuilder();
     if (configuration && configuration.length > 0) {
-      this.defaultMetrics = this.buildDefaultMetrics();
+      this.defaultMetrics = this.metricsBuilder.buildDefaultMetrics();
       this.configuration = configuration[0];
       this.publisher = new NetworkMetricsPublisher(this.configuration.url);
       this.sendAppAndDeviceMetrics();
@@ -71,7 +72,7 @@ export class MetricsService {
     }
 
     const payload: MetricsPayload = {
-      clientId: this.getClientId(),
+      clientId: this.metricsBuilder.getClientId(),
       type,
       timestamp: new Date().getTime(),
       data: {}
@@ -97,40 +98,4 @@ export class MetricsService {
     });
   }
 
-  /**
-   * Generates or gets mobile client id
-   */
-  protected getClientId(): string {
-    let clientId = this.getSavedClientId();
-
-    if (!clientId) {
-      clientId = uuid();
-      this.saveClientId(clientId);
-    }
-
-    return clientId;
-  }
-
-  protected getSavedClientId(): string | undefined {
-    return window.localStorage.getItem(MetricsService.CLIENT_ID_KEY);
-  }
-
-  protected saveClientId(id: string): void {
-    window.localStorage.setItem(MetricsService.CLIENT_ID_KEY, id);
-  }
-
-  /**
-   * Builds array of default metrics objects that are sent to server on every request.
-   * Other platforms can override this method to provide custom behavior
-   */
-  protected buildDefaultMetrics(): Metrics[] {
-    if (isMobileCordova()) {
-      return [new CordovaAppMetrics(), new CordovaDeviceMetrics()];
-    } else {
-      // No support of other platforms in default implementation.
-      // Please extend MetricsService class.
-      console.warn("Current platform is not supported by metrics.");
-      return [];
-    }
-  }
 }
