@@ -36,11 +36,11 @@ export const defaultLinkBuilder: LinkChainBuilder =
       links = [localLink, httpLink];
     }
 
-    if(config.auditLogging){
-      const metricsBuilder:MetricsBuilder = new MetricsBuilder();
-      const metricsPayload: {[key:string]:any} = {};
+    if (config.auditLogging) {
+      const metricsBuilder: MetricsBuilder = new MetricsBuilder();
+      const metricsPayload: {[key: string]: any} = {};
       const metrics = metricsBuilder.buildDefaultMetrics();
-      for(let metric of metrics){
+      for (const metric of metrics) {
         metricsPayload[metric.identifier] = await metric.collect();
       }
       const auditLoggingLink = new AuditLoggingLink(metricsBuilder.getClientId(), metricsPayload);

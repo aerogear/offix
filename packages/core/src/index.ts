@@ -13,7 +13,7 @@ export * from "./Core";
 
 export * from "./PlatformUtils";
 
-export { MetricsBuilder } from "./metrics/MetricsBuilder"
-export { Metrics } from "./metrics/model/Metrics"
-export { AppMetrics } from "./metrics/model/AppMetrics"
-export { DeviceMetrics } from "./metrics/model/DeviceMetrics"
+export { MetricsBuilder } from "./metrics/MetricsBuilder";
+export { Metrics } from "./metrics/model/Metrics";
+export { AppMetrics } from "./metrics/model/AppMetrics";
+export { DeviceMetrics } from "./metrics/model/DeviceMetrics";

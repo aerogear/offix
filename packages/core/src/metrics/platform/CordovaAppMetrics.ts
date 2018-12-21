@@ -11,7 +11,7 @@ export class CordovaAppMetrics implements Metrics {
 
   public identifier = "app";
 
-  private cachedPayload:any = undefined;
+  private cachedPayload: any = undefined;
 
   /**
    * Get app metrics, to be called after deviceReady event.
@@ -22,7 +22,7 @@ export class CordovaAppMetrics implements Metrics {
    */
   public collect(): Promise<AppMetrics> {
     return new Promise((resolve, reject) => {
-      if(this.cachedPayload){
+      if (this.cachedPayload) {
         return resolve(this.cachedPayload);
       }
 
@@ -41,7 +41,7 @@ export class CordovaAppMetrics implements Metrics {
           app.getPackageName(),
           app.getVersionNumber()
         ])
-          .then((results)=>{
+          .then((results) => {
             this.cachedPayload = {
               appId: results[0],
               appVersion: results[1],

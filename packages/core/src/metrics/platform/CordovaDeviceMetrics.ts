@@ -7,7 +7,7 @@ export class CordovaDeviceMetrics implements Metrics {
 
   public identifier = "device";
 
-  private cachedPayload:any = undefined;
+  private cachedPayload: any = undefined;
 
   /**
    * Get device metrics, to be called after deviceReady event
@@ -17,7 +17,7 @@ export class CordovaDeviceMetrics implements Metrics {
    */
   public collect(): Promise<DeviceMetrics> {
     return new Promise((resolve, reject) => {
-      if(this.cachedPayload){
+      if (this.cachedPayload) {
         return resolve(this.cachedPayload);
       }
 
