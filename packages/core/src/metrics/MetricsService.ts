@@ -19,18 +19,30 @@ export class MetricsService {
   public static readonly DEFAULT_METRICS_TYPE = "init";
   public static readonly TYPE = "metrics";
 
-  protected metricsBuilder: MetricsBuilder;
+  protected builder: MetricsBuilder;
   protected publisher?: MetricsPublisher;
   protected configuration?: ServiceConfiguration;
   private readonly defaultMetrics?: Metrics[];
 
-  constructor() {
-    const configuration = INSTANCE.getConfigByType(MetricsService.TYPE);
-    this.metricsBuilder = new MetricsBuilder();
+  // constructor params are there to provide a mechanism to override the metricsBuilder and metricsPublisher before
+  // the initial sendAppAndDeviceMetrics() execution happens. this is necessary in tests
+  constructor(options?: {configuration?: any, builder?: MetricsBuilder, publisher?: MetricsPublisher}) {
+    const configuration = options && options.configuration
+      ? options.configuration
+      : INSTANCE.getConfigByType(MetricsService.TYPE);
+
+    this.builder = options && options.builder
+      ? options.builder
+      : new MetricsBuilder();
+
     if (configuration && configuration.length > 0) {
-      this.defaultMetrics = this.metricsBuilder.buildDefaultMetrics();
+      this.defaultMetrics = this.builder.buildDefaultMetrics();
       this.configuration = configuration[0];
-      this.publisher = new NetworkMetricsPublisher(this.configuration.url);
+
+      this.publisher = options && options.publisher
+        ? options.publisher
+        : new NetworkMetricsPublisher(this.configuration.url);
+
       this.sendAppAndDeviceMetrics();
     } else {
       console.warn("Metrics configuration is missing." +
@@ -44,6 +56,14 @@ export class MetricsService {
 
   get metricsPublisher(): MetricsPublisher | undefined {
     return this.publisher;
+  }
+
+  get metricsBuilder(): MetricsBuilder {
+    return this.builder;
+  }
+
+  set metricsBuilder(builder: MetricsBuilder) {
+    this.builder = builder;
   }
 
   /**
@@ -72,7 +92,7 @@ export class MetricsService {
     }
 
     const payload: MetricsPayload = {
-      clientId: this.metricsBuilder.getClientId(),
+      clientId: this.builder.getClientId(),
       type,
       timestamp: new Date().getTime(),
       data: {}

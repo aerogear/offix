@@ -1,17 +1,8 @@
 import { assert, expect } from "chai";
-import mocha from "mocha";
 import sinon from "sinon";
-import uuid from "uuid/v1";
-import { ServiceConfiguration } from "../../src/config";
-import { INSTANCE } from "../../src/Core";
-import {
-  Metrics,
-  MetricsPayload,
-  MetricsPublisher,
-  MetricsService,
-  NetworkMetricsPublisher
-} from "../../src/metrics";
+import { Metrics, MetricsPayload, MetricsPublisher, MetricsService, NetworkMetricsPublisher } from "../../src/metrics";
 import testAerogearConfig from "../mobile-config.json";
+import { MetricsBuilder } from "../../src/metrics/MetricsBuilder";
 
 global.window = {};
 
@@ -27,26 +18,17 @@ window.cordova = {
     }
   }
 };
-window.localStorage = {
-  getItem: () => {
-    console.info("");
-  },
-  setItem: () => {
-    console.info("");
-  }
-};
 
 describe("MetricsService", () => {
-  INSTANCE.init(testAerogearConfig);
-  const configs = INSTANCE.getConfigByType(MetricsService.TYPE);
-  const metricsConfig = configs[0];
+  const metricsConfig = testAerogearConfig.services
+    .filter(service => service.type && service.type.toLowerCase() === "metrics");
 
-  const storage = { clientId: null };
   let metricsService: MetricsService;
+  let metricsBuilder: MetricsBuilder;
 
   beforeEach(() => {
-    metricsService = new DummyMetricsService();
-    storage.clientId = null;
+    metricsBuilder = new MockMetricsBuilder();
+    metricsService = new DummyMetricsService({configuration: [metricsConfig], builder: metricsBuilder});
   });
 
   describe("#constructor", () => {
@@ -59,7 +41,7 @@ describe("MetricsService", () => {
     });
 
     it("should not throw an error when not being able to publish default metrics", () => {
-      const test = () => new MockMetricsService();
+      const test = () => new MetricsService({builder: metricsBuilder});
 
       expect(test).to.not.throw();
     });
@@ -90,7 +72,7 @@ describe("MetricsService", () => {
       const type = DummyMetricsService.DEFAULT_METRICS_TYPE;
 
       const defaultMatcher: MetricsPayload = {
-        clientId: metricsService.getClientId(),
+        clientId: metricsBuilder.getClientId(),
         type,
         data: {
           default: "default"
@@ -120,7 +102,7 @@ describe("MetricsService", () => {
         { identifier: "someString", collect: () => someString }
       ];
       const matcher: MetricsPayload = {
-        clientId: metricsService.getClientId(),
+        clientId: metricsBuilder.getClientId(),
         type,
         data: {
           someNumber: 123,
@@ -154,63 +136,10 @@ describe("MetricsService", () => {
 
   });
 
-  describe("#getClientId", () => {
-
-    it("should generate a string client id", () => {
-      const id = metricsService.getClientId();
-
-      assert.isString(id);
-    });
-
-    it("should save the client id when getting for first time", () => {
-      assert.isNull(storage.clientId);
-      const id = metricsService.getClientId();
-
-      assert.equal(storage.clientId, id);
-    });
-
-    it("should generate a new unique clientID if none is saved", () => {
-      const id = metricsService.getClientId();
-      // Remove id from storage, as if it was a different device
-      storage.clientId = null;
-      const newId = metricsService.getClientId();
-
-      assert.notEqual(id, newId);
-    });
-
-    it("should return the same clientID after the first time", () => {
-      const id = metricsService.getClientId();
-      const newId = metricsService.getClientId();
-
-      assert.equal(id, newId);
-    });
-
-  });
-
-  /**
-   * Test MetricsService that mocks all browser or device functionality
-   */
-  class MockMetricsService extends MetricsService {
-
-    protected getSavedClientId(): string {
-      return storage.clientId;
-    }
-
-    protected saveClientId(id: string): void {
-      storage.clientId = id;
-    }
-
-    protected buildDefaultMetrics(): Metrics[] {
-      return [
-        { identifier: "default", collect: () => Promise.resolve("default") }
-      ];
-    }
-  }
-
   /**
    * Mocked MetricsService that doesn't publish
    */
-  class DummyMetricsService extends MockMetricsService {
+  class DummyMetricsService extends MetricsService {
 
     protected sendInitialAppAndDeviceMetrics() {
       return Promise.resolve();
@@ -222,6 +151,19 @@ describe("MetricsService", () => {
 
     public publish(metrics: MetricsPayload): Promise<any> {
       return Promise.resolve({ statusCode: 204 });
+    }
+  }
+
+  class MockMetricsBuilder extends MetricsBuilder {
+
+    public getSavedClientId(): string {
+      return "THE_CLIENT_ID";
+    }
+
+    public buildDefaultMetrics(): Metrics[] {
+      return [
+        { identifier: "default", collect: () => Promise.resolve("default") }
+      ];
     }
   }
 

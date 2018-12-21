@@ -7,9 +7,20 @@ import { CordovaAppMetrics } from "./platform/CordovaAppMetrics";
 import { CordovaDeviceMetrics } from "./platform/CordovaDeviceMetrics";
 declare var window: any;
 
+export interface Storage {
+  getItem(key: string): string | null;
+  setItem(key: string, data: string): void;
+}
+
 export class MetricsBuilder {
 
   public static readonly CLIENT_ID_KEY = "aerogear_metrics_client_key";
+
+  private storage: Storage;
+
+  constructor(storage?: Storage) {
+    this.storage = storage || window.localStorage;
+  }
 
   /**
    * Generates or gets mobile client id
@@ -25,12 +36,12 @@ export class MetricsBuilder {
     return clientId;
   }
 
-  public getSavedClientId(): string | undefined {
-    return window.localStorage.getItem(MetricsBuilder.CLIENT_ID_KEY);
+  public getSavedClientId(): string | null {
+    return this.storage.getItem(MetricsBuilder.CLIENT_ID_KEY);
   }
 
   public saveClientId(id: string): void {
-    window.localStorage.setItem(MetricsBuilder.CLIENT_ID_KEY, id);
+    this.storage.setItem(MetricsBuilder.CLIENT_ID_KEY, id);
   }
 
   /**
