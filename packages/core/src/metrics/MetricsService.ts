@@ -31,13 +31,16 @@ export class MetricsService {
       ? options.configuration
       : INSTANCE.getConfigByType(MetricsService.TYPE);
 
+    if (configuration && configuration.length > 0) {
+      this.configuration = configuration[0];
+    }
+
     this.builder = options && options.builder
       ? options.builder
       : new MetricsBuilder();
 
-    if (configuration && configuration.length > 0) {
+    if (this.configuration) {
       this.defaultMetrics = this.builder.buildDefaultMetrics();
-      this.configuration = configuration[0];
 
       this.publisher = options && options.publisher
         ? options.publisher
