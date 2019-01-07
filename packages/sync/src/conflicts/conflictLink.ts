@@ -25,10 +25,16 @@ export const conflictLink = (config: DataSyncConfig): ApolloLink => {
   return onError(({ operation, forward, graphQLErrors }) => {
     const data = getConflictData(graphQLErrors);
     if (data && config.conflictStrategy && config.conflictStateProvider) {
-      let resolvedConflict = config.conflictStrategy(operation.operationName, data, operation.variables);
+      let resolvedConflict;
+      if (data.resolvedOnServer) {
+        resolvedConflict = data.serverData;
+      } else {
+        resolvedConflict = config.conflictStrategy(operation.operationName, data.serverData, data.clientData);
+      }
       resolvedConflict = config.conflictStateProvider.nextState(resolvedConflict);
       if (config.conflictListener) {
-        config.conflictListener.conflictOccurred(operation.operationName, resolvedConflict, data, operation.variables);
+        config.conflictListener.conflictOccurred(operation.operationName,
+          resolvedConflict, data.serverData, data.clientData);
       }
       operation.variables = resolvedConflict;
       return forward(operation);
