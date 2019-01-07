@@ -22,22 +22,28 @@ export const conflictLink = (config: DataSyncConfig): ApolloLink => {
     }
   };
 
-  return onError(({ operation, forward, graphQLErrors }) => {
+  return onError(({ response, operation, forward, graphQLErrors }) => {
     const data = getConflictData(graphQLErrors);
     if (data && config.conflictStrategy && config.conflictStateProvider) {
       let resolvedConflict;
       if (data.resolvedOnServer) {
         resolvedConflict = data.serverData;
+        // 🍴 eat error
+        if (response) { response.errors = undefined; }
       } else {
         resolvedConflict = config.conflictStrategy(operation.operationName, data.serverData, data.clientData);
+        resolvedConflict = config.conflictStateProvider.nextState(resolvedConflict);
       }
-      resolvedConflict = config.conflictStateProvider.nextState(resolvedConflict);
       if (config.conflictListener) {
         config.conflictListener.conflictOccurred(operation.operationName,
           resolvedConflict, data.serverData, data.clientData);
       }
       operation.variables = resolvedConflict;
-      return forward(operation);
+
+      // Send update when resolved on client
+      if (!data.resolvedOnServer) {
+        return forward(operation);
+      }
     }
   });
 };
