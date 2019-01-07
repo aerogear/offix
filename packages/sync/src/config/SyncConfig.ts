@@ -6,6 +6,7 @@ import { WebNetworkStatus } from "../offline";
 import { isMobileCordova } from "@aerogear/core";
 import { CordovaNetworkStatus } from "../offline";
 import { diffMergeClientWins } from "../conflicts/strategies";
+import { VersionedNextState } from "../conflicts/VersionedNextState";
 
 declare var window: any;
 
@@ -23,6 +24,7 @@ export class SyncConfig implements DataSyncConfig {
   public mergeOfflineMutations = true;
   public auditLogging = false;
   public conflictStrategy = diffMergeClientWins;
+  public conflictStateProvider = new VersionedNextState();
 
   public networkStatus = (isMobileCordova()) ? new CordovaNetworkStatus() : new WebNetworkStatus();
 
