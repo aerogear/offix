@@ -1,8 +1,10 @@
-import { ConflictResolutionStrategy } from "../conflicts";
+import { ConflictResolutionStrategy } from "../conflicts/ConflictResolutionStrategy";
 import { LinkChainBuilder } from "../links";
 import { PersistedData, PersistentStore } from "../PersistentStore";
 import { NetworkStatus } from "../offline";
 import { OfflineQueueListener } from "../offline";
+import { NextState } from "../conflicts/NextState";
+import { ConflictListener } from "../conflicts/ConflictListener";
 
 /**
  * Contains all configuration options required to initialize SDK
@@ -24,11 +26,6 @@ export interface DataSyncConfig {
    * Storage solution
    */
   storage?: PersistentStore<PersistedData>;
-
-  /**
-   * Conflict resolution strategy
-   */
-  conflictStrategy?: ConflictResolutionStrategy;
 
   /**
    * Enables providing custom Apollo Link for processing requests
@@ -60,4 +57,19 @@ export interface DataSyncConfig {
    * If set to true, GraphGL requests will include some additional data to audit log in the server side.
    */
   auditLogging?: boolean;
+
+  /**
+   * Conflict resolution strategy
+   */
+  conflictStrategy?: ConflictResolutionStrategy;
+
+  /**
+   * Interface that defines how object state is progressed
+   */
+  conflictStateProvider?: NextState;
+
+  /**
+   * Interface that can be implemented to receive information about the data conflict
+   */
+  conflictListener?: ConflictListener;
 }

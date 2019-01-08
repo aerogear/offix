@@ -1,9 +1,8 @@
 import { onError } from "apollo-link-error";
 import { GraphQLError } from "graphql";
 import { DataSyncConfig } from "../config";
-import { CONFLICT_ERROR } from "../config/Constants";
-import { ConflictResolutionData, ConflictResolutionStrategy, strategies } from "./strategies";
 import { ApolloLink } from "apollo-link";
+import { ConflictResolutionData } from "./ConflictResolutionData";
 
 export const conflictLink = (config: DataSyncConfig): ApolloLink => {
   /**
@@ -15,32 +14,41 @@ export const conflictLink = (config: DataSyncConfig): ApolloLink => {
       for (const err of graphQLErrors) {
         if (err.extensions) {
           // TODO need to add flag to check if conflict was resolved on the server
-          if (err.extensions.exception.type === CONFLICT_ERROR) {
-            return err.extensions.exception.data;
+          if (err.extensions.exception.conflictInfo) {
+            return err.extensions.exception.conflictInfo;
           }
         }
       }
     }
   };
-  /**
-   * Fetch the conflict strategy if one is provided, if not return client wins.
-   */
-  const getConflictStrategy = (): ConflictResolutionStrategy => {
-    if (config.conflictStrategy) {
-      return config.conflictStrategy;
-    } else {
-      return strategies.diffMergeClientWins;
-    }
-  };
 
-  return onError(({ operation, forward, graphQLErrors }) => {
+  return onError(({ response, operation, forward, graphQLErrors }) => {
     const data = getConflictData(graphQLErrors);
-    if (data) {
-      const resolvedConflict = getConflictStrategy()(data, operation.variables);
-      // TODO Notify
-      resolvedConflict.version = data.version;
-      operation.variables = resolvedConflict;
-      return forward(operation);
+    if (data && config.conflictStrategy && config.conflictStateProvider) {
+      let resolvedConflict;
+      if (data.resolvedOnServer) {
+        resolvedConflict = data.serverData;
+        if (response) {
+          // 🍴 eat error
+          response.errors = undefined;
+          // Set data to resolved state
+          response.data = resolvedConflict;
+        }
+        if (config.conflictListener) {
+          config.conflictListener.conflictOccurred(operation.operationName,
+            resolvedConflict, data.serverData, data.clientData);
+        }
+      } else {
+        // resolve on client
+        resolvedConflict = config.conflictStrategy(operation.operationName, data.serverData, data.clientData);
+        resolvedConflict = config.conflictStateProvider.nextState(resolvedConflict);
+        operation.variables = resolvedConflict;
+        if (config.conflictListener) {
+          config.conflictListener.conflictOccurred(operation.operationName,
+            resolvedConflict, data.serverData, data.clientData);
+        }
+        return forward(operation);
+      }
     }
   });
 };

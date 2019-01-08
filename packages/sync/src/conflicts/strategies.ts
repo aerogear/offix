@@ -1,19 +1,12 @@
-import deepmerge from "deepmerge";
+import { ConflictResolutionData } from "./ConflictResolutionData";
+import { ConflictResolutionStrategy } from "./ConflictResolutionStrategy";
 
-const diffMergeClientWins = (server: ConflictResolutionData, client: ConflictResolutionData) => {
-    return deepmerge(server, client);
-};
-const diffMergeServerWins = (server: ConflictResolutionData, client: ConflictResolutionData) => {
-    return deepmerge(client, server);
-};
-
-export const strategies = {
-    diffMergeClientWins,
-    diffMergeServerWins
-};
-
-// Separate file
-export type ConflictResolutionData = any;
-
-export type ConflictResolutionStrategy =
-    (server: ConflictResolutionData, client: ConflictResolutionData) => ConflictResolutionData;
+// Used as default strategy for SDK
+export const diffMergeClientWins: ConflictResolutionStrategy =
+  (operationName: string, server: ConflictResolutionData, client: ConflictResolutionData) => {
+    return client;
+  };
+export const diffMergeServerWins: ConflictResolutionStrategy =
+  (operationName: string, server: ConflictResolutionData, client: ConflictResolutionData) => {
+    return server;
+  };
