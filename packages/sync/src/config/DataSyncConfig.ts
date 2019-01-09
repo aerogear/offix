@@ -60,7 +60,6 @@ export interface DataSyncConfig {
    */
   headerProvider?: HeaderProvider;
 
-
   /**
    * If set to true, GraphGL requests will include some additional data to audit log in the server side.
    */

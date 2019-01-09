@@ -23,7 +23,7 @@ export class SyncConfig implements DataSyncConfig {
   public storage?: PersistentStore<PersistedData>;
   public mutationsQueueName = "offline-mutation-store";
   public mergeOfflineMutations = true;
-  public headerProvider:HeaderProvider = new DefaultHeaderProvider();
+  public headerProvider: HeaderProvider = new DefaultHeaderProvider();
   public auditLogging = false;
   public conflictStrategy = diffMergeClientWins;
   public conflictStateProvider = new VersionedNextState();
