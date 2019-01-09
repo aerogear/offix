@@ -51,6 +51,7 @@ export class SyncConfig implements DataSyncConfig {
     if (configuration && configuration.length > 0) {
       const serviceConfiguration: ServiceConfiguration = configuration[0];
       config.httpUrl = serviceConfiguration.url;
+      config.wsUrl = serviceConfiguration.config.websocketUrl;
     }
   }
 
