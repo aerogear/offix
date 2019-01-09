@@ -38,8 +38,8 @@ export const createClient = async (userConfig?: DataSyncConfig): Promise<Voyager
  */
 function extractConfig(userConfig: DataSyncConfig | undefined) {
   const config = new SyncConfig();
+  config.applyPlatformConfig(config);
   const clientConfig = config.merge(userConfig);
-  config.applyPlatformConfig(clientConfig);
   config.validate(config);
   return clientConfig;
 }
