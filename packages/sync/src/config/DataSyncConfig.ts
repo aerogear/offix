@@ -3,6 +3,7 @@ import { LinkChainBuilder } from "../links";
 import { PersistedData, PersistentStore } from "../PersistentStore";
 import { NetworkStatus } from "../offline";
 import { OfflineQueueListener } from "../offline";
+import { HeaderProvider } from "./HeaderProvider";
 import { NextState } from "../conflicts/NextState";
 import { ConflictListener } from "../conflicts/ConflictListener";
 
@@ -52,6 +53,13 @@ export interface DataSyncConfig {
    * when operations were added to queue
    */
   offlineQueueListener?: OfflineQueueListener;
+
+  /**
+   * An implementation of HeaderProvider. If none passed, a default one will be used.
+   * The default one doesn't add any headers.
+   */
+  headerProvider?: HeaderProvider;
+
 
   /**
    * If set to true, GraphGL requests will include some additional data to audit log in the server side.
