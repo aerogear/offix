@@ -29,10 +29,10 @@ export const conflictLink = (config: DataSyncConfig): ApolloLink => {
       if (data.resolvedOnServer) {
         resolvedConflict = data.serverState;
         if (response) {
-          // 🍴 eat error
-          response.errors = undefined;
           // Set data to resolved state
           response.data = resolvedConflict;
+          // 🍴 eat error
+          response.errors = undefined;
         }
         if (config.conflictListener) {
           config.conflictListener.conflictOccurred(operation.operationName,
@@ -41,11 +41,14 @@ export const conflictLink = (config: DataSyncConfig): ApolloLink => {
       } else {
         // resolve on client
         resolvedConflict = config.conflictStrategy(operation.operationName, data.serverState, data.clientState);
-        resolvedConflict = config.conflictStateProvider.nextState(resolvedConflict);
-        operation.variables = resolvedConflict;
         if (config.conflictListener) {
           config.conflictListener.conflictOccurred(operation.operationName,
             resolvedConflict, data.serverState, data.clientState);
+        }
+        operation.variables = config.conflictStateProvider.nextState(resolvedConflict);
+        if (response) {
+          // 🍴 eat error
+          response.errors = undefined;
         }
         return forward(operation);
       }
