@@ -36,7 +36,7 @@ describe("OnOffLink", () => {
         {
           id: "sync",
           name: "sync",
-          type: "sync",
+          type: "sync-app",
           url: clientConfig.httpUrl,
           config: {}
         }
