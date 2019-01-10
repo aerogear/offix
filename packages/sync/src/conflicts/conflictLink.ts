@@ -45,8 +45,7 @@ export const conflictLink = (config: DataSyncConfig): ApolloLink => {
           config.conflictListener.conflictOccurred(operation.operationName,
             resolvedConflict, data.serverState, data.clientState);
         }
-        resolvedConflict = config.conflictStateProvider.nextState(resolvedConflict);
-        operation.variables = resolvedConflict;
+        operation.variables = config.conflictStateProvider.nextState(resolvedConflict);
         if (response) {
           // 🍴 eat error
           response.errors = undefined;
