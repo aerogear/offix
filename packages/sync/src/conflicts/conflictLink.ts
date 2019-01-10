@@ -41,15 +41,15 @@ export const conflictLink = (config: DataSyncConfig): ApolloLink => {
       } else {
         // resolve on client
         resolvedConflict = config.conflictStrategy(operation.operationName, data.serverState, data.clientState);
+        if (config.conflictListener) {
+          config.conflictListener.conflictOccurred(operation.operationName,
+            resolvedConflict, data.serverState, data.clientState);
+        }
         resolvedConflict = config.conflictStateProvider.nextState(resolvedConflict);
         operation.variables = resolvedConflict;
         if (response) {
           // 🍴 eat error
           response.errors = undefined;
-        }
-        if (config.conflictListener) {
-          config.conflictListener.conflictOccurred(operation.operationName,
-            resolvedConflict, data.serverState, data.clientState);
         }
         return forward(operation);
       }
