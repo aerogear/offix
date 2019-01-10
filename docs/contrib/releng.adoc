@@ -49,6 +49,20 @@ Changes:
 Repository is ready for release.
 --
 
+=== Preparing a Pre Release
+
+Prepare a pre-release by adding a suffix to the end of the release tag. Examples of valid pre-release tags:
+
+* `0.1.2-rc1`
+* `0.1.2-SNAPSHOT.0`
+* `0.1.2-alpha`
+
+If you choose to use a pre-release tag, the publish scripts later on will publish the packages using a `next` tag.
+
+This means that `npm install @aerogear/<package>@next` will install your new prerelease, while `npm install @aerogear/<package>` will still publish the latest regular release.
+
+=== Commit the Changes
+
 Use `git status` to verify that the version numbers in the correct files have been updated.
 This includes the `version` attribute in the `plugin.xml` files for packages that contain cordova plugins.
 
@@ -78,6 +92,8 @@ Once your changes have been merged to master, you can continue and release to np
 
 === How to Release
 
-To kick off a release to npm, simply link:https://help.github.com/articles/creating-releases/[Create a Release] in Github. **You must use the exact `x.y.z` format** for the release tag or the release will fail.
+To kick off a release to npm, simply link:https://help.github.com/articles/creating-releases/[Create a Release] in Github. **You must use the exact tag you used earlier** or the release will fail.
 
 This will kick off the automatic release process in CircleCI.
+
+If you prepared a pre-release it is good practice to click the checkbox in Github to indicate this is a pre-release.
