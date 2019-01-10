@@ -12,7 +12,7 @@ import { VersionedNextState } from "../conflicts/VersionedNextState";
 declare var window: any;
 
 // Legacy platform configuration that needs to be merged into sync configuration
-const TYPE: string = "sync";
+const TYPE: string = "sync-app";
 
 /**
  * Class for managing user and default configuration.
