@@ -27,7 +27,7 @@ export const conflictLink = (config: DataSyncConfig): ApolloLink => {
     if (data && config.conflictStrategy && config.conflictStateProvider) {
       let resolvedConflict;
       if (data.resolvedOnServer) {
-        resolvedConflict = data.serverData;
+        resolvedConflict = data.serverState;
         if (response) {
           // 🍴 eat error
           response.errors = undefined;
@@ -36,16 +36,16 @@ export const conflictLink = (config: DataSyncConfig): ApolloLink => {
         }
         if (config.conflictListener) {
           config.conflictListener.conflictOccurred(operation.operationName,
-            resolvedConflict, data.serverData, data.clientData);
+            resolvedConflict, data.serverState, data.clientState);
         }
       } else {
         // resolve on client
-        resolvedConflict = config.conflictStrategy(operation.operationName, data.serverData, data.clientData);
+        resolvedConflict = config.conflictStrategy(operation.operationName, data.serverState, data.clientState);
         resolvedConflict = config.conflictStateProvider.nextState(resolvedConflict);
         operation.variables = resolvedConflict;
         if (config.conflictListener) {
           config.conflictListener.conflictOccurred(operation.operationName,
-            resolvedConflict, data.serverData, data.clientData);
+            resolvedConflict, data.serverState, data.clientState);
         }
         return forward(operation);
       }
