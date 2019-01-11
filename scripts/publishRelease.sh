@@ -18,7 +18,7 @@ if [[ "$(echo $TAG | grep -E $RELEASE_SYNTAX)" == "$TAG" ]]; then
   lerna exec npm publish
 elif [[ "$(echo $TAG | grep -E $PRERELEASE_SYNTAX)" == "$TAG" ]]; then
   echo "publishing a new pre release: $TAG"
-  lerna exec npm publish --tag next
+  lerna exec "npm publish --tag next"
 else
   echo "Error: the tag $TAG is not valid. exiting..."
   exit 1
