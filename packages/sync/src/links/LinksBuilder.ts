@@ -52,7 +52,6 @@ export const defaultLinkBuilder: LinkChainBuilder =
   };
 
 async function setupAuditLogging(config: DataSyncConfig, links: ApolloLink[]) {
-  // FIXME Begs for refactor
   if (config.auditLogging) {
     const metricsBuilder: MetricsBuilder = new MetricsBuilder();
     const metricsPayload: {
@@ -67,4 +66,3 @@ async function setupAuditLogging(config: DataSyncConfig, links: ApolloLink[]) {
     links.unshift(auditLoggingLink);
   }
 }
-
