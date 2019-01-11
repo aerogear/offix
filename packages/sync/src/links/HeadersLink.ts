@@ -1,21 +1,15 @@
 import { ApolloLink, NextLink, Operation } from "apollo-link";
-import { HeaderProvider } from "../config/HeaderProvider";
+import { setContext } from "apollo-link-context";
+import { DataSyncConfig } from "../config/DataSyncConfig";
 
-export class HeadersLink extends ApolloLink {
-
-  private headerProvider: HeaderProvider;
-
-  constructor(headerProvider: HeaderProvider) {
-    super();
-    this.headerProvider = headerProvider;
-  }
-
-  public request(operation: Operation, forward: NextLink) {
-    if (this.headerProvider) {
-      operation.setContext({
-        headers: this.headerProvider.getHeaders()
-      });
+export const createHeadersLink = (config: DataSyncConfig): ApolloLink => {
+  const asyncHeadersLink = setContext(async (operation, previousContext) => {
+    if (config.headerProvider) {
+      const headers = await config.headerProvider();
+      return {
+        headers
+      };
     }
-    return forward(operation);
-  }
-}
+  });
+  return asyncHeadersLink;
+};

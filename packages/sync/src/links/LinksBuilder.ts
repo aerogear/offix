@@ -5,7 +5,7 @@ import { DataSyncConfig } from "../config";
 import { defaultWebSocketLink } from "./WebsocketLink";
 import { isSubscription } from "../utils/helpers";
 import { compositeQueueLink } from "./compositeQueueLink";
-import { HeadersLink } from "./HeadersLink";
+import { createHeadersLink } from "./HeadersLink";
 import { AuditLoggingLink } from "./AuditLoggingLink";
 import { MetricsBuilder } from "@aerogear/core";
 
@@ -32,7 +32,7 @@ export const defaultLinkBuilder: LinkChainBuilder =
     const localLink: ApolloLink = compositeQueueLink(config, "mutation");
     let httpLink = new HttpLink({ uri: config.httpUrl, includeExtensions: config.auditLogging }) as ApolloLink;
     if (config.headerProvider) {
-      httpLink = concat(new HeadersLink(config.headerProvider), httpLink);
+      httpLink = concat(createHeadersLink(config), httpLink);
     }
 
     let links: ApolloLink[] = [localLink, conflictLink(config), httpLink];
@@ -41,16 +41,7 @@ export const defaultLinkBuilder: LinkChainBuilder =
       links = [localLink, httpLink];
     }
 
-    if (config.auditLogging) {
-      const metricsBuilder: MetricsBuilder = new MetricsBuilder();
-      const metricsPayload: {[key: string]: any} = {};
-      const metrics = metricsBuilder.buildDefaultMetrics();
-      for (const metric of metrics) {
-        metricsPayload[metric.identifier] = await metric.collect();
-      }
-      const auditLoggingLink = new AuditLoggingLink(metricsBuilder.getClientId(), metricsPayload);
-      links.unshift(auditLoggingLink);  // prepend
-    }
+    await setupAuditLogging(config, links);
 
     let compositeLink = ApolloLink.from(links);
     if (config.wsUrl) {
@@ -59,3 +50,20 @@ export const defaultLinkBuilder: LinkChainBuilder =
     }
     return compositeLink;
   };
+async function setupAuditLogging(config: DataSyncConfig, links: ApolloLink[]) {
+  // FIXME Begs for refactor
+  if (config.auditLogging) {
+    const metricsBuilder: MetricsBuilder = new MetricsBuilder();
+    const metricsPayload: {
+      [key: string]: any;
+    } = {};
+    const metrics = metricsBuilder.buildDefaultMetrics();
+    for (const metric of metrics) {
+      metricsPayload[metric.identifier] = await metric.collect();
+    }
+    const auditLoggingLink =
+      new AuditLoggingLink(metricsBuilder.getClientId(), metricsPayload);
+    links.unshift(auditLoggingLink);
+  }
+}
+
