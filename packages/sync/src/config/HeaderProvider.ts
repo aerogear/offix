@@ -1,6 +1,7 @@
+
+export interface Headers { [header: string]: string; }
+
 /**
  * Interface for HeaderProvider
  */
-export interface HeaderProvider {
-  getHeaders(): {[index: string]: string};
-}
+export type HeaderProvider = () => Promise<Headers>;

@@ -5,7 +5,6 @@ import { DataSyncConfig } from "./DataSyncConfig";
 import { WebNetworkStatus } from "../offline";
 import { CordovaNetworkStatus } from "../offline";
 import { HeaderProvider } from "./HeaderProvider";
-import { DefaultHeaderProvider } from "./DefaultHeaderProvider";
 import { diffMergeClientWins } from "../conflicts/strategies";
 import { VersionedNextState } from "../conflicts/VersionedNextState";
 
@@ -23,7 +22,6 @@ export class SyncConfig implements DataSyncConfig {
   public storage?: PersistentStore<PersistedData>;
   public mutationsQueueName = "offline-mutation-store";
   public mergeOfflineMutations = true;
-  public headerProvider: HeaderProvider = new DefaultHeaderProvider();
   public auditLogging = false;
   public conflictStrategy = diffMergeClientWins;
   public conflictStateProvider = new VersionedNextState();
