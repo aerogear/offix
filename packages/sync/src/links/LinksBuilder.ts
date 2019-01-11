@@ -50,6 +50,7 @@ export const defaultLinkBuilder: LinkChainBuilder =
     }
     return compositeLink;
   };
+
 async function setupAuditLogging(config: DataSyncConfig, links: ApolloLink[]) {
   // FIXME Begs for refactor
   if (config.auditLogging) {

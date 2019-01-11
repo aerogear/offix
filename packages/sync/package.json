@@ -49,6 +49,7 @@
     "apollo-cache-persist": "^0.1.1",
     "apollo-client": "2.4.5",
     "apollo-link": "1.2.3",
+    "apollo-link-context": "^1.0.12",
     "apollo-link-error": "^1.1.1",
     "apollo-link-http": "^1.5.5",
     "apollo-link-ws": "^1.0.9",
