@@ -4,7 +4,7 @@ jobs:
     working_directory: ~/aerogear
     docker:
       # Node 8 LTS
-      - image: circleci/node:carbon
+      - image: circleci/node:carbon-browsers
     steps:
       - checkout
       - run:
@@ -35,6 +35,9 @@ jobs:
       - run:
           name: test
           command: npm test
+      - run:
+          name: sync integration test
+          command: cd packages/sync && npm run integration-test
       - store_artifacts:
           path: test-results.xml
           prefix: tests
