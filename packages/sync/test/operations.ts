@@ -13,7 +13,10 @@ export const op: Operation = {
     kind: "Document",
     definitions: [{
       kind: "OperationDefinition",
-      selectionSet: {} as any,
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: []
+      },
       operation: "mutation",
       name: {
         kind: "Name",
@@ -211,7 +214,10 @@ export const opWithDifferentQuery: Operation = {
     kind: "Document",
     definitions: [{
       kind: "OperationDefinition",
-      selectionSet: {} as any,
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: []
+      },
       operation: "mutation",
       name: {
         kind: "Name",

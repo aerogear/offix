@@ -8,7 +8,9 @@
     "clean": "del coverage src/**/*.js src/**/*.map test/**/*.js test/**/*.map dist types",
     "build": "tsc",
     "watch": "tsc --watch",
-    "test": "nyc mocha"
+    "test": "nyc mocha",
+    "preintegration-test": "cd integration_test && npm install",
+    "integration-test": "cd integration_test && npm test"
   },
   "repository": {
     "type": "git",
