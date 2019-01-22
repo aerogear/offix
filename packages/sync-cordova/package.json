@@ -1,6 +1,6 @@
 {
   "name": "@aerogear/cordova-plugin-aerogear-sync",
-  "version": "2.0.0",
+  "version": "2.1.0-rc1",
   "description": "Cordova plugin for AeroGear Sync",
   "cordova": {
     "id": "cordova-plugin-aerogear-sync",
