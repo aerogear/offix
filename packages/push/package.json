@@ -34,7 +34,9 @@
     "nyc": "^11.7.1"
   },
   "dependencies": {
-    "@aerogear/core": "2.1.0-rc1",
     "axios": "^0.18.0"
+  },
+  "peerDependencies": {
+    "@aerogear/core": ">2.0.1"
   }
 }
