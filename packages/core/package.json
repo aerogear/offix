@@ -1,6 +1,6 @@
 {
   "name": "@aerogear/core",
-  "version": "2.1.0",
+  "version": "2.1.0-rc2",
   "description": "JavaScript Core SDK for AeroGear services",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
