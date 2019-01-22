@@ -90,6 +90,13 @@ git commit -am 'release version x.y.z'
 
 Once your changes have been merged to master, you can continue and release to npm.
 
+=== Updating core peer dependency
+
+Each service package currently depends on core package using peerDependency.
+This dependency is not updated using automatic release scripts.
+If you have made any changes in core that are breaking API `peerDependency`
+needs to be changed manually for those packages.
+
 === How to Release
 
 To kick off a release to npm, simply link:https://help.github.com/articles/creating-releases/[Create a Release] in Github. **You must use the exact tag you used earlier** or the release will fail.
