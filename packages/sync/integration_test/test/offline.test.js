@@ -182,7 +182,7 @@ describe('AeroGear Apollo GraphQL Voyager client', function() {
     });
   });
 
-  describe.skip('create then update item while offline', function() {
+  describe('create then update item while offline', function() {
     it('should succeed', async function() {
       let task;
       

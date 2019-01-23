@@ -22,6 +22,7 @@ export interface OperationQueueEntry {
   forward: NextLink;
   observer: Observer<FetchResult>;
   subscription?: { unsubscribe: () => void };
+  optimisticResponse?: any;
 }
 
 /**
@@ -62,12 +63,28 @@ export class OfflineQueueLink extends ApolloLink {
     this.operationFilter = filter;
   }
 
-  public open() {
+  public async open() {
     logger("MutationQueue is open", this.opQueue);
     this.isOpen = true;
-    this.opQueue.forEach(({ operation, forward, observer }) => {
-      forward(operation).subscribe(observer);
-    });
+    for (const opEntry of this.opQueue) {
+      const { operation, forward, observer } = opEntry;
+      await new Promise(resolve => {
+        forward(operation).subscribe({
+          next: result => {
+            this.updateIds(opEntry, result);
+            this.storage.setItem(this.key, JSON.stringify(this.opQueue));
+            if (observer.next) { observer.next(result); }
+          },
+          error: error => {
+            if (observer.error) { observer.error(error); }
+          },
+          complete: () => {
+            if (observer.complete) { observer.complete(); }
+            resolve();
+          }
+        });
+      });
+    }
     this.opQueue = [];
     if (this.listener && this.listener.queueCleared) {
       this.listener.queueCleared();
@@ -93,7 +110,8 @@ export class OfflineQueueLink extends ApolloLink {
     }
 
     return new Observable(observer => {
-      const operationEntry = { operation, forward, observer };
+      const optimisticResponse = operation.getContext().optimisticResponse;
+      const operationEntry = { operation, forward, observer, optimisticResponse };
       this.enqueue(operationEntry);
       return () => this.cancelOperation(operationEntry);
     });
@@ -151,6 +169,23 @@ export class OfflineQueueLink extends ApolloLink {
           }
         }
       });
+    }
+  }
+
+  private updateIds(
+    operationEntry: OperationQueueEntry,
+    result: FetchResult
+  ): void {
+    const operation = operationEntry.operation;
+    const optimisticResponse = operationEntry.optimisticResponse;
+    if (optimisticResponse && optimisticResponse[operation.operationName].__optimisticId) {
+      const optimisticId = optimisticResponse[operation.operationName].id;
+      this.opQueue.forEach(({ operation: op }) => {
+        if (op.variables.id === optimisticId && result.data) {
+          op.variables.id = result.data[operation.operationName].id;
+        }
+      });
+      this.storage.setItem(this.key, JSON.stringify(this.opQueue));
     }
   }
 }
