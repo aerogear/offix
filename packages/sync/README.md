@@ -1,6 +1,6 @@
-# AeroGear Apollo GraphQL Voyager client
+# AeroGear Voyager GraphQL client
 
-Client SDK for [Apollo Voyager Server](https://github.com/aerogear/apollo-voyager-server)
+Client JavaScript library for [Voyager GraphQL Server](https://github.com/aerogear/voyager-server)
 
 # Getting Started
 
@@ -9,7 +9,7 @@ Client SDK for [Apollo Voyager Server](https://github.com/aerogear/apollo-voyage
 import {
   createClient,
   strategies
-} from '@aerogear/datasync-js';
+} from '@aerogear/voyager-client';
 ```
 
 ## Configuration
@@ -43,7 +43,7 @@ let client = createClient(config);
 # Example application
 
 Try SDK using sample application:
-https://github.com/aerogear/apollo-voyager-ionic-example
+https://github.com/aerogear/voyager-ionic-example
 
 
 # Basic concepts
