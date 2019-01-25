@@ -174,6 +174,8 @@ Client will resolve them automatically basing on current strategy and notify lis
 
 Conflict resolution will work out of the box with recommended defaults and do not require any specific handling on the client.
 
+> Advanced users may customize conflict implementation by supplying custom `conflictStateProvider` in config.
+
 ### Default conflict implementation
 
 By default plugable conflict resolution is configured to rely on `version` field on each
