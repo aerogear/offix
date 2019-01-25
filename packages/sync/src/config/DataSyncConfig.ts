@@ -14,37 +14,38 @@ import { ConflictListener } from "../conflicts/ConflictListener";
  */
 export interface DataSyncConfig {
   /**
-   * Http server url
+   * The URL of http server
    */
   httpUrl?: string;
 
   /**
-   * Websocket url
+   *  The URL of websocket endpoint
    */
   wsUrl?: string;
 
   /**
-   * Storage solution
+   * The storage you want your client to use (Uses window.localStorage by default)
    */
   storage?: PersistentStore<PersistedData>;
 
   /**
-   * Enables providing custom Apollo Link for processing requests
+   * Enables supplying custom Apollo Link implementation for processing requests
    */
   customLinkBuilder?: LinkChainBuilder;
 
   /**
-   * Inteface for detecting changes in network status
+   * Interface for detecting changes in network status.
+   * See `WebNetworkStatus` and `CordovaNetworkStatus`
    */
   networkStatus?: NetworkStatus;
 
   /**
-   * The key used to store offline mutations
+   * The name to store requests under in your offline queue. By default "offline-mutation-store"
    */
   mutationsQueueName?: string | any;
 
   /**
-   * Whether or not to enable squashing offline mutations
+   * Whether or not you wish to squash mutations in your queue. By default true
    */
   mergeOfflineMutations?: boolean;
 
@@ -66,7 +67,7 @@ export interface DataSyncConfig {
   auditLogging?: boolean;
 
   /**
-   * Conflict resolution strategy
+   * The conflict resolution strategy your client should use. By default it takes client version
    */
   conflictStrategy?: ConflictResolutionStrategy;
 
