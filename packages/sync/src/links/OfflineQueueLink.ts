@@ -177,7 +177,7 @@ export class OfflineQueueLink extends ApolloLink {
   ): void {
     const operation = operationEntry.operation;
     const optimisticResponse = operationEntry.optimisticResponse;
-    if (optimisticResponse && optimisticResponse[operation.operationName].id.startsWith('client:')) {
+    if (optimisticResponse && optimisticResponse[operation.operationName].id.startsWith("client:")) {
       const optimisticId = optimisticResponse[operation.operationName].id;
       this.opQueue.forEach(({ operation: op }) => {
         if (op.variables.id === optimisticId && result.data) {
