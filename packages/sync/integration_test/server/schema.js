@@ -31,7 +31,12 @@ type Subscription {
 `
 
 let id = 0;
-const data = [];
+let data = [];
+
+const resetData = () => {
+  id = 0;
+  data = [];
+};
 
 const resolvers = {
   Query: {
@@ -98,4 +103,7 @@ const resolvers = {
 
 const schema = makeExecutableSchema({ typeDefs, resolvers })
 
-module.exports = schema
+module.exports = {
+  schema,
+  resetData
+}
