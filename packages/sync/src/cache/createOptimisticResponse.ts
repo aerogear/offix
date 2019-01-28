@@ -1,7 +1,7 @@
 
 // Helper method for ID generation ()
 const generateId = (length = 8) => {
-  let result = "";
+  let result = "client:";
   const chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
   for (let i = length; i > 0; i -= 1) {
@@ -48,7 +48,6 @@ export const createOptimisticResponse =
     };
     if (addId) {
       optimisticResponse[operation][idField] = generateId();
-      optimisticResponse[operation].__optimisticId = true;
     }
 
     return optimisticResponse;

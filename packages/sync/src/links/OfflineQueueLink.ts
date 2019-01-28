@@ -72,7 +72,6 @@ export class OfflineQueueLink extends ApolloLink {
         forward(operation).subscribe({
           next: result => {
             this.updateIds(opEntry, result);
-            this.storage.setItem(this.key, JSON.stringify(this.opQueue));
             if (observer.next) { observer.next(result); }
           },
           error: error => {
@@ -178,7 +177,7 @@ export class OfflineQueueLink extends ApolloLink {
   ): void {
     const operation = operationEntry.operation;
     const optimisticResponse = operationEntry.optimisticResponse;
-    if (optimisticResponse && optimisticResponse[operation.operationName].__optimisticId) {
+    if (optimisticResponse && optimisticResponse[operation.operationName].id.startsWith('client:')) {
       const optimisticId = optimisticResponse[operation.operationName].id;
       this.opQueue.forEach(({ operation: op }) => {
         if (op.variables.id === optimisticId && result.data) {
