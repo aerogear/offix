@@ -1,7 +1,13 @@
 
+const CLIENT_ID_PREFIX = "client:";
+
+export const hasClientGeneratedId = (optimisticResponse: any, operationName: string) => {
+  return optimisticResponse[operationName].id.startsWith(CLIENT_ID_PREFIX);
+};
+
 // Helper method for ID generation ()
 const generateId = (length = 8) => {
-  let result = "client:";
+  let result = CLIENT_ID_PREFIX;
   const chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
   for (let i = length; i > 0; i -= 1) {
