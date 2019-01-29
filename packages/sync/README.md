@@ -314,13 +314,9 @@ appear instantly in the application UI. SDK provides helper method to work with 
 
 Users can detect if the provided data is optimistic response by checking `optimisticResponse` flag is set to true.
 
-> Note: pending changes created by helper are read only. Performing any additional
-operations on pending objects will result in error due to fact that next changes will be missing actual ID that can be created on server side.
-
-
 ### Mapping Client and Server ID for Optimistic Reponses
 
-When using `OptimisticReponse` helper from SDK specific mutations that create new element response is going to have client side generated id. Subsequent edits for this objects will also refer to this id. When becoming online, all offline changes are going to be performed in specific order invalidating client side id for subsequent edits. If edits for objects created when offline are required, developers need to support a way to map them in their resolvers.
+When using `OptimisticReponse` helper from SDK specific mutations that create new element response is going to have client side generated id. Subsequent edits for this objects will also refer to this id. When becoming online, all offline changes are going to be performed in specific order updating client side id with id returned from server for subsequent edits.
 
 ## Listening to the offline queue events
 

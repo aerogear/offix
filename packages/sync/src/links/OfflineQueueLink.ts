@@ -14,6 +14,7 @@ import { DataSyncConfig } from "../config";
 import { squashOperations } from "../offline/squashOperations";
 import * as debug from "debug";
 import { OfflineQueueListener } from "../offline";
+import { hasClientGeneratedId } from "../cache/createOptimisticResponse";
 
 export const logger = debug.default(MUTATION_QUEUE_LOGGER);
 
@@ -22,6 +23,7 @@ export interface OperationQueueEntry {
   forward: NextLink;
   observer: Observer<FetchResult>;
   subscription?: { unsubscribe: () => void };
+  optimisticResponse?: any;
 }
 
 /**
@@ -62,12 +64,22 @@ export class OfflineQueueLink extends ApolloLink {
     this.operationFilter = filter;
   }
 
-  public open() {
+  public async open() {
     logger("MutationQueue is open", this.opQueue);
     this.isOpen = true;
-    this.opQueue.forEach(({ operation, forward, observer }) => {
-      forward(operation).subscribe(observer);
-    });
+    for (const opEntry of this.opQueue) {
+      let result;
+      try {
+        result = await this.forwardQueuedOperation(opEntry);
+      } catch (error) {
+        // TODO: notify about failed operation via OfflineQueueListener
+        continue;
+      }
+      const { operation: { operationName }, optimisticResponse } = opEntry;
+      if (result && optimisticResponse && hasClientGeneratedId(optimisticResponse, operationName)) {
+        this.updateIds(opEntry, result);
+      }
+    }
     this.opQueue = [];
     if (this.listener && this.listener.queueCleared) {
       this.listener.queueCleared();
@@ -93,13 +105,35 @@ export class OfflineQueueLink extends ApolloLink {
     }
 
     return new Observable(observer => {
-      const operationEntry = { operation, forward, observer };
+      const optimisticResponse = operation.getContext().optimisticResponse;
+      const operationEntry = { operation, forward, observer, optimisticResponse };
       this.enqueue(operationEntry);
       return () => this.cancelOperation(operationEntry);
     });
   }
 
+  private forwardQueuedOperation(opEntry: OperationQueueEntry): Promise<FetchResult> {
+    const { operation, forward, observer } = opEntry;
+    return new Promise((resolve, reject) => {
+      opEntry.subscription = forward(operation).subscribe({
+        next: result => {
+          if (observer.next) { observer.next(result); }
+          resolve(result);
+        },
+        error: error => {
+          if (observer.error) { observer.error(error); }
+          reject(error);
+        },
+        complete: () => {
+          if (observer.complete) { observer.complete(); }
+        }
+      });
+    });
+  }
+
   private cancelOperation(entry: OperationQueueEntry) {
+    const subscription = entry.subscription;
+    if (subscription) { subscription.unsubscribe(); }
     this.opQueue = this.opQueue.filter(e => e !== entry);
     this.storage.setItem(this.key, JSON.stringify(this.opQueue));
   }
@@ -152,5 +186,25 @@ export class OfflineQueueLink extends ApolloLink {
         }
       });
     }
+  }
+
+  /**
+   * Allow updates on items created while offline.
+   * If item is created while offline and client generated ID is provided
+   * to optimisticResponse, later mutations on this item will be using this client
+   * generated ID. Once queue is opened and create operation is successful, we should
+   * update entries in queue with ID returned from server.
+   */
+  private updateIds(operationEntry: OperationQueueEntry, result: FetchResult) {
+    const { operation: { operationName }, optimisticResponse } = operationEntry;
+    const clientId = optimisticResponse && optimisticResponse[operationName].id;
+
+    this.opQueue.forEach(({ operation: op }) => {
+      if (op.variables.id === clientId) {
+        op.variables.id = result.data && result.data[operationName].id;
+      }
+    });
+
+    this.storage.setItem(this.key, JSON.stringify(this.opQueue));
   }
 }
