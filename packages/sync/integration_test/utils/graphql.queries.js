@@ -40,16 +40,16 @@ export const UPDATE_TASK = gql`
 `;
 
 export const ONLINE_ONLY = gql`
-  mutation onlineOnly($id: ID!) @onlineOnly {
-    onlineOnly(id: $id) {
+  mutation onlineOnly($id: ID!) {
+    onlineOnly(id: $id) @onlineOnly {
       id
     }
   }
 `;
 
 export const NO_SQUASH = gql`
-  mutation noSquash($id: ID!) @noSquash {
-    noSquash(id: $id) {
+  mutation noSquash($id: ID!) {
+    noSquash(id: $id) @noSquash {
       id
     }
   }

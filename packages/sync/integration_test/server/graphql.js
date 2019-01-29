@@ -2,7 +2,7 @@ const express = require('express');
 const { ApolloVoyagerServer } = require('@aerogear/apollo-voyager-server');
 const http = require('http');
 
-const schema = require('./schema');
+const schema = require('./schema').schema;
 
 const PORT = 4000;
 

@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 
 const graphqlStart = require('./graphql');
+const resetData = require('./schema').resetData;
 
 const app = express();
 app.use(cors());
@@ -16,6 +17,10 @@ app.post('/start', async (_, res) => {
 });
 app.post('/stop', (_, res) => {
   graphqlServer.close();
+  res.sendStatus(200)
+});
+app.post('/reset', (_, res) => {
+  resetData();
   res.sendStatus(200)
 });
 

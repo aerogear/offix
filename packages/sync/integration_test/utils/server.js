@@ -10,7 +10,12 @@ function stop() {
   return manage('stop');
 }
 
+function reset() {
+  return manage('reset');
+}
+
 module.exports = {
   start,
-  stop
+  stop,
+  reset
 };
