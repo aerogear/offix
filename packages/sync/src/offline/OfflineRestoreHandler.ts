@@ -4,6 +4,7 @@ import { PersistentStore, PersistedData } from "../PersistentStore";
 import { OperationQueueEntry } from "../links/OfflineQueueLink";
 import { MUTATION_QUEUE_LOGGER } from "../config/Constants";
 import * as debug from "debug";
+import { offlineQueueLink } from "../links/LinksBuilder";
 
 export const logger = debug.default(MUTATION_QUEUE_LOGGER);
 /**
@@ -41,28 +42,28 @@ export class OfflineRestoreHandler {
     // if there is no offline data  then just exit
     if (!this.hasOfflineData()) { return; }
 
-    logger("Replying offline mutations after application restart");
-    // return as promise, but in the end clear the storage
-    const uncommittedOfflineMutation: OperationQueueEntry[] = [];
-
-    await Promise.all(this.offlineData.map(async (item) => {
-      try {
-        await this.apolloClient.mutate({
-          variables: item.operation.variables,
-          mutation: item.operation.query,
-          context: item.operation.getContext
-        });
-      } catch (e) {
-        // set the errored mutation to the stash
-        uncommittedOfflineMutation.push(item);
-      }
-    }));
-
     // wait before it was cleared
     await this.clearOfflineData();
 
-    // then add again the uncommited storage
-    this.addOfflineData(uncommittedOfflineMutation);
+    logger("Replying offline mutations after application restart");
+
+    this.offlineData.forEach(item => {
+      this.apolloClient.mutate({
+        variables: item.operation.variables,
+        mutation: item.operation.query,
+        optimisticResponse: item.optimisticResponse
+      });
+    });
+
+    await this.waitForOperationsEnqueued();
+
+    this.offlineData = [];
+  }
+
+  private waitForOperationsEnqueued = async () => {
+    while (offlineQueueLink.numberOfOperationsEnqueued() < this.offlineData.length) {
+      await new Promise(resolve => setTimeout(resolve, 0));
+    }
   }
 
   private getOfflineData = async () => {
@@ -74,14 +75,6 @@ export class OfflineRestoreHandler {
   }
 
   private clearOfflineData = async () => {
-    this.offlineData = [];
     return this.storage.removeItem(this.storageKey);
-  }
-
-  private addOfflineData = (queue: OperationQueueEntry[] = []) => {
-    // add only if there is a value
-    if (queue && queue.length > 0) {
-      this.storage.setItem(this.storageKey, JSON.stringify(queue));
-    }
   }
 }

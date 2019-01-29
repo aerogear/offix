@@ -4,10 +4,13 @@ import { conflictLink } from "../conflicts";
 import { DataSyncConfig } from "../config";
 import { defaultWebSocketLink } from "./WebsocketLink";
 import { isSubscription } from "../utils/helpers";
-import { compositeQueueLink } from "./compositeQueueLink";
 import { createHeadersLink } from "./HeadersLink";
 import { AuditLoggingLink } from "./AuditLoggingLink";
 import { MetricsBuilder } from "@aerogear/core";
+import { OfflineQueueLink } from "./OfflineQueueLink";
+import { LocalDirectiveFilterLink } from "./LocalDirectiveFilterLink";
+
+export let offlineQueueLink: OfflineQueueLink;
 
 /**
  * Function used to build Apollo link
@@ -29,7 +32,11 @@ export const defaultLinkBuilder: LinkChainBuilder =
     if (config.customLinkBuilder) {
       return config.customLinkBuilder(config);
     }
-    const localLink: ApolloLink = compositeQueueLink(config, "mutation");
+
+    offlineQueueLink = new OfflineQueueLink(config, "mutation");
+    const localDirectiveFilterLink = new LocalDirectiveFilterLink();
+    const localLink: ApolloLink = concat(offlineQueueLink, localDirectiveFilterLink);
+
     let httpLink = new HttpLink({ uri: config.httpUrl, includeExtensions: config.auditLogging }) as ApolloLink;
     if (config.headerProvider) {
       httpLink = concat(createHeadersLink(config), httpLink);

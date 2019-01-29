@@ -54,6 +54,7 @@ describe("OnOffLink", () => {
   beforeEach(() => {
     testLink = new TestLink();
     onOffLink = new QueueLink(config);
+    onOffLink.open();
     link = ApolloLink.from([onOffLink, testLink]);
     operations = [];
   });

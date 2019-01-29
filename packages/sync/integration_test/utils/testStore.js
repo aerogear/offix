@@ -12,6 +12,6 @@ export class TestStore {
   }
 
   removeItem(key) {
-    delete data[key];
+    delete this.data[key];
   }
 }
