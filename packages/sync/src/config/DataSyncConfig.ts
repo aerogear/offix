@@ -1,5 +1,4 @@
 import { ConflictResolutionStrategy } from "../conflicts/ConflictResolutionStrategy";
-import { LinkChainBuilder } from "../links";
 import { PersistedData, PersistentStore } from "../PersistentStore";
 import { NetworkStatus } from "../offline";
 import { OfflineQueueListener } from "../offline";
@@ -27,11 +26,6 @@ export interface DataSyncConfig {
    * The storage you want your client to use (Uses window.localStorage by default)
    */
   storage?: PersistentStore<PersistedData>;
-
-  /**
-   * Enables supplying custom Apollo Link implementation for processing requests
-   */
-  customLinkBuilder?: LinkChainBuilder;
 
   /**
    * Interface for detecting changes in network status.

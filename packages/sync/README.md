@@ -270,22 +270,6 @@ let config = {
 
 # Advanced topics
 
-## Implementing Custom Apollo Links
-
-To use your own custom apollo links to create your own set of operation processors, simply follow the documentation for creating links here: https://www.apollographql.com/docs/link/index.html. You can pass this building mechanism to your client in the config, under the `customLinkBuilder` parameter.
-
-```javascript
-export const linkBuilder: LinkChainBuilder = (): ApolloLink => {
-    const httpLink = new HttpLink({ uri: "someUri" });
-    const customLink = new YourCustomLink();
-
-    let links: ApolloLink[] = [customLink, httpLink];
-
-    let compositeLink = ApolloLink.from(links);
-    return compositeLink;
-  };
-```
-
 ## Implementing Custom Network Status checks
 
 To use your own custom network checks, implement the [NetworkStatus](https://github.com/aerogear/aerogear-js-sdk/blob/master/packages/sync/src/offline/NetworkStatus.ts)
