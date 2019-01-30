@@ -42,7 +42,7 @@ export type TYPE_MUTATION = "mutation" | "query";
  */
 export class OfflineQueueLink extends ApolloLink {
   private opQueue: OperationQueueEntry[] = [];
-  private isOpen: boolean = true;
+  private isOpen: boolean = false;
   private storage: PersistentStore<PersistedData>;
   private readonly key: string;
   private readonly networkStatus?: NetworkStatus;
@@ -110,6 +110,10 @@ export class OfflineQueueLink extends ApolloLink {
       this.enqueue(operationEntry);
       return () => this.cancelOperation(operationEntry);
     });
+  }
+
+  public numberOfOperationsEnqueued() {
+    return this.opQueue.length;
   }
 
   private forwardQueuedOperation(opEntry: OperationQueueEntry): Promise<FetchResult> {

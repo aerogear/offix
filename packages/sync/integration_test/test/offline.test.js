@@ -215,7 +215,7 @@ describe('AeroGear Apollo GraphQL Voyager client', function() {
     });
   });
 
-  describe.skip('create then update item while offline then replaying mutations', function() {
+  describe('create then update item while offline then replaying mutations', function() {
     it('should succeed', async function() {
       let task;
 
