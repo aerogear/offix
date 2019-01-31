@@ -68,15 +68,12 @@ export class OfflineQueueLink extends ApolloLink {
     logger("MutationQueue is open", this.opQueue);
     this.isOpen = true;
     for (const opEntry of this.opQueue) {
-      let result;
-      try {
-        result = await this.forwardQueuedOperation(opEntry);
-      } catch (_) {
-        continue;
-      }
-      const { operation: { operationName }, optimisticResponse } = opEntry;
-      if (result && optimisticResponse && hasClientGeneratedId(optimisticResponse, operationName)) {
-        this.updateIds(opEntry, result);
+      const result = await this.forwardQueuedOperation(opEntry);
+      if (result) {
+        const { operation: { operationName }, optimisticResponse } = opEntry;
+        if (optimisticResponse && hasClientGeneratedId(optimisticResponse, operationName)) {
+          this.updateIds(opEntry, result);
+        }
       }
     }
     this.opQueue = [];
@@ -117,7 +114,7 @@ export class OfflineQueueLink extends ApolloLink {
 
   private forwardQueuedOperation(opEntry: OperationQueueEntry): Promise<FetchResult> {
     const { operation, forward, observer } = opEntry;
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       opEntry.subscription = forward(operation).subscribe({
         next: result => {
           if (this.listener && this.listener.onOperationSuccess) {
@@ -131,7 +128,7 @@ export class OfflineQueueLink extends ApolloLink {
             this.listener.onOperationFailure(operation, error);
           }
           if (observer.error) { observer.error(error); }
-          reject(error);
+          resolve();
         },
         complete: () => {
           if (observer.complete) { observer.complete(); }

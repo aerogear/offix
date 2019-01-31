@@ -152,6 +152,15 @@ exampleMutation(...) @noSquash {
 }
 ```
 
+## Listening for Events
+
+It is possible to provide `offlineQueueListener` in config to be notified about offline related events:
+
+- `onOperationEnqueued` - Called when new operation is being added to offline queue
+- `onOperationSuccess` - Called when back online and operation succeeds
+- `onOperationFailure` - Called when back online and operation fails with GraphQL error
+- `queueCleared` - Called when offline operation queue is cleared
+
 ## Conflicts
 
 When obtaining copy of the server side data, client data can get out of the sync.
