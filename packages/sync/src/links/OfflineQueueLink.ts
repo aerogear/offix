@@ -71,8 +71,7 @@ export class OfflineQueueLink extends ApolloLink {
       let result;
       try {
         result = await this.forwardQueuedOperation(opEntry);
-      } catch (error) {
-        // TODO: notify about failed operation via OfflineQueueListener
+      } catch (_) {
         continue;
       }
       const { operation: { operationName }, optimisticResponse } = opEntry;
@@ -121,10 +120,16 @@ export class OfflineQueueLink extends ApolloLink {
     return new Promise((resolve, reject) => {
       opEntry.subscription = forward(operation).subscribe({
         next: result => {
+          if (this.listener && this.listener.onOperationSuccess) {
+            this.listener.onOperationSuccess(operation, result);
+          }
           if (observer.next) { observer.next(result); }
           resolve(result);
         },
         error: error => {
+          if (this.listener && this.listener.onOperationFailure) {
+            this.listener.onOperationFailure(operation, error);
+          }
           if (observer.error) { observer.error(error); }
           reject(error);
         },
