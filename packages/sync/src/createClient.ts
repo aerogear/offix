@@ -3,9 +3,13 @@ import { persistCache } from "apollo-cache-persist";
 import { ApolloClient } from "apollo-client";
 import { DataSyncConfig } from "./config";
 import { SyncConfig } from "./config/SyncConfig";
-import { defaultLinkBuilder as buildLink, offlineQueueLink } from "./links/LinksBuilder";
+import { defaultHttpLinks } from "./links/LinksBuilder";
 import { PersistedData, PersistentStore } from "./PersistentStore";
 import { OfflineRestoreHandler } from "./offline/OfflineRestoreHandler";
+import { defaultWebSocketLink } from "./links/WebsocketLink";
+import { ApolloLink } from "apollo-link";
+import { isSubscription } from "./utils/helpers";
+import { OfflineQueueLink } from "./links/OfflineQueueLink";
 
 /**
  * @see ApolloClient
@@ -20,17 +24,28 @@ export type VoyagerClient = ApolloClient<NormalizedCacheObject>;
 export const createClient = async (userConfig?: DataSyncConfig): Promise<VoyagerClient> => {
   const clientConfig = extractConfig(userConfig);
   const { cache } = await buildCachePersistence(clientConfig);
-  const link = await buildLink(clientConfig);
+
+  const httpLinks = await defaultHttpLinks(clientConfig);
+  let link = ApolloLink.from(httpLinks);
+  if (clientConfig.wsUrl) {
+    const wsLink = defaultWebSocketLink({ uri: clientConfig.wsUrl });
+    link = ApolloLink.split(isSubscription, wsLink, link);
+  }
+
   const apolloClient = new ApolloClient({
     link,
     cache
   });
+
+  const offlineQueueLink = httpLinks.find(l => l instanceof OfflineQueueLink) as OfflineQueueLink;
   const storage = clientConfig.storage as PersistentStore<PersistedData>;
   const offlineMutationHandler = new OfflineRestoreHandler(apolloClient,
     storage,
-    clientConfig.mutationsQueueName);
+    clientConfig.mutationsQueueName,
+    offlineQueueLink);
   await offlineMutationHandler.replayOfflineMutations();
   offlineQueueLink.openQueueOnNetworkStateUpdates();
+
   return apolloClient;
 };
 
