@@ -92,7 +92,7 @@ export class OfflineQueueLink extends ApolloLink {
   }
 
   public request(operation: Operation, forward: NextLink) {
-    if (this.isOpen) {
+    if (this.isOpen && this.opQueue.length === 0) {
       logger("Forwarding request");
       return forward(operation);
     }
