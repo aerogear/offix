@@ -1,6 +1,6 @@
 {
   "name": "@aerogear/app",
-  "version": "2.1.0-rc2",
+  "version": "2.1.0",
   "description": "Aero Gear SDK application module",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -33,7 +33,7 @@
     "nyc": "^11.7.1"
   },
   "dependencies": {
-    "@aerogear/core": "2.1.0-rc2",
+    "@aerogear/core": "2.1.0",
     "lodash.find": "^4.6.0",
     "loglevel": "^1.6.1"
   }
