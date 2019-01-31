@@ -1,12 +1,12 @@
-import { INSTANCE, ServiceConfiguration, isMobileCordova } from "@aerogear/core";
+import { ServiceConfiguration, isMobileCordova } from "@aerogear/core";
 import { PersistedData, PersistentStore } from "../PersistentStore";
 import { ConfigError } from "./ConfigError";
 import { DataSyncConfig } from "./DataSyncConfig";
 import { WebNetworkStatus } from "../offline";
 import { CordovaNetworkStatus } from "../offline";
-import { HeaderProvider } from "./HeaderProvider";
 import { diffMergeClientWins } from "../conflicts/strategies";
 import { VersionedNextState } from "../conflicts/VersionedNextState";
+import { AeroGearApp } from "@aerogear/app";
 
 declare var window: any;
 
@@ -18,7 +18,6 @@ const TYPE: string = "sync-app";
  * Default config is applied on top of user provided configuration
  */
 export class SyncConfig implements DataSyncConfig {
-  // Explicitly use id as id field
   public storage?: PersistentStore<PersistedData>;
   public mutationsQueueName = "offline-mutation-store";
   public mergeOfflineMutations = true;
@@ -47,11 +46,13 @@ export class SyncConfig implements DataSyncConfig {
    * @param config user supplied configuration
    */
   public applyPlatformConfig(config: DataSyncConfig) {
-    const configuration = INSTANCE.getConfigByType(TYPE);
-    if (configuration && configuration.length > 0) {
-      const serviceConfiguration: ServiceConfiguration = configuration[0];
-      config.httpUrl = serviceConfiguration.url;
-      config.wsUrl = serviceConfiguration.config.websocketUrl;
+    if (config.openShiftApp) {
+      const configuration = config.openShiftApp.getConfigByType(TYPE);
+      if (configuration && configuration.length > 0) {
+        const serviceConfiguration: ServiceConfiguration = configuration[0];
+        config.httpUrl = serviceConfiguration.url;
+        config.wsUrl = serviceConfiguration.config.websocketUrl;
+      }
     }
   }
 

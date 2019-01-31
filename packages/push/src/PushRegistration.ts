@@ -1,6 +1,7 @@
 
-import { INSTANCE, isCordovaAndroid, isCordovaIOS, ServiceConfiguration } from "@aerogear/core";
+import { isCordovaAndroid, isCordovaIOS, ServiceConfiguration } from "@aerogear/core";
 import axios from "axios";
+import { AeroGearApp } from "@aerogear/app";
 
 declare var window: any;
 declare var document: any;
@@ -21,8 +22,8 @@ export class PushRegistration {
 
   private pushConfig?: ServiceConfiguration;
 
-  constructor() {
-    const configuration = INSTANCE.getConfigByType(PushRegistration.TYPE);
+  constructor(app: AeroGearApp) {
+    const configuration = app.getConfigByType(PushRegistration.TYPE);
     if (configuration && configuration.length > 0) {
       this.pushConfig = configuration[0];
     } else {
@@ -45,7 +46,7 @@ export class PushRegistration {
     if (!this.pushConfig || !this.pushConfig.config || !this.pushConfig.url) {
       return Promise.reject(new Error("UPS registration: configuration is invalid"));
     }
-    if (!deviceToken ) {
+    if (!deviceToken) {
       return Promise.reject(new Error("Device token should not be empty"));
     }
     let platformConfig;
@@ -92,7 +93,6 @@ export class PushRegistration {
    * Return true if config is present
    */
   public hasConfig(): boolean {
-    const configuration = INSTANCE.getConfigByType(PushRegistration.TYPE);
-    return !!(configuration && configuration.length > 0);
+    return !!this.pushConfig;
   }
 }

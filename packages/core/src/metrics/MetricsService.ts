@@ -1,6 +1,5 @@
 import console from "loglevel";
 import { ServiceConfiguration } from "../config";
-import { INSTANCE } from "../Core";
 
 import { isNative } from "../PlatformUtils";
 import { Metrics, MetricsPayload } from "./model";
@@ -26,10 +25,8 @@ export class MetricsService {
 
   // constructor params are there to provide a mechanism to override the metricsBuilder and metricsPublisher before
   // the initial sendAppAndDeviceMetrics() execution happens. this is necessary in tests
-  constructor(options?: {configuration?: any, builder?: MetricsBuilder, publisher?: MetricsPublisher}) {
-    const configuration = options && options.configuration
-      ? options.configuration
-      : INSTANCE.getConfigByType(MetricsService.TYPE);
+  constructor(options: { configuration: any, builder?: MetricsBuilder, publisher?: MetricsPublisher }) {
+    const configuration = options.configuration;
 
     if (configuration && configuration.length > 0) {
       this.configuration = configuration[0];
