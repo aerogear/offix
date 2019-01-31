@@ -2,7 +2,7 @@ import { ServiceConfiguration } from "@aerogear/core";
 import Keycloak from "keycloak-js";
 import { KeycloakInitOptions, KeycloakInstance, KeycloakProfile } from "keycloak-js";
 import console from "loglevel";
-import { AeroGearApp } from "@aerogear/app";
+import { AeroGearApp, ConfigurationService } from "@aerogear/app";
 
 /**
  * AeroGear Auth SDK.
@@ -15,8 +15,8 @@ export class Auth {
   private auth: KeycloakInstance;
   private internalConfig: any;
 
-  constructor(app: AeroGearApp) {
-    const configuration = app.getConfigByType(Auth.TYPE);
+  constructor(config: ConfigurationService) {
+    const configuration = config.getConfigByType(Auth.TYPE);
     if (configuration && configuration.length > 0) {
       const serviceConfiguration: ServiceConfiguration = configuration[0];
       this.internalConfig = serviceConfiguration.config;

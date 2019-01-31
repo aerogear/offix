@@ -46,8 +46,8 @@ export class SyncConfig implements DataSyncConfig {
    * @param config user supplied configuration
    */
   public applyPlatformConfig(config: DataSyncConfig) {
-    if (config.openShiftApp) {
-      const configuration = config.openShiftApp.getConfigByType(TYPE);
+    if (config.openShiftConfig) {
+      const configuration = config.openShiftConfig.getConfigByType(TYPE);
       if (configuration && configuration.length > 0) {
         const serviceConfiguration: ServiceConfiguration = configuration[0];
         config.httpUrl = serviceConfiguration.url;

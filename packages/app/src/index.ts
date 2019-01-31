@@ -3,23 +3,17 @@ import find from "lodash.find";
 import console from "loglevel";
 import { AeroGearConfiguration, ServiceConfiguration, MetricsService } from "@aerogear/core";
 
-export class AeroGearApp {
-
-  public metrics?: MetricsService;
+/**
+ * Abstraction for AeroGear configuration
+ */
+export class ConfigurationService {
   private configurations?: ServiceConfiguration[];
 
   /**
-   * @param config configuration that should be injected to all available SDK's
-   */
+  * @param config configuration that should be injected to all available SDK's
+  */
   public constructor(config: AeroGearConfiguration) {
     this.configurations = config.services;
-    const metricsConfig = this.getConfigByType(MetricsService.TYPE);
-    if (metricsConfig) {
-      const metricsOptions = {
-        configuration: this.getConfigByType(MetricsService.TYPE)
-      };
-      this.metrics = new MetricsService(metricsOptions);
-    }
   }
 
   /**
@@ -43,6 +37,23 @@ export class AeroGearApp {
       });
     }
     console.error("Configuration not initialized.");
+  }
+}
+
+export class AeroGearApp {
+
+  public metrics?: MetricsService;
+  public config?: ConfigurationService;
+
+  constructor(config: AeroGearConfiguration) {
+    this.config = new ConfigurationService(config);
+    const metricsConfig = this.config.getConfigByType(MetricsService.TYPE);
+    if (metricsConfig) {
+      const metricsOptions = {
+        configuration: metricsConfig
+      };
+      this.metrics = new MetricsService(metricsOptions);
+    }
   }
 }
 

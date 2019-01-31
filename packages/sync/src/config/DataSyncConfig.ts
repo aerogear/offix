@@ -6,7 +6,7 @@ import { OfflineQueueListener } from "../offline";
 import { HeaderProvider } from "./HeaderProvider";
 import { NextState } from "../conflicts/NextState";
 import { ConflictListener } from "../conflicts/ConflictListener";
-import { AeroGearApp } from "@aerogear/app";
+import { AeroGearApp, ConfigurationService } from "@aerogear/app";
 
 /**
  * Contains all configuration options required to initialize SDK
@@ -85,5 +85,5 @@ export interface DataSyncConfig {
   /**
    * OpenShift specific configuration
    */
-  openShiftApp?: AeroGearApp;
+  openShiftConfig?: ConfigurationService;
 }

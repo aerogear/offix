@@ -1,6 +1,7 @@
 import { DeviceCheck, DeviceCheckResult } from "./deviceTrust";
 import { CheckResultMetrics, SecurityCheckResultMetric } from "./metrics";
-import { AeroGearApp } from "@aerogear/app";
+import { AeroGearApp, ConfigurationService } from "@aerogear/app";
+import { MetricsService } from "@aerogear/core";
 
 /**
  * Service module for handling performing and reporting  possible security
@@ -11,10 +12,8 @@ import { AeroGearApp } from "@aerogear/app";
  */
 export class SecurityService {
   private static readonly METRICS_KEY = "security";
-  private app: AeroGearApp;
 
-  constructor(app: AeroGearApp) {
-    this.app = app;
+  constructor(private metrics?: MetricsService) {
   }
 
   /**
@@ -69,11 +68,11 @@ export class SecurityService {
     }
 
     const checkResultMetrics = new CheckResultMetrics(results);
-    if (!this.app.metrics) {
+    if (!this.metrics) {
       return Promise.reject(new Error("Metrics configuration is not available."));
     }
 
-    return this.app.metrics.publish(SecurityService.METRICS_KEY, [checkResultMetrics])
+    return this.metrics.publish(SecurityService.METRICS_KEY, [checkResultMetrics])
       .then(() => checkResultMetrics.collect());
   }
 }
