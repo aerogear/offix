@@ -1,6 +1,6 @@
 import { SyncConfig } from "../src/config/SyncConfig";
 import { expect } from "chai";
-import { init } from "@aerogear/app";
+import {ConfigurationService} from "@aerogear/core";
 declare var global: any;
 
 global.window = {};
@@ -27,7 +27,7 @@ describe("OnOffLink", () => {
 
   it("applyPlatformConfig", () => {
     const config = new SyncConfig();
-    const app = init({
+    const app = new ConfigurationService({
       clusterName: "",
       version: 1,
       namespace: "Test",
@@ -41,8 +41,8 @@ describe("OnOffLink", () => {
         }
       ]
     });
-    config.openShiftApp = app;
-    config.applyPlatformConfig(config);
-    expect(config.merge({}).httpUrl).eq(clientConfig.httpUrl);
+    const mergedConfig = config.merge({ openShiftConfig: app});
+    config.applyPlatformConfig(mergedConfig);
+    expect(mergedConfig.httpUrl).eq(clientConfig.httpUrl);
   });
 });

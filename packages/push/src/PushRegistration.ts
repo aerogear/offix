@@ -3,7 +3,6 @@ import { isCordovaAndroid, isCordovaIOS, ServiceConfiguration, ConfigurationServ
 import axios from "axios";
 
 declare var window: any;
-declare var document: any;
 
 /**
  * AeroGear UPS registration SDK

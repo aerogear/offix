@@ -49,7 +49,6 @@
     "branches": 80
   },
   "devDependencies": {
-    "@aerogear/core": "2.1.0",
     "@types/chai": "4.1.2",
     "@types/chai-as-promised": "7.1.0",
     "@types/loglevel": "^1.5.3",
@@ -70,9 +69,7 @@
   "dependencies": {
     "keycloak-js": "^4.8.3",
     "loglevel": "^1.6.1",
-    "url": "^0.11.0"
-  },
-  "peerDependencies": {
-    "@aerogear/core": ">2.0.1"
+    "url": "^0.11.0",
+    "@aerogear/core": "2.1.0"
   }
 }
