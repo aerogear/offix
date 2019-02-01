@@ -6,7 +6,6 @@ import { WebNetworkStatus } from "../offline";
 import { CordovaNetworkStatus } from "../offline";
 import { diffMergeClientWins } from "../conflicts/strategies";
 import { VersionedNextState } from "../conflicts/VersionedNextState";
-import { AeroGearApp } from "@aerogear/app";
 
 declare var window: any;
 

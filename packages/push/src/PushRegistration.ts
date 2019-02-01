@@ -1,7 +1,6 @@
 
-import { isCordovaAndroid, isCordovaIOS, ServiceConfiguration } from "@aerogear/core";
+import { isCordovaAndroid, isCordovaIOS, ServiceConfiguration, ConfigurationService } from "@aerogear/core";
 import axios from "axios";
-import { ConfigurationService } from "@aerogear/app";
 
 declare var window: any;
 declare var document: any;
@@ -22,8 +21,8 @@ export class PushRegistration {
 
   private pushConfig?: ServiceConfiguration;
 
-  constructor(app: ConfigurationService) {
-    const configuration = app.getConfigByType(PushRegistration.TYPE);
+  constructor(config: ConfigurationService) {
+    const configuration = config.getConfigByType(PushRegistration.TYPE);
     if (configuration && configuration.length > 0) {
       this.pushConfig = configuration[0];
     } else {

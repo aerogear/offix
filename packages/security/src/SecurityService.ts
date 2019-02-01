@@ -1,6 +1,5 @@
 import { DeviceCheck, DeviceCheckResult } from "./deviceTrust";
 import { CheckResultMetrics, SecurityCheckResultMetric } from "./metrics";
-import { AeroGearApp, ConfigurationService } from "@aerogear/app";
 import { MetricsService } from "@aerogear/core";
 
 /**

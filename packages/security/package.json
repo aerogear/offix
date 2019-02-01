@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/aerogear/aerogear-js-sdk#readme",
   "devDependencies": {
-    "@aerogear/app": "2.1.0",
+    "@aerogear/core": "2.1.0",
     "@types/chai": "^4.1.3",
     "chai": "^4.1.2",
     "mocha": "^5.1.1",
@@ -36,6 +36,6 @@
     "@aerogear/core": "2.1.0"
   },
   "peerDependencies": {
-    "@aerogear/app": ">2.0.1"
+    "@aerogear/core": ">2.0.1"
   }
 }

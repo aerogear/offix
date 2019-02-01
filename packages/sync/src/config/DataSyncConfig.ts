@@ -6,7 +6,7 @@ import { OfflineQueueListener } from "../offline";
 import { HeaderProvider } from "./HeaderProvider";
 import { NextState } from "../conflicts/NextState";
 import { ConflictListener } from "../conflicts/ConflictListener";
-import { AeroGearApp, ConfigurationService } from "@aerogear/app";
+import { ConfigurationService } from "@aerogear/core";
 
 /**
  * Contains all configuration options required to initialize SDK

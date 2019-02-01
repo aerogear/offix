@@ -1,8 +1,7 @@
-import { ServiceConfiguration } from "@aerogear/core";
 import Keycloak from "keycloak-js";
-import { KeycloakInitOptions, KeycloakInstance, KeycloakProfile } from "keycloak-js";
 import console from "loglevel";
-import { AeroGearApp, ConfigurationService } from "@aerogear/app";
+import { KeycloakInitOptions, KeycloakInstance, KeycloakProfile } from "keycloak-js";
+import { ServiceConfiguration, ConfigurationService } from "@aerogear/core";
 
 /**
  * AeroGear Auth SDK.
