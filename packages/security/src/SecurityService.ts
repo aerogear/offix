@@ -1,6 +1,6 @@
-import { INSTANCE } from "@aerogear/core";
 import { DeviceCheck, DeviceCheckResult } from "./deviceTrust";
 import { CheckResultMetrics, SecurityCheckResultMetric } from "./metrics";
+import { MetricsService } from "@aerogear/core";
 
 /**
  * Service module for handling performing and reporting  possible security
@@ -11,6 +11,9 @@ import { CheckResultMetrics, SecurityCheckResultMetric } from "./metrics";
  */
 export class SecurityService {
   private static readonly METRICS_KEY = "security";
+
+  constructor(private metrics?: MetricsService) {
+  }
 
   /**
    * Execute the provided security check and return the result.
@@ -58,17 +61,17 @@ export class SecurityService {
    *
    * @return Promise with the result of the underlying metrics publisher.
    */
-  private publishCheckResultMetrics(...results: DeviceCheckResult[]): Promise<SecurityCheckResultMetric[]>  {
+  private publishCheckResultMetrics(...results: DeviceCheckResult[]): Promise<SecurityCheckResultMetric[]> {
     if (!results || results.length === 0) {
       return Promise.resolve([]);
     }
 
     const checkResultMetrics = new CheckResultMetrics(results);
-    if (!INSTANCE || !INSTANCE.metrics) {
+    if (!this.metrics) {
       return Promise.reject(new Error("Metrics configuration is not available."));
     }
 
-    return INSTANCE.metrics.publish(SecurityService.METRICS_KEY, [checkResultMetrics])
+    return this.metrics.publish(SecurityService.METRICS_KEY, [checkResultMetrics])
       .then(() => checkResultMetrics.collect());
   }
 }

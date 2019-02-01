@@ -6,10 +6,8 @@
 import console from "loglevel";
 console.setDefaultLevel(console.levels.WARN);
 
-// Configuration parsers
+// Configuration
 export * from "./config";
-
-export * from "./Core";
 
 export * from "./PlatformUtils";
 

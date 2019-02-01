@@ -4,8 +4,6 @@
       "src/"
     ],
     "compilerOptions": {
-      "outDir": "./dist/",
-      "declarationDir": "./types"
+      "outDir": "./dist/"
     }
   }
-  
