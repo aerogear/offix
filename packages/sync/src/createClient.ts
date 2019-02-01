@@ -69,7 +69,9 @@ async function buildCachePersistence(clientConfig: DataSyncConfig) {
   const cache = new InMemoryCache();
   await persistCache({
     cache,
-    storage: clientConfig.storage as PersistentStore<PersistedData>
+    storage: clientConfig.storage as PersistentStore<PersistedData>,
+    maxSize: false,
+    debug: false
   });
   return { cache };
 }
