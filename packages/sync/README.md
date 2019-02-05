@@ -227,23 +227,24 @@ Custom strategies can be used also to provide different resolution strategy for 
 
 
 ```javascript
-let clientWins = (operation, serverData, clientData) => {
-  if(operation === 'updateUser'){
-      delete clientData.socialKey
-      return Object.assign(serverData, clientData);
-  }
-  else return clientWins(operation, serverData, clientData);
+let updateUserConflictResolver = (serverData, clientData) => {
+    delete clientData.socialKey
+    return Object.assign(serverData, clientData);
+};
+
+let updateTaskConflictResolver = (serverData, clientData) => {
+    ...
 };
 ```
 
 > Note: Client strategies will work only when specific server side resolver explicitly states that conflicts should be fixed on the client. Client strategy will be ignored when conflict is resolved on the server.
 
 To use strategy pass it as argument to conflictStrategy in your config object:
-
+ 
 ```javascript
 let config = {
 ...
-  conflictStrategy: clientWins
+  conflictStrategy: {"TaskUpdated": updateTaskConflictResolver, "UserUpdated": updateUserConflictResolver}
 ...
 }
 ```
