@@ -174,7 +174,7 @@ When collision is detected it can be handled on both server or client.
 
 See Voyager Server documentation for information about writing conflicts for the server.
 
-### Working with plugable conflict implementations
+### Working with pluggable conflict implementations
 
 Plugable conflict resolution allows developers to define way to determine how conflicts are detected and handled.
 Conflict resolution can be fully controlled by server side implementation.

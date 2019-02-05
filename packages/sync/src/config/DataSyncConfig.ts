@@ -1,4 +1,4 @@
-import { ConflictResolutionStrategy } from "../conflicts/ConflictResolutionStrategy";
+import { ConflictResolutionStrategy, IResolver } from "../conflicts/ConflictResolutionStrategy";
 import { PersistedData, PersistentStore } from "../PersistentStore";
 import { NetworkStatus } from "../offline";
 import { OfflineQueueListener } from "../offline";
@@ -80,4 +80,6 @@ export interface DataSyncConfig {
    * OpenShift specific configuration
    */
   openShiftConfig?: ConfigurationService;
+
+  resolvers?: IResolver;
 }

@@ -10,3 +10,8 @@ import { ConflictResolutionData } from "./ConflictResolutionData";
  */
 export type ConflictResolutionStrategy =
   (operationName: string, server: ConflictResolutionData, client: ConflictResolutionData) => ConflictResolutionData;
+
+export interface IResolver {
+ [id: string]: (server: ConflictResolutionData,
+                client: ConflictResolutionData) => ConflictResolutionData;
+}
