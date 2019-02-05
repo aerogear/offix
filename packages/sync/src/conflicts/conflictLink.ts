@@ -24,7 +24,7 @@ export const conflictLink = (config: DataSyncConfig): ApolloLink => {
 
   return onError(({ response, operation, forward, graphQLErrors }) => {
     const data = getConflictData(graphQLErrors);
-    if (data && (config.conflictStrategy || config.resolvers) && config.conflictStateProvider) {
+    if (data && config.conflictStrategy && config.conflictStateProvider) {
       let resolvedConflict;
       if (data.resolvedOnServer) {
         resolvedConflict = data.serverState;
@@ -40,13 +40,12 @@ export const conflictLink = (config: DataSyncConfig): ApolloLink => {
         }
       } else {
         // resolve on client
-        if (config.resolvers && config.resolvers[operation.operationName]) {
-          config.resolvers[operation.operationName](data.serverState, data.clientState);
-        }
-
-        // use global function, if present
-        if (config.conflictStrategy) {
+        if (config.conflictStrategy instanceof Function) {
+          // ConflictResolutionStrategy interface is used
           resolvedConflict = config.conflictStrategy(operation.operationName, data.serverState, data.clientState);
+        } else {
+          // ConflictResolutionStrategies interface is used
+          resolvedConflict = config.conflictStrategy[operation.operationName](data.serverState, data.clientState);
         }
 
         if (config.conflictListener) {

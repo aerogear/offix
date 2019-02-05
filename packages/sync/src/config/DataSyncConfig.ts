@@ -1,4 +1,4 @@
-import { ConflictResolutionStrategy, IResolver } from "../conflicts/ConflictResolutionStrategy";
+import { ConflictResolutionStrategy, ConflictResolutionStrategies } from "../conflicts/ConflictResolutionStrategy";
 import { PersistedData, PersistentStore } from "../PersistentStore";
 import { NetworkStatus } from "../offline";
 import { OfflineQueueListener } from "../offline";
@@ -62,11 +62,6 @@ export interface DataSyncConfig {
   auditLogging?: boolean;
 
   /**
-   * The conflict resolution strategy your client should use. By default it takes client version
-   */
-  conflictStrategy?: ConflictResolutionStrategy;
-
-  /**
    * Interface that defines how object state is progressed
    */
   conflictStateProvider?: NextState;
@@ -81,5 +76,8 @@ export interface DataSyncConfig {
    */
   openShiftConfig?: ConfigurationService;
 
-  resolvers?: IResolver;
+  /**
+   * The conflict resolution strategy your client should use. By default it takes client version.
+   */
+  conflictStrategy?: ConflictResolutionStrategy | ConflictResolutionStrategies;
 }
