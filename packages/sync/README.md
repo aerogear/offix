@@ -31,7 +31,7 @@ let client = createClient(config);
 # Example application
 
 Try SDK using sample application:
-https://github.com/aerogear/voyager-ionic-example
+https://github.com/aerogear/ionic-showcase
 
 
 # Basic concepts
