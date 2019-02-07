@@ -1,12 +1,18 @@
 import { WebSocketLink } from "apollo-link-ws";
+import { DataSyncConfig } from "../config";
 
-export const defaultWebSocketLink = (config: WebSocketLink.Configuration) => {
+export const defaultWebSocketLink = async (userOptions: DataSyncConfig, config: WebSocketLink.Configuration) => {
   const options = config.options || {};
   return new WebSocketLink({
     uri: config.uri,
     options: {
       // Params that can be used to send authentication token etc.
-      connectionParams: options.connectionParams,
+      connectionParams: async () => {
+        if (userOptions.authContextProvider) {
+          const { token } = await userOptions.authContextProvider();
+          return token;
+        }
+      },
       connectionCallback: options.connectionCallback,
       timeout: options.timeout || 10000,
       // How long client should wait to kill connection

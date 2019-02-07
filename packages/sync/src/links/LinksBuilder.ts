@@ -21,12 +21,22 @@ import { createUploadLink } from "apollo-upload-client";
 export const defaultHttpLinks = async (config: DataSyncConfig): Promise<ApolloLink[]> => {
   const offlineQueueLink = new OfflineQueueLink(config, "mutation");
   const localDirectiveFilterLink = new LocalDirectiveFilterLink();
+<<<<<<< HEAD
 
   let links: ApolloLink[] = [
     offlineQueueLink,
     localDirectiveFilterLink,
     conflictLink(config)
   ];
+=======
+  let httpLink = new HttpLink({ uri: config.httpUrl, includeExtensions: config.auditLogging }) as ApolloLink;
+  httpLink = concat(createHeadersLink(config), httpLink);
+  let links: ApolloLink[] = [offlineQueueLink, localDirectiveFilterLink, conflictLink(config), httpLink];
+
+  if (!config.conflictStrategy) {
+    links = [offlineQueueLink, localDirectiveFilterLink, httpLink];
+  }
+>>>>>>> feat: add token to auth provider for subscription authenthication
 
   if (config.auditLogging) {
     const auditLoggingLink = await createAuditLoggingLink(config);
