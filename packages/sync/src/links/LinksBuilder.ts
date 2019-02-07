@@ -7,7 +7,7 @@ import { AuditLoggingLink } from "./AuditLoggingLink";
 import { MetricsBuilder } from "@aerogear/core";
 import { OfflineQueueLink } from "./OfflineQueueLink";
 import { LocalDirectiveFilterLink } from "./LocalDirectiveFilterLink";
-
+import { createFileLink } from "./FileLink";
 /**
  * Default HTTP Apollo Links
  * Provides out of the box functionality for:
@@ -26,7 +26,11 @@ export const defaultHttpLinks = async (config: DataSyncConfig): Promise<ApolloLi
     httpLink = concat(createHeadersLink(config), httpLink);
   }
 
-  let links: ApolloLink[] = [offlineQueueLink, localDirectiveFilterLink, conflictLink(config), httpLink];
+  let links: ApolloLink[] = [offlineQueueLink,
+    localDirectiveFilterLink,
+    conflictLink(config),
+    createFileLink(config),
+    httpLink];
 
   if (!config.conflictStrategy) {
     links = [offlineQueueLink, localDirectiveFilterLink, httpLink];
