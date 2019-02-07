@@ -1,5 +1,5 @@
 const express = require('express');
-const { ApolloVoyagerServer } = require('@aerogear/apollo-voyager-server');
+const { VoyagerServer } = require('@aerogear/voyager-server');
 const http = require('http');
 
 const schema = require('./schema').schema;
@@ -9,7 +9,7 @@ const PORT = 4000;
 function start() {
   const app = express();
 
-  const apolloServer = ApolloVoyagerServer({ schema });
+  const apolloServer = VoyagerServer({ schema });
   const httpServer = http.createServer(app);
   apolloServer.installSubscriptionHandlers(httpServer);
   apolloServer.applyMiddleware({ app });
