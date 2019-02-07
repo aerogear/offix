@@ -40,7 +40,14 @@ export const conflictLink = (config: DataSyncConfig): ApolloLink => {
         }
       } else {
         // resolve on client
-        resolvedConflict = config.conflictStrategy(operation.operationName, data.serverState, data.clientState);
+        if (config.conflictStrategy instanceof Function) {
+          // ConflictResolutionStrategy interface is used
+          resolvedConflict = config.conflictStrategy(operation.operationName, data.serverState, data.clientState);
+        } else {
+          // ConflictResolutionStrategies interface is used
+          resolvedConflict = config.conflictStrategy[operation.operationName](data.serverState, data.clientState);
+        }
+
         if (config.conflictListener) {
           config.conflictListener.conflictOccurred(operation.operationName,
             resolvedConflict, data.serverState, data.clientState);
