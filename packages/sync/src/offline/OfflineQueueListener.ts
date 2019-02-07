@@ -1,5 +1,5 @@
 import { Operation, FetchResult } from "apollo-link";
-import { OperationQueueEntry } from "../links/OfflineQueueLink";
+import { OperationQueueEntry } from "./OperationQueueEntry";
 
 /**
  * Interface for creating listeners for offline queue.

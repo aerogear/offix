@@ -1,7 +1,7 @@
 import { OperationDefinitionNode, NameNode } from "graphql";
 import { hasDirectives } from "apollo-utilities";
 import { localDirectives } from "../config/Constants";
-import { OperationQueueEntry } from "../links/OfflineQueueLink";
+import { OperationQueueEntry } from "./OperationQueueEntry";
 import { MUTATION_QUEUE_LOGGER } from "../config/Constants";
 import debug from "debug";
 

@@ -26,7 +26,7 @@ const newClient = async (clientOptions = {}) => {
 
 describe('AeroGear Apollo GraphQL Voyager client', function() {
 
-  this.timeout(0);
+  this.timeout(1000);
 
   const mutationsQueueName = 'offline-mutation-queue';
 

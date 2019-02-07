@@ -1,8 +1,8 @@
 
 const CLIENT_ID_PREFIX = "client:";
 
-export const hasClientGeneratedId = (optimisticResponse: any, operationName: string) => {
-  return optimisticResponse[operationName].id.startsWith(CLIENT_ID_PREFIX);
+export const isClientGeneratedId = (id: string) => {
+  return id && id.startsWith(CLIENT_ID_PREFIX);
 };
 
 // Helper method for ID generation ()
