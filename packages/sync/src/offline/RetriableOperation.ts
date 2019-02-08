@@ -9,11 +9,11 @@ export type shouldRetryFn = (count: number, operation: Operation, error: any) =>
 
 /**
  * Class implementing retry mechanism for operation.
- * 
+ *
  * It provides two methods. Try method will forward the operation
  * and if it fails because no response from server, it will schedule
  * next try. With every retry timeout is doubled.
- * 
+ *
  * Operation can also be force retried.
  */
 export class RetriableOperation extends OperationQueueEntry {
@@ -29,7 +29,7 @@ export class RetriableOperation extends OperationQueueEntry {
 
   /**
    * Try method.
-   * 
+   *
    * shouldRetry function is called with every network fail
    * to determine if the operation should be retried.
    */

@@ -9,7 +9,7 @@ export interface OperationQueueEntryOptions {
 
 /**
  * Class representing operation queue entry.
- * 
+ *
  * It exposes method for forwarding the operation.
  */
 export class OperationQueueEntry {

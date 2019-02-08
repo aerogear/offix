@@ -10,10 +10,10 @@ export interface OperationQueueOptions {
 
 /**
  * Class implementing GraphQL operation queue.
- * 
+ *
  * Queue can be used to keep track of pending operations
  * or to defer their forward to next Apollo link.
- * 
+ *
  * Once operation in queue succeeds/fails it is automatically
  * removed from queue.
  */

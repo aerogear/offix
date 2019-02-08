@@ -13,11 +13,11 @@ export interface OfflineLinkOptions {
 
 /**
  * Apollo link implementation used to queue graphql requests.
- * 
+ *
  * Link will push every incoming operation to queue.
  * All operations that are ready (i.e. they don't use client
  * generated ID) are forwarded to next link when:
- * 
+ *
  * - client goes online
  * - there is a new operation and client is online
  * - operation was completed (which could result in ID updates, i.e. new

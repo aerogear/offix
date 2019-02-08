@@ -16,10 +16,10 @@ export interface OfflineQueueOptions {
 
 /**
  * Class implementing persistent operation queue.
- * 
+ *
  * This class is designed to be used by OfflineLink
  * It provides these functionalities:
- * 
+ *
  * - persisting operation queue in provided storage
  * - squashing incoming operations if enabled
  * - updating client IDs with server IDs (explained below)
