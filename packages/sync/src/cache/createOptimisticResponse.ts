@@ -1,6 +1,7 @@
 
 const CLIENT_ID_PREFIX = "client:";
 
+// Returns true if ID was generated on client
 export const isClientGeneratedId = (id: string) => {
   return id && id.startsWith(CLIENT_ID_PREFIX);
 };

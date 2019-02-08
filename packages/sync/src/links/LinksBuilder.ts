@@ -12,6 +12,10 @@ import { defaultWebSocketLink } from "./WebsocketLink";
 import { OfflineLink } from "./OfflineLink";
 import { RetryLink } from "./RetryLink";
 
+/**
+ * Default Apollo Link
+ * Combines HTTP and WebSocket links
+ */
 export const defaultLink = async (config: DataSyncConfig) => {
   let link = await defaultHttpLinks(config);
   if (config.wsUrl) {

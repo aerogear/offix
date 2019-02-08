@@ -8,6 +8,15 @@ export interface OperationQueueOptions {
   onDequeue: OperationQueueChangeHandler;
 }
 
+/**
+ * Class implementing GraphQL operation queue.
+ * 
+ * Queue can be used to keep track of pending operations
+ * or to defer their forward to next Apollo link.
+ * 
+ * Once operation in queue succeeds/fails it is automatically
+ * removed from queue.
+ */
 export class OperationQueue {
   protected queue: OperationQueueEntry[] = [];
   protected onEnqueue: OperationQueueChangeHandler;
@@ -20,6 +29,9 @@ export class OperationQueue {
     this.onDequeue = onDequeue;
   }
 
+  /**
+   * Enqueues new operation in queue and returns Observable for it.
+   */
   public enqueue(
     operation: Operation,
     forward: NextLink,
@@ -32,8 +44,11 @@ export class OperationQueue {
     return this.getObservable(operationEntry);
   }
 
+  /**
+   * Returns operations from queue that have not yet been forwarded.
+   */
   public toBeForwarded() {
-    return this.queue.filter(op => !op.subscription && !op.hasClientId());
+    return this.queue.filter(op => !op.subscription);
   }
 
   public all() {

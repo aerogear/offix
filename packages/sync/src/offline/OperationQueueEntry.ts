@@ -7,6 +7,11 @@ export interface OperationQueueEntryOptions {
   forward: NextLink;
 }
 
+/**
+ * Class representing operation queue entry.
+ * 
+ * It exposes method for forwarding the operation.
+ */
 export class OperationQueueEntry {
   public readonly operation: Operation;
   public readonly forward: NextLink;
