@@ -28,7 +28,7 @@ export const createClient = async (userConfig?: DataSyncConfig): Promise<Voyager
   const httpLinks = await defaultHttpLinks(clientConfig);
   let link = ApolloLink.from(httpLinks);
   if (clientConfig.wsUrl) {
-    const wsLink = await defaultWebSocketLink(clientConfig, { uri: clientConfig.wsUrl });
+    const wsLink = defaultWebSocketLink(clientConfig, { uri: clientConfig.wsUrl });
     link = ApolloLink.split(isSubscription, wsLink, link);
   }
 
