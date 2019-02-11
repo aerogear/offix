@@ -60,6 +60,11 @@ export interface DataSyncConfig {
    * If set to true, GraphGL requests will include some additional data to audit log in the server side.
    */
   auditLogging?: boolean;
+  
+  /**
+   * If set to true, GraphGL file uploads will be enabled and supported
+   */
+  fileUpload?: boolean;
 
   /**
    * Interface that defines how object state is progressed

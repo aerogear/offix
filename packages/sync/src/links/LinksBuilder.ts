@@ -7,7 +7,8 @@ import { AuditLoggingLink } from "./AuditLoggingLink";
 import { MetricsBuilder } from "@aerogear/core";
 import { OfflineQueueLink } from "./OfflineQueueLink";
 import { LocalDirectiveFilterLink } from "./LocalDirectiveFilterLink";
-import { createFileLink } from "./FileLink";
+import { createUploadLink } from "apollo-upload-client";
+
 /**
  * Default HTTP Apollo Links
  * Provides out of the box functionality for:
@@ -21,26 +22,32 @@ export const defaultHttpLinks = async (config: DataSyncConfig): Promise<ApolloLi
   const offlineQueueLink = new OfflineQueueLink(config, "mutation");
   const localDirectiveFilterLink = new LocalDirectiveFilterLink();
 
-  let httpLink = new HttpLink({ uri: config.httpUrl, includeExtensions: config.auditLogging }) as ApolloLink;
-  if (config.headerProvider) {
-    httpLink = concat(createHeadersLink(config), httpLink);
-  }
-
-  let links: ApolloLink[] = [offlineQueueLink,
+  let links: ApolloLink[] = [
+    offlineQueueLink,
     localDirectiveFilterLink,
-    conflictLink(config),
-    createFileLink(),
-    httpLink];
-
-  if (!config.conflictStrategy) {
-    links = [offlineQueueLink, localDirectiveFilterLink, httpLink];
-  }
+    conflictLink(config)
+  ];
 
   if (config.auditLogging) {
     const auditLoggingLink = await createAuditLoggingLink(config);
-    links.unshift(auditLoggingLink);
+    links = links.concat(auditLoggingLink);
   }
 
+  if (config.headerProvider) {
+    links = links.concat(createHeadersLink(config));
+  }
+  if (config.fileUpload) {
+    links = links.concat(createUploadLink({
+      uri: config.httpUrl,
+      includeExtensions: config.auditLogging
+    }));
+  } else {
+    const httpLink = new HttpLink({
+      uri: config.httpUrl,
+      includeExtensions: config.auditLogging
+    }) as ApolloLink;
+    links = links.concat(httpLink);
+  }
   return links;
 };
 
