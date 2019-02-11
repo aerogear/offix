@@ -125,7 +125,7 @@ export class Auth {
     return () => {
       const tokenUpdate = this.extract().updateToken(tokenUpdateTime) as any;
       // Keycloak doesn't use a proper promise. Instead it uses success/error.
-      return new Promise((resolve, reject) => {
+      return new Promise<AuthContext>((resolve, reject) => {
         tokenUpdate.success(() => {
           resolve({
             header: {
@@ -140,5 +140,10 @@ export class Auth {
       });
     };
   }
+
+}
+export interface AuthContext {
+  header: any;
+  token?: string;
 
 }

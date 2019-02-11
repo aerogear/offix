@@ -6,7 +6,6 @@ export const createHeadersLink = (config: DataSyncConfig): ApolloLink => {
   const asyncHeadersLink = setContext(async (operation, previousContext) => {
     if (config.authContextProvider) {
       const { header } = await config.authContextProvider();
-      console.log("HEADER: ", header);
       return {
         headers: header
       };
