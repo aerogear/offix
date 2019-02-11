@@ -127,12 +127,16 @@ export class Auth {
       // Keycloak doesn't use a proper promise. Instead it uses success/error.
       return new Promise<AuthContext>((resolve, reject) => {
         tokenUpdate.success(() => {
-          resolve({
-            header: {
-              "Authorization": "Bearer " + this.auth.token
-            },
-            token: this.auth.token
-          });
+          if (this.auth.token) {
+            resolve({
+              header: {
+                "Authorization": "Bearer " + this.auth.token
+              },
+              token: this.auth.token
+            });
+          } else {
+            reject("No keycloak token available");
+          }
         }).error((error: any) => {
           console.info("Cannot update keycloak token", error);
           reject(error);
@@ -144,6 +148,5 @@ export class Auth {
 }
 export interface AuthContext {
   header: any;
-  token?: string;
-
+  token: string;
 }
