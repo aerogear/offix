@@ -29,7 +29,7 @@ export const defaultHttpLinks = async (config: DataSyncConfig): Promise<ApolloLi
   let links: ApolloLink[] = [offlineQueueLink,
     localDirectiveFilterLink,
     conflictLink(config),
-    createFileLink(config),
+    createFileLink(),
     httpLink];
 
   if (!config.conflictStrategy) {
