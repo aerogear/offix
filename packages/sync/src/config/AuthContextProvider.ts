@@ -1,7 +1,7 @@
 
 export interface AuthContext {
   header: any;
-  token?: string;
+  token: string;
 }
 
 /**
