@@ -1,2 +1,2 @@
 export * from "./DataSyncConfig";
-export * from "./HeaderProvider";
+export * from "./AuthContextProvider";

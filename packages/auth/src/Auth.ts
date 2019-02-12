@@ -118,16 +118,25 @@ export class Auth {
   }
 
   /**
-   * Provides an Authorization Bearer header token
+   * Provides an Authorization Context which contains a token and a prebuilt header
    * @param tokenUpdateTime time (in seconds) to refresh the token
    */
-  public getHeaderProvider(tokenUpdateTime: number = 10) {
+  public getAuthContextProvider(tokenUpdateTime: number = 10) {
     return () => {
       const tokenUpdate = this.extract().updateToken(tokenUpdateTime) as any;
       // Keycloak doesn't use a proper promise. Instead it uses success/error.
-      return new Promise((resolve, reject) => {
+      return new Promise<AuthContext>((resolve, reject) => {
         tokenUpdate.success(() => {
-          resolve({ "Authorization": "Bearer " + this.auth.token });
+          if (this.auth.token) {
+            resolve({
+              header: {
+                "Authorization": "Bearer " + this.auth.token
+              },
+              token: this.auth.token
+            });
+          } else {
+            reject("No keycloak token available");
+          }
         }).error((error: any) => {
           console.info("Cannot update keycloak token", error);
           reject(error);
@@ -136,4 +145,8 @@ export class Auth {
     };
   }
 
+}
+export interface AuthContext {
+  header: any;
+  token: string;
 }

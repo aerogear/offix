@@ -33,7 +33,7 @@ export const defaultHttpLinks = async (config: DataSyncConfig): Promise<ApolloLi
     links = links.concat(auditLoggingLink);
   }
 
-  if (config.headerProvider) {
+  if (config.authContextProvider) {
     links = links.concat(createHeadersLink(config));
   }
   if (config.fileUpload) {

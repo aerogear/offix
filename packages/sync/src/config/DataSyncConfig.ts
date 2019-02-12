@@ -2,7 +2,7 @@ import { ConflictResolutionStrategy, ConflictResolutionStrategies } from "../con
 import { PersistedData, PersistentStore } from "../PersistentStore";
 import { NetworkStatus } from "../offline";
 import { OfflineQueueListener } from "../offline";
-import { HeaderProvider } from "./HeaderProvider";
+import { AuthContextProvider } from "./AuthContextProvider";
 import { NextState } from "../conflicts/NextState";
 import { ConflictListener } from "../conflicts/ConflictListener";
 import { ConfigurationService } from "@aerogear/core";
@@ -51,10 +51,10 @@ export interface DataSyncConfig {
   offlineQueueListener?: OfflineQueueListener;
 
   /**
-   * An implementation of HeaderProvider. If none passed, a default one will be used.
+   * An implementation of AuthContextProvider. If none passed, a default one will be used.
    * The default one doesn't add any headers.
    */
-  headerProvider?: HeaderProvider;
+  authContextProvider?: AuthContextProvider;
 
   /**
    * If set to true, GraphGL requests will include some additional data to audit log in the server side.
