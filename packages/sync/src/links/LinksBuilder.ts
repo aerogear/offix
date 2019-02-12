@@ -42,8 +42,10 @@ export const defaultHttpLinks = async (config: DataSyncConfig): Promise<ApolloLi
     links.push(await createAuditLoggingLink(config));
   }
 
-  const retryLink = new RetryLink({});
-  links.push(retryLink);
+  if (config.shouldRetry) {
+    const retryLink = new RetryLink(config);
+    links.push(retryLink);
+  }
 
   if (config.conflictStrategy) {
     links.push(conflictLink(config));

@@ -6,6 +6,7 @@ import { AuthContextProvider } from "./AuthContextProvider";
 import { NextState } from "../conflicts/NextState";
 import { ConflictListener } from "../conflicts/ConflictListener";
 import { ConfigurationService } from "@aerogear/core";
+import { shouldRetryFn } from "../offline/RetriableOperation";
 
 /**
  * Contains all configuration options required to initialize SDK
@@ -85,4 +86,10 @@ export interface DataSyncConfig {
    * The conflict resolution strategy your client should use. By default it takes client version.
    */
   conflictStrategy?: ConflictResolutionStrategy | ConflictResolutionStrategies;
+
+  /**
+   * Function that enables retry mechanism for queries that failed on network errors.
+   * See https://www.apollographql.com/docs/link/links/retry.html for more information
+   */
+  shouldRetry?: shouldRetryFn;
 }
