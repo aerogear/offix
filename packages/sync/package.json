@@ -1,6 +1,6 @@
 {
   "name": "@aerogear/voyager-client",
-  "version": "2.1.0-dev.6",
+  "version": "2.1.0-dev.8",
   "description": "AeroGear Voyager GraphQL client",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
