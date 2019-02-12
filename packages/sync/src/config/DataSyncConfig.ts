@@ -62,6 +62,11 @@ export interface DataSyncConfig {
   auditLogging?: boolean;
 
   /**
+   * If set to true, GraphGL file uploads will be enabled and supported
+   */
+  fileUpload?: boolean;
+
+  /**
    * Interface that defines how object state is progressed
    */
   conflictStateProvider?: NextState;
