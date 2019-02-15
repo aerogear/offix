@@ -1,7 +1,7 @@
 import ApolloClient from "apollo-client";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
 import { PersistentStore, PersistedData } from "../PersistentStore";
-import { OperationQueueEntry, OfflineQueueLink } from "../links/OfflineQueueLink";
+import { OperationQueueEntry } from "./OperationQueueEntry";
 import { MUTATION_QUEUE_LOGGER } from "../config/Constants";
 import * as debug from "debug";
 
@@ -17,16 +17,13 @@ export class OfflineRestoreHandler {
   private storage: PersistentStore<PersistedData>;
   private readonly storageKey: string;
   private offlineData: OperationQueueEntry[] = [];
-  private readonly offlineQueueLink: OfflineQueueLink;
 
   constructor(apolloClient: ApolloClient<NormalizedCacheObject>,
               storage: PersistentStore<PersistedData>,
-              storageKey: string,
-              offlineQueueLink: OfflineQueueLink) {
+              storageKey: string) {
     this.apolloClient = apolloClient;
     this.storage = storage;
     this.storageKey = storageKey;
-    this.offlineQueueLink = offlineQueueLink;
   }
 
   /**
@@ -57,15 +54,7 @@ export class OfflineRestoreHandler {
       });
     });
 
-    await this.waitForOperationsEnqueued();
-
     this.offlineData = [];
-  }
-
-  private waitForOperationsEnqueued = async () => {
-    while (this.offlineQueueLink.numberOfOperationsEnqueued() < this.offlineData.length) {
-      await new Promise(resolve => setTimeout(resolve, 0));
-    }
   }
 
   private getOfflineData = async () => {

@@ -1,21 +1,19 @@
 import { squashOperations } from "../src/offline/squashOperations";
-import { OperationQueueEntry } from "../src/links/OfflineQueueLink";
+import { OperationQueueEntry } from "../src/offline/OperationQueueEntry";
 import { expect } from "chai";
 import { op, opWithDifferentQuery, opWithSquashDirective } from "./operations";
 
-const queueEntry: OperationQueueEntry = {
+const queueEntry = new OperationQueueEntry({
   operation: op,
-  forward: {} as any,
-  observer: {} as any
-};
+  forward: {} as any
+});
 
-const queueEntryWithDirective: OperationQueueEntry = {
+const queueEntryWithDirective = new OperationQueueEntry({
   operation: opWithSquashDirective,
-  forward: {} as any,
-  observer: {} as any
-};
+  forward: {} as any
+});
 
-const queueEntryDifferentID: OperationQueueEntry = {
+const queueEntryDifferentID = new OperationQueueEntry({
   operation: {
     ...op, variables: {
       name: "User 1",
@@ -25,11 +23,10 @@ const queueEntryDifferentID: OperationQueueEntry = {
       version: 1
     }
   },
-  forward: {} as any,
-  observer: {} as any
-};
+  forward: {} as any
+});
 
-const queueEntryNewVars: OperationQueueEntry = {
+const queueEntryNewVars = new OperationQueueEntry({
   operation: {
     ...op, variables: {
       name: "User 1",
@@ -39,15 +36,13 @@ const queueEntryNewVars: OperationQueueEntry = {
       version: 1
     }
   },
-  forward: {} as any,
-  observer: {} as any
-};
+  forward: {} as any
+});
 
-const queueEntryDifferentQuery: OperationQueueEntry = {
+const queueEntryDifferentQuery = new OperationQueueEntry({
   operation: opWithDifferentQuery,
-  forward: {} as any,
-  observer: {} as any
-};
+  forward: {} as any
+});
 
 describe("SquashOperations", () => {
   let opQueue: OperationQueueEntry[] = [];
