@@ -1,6 +1,6 @@
 {
   "name": "@aerogear/cordova-plugin-aerogear-push",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Cordova plugin for AeroGear Push Notifications",
   "cordova": {
     "id": "cordova-plugin-aerogear-push",
