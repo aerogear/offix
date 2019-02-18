@@ -25,6 +25,8 @@ This Aerogear SDK consists of a set of SDK's.
 - Metrics - Mobile Application Metrics SDK
 - Security - Mobile Application Security SDK
 - Push - Unified Push Server SDK
+- DataSync - Data Synchronization using Voyager Framework
+
 
 ## Contributing
 
