@@ -1,6 +1,6 @@
 {
   "name": "@aerogear/auth",
-  "version": "2.1.0-rc3",
+  "version": "2.1.0",
   "description": "JavaScript Auth module for AeroGear services",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -67,7 +67,7 @@
     "typescript": "^2.8.1"
   },
   "dependencies": {
-    "@aerogear/core": "2.1.0-rc3",
+    "@aerogear/core": "2.1.0",
     "keycloak-js": "^4.8.3",
     "loglevel": "^1.6.1",
     "url": "^0.11.0"
