@@ -1,5 +1,6 @@
 import { OperationDefinitionNode, NameNode } from "graphql";
 import { hasDirectives } from "apollo-utilities";
+import { isSquashable } from "../utils/helpers";
 import { localDirectives } from "../config/Constants";
 import { OperationQueueEntry } from "./OperationQueueEntry";
 import { MUTATION_QUEUE_LOGGER } from "../config/Constants";
@@ -11,7 +12,7 @@ export const logger = debug(MUTATION_QUEUE_LOGGER);
  * Equality of operation is done by checking operationName and object id.
  */
 export function squashOperations(entry: OperationQueueEntry, opQueue: OperationQueueEntry[]): OperationQueueEntry[] {
-  if (hasDirectives([localDirectives.NO_SQUASH], entry.operation.query)) {
+  if (!isSquashable(entry.operation)) {
     opQueue.push(entry);
     return opQueue;
   }

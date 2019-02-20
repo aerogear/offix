@@ -2,7 +2,6 @@ import { ApolloLink, Operation, NextLink } from "apollo-link";
 import { PersistentStore, PersistedData } from "../PersistentStore";
 import { OfflineQueueListener, NetworkStatus, NetworkInfo } from "../offline";
 import { OfflineQueue } from "../offline/OfflineQueue";
-import { isOnlineOnly, isNotSquashable } from "../utils/helpers";
 
 export interface OfflineLinkOptions {
   networkStatus: NetworkStatus;
@@ -48,9 +47,6 @@ export class OfflineLink extends ApolloLink {
   }
 
   public request(operation: Operation, forward: NextLink) {
-    if (isOnlineOnly(operation)) {
-      return forward(operation);
-    }
     return this.queue.enqueue(operation, forward);
   }
 

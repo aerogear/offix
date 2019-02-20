@@ -24,7 +24,7 @@ const newClient = async (clientOptions = {}) => {
   return await createClient(config);
 };
 
-describe('AeroGear Apollo GraphQL Voyager client', function() {
+describe('AeroGear Apollo GraphQL Voyager client', function () {
 
   this.timeout(1000);
 
@@ -42,30 +42,30 @@ describe('AeroGear Apollo GraphQL Voyager client', function() {
 
   let client, networkStatus, store;
 
-  before('start server', async function() {
+  before('start server', async function () {
     await server.start();
   });
 
-  beforeEach('reset server', async function() {
+  beforeEach('reset server', async function () {
     await server.reset();
   });
 
-  beforeEach('create client', async function() {
+  beforeEach('create client', async function () {
     networkStatus = newNetworkStatus(false);
     store = new TestStore();
     client = await newClient({ networkStatus, storage: store, mutationsQueueName });
   });
 
-  describe('save mutation to offlineMutationStore while offline', function() {
+  describe('save mutation to offlineMutationStore while offline', function () {
 
-    it('should succeed', function() {
+    it('should succeed', function () {
       client.mutate({
         mutation: ADD_TASK,
         variables: newTask
       });
-  
+
       const offlineMutationStore = JSON.parse(store.getItem(mutationsQueueName));
-  
+
       expect(offlineMutationStore).to.exist;
       expect(offlineMutationStore[0]).to.exist;
       expect(offlineMutationStore[0].operation).to.exist;
@@ -76,16 +76,16 @@ describe('AeroGear Apollo GraphQL Voyager client', function() {
 
   });
 
-  describe('send mutation when going back online', function() {
+  describe('send mutation when going back online', function () {
 
-    beforeEach('prepare data', function() {
+    beforeEach('prepare data', function () {
       client.mutate({
         mutation: ADD_TASK,
         variables: newTask
       });
     });
 
-    it('should succeed', async function() {
+    it('should succeed', async function () {
       networkStatus.setOnline(true);
 
       await waitFor(() => JSON.parse(store.getItem(mutationsQueueName)).length === 0);
@@ -102,11 +102,11 @@ describe('AeroGear Apollo GraphQL Voyager client', function() {
 
   });
 
-  describe('save more mutations while offline', function() {
+  describe('save more mutations while offline', function () {
 
     let task;
 
-    beforeEach('prepare data', async function() {
+    beforeEach('prepare data', async function () {
       networkStatus.setOnline(true);
 
       const response = await client.mutate({
@@ -119,7 +119,7 @@ describe('AeroGear Apollo GraphQL Voyager client', function() {
       networkStatus.setOnline(false);
     });
 
-    it('should succeed', async function() {
+    it('should succeed', async function () {
       const variables = { ...updatedTask, id: task.id, version: task.version };
 
       client.mutate({
@@ -141,9 +141,9 @@ describe('AeroGear Apollo GraphQL Voyager client', function() {
     });
   });
 
-  describe('send more mutations when back online', function() {
+  describe('send more mutations when back online', function () {
 
-    beforeEach('prepare data', async function() {
+    beforeEach('prepare data', async function () {
       networkStatus.setOnline(true);
 
       const response = await client.mutate({
@@ -167,7 +167,7 @@ describe('AeroGear Apollo GraphQL Voyager client', function() {
       });
     });
 
-    it('should succeed', async function() {
+    it('should succeed', async function () {
       networkStatus.setOnline(true);
 
       await waitFor(() => JSON.parse(store.getItem(mutationsQueueName)).length === 0);
@@ -182,10 +182,10 @@ describe('AeroGear Apollo GraphQL Voyager client', function() {
     });
   });
 
-  describe('create then update item while offline', function() {
-    it('should succeed', async function() {
+  describe('create then update item while offline', function () {
+    it('should succeed', async function () {
       let task;
-      
+
       client.mutate({
         mutation: ADD_TASK,
         variables: newTask,
@@ -215,8 +215,8 @@ describe('AeroGear Apollo GraphQL Voyager client', function() {
     });
   });
 
-  describe('create then update item while offline then replaying mutations', function() {
-    it('should succeed', async function() {
+  describe('create then update item while offline then replaying mutations', function () {
+    it('should succeed', async function () {
       let task;
 
       client.mutate({
@@ -249,11 +249,11 @@ describe('AeroGear Apollo GraphQL Voyager client', function() {
     });
   });
 
-  describe('merge offline mutations', function() {
+  describe('merge offline mutations', function () {
 
     let task;
 
-    beforeEach('prepare data', async function() {
+    beforeEach('prepare data', async function () {
       networkStatus.setOnline(true);
 
       const response = await client.mutate({
@@ -267,7 +267,7 @@ describe('AeroGear Apollo GraphQL Voyager client', function() {
       networkStatus.setOnline(false);
     });
 
-    it('should succeed', async function() {
+    it('should succeed', async function () {
       const variables = { title: 'update1', description: 'merge', id: task.id, version: task.version };
 
       client.mutate({
@@ -302,16 +302,20 @@ describe('AeroGear Apollo GraphQL Voyager client', function() {
     });
   });
 
-  describe.skip('noSquash mutations', function() {
-    it('should succeed', async function() {
+  describe('noSquash mutations', function () {
+    it('should succeed', async function () {
       const a = client.mutate({
         mutation: NO_SQUASH,
         variables: { id: 0 }
+      }).catch((error) => {
+        expect(error).to.exist;
       });
 
       const b = client.mutate({
         mutation: NO_SQUASH,
         variables: { id: 0 }
+      }).catch((error) => {
+        expect(error).to.exist;
       });
 
       const offlineMutationStore = JSON.parse(store.getItem(mutationsQueueName));
@@ -327,11 +331,11 @@ describe('AeroGear Apollo GraphQL Voyager client', function() {
     });
   });
 
-  describe('do not merge offline mutations', function() {
-  
+  describe('do not merge offline mutations', function () {
+
     let task;
 
-    beforeEach('prepare data', async function() {
+    beforeEach('prepare data', async function () {
       client = await newClient({ networkStatus, storage: store, mutationsQueueName, mergeOfflineMutations: false });
       networkStatus.setOnline(true);
 
@@ -346,7 +350,7 @@ describe('AeroGear Apollo GraphQL Voyager client', function() {
       networkStatus.setOnline(false);
     });
 
-    it('should succeed', async function() {
+    it('should succeed', async function () {
       const variables = { title: 'nomerge1', description: 'nomerge', id: task.id, version: task.version };
 
       client.mutate({
@@ -382,8 +386,8 @@ describe('AeroGear Apollo GraphQL Voyager client', function() {
     });
   });
 
-  describe('notify about offline changes', function() {
-    it('should succeed', async function() {
+  describe('notify about offline changes', function () {
+    it('should succeed', async function () {
       let offlineOps = 0;
       let cleared = 0;
 
@@ -409,25 +413,24 @@ describe('AeroGear Apollo GraphQL Voyager client', function() {
     });
   });
 
-  describe.skip('online only mutation', function() {
-    it('should succeed', async function() {
-      try {
-        await client.mutate({
-          mutation: ONLINE_ONLY,
-          variables: { id: 0 }
-        });
-      } catch (error) {
+  describe('online only mutation', function () {
+    it('should succeed', async function () {
+      networkStatus.setOnline(false);
+      await client.mutate({
+        mutation: ONLINE_ONLY,
+        variables: { id: 0 }
+      }).catch((error) => {
         expect(error).to.exist;
-        
-        networkStatus.setOnline(true);
+      });
 
-        await client.mutate({
-          mutation: ONLINE_ONLY,
-          variables: { id: 0 }
-        });
-      }
-      
-      throw new Error('Online mutation should fail when offline');
+      client.mutate({
+        mutation: ADD_TASK,
+        variables: newTask
+      });
+
+      let offlineMutationStore = JSON.parse(store.getItem(mutationsQueueName));
+      expect(offlineMutationStore.length).to.equal(1);
+      networkStatus.setOnline(true);
     });
   });
 
