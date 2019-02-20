@@ -37,9 +37,6 @@ export class Auth {
    * @returns A promise to set functions to be invoked on success or error.
    */
   public init(initOptions: KeycloakInitOptions): Promise<boolean> {
-    if (!initOptions.onLoad) {
-      initOptions.onLoad = "check-sso";
-    }
     return new Promise((resolve, reject) => {
       return this.auth.init(initOptions).error(reject).success(resolve);
     });
