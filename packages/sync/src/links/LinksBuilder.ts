@@ -90,11 +90,6 @@ function createOfflineLink(config: DataSyncConfig) {
     listener: config.offlineQueueListener,
     networkStatus: config.networkStatus as NetworkStatus
   });
-  const offlineLinks = ApolloLink.split((op: Operation) => {
-    return isMutation(op) && !isOnlineOnly(op);
-  },
-    offlineLink,
-    new LocalDirectiveFilterLink()
-  );
-  return offlineLinks;
+
+  return ApolloLink.from([offlineLink, new LocalDirectiveFilterLink()]);
 }

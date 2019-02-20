@@ -4,6 +4,7 @@ import { OfflineQueueListener } from "./OfflineQueueListener";
 import { OperationQueue, OperationQueueChangeHandler } from "./OperationQueue";
 import { isClientGeneratedId } from "../cache/createOptimisticResponse";
 import { squashOperations } from "./squashOperations";
+import { isNotSquashable } from "../utils/helpers";
 
 export interface OfflineQueueOptions {
   storage?: PersistentStore<PersistedData>;
@@ -50,7 +51,7 @@ export class OfflineQueue extends OperationQueue {
   }
 
   protected enqueueEntry(entry: OperationQueueEntry) {
-    if (this.squashOperations) {
+    if (this.squashOperations && !isNotSquashable(entry.operation)) {
       this.queue = squashOperations(entry, this.queue);
     } else {
       this.queue.push(entry);
