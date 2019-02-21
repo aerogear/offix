@@ -4,6 +4,7 @@ import { OfflineQueueListener } from "./OfflineQueueListener";
 import { OperationQueue, OperationQueueChangeHandler } from "./OperationQueue";
 import { isClientGeneratedId } from "../cache/createOptimisticResponse";
 import { squashOperations } from "./squashOperations";
+import { isSquashable, isMutation } from "../utils/helpers";
 
 export interface OfflineQueueOptions {
   storage?: PersistentStore<PersistedData>;
