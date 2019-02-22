@@ -51,7 +51,7 @@
     "apollo-client": "2.4.5",
     "apollo-link": "1.2.3",
     "apollo-link-context": "^1.0.12",
-    "apollo-link-error": "^1.1.1",
+    "apollo-link-error": "^1.1.7",
     "apollo-link-http": "^1.5.5",
     "apollo-link-ws": "^1.0.9",
     "apollo-upload-client": "^10.0.0",
