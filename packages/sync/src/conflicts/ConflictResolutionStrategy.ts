@@ -19,6 +19,6 @@ export type ConflictResolutionStrategy =
  * @param client - client data
  */
 export interface ConflictResolutionStrategies {
- [operationName: string]: (server: ConflictResolutionData,
-                           client: ConflictResolutionData) => ConflictResolutionData;
+ [operationName: string]: (server: ConflictResolutionData, client: ConflictResolutionData) => ConflictResolutionData;
+  default: (server: ConflictResolutionData, client: ConflictResolutionData) => ConflictResolutionData;
 }
