@@ -1,6 +1,8 @@
 #!/bin/bash
 echo "Preparing release"
 
+set -e
+
 rm -Rf node_modules
 npm install
 npm run clean
