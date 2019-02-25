@@ -6,6 +6,7 @@ import { WebNetworkStatus } from "../offline";
 import { CordovaNetworkStatus } from "../offline";
 import { diffMergeClientWins } from "../conflicts/strategies";
 import { VersionedNextState } from "../conflicts/VersionedNextState";
+import { ConflictResolutionData } from "../conflicts/ConflictResolutionData";
 
 declare var window: any;
 
@@ -36,6 +37,13 @@ export class SyncConfig implements DataSyncConfig {
    * Method used to join user configuration with defaults
    */
   public merge(clientOptions?: DataSyncConfig): DataSyncConfig {
+    if (clientOptions && clientOptions.conflictStrategy) {
+      if (!(clientOptions.conflictStrategy instanceof Function)
+            && clientOptions.conflictStrategy.default === undefined) {
+          clientOptions.conflictStrategy.default = (clientData: ConflictResolutionData,
+                                                    serverData: ConflictResolutionData) => clientData;
+      }
+    }
     return Object.assign(this, clientOptions);
   }
 
