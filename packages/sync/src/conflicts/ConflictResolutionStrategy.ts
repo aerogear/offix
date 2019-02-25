@@ -9,7 +9,7 @@ import { ConflictResolutionData } from "./ConflictResolutionData";
  * @param client - client data
  */
 export type ConflictResolutionStrategy =
-  (operationName: string, server: ConflictResolutionData, client: ConflictResolutionData) => ConflictResolutionData;
+  (server: ConflictResolutionData, client: ConflictResolutionData) => ConflictResolutionData;
 
 /**
  * Interface for conflict handlers that can be used to resolve conflicts.
@@ -19,6 +19,8 @@ export type ConflictResolutionStrategy =
  * @param client - client data
  */
 export interface ConflictResolutionStrategies {
- [operationName: string]: (server: ConflictResolutionData, client: ConflictResolutionData) => ConflictResolutionData;
-  default: (server: ConflictResolutionData, client: ConflictResolutionData) => ConflictResolutionData;
+  strategies: {
+    [operationName: string]: ConflictResolutionStrategy
+  };
+  default: ConflictResolutionStrategy;
 }
