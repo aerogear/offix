@@ -4,7 +4,7 @@ jobs:
     working_directory: ~/aerogear
     docker:
       # Node 8 LTS
-      - image: circleci/node:carbon-browsers
+      - image: circleci/node:lts-browsers
     steps:
       - checkout
       - run:
@@ -50,7 +50,7 @@ jobs:
     working_directory: ~/aerogear
     docker:
       # Node 8 LTS
-      - image: circleci/node:carbon
+      - image: circleci/node:lts
     steps:
       - checkout
         # Allows us to authenticate with the npm registry
