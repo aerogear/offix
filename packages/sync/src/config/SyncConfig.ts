@@ -5,7 +5,7 @@ import { DataSyncConfig } from "./DataSyncConfig";
 import { WebNetworkStatus } from "../offline";
 import { CordovaNetworkStatus } from "../offline";
 import { diffMergeClientWins } from "../conflicts/strategies";
-import { VersionedNextState } from "../conflicts/VersionedNextState";
+import { VersionedState } from "../conflicts/VersionedState";
 import { ConflictResolutionStrategies } from "../conflicts";
 
 declare var window: any;
@@ -42,10 +42,10 @@ export class SyncConfig implements DataSyncConfig {
 
   public storage?: PersistentStore<PersistedData>;
   public mutationsQueueName = "offline-mutation-store";
-  public mergeOfflineMutations = true;
+  public mergeOfflineMutations = false;
   public auditLogging = false;
   public conflictStrategy: ConflictResolutionStrategies;
-  public conflictStateProvider = new VersionedNextState();
+  public conflictStateProvider = new VersionedState();
 
   public networkStatus = (isMobileCordova()) ? new CordovaNetworkStatus() : new WebNetworkStatus();
   private clientConfig: DataSyncConfig;

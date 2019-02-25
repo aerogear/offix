@@ -1,5 +1,4 @@
 import { createClient, createOptimisticResponse } from '../../dist';
-
 import { TestStore } from '../utils/testStore';
 import { ToggleableNetworkStatus } from '../utils/network';
 import server from '../utils/server';
@@ -250,7 +249,7 @@ describe('AeroGear Apollo GraphQL Voyager client', function () {
     });
   });
 
-  describe('merge offline mutations', function () {
+  describe('queue offline mutations', function () {
 
     let task;
 
@@ -276,6 +275,8 @@ describe('AeroGear Apollo GraphQL Voyager client', function () {
         variables
       });
 
+      const firstUpdateTitle = variables.title;
+
       variables.title = 'update2';
 
       client.mutate({
@@ -285,8 +286,9 @@ describe('AeroGear Apollo GraphQL Voyager client', function () {
 
       const offlineMutationStore = JSON.parse(store.getItem(mutationsQueueName));
 
-      expect(offlineMutationStore.length).to.equal(1);
-      expect(offlineMutationStore[0].operation.variables.title).to.equal(variables.title);
+      expect(offlineMutationStore.length).to.equal(2);
+      expect(offlineMutationStore[0].operation.variables.title).to.equal(firstUpdateTitle);
+      expect(offlineMutationStore[1].operation.variables.title).to.equal(variables.title);
 
       networkStatus.setOnline(true);
 
@@ -337,7 +339,7 @@ describe('AeroGear Apollo GraphQL Voyager client', function () {
     let task;
 
     beforeEach('prepare data', async function () {
-      client = await newClient({ networkStatus, storage: store, mutationsQueueName, mergeOfflineMutations: false });
+      client = await newClient({ networkStatus, storage: store, mutationsQueueName});
       networkStatus.setOnline(true);
 
       const response = await client.mutate({

@@ -3,7 +3,7 @@ import { PersistedData, PersistentStore } from "../PersistentStore";
 import { NetworkStatus } from "../offline";
 import { OfflineQueueListener } from "../offline";
 import { AuthContextProvider } from "./AuthContextProvider";
-import { NextState } from "../conflicts/NextState";
+import { ObjectState } from "../conflicts/ObjectState";
 import { ConflictListener } from "../conflicts/ConflictListener";
 import { ConfigurationService } from "@aerogear/core";
 import { shouldRetryFn } from "../offline/RetriableOperation";
@@ -41,7 +41,7 @@ export interface DataSyncConfig {
   mutationsQueueName?: string | any;
 
   /**
-   * Whether or not you wish to squash mutations in your queue. By default true
+   * Whether or not you wish to squash mutations in your queue. By default false
    */
   mergeOfflineMutations?: boolean;
 
@@ -70,7 +70,7 @@ export interface DataSyncConfig {
   /**
    * Interface that defines how object state is progressed
    */
-  conflictStateProvider?: NextState;
+  conflictStateProvider?: ObjectState;
 
   /**
    * Interface that can be implemented to receive information about the data conflict
@@ -92,4 +92,5 @@ export interface DataSyncConfig {
    * See https://www.apollographql.com/docs/link/links/retry.html for more information
    */
   shouldRetry?: shouldRetryFn;
+
 }
