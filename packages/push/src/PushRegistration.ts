@@ -61,7 +61,15 @@ export class PushRegistration {
       return Promise.reject(new Error("UPS registration: Platform is configured." +
         "Please add UPS variant and generate mobile - config.json again"));
     }
-    const authToken = window.btoa(`${platformConfig.variantId}:${platformConfig.variantSecret}`);
+    const variantId = platformConfig.variantId || platformConfig.variantID;
+    const variantSecret = platformConfig.variantSecret;
+    if (!variantId) {
+      return Promise.reject(new Error("UPS registration: variantId is not defined."));
+    }
+    if (!variantSecret) {
+      return Promise.reject(new Error("UPS registration: variantSecret is not defined."));
+    }
+    const authToken = window.btoa(`${variantId}:${variantSecret}`);
     const postData = {
       "deviceToken": deviceToken,
       "deviceType": window.device.model,
