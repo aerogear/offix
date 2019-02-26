@@ -10,7 +10,7 @@ import * as debug from "debug";
 export const logger = debug.default(MUTATION_QUEUE_LOGGER);
 
 export class LocalDirectiveFilterLink extends ApolloLink {
-  private readonly directiveRemovalConfig: any= [];
+  private readonly directiveRemovalConfig: any = [];
 
   constructor() {
     super();
