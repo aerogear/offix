@@ -1,13 +1,13 @@
-import { SecurityCheck, SecurityCheckResult } from "../src";
+import { DeviceCheck, DeviceCheckResult } from "../../src";
 
-export class MockCheck implements SecurityCheck {
+export class MockCheck implements DeviceCheck {
   public name = "Mock check";
 
   constructor(readonly shouldPass: boolean) {}
 
-  public check(): Promise<SecurityCheckResult> {
+  public check(): Promise<DeviceCheckResult> {
     return new Promise((resolve, reject) => {
-      const checkResult: SecurityCheckResult = { name: this.name, passed: this.shouldPass };
+      const checkResult: DeviceCheckResult = { name: this.name, passed: this.shouldPass };
       resolve(checkResult);
     });
   }

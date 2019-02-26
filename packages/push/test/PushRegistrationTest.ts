@@ -1,7 +1,9 @@
 import { assert, expect } from "chai";
-import mocha from "mocha";
 import { PushRegistration } from "../src/PushRegistration";
 import { ConfigurationService } from "@aerogear/core";
+
+declare var window: any;
+declare var global: any;
 
 global.window = { btoa: () => "dGVzdA==" };
 window.device = { platform: "iOS" };
@@ -30,7 +32,7 @@ describe("Registration tests", () => {
 
   describe("#register", async () => {
     it("should fail to register in push server", async () => {
-      registration.register(undefined, "cordova", ["Test"]).then(() => {
+      registration.register(undefined as unknown as string, "cordova", ["Test"]).then(() => {
         assert.fail();
       }).catch(() => {
         return "ok";
