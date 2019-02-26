@@ -42,7 +42,7 @@
     "mocha": "^5.1.1",
     "nyc": "^11.7.1",
     "ts-node": "^7.0.1",
-    "typescript": "^3.1.6"
+    "typescript": "^3.3.3333"
   },
   "dependencies": {
     "@aerogear/core": "2.1.1",
