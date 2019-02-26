@@ -6,7 +6,7 @@ import { WebNetworkStatus } from "../offline";
 import { CordovaNetworkStatus } from "../offline";
 import { diffMergeClientWins } from "../conflicts/strategies";
 import { VersionedNextState } from "../conflicts/VersionedNextState";
-import { ConflictResolutionData } from "../conflicts/ConflictResolutionData";
+import { ConflictResolutionStrategies } from "../conflicts";
 
 declare var window: any;
 
@@ -44,7 +44,7 @@ export class SyncConfig implements DataSyncConfig {
   public mutationsQueueName = "offline-mutation-store";
   public mergeOfflineMutations = true;
   public auditLogging = false;
-  public conflictStrategy = diffMergeClientWins;
+  public conflictStrategy: ConflictResolutionStrategies;
   public conflictStateProvider = new VersionedNextState();
 
   public networkStatus = (isMobileCordova()) ? new CordovaNetworkStatus() : new WebNetworkStatus();
@@ -54,21 +54,22 @@ export class SyncConfig implements DataSyncConfig {
     if (window) {
       this.storage = window.localStorage;
     }
+    if (clientOptions && clientOptions.conflictStrategy) {
+      this.conflictStrategy = clientOptions.conflictStrategy;
+      if (!clientOptions.conflictStrategy.default) {
+        this.conflictStrategy.default = diffMergeClientWins;
+      }
+    } else {
+      this.conflictStrategy = { default: diffMergeClientWins };
+    }
     this.clientConfig = this.init(clientOptions);
   }
 
-  public getClientConfig() {
+  public getClientConfig(): DataSyncConfig {
     return this.clientConfig;
   }
 
   private init(clientOptions?: DataSyncConfig) {
-    // perform conflict strategy check
-    if (clientOptions && clientOptions.conflictStrategy) {
-      if (!(clientOptions.conflictStrategy instanceof Function)
-            && clientOptions.conflictStrategy.default === undefined) {
-          clientOptions.conflictStrategy.default = diffMergeClientWins;
-      }
-    }
     const config = this.merge(clientOptions);
     SyncConfig.applyPlatformConfig(config);
     SyncConfig.validate(config);
@@ -81,4 +82,5 @@ export class SyncConfig implements DataSyncConfig {
   private merge(clientOptions?: DataSyncConfig): DataSyncConfig {
     return Object.assign(this, clientOptions);
   }
+
 }

@@ -85,7 +85,7 @@ export interface DataSyncConfig {
   /**
    * The conflict resolution strategy your client should use. By default it takes client version.
    */
-  conflictStrategy?: ConflictResolutionStrategy | ConflictResolutionStrategies;
+  conflictStrategy?: ConflictResolutionStrategies;
 
   /**
    * Function that enables retry mechanism for queries that failed on network errors.

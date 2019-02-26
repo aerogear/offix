@@ -41,17 +41,13 @@ export const conflictLink = (config: DataSyncConfig): ApolloLink => {
         }
       } else {
         // resolve on client
-        if (config.conflictStrategy instanceof Function) {
-          // ConflictResolutionStrategy interface is used
-          resolvedConflict = config.conflictStrategy(data.serverState, data.clientState);
-        } else {
-          // ConflictResolutionStrategies interface is used
-          if (config.conflictStrategy.strategies[operation.operationName] !== undefined) {
-            // tslint:disable-next-line:max-line-length
-            resolvedConflict = config.conflictStrategy.strategies[operation.operationName](data.serverState, data.clientState);
-          } else {
-            resolvedConflict = config.conflictStrategy.default(data.serverState, data.clientState);
-          }
+        // ConflictResolutionStrategies interface is used
+        if (config.conflictStrategy.strategies &&
+          !!config.conflictStrategy.strategies[operation.operationName]) {
+          const individualStrategy = config.conflictStrategy.strategies[operation.operationName];
+          resolvedConflict = individualStrategy(data.serverState, data.clientState);
+        } else if (config.conflictStrategy.default) {
+          resolvedConflict = config.conflictStrategy.default(data.serverState, data.clientState);
         }
 
         if (config.conflictListener) {
