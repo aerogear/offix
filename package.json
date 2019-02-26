@@ -7,7 +7,7 @@
   "scripts": {
     "test": "lerna run test",
     "cleanInstall": "lerna exec npm install --ignore-scripts",
-    "bootstrap": "lerna bootstrap",
+    "bootstrap": "lerna bootstrap --no-ci",
     "lint": "tslint '*/*/src/**/*.ts' '*/*/test/**/*.ts'",
     "build": "lerna run build",
     "watch": "lerna run watch",
