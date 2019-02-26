@@ -222,7 +222,7 @@ type Mutation {
 ### Conflict resolution strategies
 
 Client can define custom resolution strategies.
-You can provide custom conflict resolution strategies to the client in the config by using the provided `ConflictResolutionStrategy` type from the SDK. By default developers do not need to pass any strategy (`clientVersionWins` strategy is used).
+You can provide custom conflict resolution strategies to the client in the config by using the provided `ConflictResolutionStrategies` type from the SDK. By default developers do not need to pass any strategy (`clientVersionWins` strategy is used).
 Custom strategies can be used also to provide different resolution strategy for certain operations:
 
 
@@ -235,16 +235,20 @@ let updateUserConflictResolver = (serverData, clientData) => {
 let updateTaskConflictResolver = (serverData, clientData) => {
     ...
 };
+
+let defaultConflictResolver = (serverData, clientData) => {
+  ...
+};
 ```
 
 > Note: Client strategies will work only when specific server side resolver explicitly states that conflicts should be fixed on the client. Client strategy will be ignored when conflict is resolved on the server.
 
-To use strategy pass it as argument to conflictStrategy in your config object:
- 
+To use strategy pass it as argument to conflictStrategy in your config object, containing a default to use in the case where you do not provide a strategy for a specific mutations:
+
 ```javascript
 let config = {
 ...
-  conflictStrategy: {"TaskUpdated": updateTaskConflictResolver, "UserUpdated": updateUserConflictResolver}
+  conflictStrategy: {"TaskUpdated": updateTaskConflictResolver, "UserUpdated": updateUserConflictResolver, "default": defaultConflictResolver}
 ...
 }
 ```

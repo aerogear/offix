@@ -6,6 +6,7 @@ import { WebNetworkStatus } from "../offline";
 import { CordovaNetworkStatus } from "../offline";
 import { diffMergeClientWins } from "../conflicts/strategies";
 import { VersionedNextState } from "../conflicts/VersionedNextState";
+import { ConflictResolutionStrategies } from "../conflicts";
 
 declare var window: any;
 
@@ -17,34 +18,12 @@ const TYPE: string = "sync-app";
  * Default config is applied on top of user provided configuration
  */
 export class SyncConfig implements DataSyncConfig {
-  public storage?: PersistentStore<PersistedData>;
-  public mutationsQueueName = "offline-mutation-store";
-  public mergeOfflineMutations = true;
-  public auditLogging = false;
-  public conflictStrategy = diffMergeClientWins;
-  public conflictStateProvider = new VersionedNextState();
-
-  public networkStatus = (isMobileCordova()) ? new CordovaNetworkStatus() : new WebNetworkStatus();
-
-  constructor() {
-    if (window) {
-      this.storage = window.localStorage;
-    }
-  }
-
-  /**
-   * Method used to join user configuration with defaults
-   */
-  public merge(clientOptions?: DataSyncConfig): DataSyncConfig {
-    return Object.assign(this, clientOptions);
-  }
-
   /**
    * Platform configuration that is generated and supplied by OpenShift
    *
    * @param config user supplied configuration
    */
-  public applyPlatformConfig(config: DataSyncConfig) {
+  private static applyPlatformConfig(config: DataSyncConfig) {
     if (config.openShiftConfig) {
       const configuration = config.openShiftConfig.getConfigByType(TYPE);
       if (configuration && configuration.length > 0) {
@@ -55,9 +34,53 @@ export class SyncConfig implements DataSyncConfig {
     }
   }
 
-  public validate(userConfig: DataSyncConfig) {
+  private static validate(userConfig: DataSyncConfig) {
     if (!userConfig.httpUrl) {
       throw new ConfigError("Missing server URL", "httpUrl");
     }
   }
+
+  public storage?: PersistentStore<PersistedData>;
+  public mutationsQueueName = "offline-mutation-store";
+  public mergeOfflineMutations = true;
+  public auditLogging = false;
+  public conflictStrategy: ConflictResolutionStrategies;
+  public conflictStateProvider = new VersionedNextState();
+
+  public networkStatus = (isMobileCordova()) ? new CordovaNetworkStatus() : new WebNetworkStatus();
+  private clientConfig: DataSyncConfig;
+
+  constructor(clientOptions?: DataSyncConfig) {
+    if (window) {
+      this.storage = window.localStorage;
+    }
+    if (clientOptions && clientOptions.conflictStrategy) {
+      this.conflictStrategy = clientOptions.conflictStrategy;
+      if (!clientOptions.conflictStrategy.default) {
+        this.conflictStrategy.default = diffMergeClientWins;
+      }
+    } else {
+      this.conflictStrategy = { default: diffMergeClientWins };
+    }
+    this.clientConfig = this.init(clientOptions);
+  }
+
+  public getClientConfig(): DataSyncConfig {
+    return this.clientConfig;
+  }
+
+  private init(clientOptions?: DataSyncConfig) {
+    const config = this.merge(clientOptions);
+    SyncConfig.applyPlatformConfig(config);
+    SyncConfig.validate(config);
+    return config;
+  }
+
+  /**
+   * Method used to join user configuration with defaults
+   */
+  private merge(clientOptions?: DataSyncConfig): DataSyncConfig {
+    return Object.assign(this, clientOptions);
+  }
+
 }

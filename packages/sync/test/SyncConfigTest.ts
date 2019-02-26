@@ -1,32 +1,37 @@
 import { SyncConfig } from "../src/config/SyncConfig";
 import { expect } from "chai";
-import {ConfigurationService} from "@aerogear/core";
+import { ConfigurationService } from "@aerogear/core";
+import { ConflictResolutionStrategies } from "../src/conflicts/ConflictResolutionStrategy";
+import { ConflictResolutionData } from "../src/conflicts/ConflictResolutionData";
+import { DataSyncConfig } from "../src/config/DataSyncConfig";
 declare var global: any;
 
 global.window = {};
 
 describe("OnOffLink", () => {
-  const clientConfig = { httpUrl: "test" };
+
+  const userConfig = { httpUrl: "test" };
+  const configWithConflictDictionary: DataSyncConfig = {
+    httpUrl: "test",
+    conflictStrategy: {
+      strategies: {
+        "aMethod": (server: ConflictResolutionData, client: ConflictResolutionData) => server
+      }
+    }
+  };
 
   it("merges config", () => {
-    const config = new SyncConfig();
-    const mergedConfig = config.merge(clientConfig);
-    expect(mergedConfig.httpUrl).eq(clientConfig.httpUrl);
+    const config = new SyncConfig(userConfig);
+    const mergedConfig = config.getClientConfig();
+    expect(mergedConfig.httpUrl).eq(userConfig.httpUrl);
   });
 
   it("validates config", () => {
-    const config = new SyncConfig();
-    expect(config.validate).to.throw();
-  });
-
-  it("applyPlatformConfig when no config", () => {
-    const config = new SyncConfig();
-    config.applyPlatformConfig(config);
-    expect(config.merge({}).httpUrl).eq(undefined);
+    const badConstructor = () => new SyncConfig();
+    expect(badConstructor).to.throw();
   });
 
   it("applyPlatformConfig", () => {
-    const config = new SyncConfig();
     const app = new ConfigurationService({
       clusterName: "",
       version: 1,
@@ -36,13 +41,31 @@ describe("OnOffLink", () => {
           id: "sync",
           name: "sync",
           type: "sync-app",
-          url: clientConfig.httpUrl,
+          url: userConfig.httpUrl,
           config: {}
         }
       ]
     });
-    const mergedConfig = config.merge({ openShiftConfig: app});
-    config.applyPlatformConfig(mergedConfig);
-    expect(mergedConfig.httpUrl).eq(clientConfig.httpUrl);
+    const config = new SyncConfig({ openShiftConfig: app });
+    const mergedConfig = config.getClientConfig();
+    expect(mergedConfig.httpUrl).eq(userConfig.httpUrl);
+  });
+
+  it("conflict strategy is a dictionary", () => {
+    const config = new SyncConfig(configWithConflictDictionary);
+    const mergedConfig = config.getClientConfig();
+    expect(mergedConfig.conflictStrategy).to.be.an("object");
+    if (mergedConfig.conflictStrategy && mergedConfig.conflictStrategy.strategies) {
+      expect(mergedConfig.conflictStrategy.strategies.aMethod).to.be.a("Function");
+    }
+  });
+
+  it("conflict strategy has a default", () => {
+    const config = new SyncConfig(configWithConflictDictionary);
+    const mergedConfig = config.getClientConfig();
+    expect(mergedConfig.conflictStrategy).to.be.an("object");
+    if (mergedConfig.conflictStrategy) {
+      expect(mergedConfig.conflictStrategy.default).to.be.a("Function");
+    }
   });
 });

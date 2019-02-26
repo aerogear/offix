@@ -3,6 +3,7 @@ import { GraphQLError } from "graphql";
 import { DataSyncConfig } from "../config";
 import { ApolloLink } from "apollo-link";
 import { ConflictResolutionData } from "./ConflictResolutionData";
+import { diffMergeClientWins } from "./strategies";
 
 export const conflictLink = (config: DataSyncConfig): ApolloLink => {
   /**
@@ -40,12 +41,13 @@ export const conflictLink = (config: DataSyncConfig): ApolloLink => {
         }
       } else {
         // resolve on client
-        if (config.conflictStrategy instanceof Function) {
-          // ConflictResolutionStrategy interface is used
-          resolvedConflict = config.conflictStrategy(operation.operationName, data.serverState, data.clientState);
-        } else {
-          // ConflictResolutionStrategies interface is used
-          resolvedConflict = config.conflictStrategy[operation.operationName](data.serverState, data.clientState);
+        // ConflictResolutionStrategies interface is used
+        if (config.conflictStrategy.strategies &&
+          !!config.conflictStrategy.strategies[operation.operationName]) {
+          const individualStrategy = config.conflictStrategy.strategies[operation.operationName];
+          resolvedConflict = individualStrategy(data.serverState, data.clientState);
+        } else if (config.conflictStrategy.default) {
+          resolvedConflict = config.conflictStrategy.default(data.serverState, data.clientState);
         }
 
         if (config.conflictListener) {
