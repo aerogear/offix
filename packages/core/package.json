@@ -47,29 +47,29 @@
   "devDependencies": {
     "@types/chai": "4.1.2",
     "@types/chai-as-promised": "7.1.0",
-    "@types/lodash.find": "^4.6.3",
-    "@types/loglevel": "^1.5.3",
-    "@types/mocha": "^5.0.0",
+    "@types/lodash.find": "4.6.5",
+    "@types/loglevel": "1.5.4",
+    "@types/mocha": "5.2.6",
     "@types/node": "11.9.5",
     "@types/proxyquire": "1.3.28",
-    "@types/sinon": "^4.3.1",
-    "@types/uuid": "^3.4.3",
-    "browserify": "^16.2.0",
+    "@types/sinon": "4.3.3",
+    "@types/uuid": "3.4.4",
+    "browserify": "16.2.3",
     "chai": "4.1.2",
     "chai-as-promised": "7.1.1",
     "del-cli": "1.1.0",
-    "mocha": "^5.0.5",
-    "mockttp": "^0.7.1",
-    "nyc": "^11.6.0",
-    "sinon": "^4.5.0",
-    "source-map-support": "^0.5.4",
+    "mocha": "5.2.0",
+    "mockttp": "0.7.2",
+    "nyc": "11.9.0",
+    "sinon": "4.5.0",
+    "source-map-support": "0.5.10",
     "ts-node": "5.0.1",
-    "typescript": "^3.3.3333"
+    "typescript": "3.3.3333"
   },
   "dependencies": {
     "axios": "0.18.0",
-    "lodash.find": "^4.6.0",
-    "loglevel": "^1.6.1",
-    "uuid": "^3.2.1"
+    "lodash.find": "4.6.0",
+    "loglevel": "1.6.1",
+    "uuid": "3.3.2"
   }
 }
