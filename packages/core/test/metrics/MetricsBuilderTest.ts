@@ -1,6 +1,9 @@
 import {assert} from "chai";
 import {MetricsBuilder} from "../../src/metrics";
 
+declare var window: any;
+declare var global: any;
+
 global.window = {};
 
 window.device = {};

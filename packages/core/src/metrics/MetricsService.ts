@@ -112,7 +112,7 @@ export class MetricsService {
    * Collect metrics for all active metrics collectors
    * Send data using metrics publisher
    */
-  protected sendAppAndDeviceMetrics(): Promise<any> {
+  public sendAppAndDeviceMetrics(): Promise<any> {
     return this.publish(MetricsService.DEFAULT_METRICS_TYPE, []).catch((error) => {
       console.error("Error when sending metrics", JSON.stringify(error, Object.getOwnPropertyNames(error)));
     });

@@ -2,6 +2,7 @@ import { assert, expect } from "chai";
 import mocha from "mocha";
 import { AeroGearConfiguration, ConfigurationService } from "../src/index";
 import testConfigJson from "./mobile-config.json";
+
 declare var global: any;
 declare var window: any;
 
@@ -37,13 +38,19 @@ describe("Config Tests", () => {
 
     it("should return empty array if using an nonexistent key", () => {
       const result = core.getConfigByType("foo");
-
+      if (!result) {
+        return new Error("Empty result");
+      }
       assert.isArray(result);
       assert.isOk(result.length === 0);
     });
 
     it("should be able to get config if its key exists", () => {
       const result = core.getConfigByType("keycloak");
+      if (!result) {
+        return new Error("Empty result");
+      }
+      assert.isNotNull(result);
       expect(result[0].type).to.equal("keycloak");
     });
 

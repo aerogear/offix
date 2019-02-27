@@ -1,5 +1,5 @@
 {
-  "version": "1.0",
+  "version": 1,
   "clusterName": "192.168.64.74:8443",
   "namespace": "myproject",
   "clientId": "example_client_id",

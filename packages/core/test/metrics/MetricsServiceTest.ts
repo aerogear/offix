@@ -4,6 +4,9 @@ import { Metrics, MetricsPayload, MetricsPublisher, MetricsService, NetworkMetri
 import testAerogearConfig from "../mobile-config.json";
 import { MetricsBuilder } from "../../src/metrics/MetricsBuilder";
 
+declare var global: any;
+declare var window: any;
+
 global.window = {};
 
 window.device = {};
@@ -28,20 +31,19 @@ describe("MetricsService", () => {
 
   beforeEach(() => {
     metricsBuilder = new MockMetricsBuilder();
-    metricsService = new DummyMetricsService({configuration: [metricsConfig], builder: metricsBuilder});
+    metricsService = new DummyMetricsService({ configuration: [metricsConfig], builder: metricsBuilder });
   });
 
   describe("#constructor", () => {
 
     it("should instantiate NetworkMetricsPublisher with configuration url", () => {
-      const { url } = metricsConfig;
       const publisher = metricsService.metricsPublisher as NetworkMetricsPublisher;
 
-      assert.equal(url, publisher.url);
+      assert.equal((metricsConfig as any).url, publisher.url);
     });
 
     it("should not throw an error when not being able to publish default metrics", () => {
-      const test = () => new MetricsService({builder: metricsBuilder});
+      const test = () => new MetricsService({ configuration: testAerogearConfig, builder: metricsBuilder });
 
       expect(test).to.not.throw();
     });
@@ -116,13 +118,13 @@ describe("MetricsService", () => {
     });
 
     it("should throw an error if type is null", () => {
-      const test = () => metricsService.publish(null, []);
+      const test = () => metricsService.publish(null as unknown as string, []);
 
       expect(test).to.throw("Type is invalid: null");
     });
 
     it("should throw an error if type is undefined", () => {
-      const test = () => metricsService.publish(undefined, []);
+      const test = () => metricsService.publish(undefined as unknown as string, []);
 
       expect(test).to.throw("Type is invalid: undefined");
     });
