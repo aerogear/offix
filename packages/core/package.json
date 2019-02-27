@@ -45,7 +45,7 @@
     "branches": 80
   },
   "devDependencies": {
-    "@types/chai": "4.1.2",
+    "@types/chai": "4.1.7",
     "@types/chai-as-promised": "7.1.0",
     "@types/lodash.find": "4.6.5",
     "@types/loglevel": "1.5.4",
@@ -55,11 +55,11 @@
     "@types/sinon": "4.3.3",
     "@types/uuid": "3.4.4",
     "browserify": "16.2.3",
-    "chai": "4.1.2",
+    "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
     "del-cli": "1.1.0",
     "mocha": "5.2.0",
-    "mockttp": "0.7.2",
+    "mockttp": "0.12.6",
     "nyc": "11.9.0",
     "sinon": "4.5.0",
     "source-map-support": "0.5.10",
