@@ -46,10 +46,10 @@
   },
   "dependencies": {
     "@aerogear/core": "2.1.1",
-    "apollo-cache-inmemory": "1.3.9",
+    "apollo-cache-inmemory": "1.5.0",
     "apollo-cache-persist": "0.1.1",
-    "apollo-client": "2.4.5",
-    "apollo-link": "1.2.3",
+    "apollo-client": "2.5.0",
+    "apollo-link": "1.2.8",
     "apollo-link-context": "1.0.14",
     "apollo-link-error": "1.1.7",
     "apollo-link-http": "1.5.11",
