@@ -5,6 +5,7 @@
   ],
   "compilerOptions": {
     "outDir": "./dist/",
-    "declarationDir": "./types"
+    "declarationDir": "./types",
+    "resolveJsonModule": true
   }
 }
