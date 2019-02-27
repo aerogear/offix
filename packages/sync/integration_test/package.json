@@ -10,7 +10,7 @@
   "author": "AeroGear",
   "license": "Apache-2.0",
   "dependencies": {
-    "@aerogear/voyager-server": "0.4.0-rc2",
+    "@aerogear/voyager-server": "0.4.0",
     "apollo-server": "2.4.8",
     "chai": "4.2.0",
     "cors": "2.8.5",
