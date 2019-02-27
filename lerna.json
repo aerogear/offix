@@ -3,10 +3,10 @@
   "packages": [
     "packages/*"
   ],
-  "commands": {
+  "version": "2.2.0-rc1",
+  "command": {
     "publish": {
       "exact": true
     }
-  },
-  "version": "2.1.1"
+  }
 }
