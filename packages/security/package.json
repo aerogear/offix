@@ -28,8 +28,8 @@
   "devDependencies": {
     "@types/chai": "4.1.7",
     "chai": "4.2.0",
-    "mocha": "5.2.0",
-    "nyc": "11.9.0",
+    "mocha": "6.0.2",
+    "nyc": "13.3.0",
     "typescript": "3.3.3333"
   },
   "dependencies": {
