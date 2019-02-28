@@ -50,7 +50,6 @@ export const createOptimisticResponse =
     optimisticResponse[operation] = {
       __typename: typeName,
       ...data,
-
       optimisticResponse: true
     };
     if (addId) {
