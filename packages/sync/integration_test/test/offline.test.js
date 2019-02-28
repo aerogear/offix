@@ -32,7 +32,8 @@ describe('AeroGear Apollo GraphQL Voyager client', function () {
 
   const newTask = {
     description: 'new',
-    title: 'new'
+    title: 'new',
+    version: 1
   };
 
   const updatedTask = {
