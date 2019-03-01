@@ -22,12 +22,10 @@
     "clean:dependencies": "lerna clean --yes",
     "update:check": "lerna exec --concurrency 1 -- ncu",
     "update:run": "lerna exec -- ncu -a --removeRange -x 'fh-js-sdk'",
-    "depcheck": "lerna exec --parallel --stream -- depcheck --dev --specials='mocha,bin' --ignores='ts-node,@types/*' --ignore-dirs='example'",
     "generate:docs": "./scripts/docs.sh"
   },
   "devDependencies": {
     "del-cli": "1.1.0",
-    "depcheck": "0.7.2",
     "lerna": "3.13.1",
     "npm-run-all": "4.1.5",
     "replace": "1.0.1",
