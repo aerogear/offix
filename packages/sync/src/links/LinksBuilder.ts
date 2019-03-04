@@ -2,7 +2,7 @@ import { ApolloLink, concat, Operation } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { conflictLink } from "../conflicts";
 import { DataSyncConfig } from "../config";
-import { createHeadersLink } from "./HeadersLink";
+import { createAuthLink } from "./AuthLink";
 import { AuditLoggingLink } from "./AuditLoggingLink";
 import { MetricsBuilder } from "@aerogear/core";
 import { LocalDirectiveFilterLink } from "./LocalDirectiveFilterLink";
@@ -52,7 +52,7 @@ export const defaultHttpLinks = async (config: DataSyncConfig): Promise<ApolloLi
   }
 
   if (config.authContextProvider) {
-    links.push(createHeadersLink(config));
+    links.push(createAuthLink(config));
   }
 
   if (config.fileUpload) {
