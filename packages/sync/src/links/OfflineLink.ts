@@ -2,6 +2,7 @@ import { ApolloLink, Operation, NextLink } from "apollo-link";
 import { PersistentStore, PersistedData } from "../PersistentStore";
 import { OfflineQueueListener, NetworkStatus, NetworkInfo } from "../offline";
 import { OfflineQueue } from "../offline/OfflineQueue";
+import { ObjectState } from "../conflicts";
 
 export interface OfflineLinkOptions {
   networkStatus: NetworkStatus;
@@ -9,6 +10,7 @@ export interface OfflineLinkOptions {
   storageKey?: string;
   squashOperations?: boolean;
   listener?: OfflineQueueListener;
+  conflictStateProvider?: ObjectState;
 }
 
 /**
@@ -56,10 +58,10 @@ export class OfflineLink extends ApolloLink {
     }
   }
 
-  private forward() {
-    this.queue.toBeForwarded().forEach(operation =>
-      operation.forwardOperation()
-    );
+  private async forward() {
+    for (const operation of this.queue.toBeForwarded()) {
+      await operation.forwardOperation();
+    }
   }
 
   private async forwardOnOnline() {

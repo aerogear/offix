@@ -1,5 +1,5 @@
 import { ConflictResolutionData } from "./ConflictResolutionData";
-import { NextState } from "./NextState";
+import { ObjectState } from "./ObjectState";
 
 /**
  * Object state manager using a version field
@@ -13,10 +13,14 @@ import { NextState } from "./NextState";
  *   version: String
  * }
  */
-export class VersionedNextState implements NextState {
+export class VersionedState implements ObjectState {
 
   public nextState(currentObjectState: ConflictResolutionData) {
     currentObjectState.version = currentObjectState.version + 1;
     return currentObjectState;
+  }
+
+  public currentState(currentObjectState: ConflictResolutionData) {
+    return currentObjectState.version;
   }
 }

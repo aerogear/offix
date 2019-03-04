@@ -4,13 +4,14 @@ import { OfflineQueueListener } from "./OfflineQueueListener";
 import { OperationQueue, OperationQueueChangeHandler } from "./OperationQueue";
 import { isClientGeneratedId } from "../cache/createOptimisticResponse";
 import { squashOperations } from "./squashOperations";
-import { isSquashable, isMutation } from "../utils/helpers";
+import { ObjectState } from "../conflicts/ObjectState";
 
 export interface OfflineQueueOptions {
   storage?: PersistentStore<PersistedData>;
   storageKey?: string;
   squashOperations?: boolean;
   listener?: OfflineQueueListener;
+  conflictStateProvider?: ObjectState;
   onEnqueue: OperationQueueChangeHandler;
   onDequeue: OperationQueueChangeHandler;
 }
@@ -29,17 +30,19 @@ export class OfflineQueue extends OperationQueue {
   private readonly storage?: PersistentStore<PersistedData>;
   private readonly storageKey?: string;
   private readonly listener?: OfflineQueueListener;
+  private readonly state?: ObjectState;
   private readonly squashOperations?: boolean;
 
   constructor(options: OfflineQueueOptions) {
     super(options);
 
-    const { storage, storageKey, listener, squashOperations: squash } = options;
+    const { storage, storageKey, listener, squashOperations: squash, conflictStateProvider} = options;
 
     this.storage = storage;
     this.storageKey = storageKey;
     this.listener = listener;
     this.squashOperations = squash;
+    this.state = conflictStateProvider;
   }
 
   /**
@@ -51,14 +54,13 @@ export class OfflineQueue extends OperationQueue {
   }
 
   protected enqueueEntry(entry: OperationQueueEntry) {
+
     if (this.squashOperations) {
       this.queue = squashOperations(entry, this.queue);
     } else {
       this.queue.push(entry);
     }
-
     this.onEnqueue(entry);
-
     this.persist();
 
     if (this.listener && this.listener.onOperationEnqueued) {
@@ -68,8 +70,8 @@ export class OfflineQueue extends OperationQueue {
 
   protected dequeue(entry: OperationQueueEntry) {
     super.dequeue(entry, false);
-
     this.updateIds(entry);
+    this.updateVersions(entry);
 
     this.persist();
 
@@ -106,5 +108,29 @@ export class OfflineQueue extends OperationQueue {
         op.variables.id = result.data && result.data[operationName].id;
       }
     });
+  }
+
+  /**
+   * Manipulate the versions of items in the queue so that we do not get a conflict with ourself
+   * @param entry the operation which returns the result we compare with first queue entry
+   */
+  private updateVersions(entry: OperationQueueEntry) {
+    const { result, operation: { operationName } } = entry;
+    if (!result || !this.state) {
+      return;
+    }
+
+    if (result.data && result.data[operationName]) {
+      for (const { operation: op } of this.queue) {
+        if (op.variables.id === entry.operation.variables.id && op.operationName === entry.operation.operationName) {
+          const opVersion = this.state.currentState(op.variables);
+          const prevOpVersion = this.state.currentState(entry.operation.variables);
+          if (opVersion === prevOpVersion) {
+            op.variables = this.state.nextState(op.variables);
+            break;
+          }
+        }
+      }
+    }
   }
 }
