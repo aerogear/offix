@@ -42,7 +42,6 @@ export class SyncConfig implements DataSyncConfig {
 
   public storage?: PersistentStore<PersistedData>;
   public mutationsQueueName = "offline-mutation-store";
-  public mergeOfflineMutations = false;
   public auditLogging = false;
   public conflictStrategy: ConflictResolutionStrategies;
   public conflictStateProvider = new VersionedState();

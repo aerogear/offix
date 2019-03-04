@@ -3,7 +3,6 @@ import { GraphQLError } from "graphql";
 import { DataSyncConfig } from "../config";
 import { ApolloLink } from "apollo-link";
 import { ConflictResolutionData } from "./ConflictResolutionData";
-import { diffMergeClientWins } from "./strategies";
 
 export const conflictLink = (config: DataSyncConfig): ApolloLink => {
   /**
@@ -14,7 +13,6 @@ export const conflictLink = (config: DataSyncConfig): ApolloLink => {
     if (graphQLErrors) {
       for (const err of graphQLErrors) {
         if (err.extensions) {
-          // TODO need to add flag to check if conflict was resolved on the server
           if (err.extensions.exception.conflictInfo) {
             return err.extensions.exception.conflictInfo;
           }
