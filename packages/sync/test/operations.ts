@@ -30,49 +30,6 @@ export const op: Operation = {
   toKey: {} as any
 };
 
-export const opWithSquashDirective: Operation = {
-  variables: {
-    name: "User 1",
-    dateOfBirth: "Fri Nov 30 2018 09:43:22 GMT+0000",
-    id: "1",
-    version: 3
-  },
-  operationName: "updateUser",
-  query: {
-    kind: "Document",
-    definitions: [{
-      kind: "OperationDefinition",
-      operation: "mutation",
-      name: {
-        kind: "Name",
-        value: "updateUser"
-      },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [{
-          kind: "Field",
-          name: {
-            kind: "Name",
-            value: "updateUser"
-          },
-          directives: [{
-            kind: "Directive",
-            name: {
-              kind: "Name",
-              value: "noSquash"
-            },
-            arguments: []
-          }]
-        }]
-      }
-    }]
-  },
-  extensions: {} as any,
-  setContext: {} as any,
-  getContext: {} as any,
-  toKey: {} as any
-};
-
 export const requestWithOnlineDirective: GraphQLRequest = {
   variables: {
     name: "User 1",
@@ -113,47 +70,7 @@ export const requestWithOnlineDirective: GraphQLRequest = {
   extensions: {} as any
 };
 
-export const requestWithNoSquashDirective: GraphQLRequest = {
-  variables: {
-    name: "User 1",
-    dateOfBirth: "Fri Nov 30 2018 09:43:22 GMT+0000",
-    id: "1",
-    version: 3
-  },
-  operationName: "updateUser",
-  query: {
-    kind: "Document",
-    definitions: [{
-      kind: "OperationDefinition",
-      operation: "mutation",
-      name: {
-        kind: "Name",
-        value: "updateUser"
-      },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [{
-          kind: "Field",
-          name: {
-            kind: "Name",
-            value: "updateUser"
-          },
-          directives: [{
-            kind: "Directive",
-            name: {
-              kind: "Name",
-              value: "noSquash"
-            },
-            arguments: []
-          }]
-        }]
-      }
-    }]
-  },
-  extensions: {} as any
-};
-
-export const requestWithBothDirectives: GraphQLRequest = {
+export const requestWithMultipleDirectives: GraphQLRequest = {
   variables: {
     name: "User 1",
     dateOfBirth: "Fri Nov 30 2018 09:43:22 GMT+0000",

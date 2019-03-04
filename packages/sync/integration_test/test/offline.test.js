@@ -3,7 +3,7 @@ import { TestStore } from '../utils/testStore';
 import { ToggleableNetworkStatus } from '../utils/network';
 import server from '../utils/server';
 import waitFor from '../utils/waitFor';
-import { ADD_TASK, GET_TASKS, UPDATE_TASK, DELETE_TASK, ONLINE_ONLY, NO_SQUASH } from '../utils/graphql.queries';
+import { ADD_TASK, GET_TASKS, UPDATE_TASK, DELETE_TASK, ONLINE_ONLY } from '../utils/graphql.queries';
 
 // TODO: error handling when server is down
 
