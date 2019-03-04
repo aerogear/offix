@@ -16,10 +16,6 @@ export const isOnlineOnly = (op: Operation) => {
   return hasDirectives([localDirectives.ONLINE_ONLY], op.query);
 };
 
-export const isSquashable = (op: Operation) => {
-  return !hasDirectives([localDirectives.NO_SQUASH], op.query);
-};
-
 export const isNetworkError = (error: any) => {
   return !error.result;
 };

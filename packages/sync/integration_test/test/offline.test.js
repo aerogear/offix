@@ -305,35 +305,6 @@ describe('AeroGear Apollo GraphQL Voyager client', function () {
     });
   });
 
-  describe('noSquash mutations', function () {
-    it('should succeed', async function () {
-      const a = client.mutate({
-        mutation: NO_SQUASH,
-        variables: { id: 0 }
-      }).catch((error) => {
-        expect(error).to.exist;
-      });
-
-      const b = client.mutate({
-        mutation: NO_SQUASH,
-        variables: { id: 0 }
-      }).catch((error) => {
-        expect(error).to.exist;
-      });
-
-      const offlineMutationStore = JSON.parse(store.getItem(mutationsQueueName));
-
-      expect(offlineMutationStore.length).to.equal(2);
-
-      networkStatus.setOnline(true);
-
-      await waitFor(() => JSON.parse(store.getItem(mutationsQueueName)).length === 0);
-
-      await a;
-      await b;
-    });
-  });
-
   describe('do not merge offline mutations', function () {
 
     let task;

@@ -86,7 +86,6 @@ function createOfflineLink(config: DataSyncConfig) {
   const offlineLink = new OfflineLink({
     storage: config.storage,
     storageKey: config.mutationsQueueName,
-    squashOperations: config.mergeOfflineMutations,
     listener: config.offlineQueueListener,
     networkStatus: config.networkStatus as NetworkStatus,
     conflictStateProvider: config.conflictStateProvider
