@@ -4,7 +4,7 @@ import { ConfigError } from "./ConfigError";
 import { DataSyncConfig } from "./DataSyncConfig";
 import { WebNetworkStatus } from "../offline";
 import { CordovaNetworkStatus } from "../offline";
-import { diffMergeClientWins } from "../conflicts/strategies";
+import { clientWins } from "../conflicts/strategies";
 import { VersionedState } from "../conflicts/VersionedState";
 import { ConflictResolutionStrategies } from "../conflicts";
 
@@ -56,10 +56,10 @@ export class SyncConfig implements DataSyncConfig {
     if (clientOptions && clientOptions.conflictStrategy) {
       this.conflictStrategy = clientOptions.conflictStrategy;
       if (!clientOptions.conflictStrategy.default) {
-        this.conflictStrategy.default = diffMergeClientWins;
+        this.conflictStrategy.default = clientWins;
       }
     } else {
-      this.conflictStrategy = { default: diffMergeClientWins };
+      this.conflictStrategy = { default: clientWins };
     }
     this.clientConfig = this.init(clientOptions);
   }
