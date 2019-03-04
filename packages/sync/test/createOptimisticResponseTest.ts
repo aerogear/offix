@@ -2,7 +2,7 @@ import { createOptimisticResponse } from "../src";
 import { expect } from "chai";
 import { should } from "chai";
 
-describe("SquashOperations", () => {
+describe("Optimistic Response tests", () => {
 
   it("check createNewOptimisticResponse", () => {
     const result = createOptimisticResponse("updateTest", "Test", { name: "test" });

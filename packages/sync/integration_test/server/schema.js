@@ -20,7 +20,6 @@ type Mutation {
   updateTask(id: ID!, title: String, description: String, version: Int!): Task
   deleteTask(id: ID!): ID
   onlineOnly(id: ID!): ID
-  noSquash(id: ID!): ID
 }
 
 type Subscription {
@@ -81,13 +80,9 @@ const resolvers = {
     onlineOnly: (_, args) => {
       console.log('onlineOnly: ', args);
       return args.id;
-    },
-    noSquash: (_, args) => {
-      console.log('noSquash: ', args);
-      return args.id;
     }
   },
-  // TODO add helper/package to support generating subscription resolvers 
+  // TODO add helper/package to support generating subscription resolvers
   Subscription: {
     taskCreated: {
       subscribe: () => pubSub.asyncIterator(EVENTS.TASK.CREATED)

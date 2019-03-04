@@ -128,30 +128,6 @@ exampleQuery(...) @onlineOnly {
 }
 ```
 
-### Squashing Mutations
-
-Multiple changes performed on the same object ID and with the same mutation will automatically be joined by the AeroGear Sync SDK when your client is offline. This is beneficial as the client will not have to queue a large amount of mutations to replay once it returns online.
-
-#### Global Squashing
-This feature is on by default at a global level. To disable it on a global level simply do so in your config:
-
-```javascript
-let config = {
-...
-  mergeOfflineMutations: false
-...
-}
-```
-
-#### Mutation Level Squashing
-To disable this feature at a mutation level be sure to include the annotation on the mutation like so:
-
-```
-exampleMutation(...) @noSquash {
-  ...
-}
-```
-
 ## Listening for Events
 
 It is possible to provide `offlineQueueListener` in config to be notified about offline related events:

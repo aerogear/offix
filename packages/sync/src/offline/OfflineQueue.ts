@@ -3,13 +3,11 @@ import { PersistentStore, PersistedData } from "../PersistentStore";
 import { OfflineQueueListener } from "./OfflineQueueListener";
 import { OperationQueue, OperationQueueChangeHandler } from "./OperationQueue";
 import { isClientGeneratedId } from "../cache/createOptimisticResponse";
-import { squashOperations } from "./squashOperations";
 import { ObjectState } from "../conflicts/ObjectState";
 
 export interface OfflineQueueOptions {
   storage?: PersistentStore<PersistedData>;
   storageKey?: string;
-  squashOperations?: boolean;
   listener?: OfflineQueueListener;
   conflictStateProvider?: ObjectState;
   onEnqueue: OperationQueueChangeHandler;
@@ -23,7 +21,6 @@ export interface OfflineQueueOptions {
  * It provides these functionalities:
  *
  * - persisting operation queue in provided storage
- * - squashing incoming operations if enabled
  * - updating client IDs with server IDs (explained below)
  */
 export class OfflineQueue extends OperationQueue {
@@ -31,17 +28,15 @@ export class OfflineQueue extends OperationQueue {
   private readonly storageKey?: string;
   private readonly listener?: OfflineQueueListener;
   private readonly state?: ObjectState;
-  private readonly squashOperations?: boolean;
 
   constructor(options: OfflineQueueOptions) {
     super(options);
 
-    const { storage, storageKey, listener, squashOperations: squash, conflictStateProvider} = options;
+    const { storage, storageKey, listener, conflictStateProvider} = options;
 
     this.storage = storage;
     this.storageKey = storageKey;
     this.listener = listener;
-    this.squashOperations = squash;
     this.state = conflictStateProvider;
   }
 
@@ -54,12 +49,7 @@ export class OfflineQueue extends OperationQueue {
   }
 
   protected enqueueEntry(entry: OperationQueueEntry) {
-
-    if (this.squashOperations) {
-      this.queue = squashOperations(entry, this.queue);
-    } else {
-      this.queue.push(entry);
-    }
+    this.queue.push(entry);
     this.onEnqueue(entry);
     this.persist();
 

@@ -46,11 +46,3 @@ export const ONLINE_ONLY = gql`
     }
   }
 `;
-
-export const NO_SQUASH = gql`
-  mutation noSquash($id: ID!) {
-    noSquash(id: $id) @noSquash {
-      id
-    }
-  }
-`;

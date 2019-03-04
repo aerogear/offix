@@ -8,7 +8,6 @@ export interface OfflineLinkOptions {
   networkStatus: NetworkStatus;
   storage?: PersistentStore<PersistedData>;
   storageKey?: string;
-  squashOperations?: boolean;
   listener?: OfflineQueueListener;
   conflictStateProvider?: ObjectState;
 }

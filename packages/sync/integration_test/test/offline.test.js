@@ -3,7 +3,7 @@ import { TestStore } from '../utils/testStore';
 import { ToggleableNetworkStatus } from '../utils/network';
 import server from '../utils/server';
 import waitFor from '../utils/waitFor';
-import { ADD_TASK, GET_TASKS, UPDATE_TASK, DELETE_TASK, ONLINE_ONLY, NO_SQUASH } from '../utils/graphql.queries';
+import { ADD_TASK, GET_TASKS, UPDATE_TASK, DELETE_TASK, ONLINE_ONLY } from '../utils/graphql.queries';
 
 // TODO: error handling when server is down
 
@@ -302,35 +302,6 @@ describe('AeroGear Apollo GraphQL Voyager client', function () {
       expect(response.data.allTasks).to.exist;
       expect(response.data.allTasks.length).to.equal(1);
       expect(response.data.allTasks[0].title).to.equal(variables.title);
-    });
-  });
-
-  describe('noSquash mutations', function () {
-    it('should succeed', async function () {
-      const a = client.mutate({
-        mutation: NO_SQUASH,
-        variables: { id: 0 }
-      }).catch((error) => {
-        expect(error).to.exist;
-      });
-
-      const b = client.mutate({
-        mutation: NO_SQUASH,
-        variables: { id: 0 }
-      }).catch((error) => {
-        expect(error).to.exist;
-      });
-
-      const offlineMutationStore = JSON.parse(store.getItem(mutationsQueueName));
-
-      expect(offlineMutationStore.length).to.equal(2);
-
-      networkStatus.setOnline(true);
-
-      await waitFor(() => JSON.parse(store.getItem(mutationsQueueName)).length === 0);
-
-      await a;
-      await b;
     });
   });
 
