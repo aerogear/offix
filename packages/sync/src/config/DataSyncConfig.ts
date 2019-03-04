@@ -110,4 +110,11 @@ export interface DataSyncConfig {
    */
   shouldRetry?: shouldRetryFn;
 
+  /**
+   * [Modifier]
+   *
+   * Whether or not you wish to squash mutations in your queue. By default false
+   */
+  mergeOfflineMutations?: boolean;
+
 }
