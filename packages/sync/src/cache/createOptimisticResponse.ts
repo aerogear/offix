@@ -33,8 +33,6 @@ const generateId = (length = 8) => {
  * For more info and examples see:
  * https://www.apollographql.com/docs/react/features/optimistic-ui.html
  *
- *
- *
  * @param operation operation that is being performed (update)
  * @param typeName type that is going to be returned
  * @param data actual data passed to function
