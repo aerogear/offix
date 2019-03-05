@@ -6,7 +6,7 @@ import { AuthContextProvider } from "../auth/AuthContextProvider";
 import { ObjectState } from "../conflicts/ObjectState";
 import { ConflictListener } from "../conflicts/ConflictListener";
 import { ConfigurationService } from "@aerogear/core";
-import { shouldRetryFn } from "../offline/RetriableOperation";
+import { ShouldRetryFn } from "../offline/retry/ShouldRetry";
 
 /**
  * Contains all configuration options required to initialize Voyager Client
@@ -105,9 +105,10 @@ export interface DataSyncConfig {
   /**
    * [Modifier]
    *
-   * Function that overrides retry mechanism for offline mutations that failed on network errors.
+   * Function that customizes retry mechanism for queries that failed on network errors.
    * See https://www.apollographql.com/docs/link/links/retry.html for more information
+   * By default offline requests are retried 5 times.
    */
-  shouldRetry?: shouldRetryFn;
+  shouldRetry?: ShouldRetryFn;
 
 }

@@ -1,11 +1,9 @@
-import { isNetworkError } from "../utils/helpers";
-import { OperationQueueEntry } from "./OperationQueueEntry";
-import { Operation } from "apollo-link";
+import { isNetworkError } from "../../utils/helpers";
+import { OperationQueueEntry } from "../OperationQueueEntry";
+import { ShouldRetryFn } from "./ShouldRetry";
 
 // Initial timeout for first retry
 const INITIAL_TIMEOUT = 1000;
-
-export type shouldRetryFn = (count: number, operation: Operation, error: any) => boolean;
 
 /**
  * Class implementing retry mechanism for operation.
@@ -33,7 +31,7 @@ export class RetriableOperation extends OperationQueueEntry {
    * shouldRetry function is called with every network fail
    * to determine if the operation should be retried.
    */
-  public async try(shouldRetry: shouldRetryFn) {
+  public async try(shouldRetry: ShouldRetryFn) {
     let networkError;
     let retry;
     let attempts = 0;

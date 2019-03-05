@@ -1,10 +1,11 @@
 import { ApolloLink, Operation, NextLink, Observable, FetchResult } from "apollo-link";
 import { OperationQueue } from "../offline/OperationQueue";
 import { isMutation, isNetworkError } from "../utils/helpers";
-import { RetriableOperation, shouldRetryFn } from "../offline/RetriableOperation";
+import { RetriableOperation } from "../offline/retry/RetriableOperation";
+import { ShouldRetryFn } from "../offline/retry/ShouldRetry";
 
 export interface RetryLinkOptions {
-  shouldRetry?: shouldRetryFn;
+  shouldRetry?: ShouldRetryFn;
 }
 
 /**
@@ -24,7 +25,7 @@ export interface RetryLinkOptions {
  */
 export class RetryLink extends ApolloLink {
   private queue: OperationQueue;
-  private shouldRetry: shouldRetryFn;
+  private shouldRetry: ShouldRetryFn;
 
   constructor(options: RetryLinkOptions) {
     super();

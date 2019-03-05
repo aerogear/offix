@@ -2,11 +2,12 @@ import { ServiceConfiguration, isMobileCordova } from "@aerogear/core";
 import { PersistedData, PersistentStore } from "../PersistentStore";
 import { ConfigError } from "./ConfigError";
 import { DataSyncConfig } from "./DataSyncConfig";
-import { WebNetworkStatus } from "../offline";
+import { WebNetworkStatus, NetworkStatus } from "../offline";
 import { CordovaNetworkStatus } from "../offline";
 import { clientWins } from "../conflicts/strategies";
 import { VersionedState } from "../conflicts/VersionedState";
 import { ConflictResolutionStrategies } from "../conflicts";
+import { defaultRetryFn } from "../offline/retry/ShouldRetry";
 
 declare var window: any;
 
@@ -45,14 +46,18 @@ export class SyncConfig implements DataSyncConfig {
   public auditLogging = false;
   public conflictStrategy: ConflictResolutionStrategies;
   public conflictStateProvider = new VersionedState();
+  public shouldRetry = defaultRetryFn;
 
-  public networkStatus = (isMobileCordova()) ? new CordovaNetworkStatus() : new WebNetworkStatus();
+  public networkStatus: NetworkStatus;
   private clientConfig: DataSyncConfig;
 
   constructor(clientOptions?: DataSyncConfig) {
     if (window) {
       this.storage = window.localStorage;
     }
+    this.networkStatus = (isMobileCordova()) ?
+      new CordovaNetworkStatus() : new WebNetworkStatus();
+
     if (clientOptions && clientOptions.conflictStrategy) {
       this.conflictStrategy = clientOptions.conflictStrategy;
       if (!clientOptions.conflictStrategy.default) {
