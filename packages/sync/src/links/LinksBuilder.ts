@@ -1,4 +1,4 @@
-import { ApolloLink, concat, Operation } from "apollo-link";
+import { ApolloLink, Operation } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { conflictLink } from "../conflicts";
 import { DataSyncConfig } from "../config";
@@ -7,7 +7,7 @@ import { AuditLoggingLink } from "./AuditLoggingLink";
 import { MetricsBuilder } from "@aerogear/core";
 import { LocalDirectiveFilterLink } from "./LocalDirectiveFilterLink";
 import { createUploadLink } from "apollo-upload-client";
-import { isMutation, isOnlineOnly, isSubscription } from "../utils/helpers";
+import { isMutation, isOnlineOnly, isSubscription, markedOffline } from "../utils/helpers";
 import { defaultWebSocketLink } from "./WebsocketLink";
 import { OfflineLink } from "./OfflineLink";
 import { RetryLink } from "./RetryLink";
@@ -91,6 +91,13 @@ function createOfflineLink(config: DataSyncConfig) {
     conflictStateProvider: config.conflictStateProvider
   });
   const localFilterLink = new LocalDirectiveFilterLink();
-  const mutationOfflineLink = ApolloLink.split((op: Operation) => isMutation(op) && !isOnlineOnly(op), offlineLink);
-  return ApolloLink.from([mutationOfflineLink, localFilterLink]);
+  const mutationOfflineLink = ApolloLink.split((op: Operation) => {
+    return isMutation(op) && !isOnlineOnly(op);
+  }, offlineLink);
+
+  const retryOfflineMutationsLink = ApolloLink.split((op: Operation) => {
+    return markedOffline(op);
+  }, offlineLink);
+
+  return ApolloLink.from([mutationOfflineLink, retryOfflineMutationsLink, localFilterLink]);
 }
