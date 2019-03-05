@@ -32,7 +32,7 @@ export class OfflineQueue extends OperationQueue {
   constructor(options: OfflineQueueOptions) {
     super(options);
 
-    const { storage, storageKey, listener, conflictStateProvider} = options;
+    const { storage, storageKey, listener, conflictStateProvider } = options;
 
     this.storage = storage;
     this.storageKey = storageKey;
@@ -59,17 +59,31 @@ export class OfflineQueue extends OperationQueue {
   }
 
   protected dequeue(entry: OperationQueueEntry) {
-    super.dequeue(entry, false);
-    this.updateIds(entry);
-    this.updateVersions(entry);
+    if (entry.result && entry.result.data) {
+      super.dequeue(entry, false);
+      this.updateIds(entry);
+      this.updateVersions(entry);
 
-    this.persist();
 
-    if (this.queue.length === 0 && this.listener && this.listener.queueCleared) {
-      this.listener.queueCleared();
+      this.persist();
+
+      if (this.queue.length === 0 && this.listener && this.listener.queueCleared) {
+        this.listener.queueCleared();
+      }
+
+      if (this.listener && this.listener.onOperationSuccess) {
+        this.listener.onOperationSuccess(entry.operation, entry.result.data);
+      }
+
+      this.onDequeue(entry);
+    } else {
+      if (this.listener && this.listener.onOperationFailure) {
+        this.listener.onOperationFailure(entry.operation, entry.result);
+      }
+      // tslint:disable-next-line:no-console
+      console.log("Error when trying to send data to server",
+      JSON.stringify(entry.result));
     }
-
-    this.onDequeue(entry);
   }
 
   private persist() {
