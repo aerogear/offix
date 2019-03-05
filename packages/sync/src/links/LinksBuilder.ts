@@ -42,11 +42,6 @@ export const defaultHttpLinks = async (config: DataSyncConfig): Promise<ApolloLi
     links.push(await createAuditLoggingLink(config));
   }
 
-  if (config.shouldRetry) {
-    const retryLink = new RetryLink(config);
-    links.push(retryLink);
-  }
-
   if (config.conflictStrategy) {
     links.push(conflictLink(config));
   }
@@ -95,9 +90,11 @@ function createOfflineLink(config: DataSyncConfig) {
     return isMutation(op) && !isOnlineOnly(op);
   }, offlineLink);
 
+  const retryLink = new RetryLink(config);
+
   const retryOfflineMutationsLink = ApolloLink.split((op: Operation) => {
     return markedOffline(op);
-  }, offlineLink);
+  }, retryLink);
 
   return ApolloLink.from([mutationOfflineLink, retryOfflineMutationsLink, localFilterLink]);
 }

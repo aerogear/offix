@@ -105,7 +105,7 @@ export interface DataSyncConfig {
   /**
    * [Modifier]
    *
-   * Function that enables retry mechanism for queries that failed on network errors.
+   * Function that overrides retry mechanism for offline mutations that failed on network errors.
    * See https://www.apollographql.com/docs/link/links/retry.html for more information
    */
   shouldRetry?: shouldRetryFn;
