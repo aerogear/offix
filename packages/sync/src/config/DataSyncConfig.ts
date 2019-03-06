@@ -110,5 +110,4 @@ export interface DataSyncConfig {
    * By default offline requests are retried 5 times.
    */
   shouldRetry?: ShouldRetryFn;
-
 }

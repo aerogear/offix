@@ -49,26 +49,9 @@ export class RetryLink extends ApolloLink {
     if (isMutation(operation)) {
       return this.queue.enqueue(operation, forward, RetriableOperation);
     } else {
-      const observer = forward(operation);
-      this.forceRetryOnCompletedQuery(observer);
-      return observer;
+      // Enable only for mutations
+      return forward(operation);
     }
-  }
-
-  /**
-   * This makes sure that pending mutations are force retried also
-   * when there is query with response from server.
-   */
-  private forceRetryOnCompletedQuery(observer: Observable<FetchResult>) {
-    const self = this;
-    observer.subscribe({
-      complete: self.forceRetry,
-      error: error => {
-        if (!isNetworkError(error)) {
-          self.forceRetry();
-        }
-      }
-    });
   }
 
   private try() {
