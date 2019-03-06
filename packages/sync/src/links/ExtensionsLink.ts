@@ -6,8 +6,9 @@ import { ApolloLink } from "apollo-link";
  */
 export const extensionsLink = new ApolloLink((operation, forward) => {
   const extensions = operation.getContext().extensions;
-  operation.extensions = extensions;
-
+  if (extensions) {
+    operation.extensions = extensions;
+  }
   if (forward) {
     return forward(operation);
   } else {
