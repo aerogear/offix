@@ -19,8 +19,10 @@ export class OperationQueueEntry {
   public readonly optimisticResponse?: any;
   public subscription?: { unsubscribe: () => void };
   public result?: FetchResult;
+  public error: any;
   protected resolveForward?: (value?: {} | PromiseLike<{}> | undefined) => void;
   protected rejectForward?: (reason?: any) => void;
+
 
   constructor(options: OperationQueueEntryOptions) {
     const { operation, forward } = options;
@@ -64,6 +66,7 @@ export class OperationQueueEntry {
   }
 
   protected handleError(error: any) {
+    this.error = error;
     if (this.observer && this.observer.error) {
       this.observer.error(error);
     }
