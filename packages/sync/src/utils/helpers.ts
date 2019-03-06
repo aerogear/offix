@@ -3,16 +3,11 @@ import { Operation } from "apollo-link";
 import { localDirectives } from "../config/Constants";
 
 export const markOffline = (operation: Operation) => {
-  if (typeof operation.getContext === "function") {
-    operation.setContext({ persitedOffline: true });
-  }
+  operation.extensions.persistedOffline = true;
 };
 
 export const markedOffline = (operation: Operation) => {
-  if (typeof operation.getContext === "function") {
-    return !!(operation.getContext().persitedOffline);
-  }
-  return false;
+  return !!(operation.extensions.persistedOffline);
 };
 
 export const isSubscription = (op: Operation) => {
