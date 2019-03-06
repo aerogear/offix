@@ -59,29 +59,43 @@ export class OfflineQueue extends OperationQueue {
   }
 
   protected dequeue(entry: OperationQueueEntry) {
-    if (entry.result && entry.result.data) {
-      super.dequeue(entry, false);
-      this.updateIds(entry);
-      this.updateVersions(entry);
+    // Network error: Skip dequeue and just notify users that network error happen.
+    // Items will be sent on next offline/online change.
+    // Reason for that is that device may be notifying us about the online state
+    // but technically quality of link will not allow to perform actual requests.
+    // We need to wait for the next offline state to succeed.
+    if (entry.networkError) {
+      if (this.listener && this.listener.onOperationFailure) {
+        this.listener.onOperationFailure(entry.operation, undefined, entry.networkError);
+      }
+      return;
+    }
 
+    // For Success and GraphQL errors
+    // If operation is successful we perform updates on offline data
+    // that is sequential. In case of GraphQL errors (validation/auth etc.) we cannot
+    // properly handle those and we return info to users in order to deal with them
+    if (entry.result) {
+      super.dequeue(entry, false);
+      // Notify about all errors
+      if (entry.result.errors) {
+        if (this.listener && this.listener.onOperationFailure) {
+          this.listener.onOperationFailure(entry.operation, entry.result.errors);
+        }
+        // Notify for success otherwise
+      } else if (entry.result.data) {
+        if (this.listener && this.listener.onOperationSuccess) {
+          this.listener.onOperationSuccess(entry.operation, entry.result.data);
+        }
+        this.updateIds(entry);
+        this.updateObjectState(entry);
+      }
       this.persist();
 
       if (this.queue.length === 0 && this.listener && this.listener.queueCleared) {
         this.listener.queueCleared();
       }
-
-      if (this.listener && this.listener.onOperationSuccess) {
-        this.listener.onOperationSuccess(entry.operation, entry.result.data);
-      }
-
       this.onDequeue(entry);
-    } else {
-      if (this.listener && this.listener.onOperationFailure) {
-        this.listener.onOperationFailure(entry.operation, entry.result);
-      }
-      // tslint:disable-next-line:no-console
-      console.log("Error when trying to send data to server",
-      JSON.stringify(entry.result));
     }
   }
 
@@ -114,10 +128,11 @@ export class OfflineQueue extends OperationQueue {
   }
 
   /**
-   * Manipulate the versions of items in the queue so that we do not get a conflict with ourself
+   * Manipulate state of item that is being used for conflict resolution purposes.
+   * This is required for the queue items so that we do not get a conflict with ourself
    * @param entry the operation which returns the result we compare with first queue entry
    */
-  private updateVersions(entry: OperationQueueEntry) {
+  private updateObjectState(entry: OperationQueueEntry) {
     const { result, operation: { operationName } } = entry;
     if (!result || !this.state) {
       return;
