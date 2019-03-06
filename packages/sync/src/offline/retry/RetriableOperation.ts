@@ -47,7 +47,7 @@ export class RetriableOperation extends OperationQueueEntry {
             setTimeout(resolve, this.timeout);
           });
 
-          this.timeout *= 2;
+          this.timeout *= 3;
           attempts++;
 
           retry = shouldRetry(attempts, this.operation, error);
