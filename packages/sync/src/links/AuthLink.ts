@@ -1,4 +1,4 @@
-import { ApolloLink, NextLink, Operation } from "apollo-link";
+import { ApolloLink } from "apollo-link";
 import { setContext } from "apollo-link-context";
 import { DataSyncConfig } from "../config/DataSyncConfig";
 

@@ -12,6 +12,7 @@ import { defaultWebSocketLink } from "./WebsocketLink";
 import { OfflineLink } from "./OfflineLink";
 import { RetryLink } from "./RetryLink";
 import { NetworkStatus } from "../offline";
+import { extensionsLink } from "./ExtensionsLink";
 
 /**
  * Default Apollo Link
@@ -36,7 +37,7 @@ export const defaultLink = async (config: DataSyncConfig) => {
  * - Audit logging
  */
 export const defaultHttpLinks = async (config: DataSyncConfig): Promise<ApolloLink> => {
-  const links: ApolloLink[] = [createOfflineLink(config)];
+  const links: ApolloLink[] = [extensionsLink, createOfflineLink(config)];
 
   if (config.auditLogging) {
     links.push(await createAuditLoggingLink(config));
