@@ -19,8 +19,8 @@ export class OfflineRestoreHandler {
   private offlineData: OperationQueueEntry[] = [];
 
   constructor(apolloClient: ApolloClient<NormalizedCacheObject>,
-    storage: PersistentStore<PersistedData>,
-    storageKey: string) {
+              storage: PersistentStore<PersistedData>,
+              storageKey: string) {
     this.apolloClient = apolloClient;
     this.storage = storage;
     this.storageKey = storageKey;
