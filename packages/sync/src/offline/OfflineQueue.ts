@@ -64,7 +64,6 @@ export class OfflineQueue extends OperationQueue {
       this.updateIds(entry);
       this.updateVersions(entry);
 
-
       this.persist();
 
       if (this.queue.length === 0 && this.listener && this.listener.queueCleared) {
