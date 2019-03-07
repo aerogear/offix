@@ -5,6 +5,9 @@ import { ShouldRetryFn } from "./ShouldRetry";
 // Initial timeout for first retry
 const INITIAL_TIMEOUT = 1000;
 
+// Every retry INITIAL_TIMEOUT is multiplied by TIMEOUT_MULTIPLIER
+const TIMEOUT_MULTIPLIER = 3;
+
 /**
  * Class implementing retry mechanism for operation.
  *
@@ -47,7 +50,7 @@ export class RetriableOperation extends OperationQueueEntry {
             setTimeout(resolve, this.timeout);
           });
 
-          this.timeout *= 3;
+          this.timeout *= TIMEOUT_MULTIPLIER;
           attempts++;
 
           retry = shouldRetry(attempts, this.operation, error);
