@@ -14,7 +14,7 @@ export const markOffline = (operation: Operation) => {
  * This operations have special handling.
  * They are never forwarded when sent back again to client.
  */
-export const markedOffline = (operation: Operation) => {
+export const isMarkedOffline = (operation: Operation) => {
   return !!(operation.extensions.persistedOffline);
 };
 

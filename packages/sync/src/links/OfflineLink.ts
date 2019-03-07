@@ -3,7 +3,7 @@ import { PersistedData, PersistentStore } from "../PersistentStore";
 import { NetworkInfo, NetworkStatus, OfflineQueueListener } from "../offline";
 import { OfflineQueue } from "../offline/OfflineQueue";
 import { ObjectState } from "../conflicts";
-import { markedOffline, markOffline } from "../utils/helpers";
+import { isMarkedOffline, markOffline } from "../utils/helpers";
 
 export interface OfflineLinkOptions {
   networkStatus: NetworkStatus;
@@ -49,7 +49,7 @@ export class OfflineLink extends ApolloLink {
   }
 
   public request(operation: Operation, forward: NextLink) {
-    const enqueuedWhenOffline = markedOffline(operation);
+    const enqueuedWhenOffline = isMarkedOffline(operation);
     if (enqueuedWhenOffline) {
       // Operation was processed before and needs to be enqueued again
       return this.queue.enqueue(operation, forward);
