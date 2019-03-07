@@ -1,9 +1,8 @@
-import { ServiceConfiguration, isMobileCordova } from "@aerogear/core";
+import { isMobileCordova, ServiceConfiguration } from "@aerogear/core";
 import { PersistedData, PersistentStore } from "../PersistentStore";
 import { ConfigError } from "./ConfigError";
 import { DataSyncConfig } from "./DataSyncConfig";
-import { WebNetworkStatus, NetworkStatus } from "../offline";
-import { CordovaNetworkStatus } from "../offline";
+import { CordovaNetworkStatus, NetworkStatus, WebNetworkStatus } from "../offline";
 import { clientWins } from "../conflicts/strategies";
 import { VersionedState } from "../conflicts/VersionedState";
 import { ConflictResolutionStrategies } from "../conflicts";

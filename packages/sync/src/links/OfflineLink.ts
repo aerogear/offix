@@ -1,6 +1,6 @@
-import { ApolloLink, Operation, NextLink } from "apollo-link";
-import { PersistentStore, PersistedData } from "../PersistentStore";
-import { OfflineQueueListener, NetworkStatus, NetworkInfo } from "../offline";
+import { ApolloLink, NextLink, Operation } from "apollo-link";
+import { PersistedData, PersistentStore } from "../PersistentStore";
+import { NetworkInfo, NetworkStatus, OfflineQueueListener } from "../offline";
 import { OfflineQueue } from "../offline/OfflineQueue";
 import { ObjectState } from "../conflicts";
 import { markedOffline, markOffline } from "../utils/helpers";

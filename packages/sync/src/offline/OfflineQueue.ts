@@ -1,5 +1,5 @@
 import { OperationQueueEntry } from "./OperationQueueEntry";
-import { PersistentStore, PersistedData } from "../PersistentStore";
+import { PersistedData, PersistentStore } from "../PersistentStore";
 import { OfflineQueueListener } from "./OfflineQueueListener";
 import { OperationQueue, OperationQueueChangeHandler } from "./OperationQueue";
 import { isClientGeneratedId } from "../cache/createOptimisticResponse";

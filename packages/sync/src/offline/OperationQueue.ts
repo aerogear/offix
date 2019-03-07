@@ -1,4 +1,4 @@
-import { Operation, NextLink, Observable } from "apollo-link";
+import { NextLink, Observable, Operation } from "apollo-link";
 import { OperationQueueEntry, OperationQueueEntryOptions } from "./OperationQueueEntry";
 
 export type OperationQueueChangeHandler = (entry: OperationQueueEntry) => void;

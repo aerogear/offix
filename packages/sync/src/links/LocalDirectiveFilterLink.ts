@@ -1,8 +1,4 @@
-import {
-  ApolloLink,
-  NextLink,
-  Operation
-} from "apollo-link";
+import { ApolloLink, NextLink, Operation } from "apollo-link";
 import { hasDirectives, removeDirectivesFromDocument } from "apollo-utilities";
 import { localDirectivesArray, MUTATION_QUEUE_LOGGER } from "../config/Constants";
 import * as debug from "debug";

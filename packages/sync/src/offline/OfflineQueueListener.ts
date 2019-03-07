@@ -1,4 +1,4 @@
-import { Operation, FetchResult } from "apollo-link";
+import { FetchResult, Operation } from "apollo-link";
 import { OperationQueueEntry } from "./OperationQueueEntry";
 
 /**

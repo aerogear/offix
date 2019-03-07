@@ -1,6 +1,6 @@
 import ApolloClient from "apollo-client";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
-import { PersistentStore, PersistedData } from "../PersistentStore";
+import { PersistedData, PersistentStore } from "../PersistentStore";
 import { OperationQueueEntry } from "./OperationQueueEntry";
 import { MUTATION_QUEUE_LOGGER } from "../config/Constants";
 import * as debug from "debug";

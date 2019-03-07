@@ -1,4 +1,4 @@
-import { Operation, NextLink, FetchResult } from "apollo-link";
+import { FetchResult, NextLink, Operation } from "apollo-link";
 import { Observer } from "zen-observable-ts";
 import { isClientGeneratedId } from "../cache/createOptimisticResponse";
 

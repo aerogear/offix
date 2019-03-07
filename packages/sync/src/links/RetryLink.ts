@@ -1,6 +1,6 @@
-import { ApolloLink, Operation, NextLink, Observable, FetchResult } from "apollo-link";
+import { ApolloLink, NextLink, Operation } from "apollo-link";
 import { OperationQueue } from "../offline/OperationQueue";
-import { isMutation, isNetworkError } from "../utils/helpers";
+import { isMutation } from "../utils/helpers";
 import { RetriableOperation } from "../offline/retry/RetriableOperation";
 import { ShouldRetryFn } from "../offline/retry/ShouldRetry";
 

@@ -1,11 +1,6 @@
 import { expect } from "chai";
-import {
-  requestWithOnlineDirective,
-  requestWithMultipleDirectives
-} from "./operations";
-import {
-  TestLink
-} from "./TestUtils";
+import { requestWithMultipleDirectives, requestWithOnlineDirective } from "./operations";
+import { TestLink } from "./TestUtils";
 import { ApolloLink, execute } from "apollo-link";
 import { LocalDirectiveFilterLink } from "../src/links/LocalDirectiveFilterLink";
 import { hasDirectives } from "apollo-utilities";

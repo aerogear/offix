@@ -1,6 +1,5 @@
 import { createOptimisticResponse } from "../src";
-import { expect } from "chai";
-import { should } from "chai";
+import { expect, should } from "chai";
 
 describe("Optimistic Response tests", () => {
 

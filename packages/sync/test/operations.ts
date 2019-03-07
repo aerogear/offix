@@ -1,4 +1,4 @@
-import { Operation, GraphQLRequest } from "apollo-link";
+import { GraphQLRequest, Operation } from "apollo-link";
 
 export const op: Operation = {
   variables: {

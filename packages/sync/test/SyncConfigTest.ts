@@ -1,9 +1,9 @@
 import { SyncConfig } from "../src/config/SyncConfig";
 import { expect } from "chai";
 import { ConfigurationService } from "@aerogear/core";
-import { ConflictResolutionStrategies } from "../src/conflicts/ConflictResolutionStrategy";
 import { ConflictResolutionData } from "../src/conflicts/ConflictResolutionData";
 import { DataSyncConfig } from "../src/config/DataSyncConfig";
+
 declare var global: any;
 
 global.window = {};

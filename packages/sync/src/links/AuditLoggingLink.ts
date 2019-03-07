@@ -1,5 +1,4 @@
-import { NextLink, Operation } from "apollo-link";
-import { ApolloLink } from "apollo-link";
+import { ApolloLink, NextLink, Operation } from "apollo-link";
 
 export class AuditLoggingLink extends ApolloLink {
 
