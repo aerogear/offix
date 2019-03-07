@@ -67,7 +67,7 @@ export const defaultHttpLinks = async (config: DataSyncConfig): Promise<ApolloLi
   return ApolloLink.from(links);
 };
 
-export const createAuditLoggingLink = async (): Promise<AuditLoggingLink> => {
+const createAuditLoggingLink = async (): Promise<AuditLoggingLink> => {
   const metricsBuilder: MetricsBuilder = new MetricsBuilder();
   const metricsPayload: {
     [key: string]: any;
