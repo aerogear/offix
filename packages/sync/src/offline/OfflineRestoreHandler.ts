@@ -45,12 +45,16 @@ export class OfflineRestoreHandler {
     await this.clearOfflineData();
 
     logger("Replying offline mutations after application restart");
-
     this.offlineData.forEach(item => {
+      const extensions = item.operation.extensions;
+      const optimisticResponse = item.optimisticResponse;
       this.apolloClient.mutate({
         variables: item.operation.variables,
         mutation: item.operation.query,
-        optimisticResponse: item.optimisticResponse
+        // Restore optimistic response from operation in order to see it
+        optimisticResponse,
+        // Pass extensions as part of the context
+        context: { extensions }
       });
     });
 

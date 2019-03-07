@@ -1,4 +1,4 @@
-import { ApolloLink, concat, Operation } from "apollo-link";
+import { ApolloLink, Operation } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { conflictLink } from "../conflicts";
 import { DataSyncConfig } from "../config";
@@ -7,11 +7,12 @@ import { AuditLoggingLink } from "./AuditLoggingLink";
 import { MetricsBuilder } from "@aerogear/core";
 import { LocalDirectiveFilterLink } from "./LocalDirectiveFilterLink";
 import { createUploadLink } from "apollo-upload-client";
-import { isMutation, isOnlineOnly, isSubscription } from "../utils/helpers";
+import { isMutation, isOnlineOnly, isSubscription, markedOffline } from "../utils/helpers";
 import { defaultWebSocketLink } from "./WebsocketLink";
 import { OfflineLink } from "./OfflineLink";
 import { RetryLink } from "./RetryLink";
 import { NetworkStatus } from "../offline";
+import { extensionsLink } from "./ExtensionsLink";
 
 /**
  * Default Apollo Link
@@ -36,15 +37,10 @@ export const defaultLink = async (config: DataSyncConfig) => {
  * - Audit logging
  */
 export const defaultHttpLinks = async (config: DataSyncConfig): Promise<ApolloLink> => {
-  const links: ApolloLink[] = [createOfflineLink(config)];
+  const links: ApolloLink[] = [extensionsLink, createOfflineLink(config)];
 
   if (config.auditLogging) {
     links.push(await createAuditLoggingLink(config));
-  }
-
-  if (config.shouldRetry) {
-    const retryLink = new RetryLink(config);
-    links.push(retryLink);
   }
 
   if (config.conflictStrategy) {
@@ -91,6 +87,15 @@ function createOfflineLink(config: DataSyncConfig) {
     conflictStateProvider: config.conflictStateProvider
   });
   const localFilterLink = new LocalDirectiveFilterLink();
-  const mutationOfflineLink = ApolloLink.split((op: Operation) => isMutation(op) && !isOnlineOnly(op), offlineLink);
-  return ApolloLink.from([mutationOfflineLink, localFilterLink]);
+  const mutationOfflineLink = ApolloLink.split((op: Operation) => {
+    return isMutation(op) && !isOnlineOnly(op);
+  }, offlineLink);
+
+  const retryLink = new RetryLink(config);
+
+  const retryOfflineMutationsLink = ApolloLink.split((op: Operation) => {
+    return markedOffline(op);
+  }, retryLink);
+
+  return ApolloLink.from([mutationOfflineLink, retryOfflineMutationsLink, localFilterLink]);
 }

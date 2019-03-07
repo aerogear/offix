@@ -1,10 +1,11 @@
 import { ApolloLink, Operation, NextLink, Observable, FetchResult } from "apollo-link";
 import { OperationQueue } from "../offline/OperationQueue";
 import { isMutation, isNetworkError } from "../utils/helpers";
-import { RetriableOperation, shouldRetryFn } from "../offline/RetriableOperation";
+import { RetriableOperation } from "../offline/retry/RetriableOperation";
+import { ShouldRetryFn } from "../offline/retry/ShouldRetry";
 
 export interface RetryLinkOptions {
-  shouldRetry?: shouldRetryFn;
+  shouldRetry?: ShouldRetryFn;
 }
 
 /**
@@ -24,7 +25,7 @@ export interface RetryLinkOptions {
  */
 export class RetryLink extends ApolloLink {
   private queue: OperationQueue;
-  private shouldRetry: shouldRetryFn;
+  private shouldRetry: ShouldRetryFn;
 
   constructor(options: RetryLinkOptions) {
     super();
@@ -48,26 +49,9 @@ export class RetryLink extends ApolloLink {
     if (isMutation(operation)) {
       return this.queue.enqueue(operation, forward, RetriableOperation);
     } else {
-      const observer = forward(operation);
-      this.forceRetryOnCompletedQuery(observer);
-      return observer;
+      // Enable only for mutations
+      return forward(operation);
     }
-  }
-
-  /**
-   * This makes sure that pending mutations are force retried also
-   * when there is query with response from server.
-   */
-  private forceRetryOnCompletedQuery(observer: Observable<FetchResult>) {
-    const self = this;
-    observer.subscribe({
-      complete: self.forceRetry,
-      error: error => {
-        if (!isNetworkError(error)) {
-          self.forceRetry();
-        }
-      }
-    });
   }
 
   private try() {
