@@ -40,7 +40,7 @@ export const defaultHttpLinks = async (config: DataSyncConfig): Promise<ApolloLi
   const links: ApolloLink[] = [extensionsLink, createOfflineLink(config)];
 
   if (config.auditLogging) {
-    links.push(await createAuditLoggingLink(config));
+    links.push(await createAuditLoggingLink());
   }
 
   if (config.conflictStrategy) {
@@ -67,7 +67,7 @@ export const defaultHttpLinks = async (config: DataSyncConfig): Promise<ApolloLi
   return ApolloLink.from(links);
 };
 
-export const createAuditLoggingLink = async (config: DataSyncConfig): Promise<AuditLoggingLink> => {
+export const createAuditLoggingLink = async (): Promise<AuditLoggingLink> => {
   const metricsBuilder: MetricsBuilder = new MetricsBuilder();
   const metricsPayload: {
     [key: string]: any;
@@ -78,6 +78,7 @@ export const createAuditLoggingLink = async (config: DataSyncConfig): Promise<Au
   }
   return new AuditLoggingLink(metricsBuilder.getClientId(), metricsPayload);
 };
+
 function createOfflineLink(config: DataSyncConfig) {
   const offlineLink = new OfflineLink({
     storage: config.storage,
@@ -86,16 +87,16 @@ function createOfflineLink(config: DataSyncConfig) {
     networkStatus: config.networkStatus as NetworkStatus,
     conflictStateProvider: config.conflictStateProvider
   });
-  const localFilterLink = new LocalDirectiveFilterLink();
   const mutationOfflineLink = ApolloLink.split((op: Operation) => {
     return isMutation(op) && !isOnlineOnly(op);
   }, offlineLink);
 
   const retryLink = new RetryLink(config);
-
   const retryOfflineMutationsLink = ApolloLink.split((op: Operation) => {
     return markedOffline(op);
   }, retryLink);
+
+  const localFilterLink = new LocalDirectiveFilterLink();
 
   return ApolloLink.from([mutationOfflineLink, retryOfflineMutationsLink, localFilterLink]);
 }
