@@ -25,7 +25,7 @@ export interface RetryLinkOptions {
  */
 export class RetryLink extends ApolloLink {
   private queue: OperationQueue;
-  private shouldRetry: ShouldRetryFn;
+  private readonly shouldRetry: ShouldRetryFn;
 
   constructor(options: RetryLinkOptions) {
     super();

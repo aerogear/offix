@@ -48,7 +48,7 @@ export class SyncConfig implements DataSyncConfig {
   public shouldRetry = defaultRetryFn;
 
   public networkStatus: NetworkStatus;
-  private clientConfig: DataSyncConfig;
+  private readonly clientConfig: DataSyncConfig;
 
   constructor(clientOptions?: DataSyncConfig) {
     if (window) {

@@ -2,8 +2,8 @@ import { ApolloLink, NextLink, Operation } from "apollo-link";
 
 export class AuditLoggingLink extends ApolloLink {
 
-  private clientId: string;
-  private metricsPayload: any;
+  private readonly clientId: string;
+  private readonly metricsPayload: any;
 
   constructor(clientId: string, metricsPayload: any) {
     super();
