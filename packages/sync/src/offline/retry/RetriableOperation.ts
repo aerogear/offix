@@ -31,7 +31,7 @@ export class RetriableOperation extends OperationQueueEntry {
   /**
    * Try method.
    *
-   * shouldRetry function is called with every network fail
+   * @param shouldRetry function is called with every network fail
    * to determine if the operation should be retried.
    */
   public async try(shouldRetry: ShouldRetryFn) {

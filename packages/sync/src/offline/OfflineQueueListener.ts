@@ -21,7 +21,7 @@ export interface OfflineQueueListener {
   /**
    * Called when back online and operation fails with GraphQL error
    *
-   * error - application error (it means that user need to react to error and sent this operation again)
+   * graphQLError - application error (it means that user need to react to error and sent this operation again)
    * networkError - operation was retried but it did not reached server (it will be reatempted again)
    */
   onOperationFailure?: (operation: Operation, graphQLError?: any, networkError?: any) => void;
