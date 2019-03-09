@@ -114,7 +114,10 @@ export class OfflineQueue extends OperationQueue {
    */
   private updateIds(entry: OperationQueueEntry) {
     const { operation: { operationName }, optimisticResponse, result } = entry;
-    if (!result || !optimisticResponse || !isClientGeneratedId(optimisticResponse[operationName].id)) {
+    if (!result ||
+      !optimisticResponse ||
+      !optimisticResponse[operationName] ||
+      !isClientGeneratedId(optimisticResponse[operationName].id)) {
       return;
     }
 
