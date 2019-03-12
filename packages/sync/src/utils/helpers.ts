@@ -1,6 +1,7 @@
 import { getMainDefinition, hasDirectives } from "apollo-utilities";
-import { Operation } from "apollo-link";
+import { Operation, DocumentNode } from "apollo-link";
 import { localDirectives } from "../config/Constants";
+import { OperationDefinitionNode } from "graphql";
 
 /**
  * Check if operation was done when offline
@@ -34,4 +35,10 @@ export const isOnlineOnly = (op: Operation) => {
 
 export const isNetworkError = (error: any) => {
   return !error.result;
+};
+
+export const getMutationName = (mutation: DocumentNode) => {
+  const definition = mutation.definitions.find(def => def.kind === "OperationDefinition");
+  const operationDefinition = definition && definition as OperationDefinitionNode;
+  return operationDefinition && operationDefinition.name && operationDefinition.name.value;
 };

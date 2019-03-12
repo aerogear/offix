@@ -28,13 +28,10 @@ export const createClient = async (userConfig?: DataSyncConfig): Promise<Voyager
     cache
   });
 
-  const storage = clientConfig.storage as PersistentStore<PersistedData>;
   const offlineMutationHandler = new OfflineRestoreHandler(apolloClient,
-    storage,
-    clientConfig.mutationsQueueName);
+    clientConfig);
   // Reschedule offline mutations for new client instance
   await offlineMutationHandler.replayOfflineMutations();
-
   return apolloClient;
 };
 
