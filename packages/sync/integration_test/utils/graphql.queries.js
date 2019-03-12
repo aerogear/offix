@@ -39,6 +39,61 @@ export const UPDATE_TASK = gql`
   }
 `;
 
+export const UPDATE_TASK_CLIENT_RESOLUTION = gql`
+  mutation updateTaskClientResolution($description: String, $id: ID!, $title: String, $version: Int!) {
+    updateTaskClientResolution(description: $description, id: $id, title: $title, version: $version) {
+      description
+      id
+      title
+      version
+    }
+  }
+`;
+
+export const UPDATE_TASK_CUSTOM_CLIENT_RESOLUTION = gql`
+  mutation updateTaskCustomClientResolution($description: String, $id: ID!, $title: String, $version: Int!) {
+    updateTaskCustomClientResolution(description: $description, id: $id, title: $title, version: $version) {
+      description
+      id
+      title
+      version
+    }
+  }
+`;
+
+export const UPDATE_TASK_SERVER_RESOLUTION = gql`
+  mutation updateTaskServerResolution($description: String, $id: ID!, $title: String, $version: Int!) {
+    updateTaskServerResolution(description: $description, id: $id, title: $title, version: $version) {
+      description
+      id
+      title
+      version
+    }
+  }
+`;
+
+export const UPDATE_TASK_CONFLICT_REJECT = gql`
+  mutation updateTaskConflictReject($description: String, $id: ID!, $title: String, $version: Int!) {
+    updateTaskConflictReject(description: $description, id: $id, title: $title, version: $version) {
+      description
+      id
+      title
+      version
+    }
+  }
+`;
+
+export const UPDATE_TASK_CUSTOM_STRATEGY = gql`
+  mutation updateTaskCustomStrategy($description: String, $id: ID!, $title: String, $version: Int!) {
+    updateTaskCustomStrategy(description: $description, id: $id, title: $title, version: $version) {
+      description
+      id
+      title
+      version
+    }
+  }
+`;
+
 export const ONLINE_ONLY = gql`
   mutation onlineOnly($id: ID!) {
     onlineOnly(id: $id) @onlineOnly {
