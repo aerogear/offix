@@ -6,7 +6,6 @@ import { CordovaNetworkStatus, NetworkStatus, WebNetworkStatus } from "../offlin
 import { clientWins } from "../conflicts/strategies";
 import { VersionedState } from "../conflicts/VersionedState";
 import { ConflictResolutionStrategies } from "../conflicts";
-import { defaultRetryFn } from "../offline/retry/ShouldRetry";
 
 declare var window: any;
 
@@ -45,7 +44,6 @@ export class SyncConfig implements DataSyncConfig {
   public auditLogging = false;
   public conflictStrategy: ConflictResolutionStrategies;
   public conflictStateProvider = new VersionedState();
-  public shouldRetry = defaultRetryFn;
 
   public networkStatus: NetworkStatus;
   private readonly clientConfig: DataSyncConfig;

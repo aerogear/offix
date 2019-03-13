@@ -5,7 +5,6 @@ import { AuthContextProvider } from "../auth/AuthContextProvider";
 import { ObjectState } from "../conflicts/ObjectState";
 import { ConflictListener } from "../conflicts/ConflictListener";
 import { ConfigurationService } from "@aerogear/core";
-import { ShouldRetryFn } from "../offline/retry/ShouldRetry";
 import CacheUpdates from "../cache/CacheUpdates";
 
 /**
@@ -109,7 +108,8 @@ export interface DataSyncConfig {
    * See https://www.apollographql.com/docs/link/links/retry.html for more information
    * By default offline requests are retried 5 times.
    */
-  shouldRetry?: ShouldRetryFn;
+   // TODO FIXME XXX !IMPORTANT (use retry link)
+   // shouldRetry?: ShouldRetryFn;
 
   /**
    * [Modifier]
