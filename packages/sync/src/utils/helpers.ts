@@ -16,7 +16,7 @@ export const markOffline = (operation: Operation) => {
  * They are never forwarded when sent back again to client.
  */
 export const isMarkedOffline = (operation: Operation) => {
-  return !!(operation.extensions.persistedOffline);
+  return !!operation.extensions.persistedOffline;
 };
 
 export const isSubscription = (op: Operation) => {
