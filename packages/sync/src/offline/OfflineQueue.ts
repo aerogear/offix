@@ -3,7 +3,7 @@ import { PersistedData, PersistentStore } from "../PersistentStore";
 import { OfflineQueueListener } from "./OfflineQueueListener";
 import { isClientGeneratedId } from "../cache/createOptimisticResponse";
 import { ObjectState } from "../conflicts/ObjectState";
-import { Operation, NextLink } from "apollo-link";
+import { Operation, NextLink, Observable } from "apollo-link";
 import { OfflineLinkOptions } from "..";
 import { isMarkedOffline } from "../utils/helpers";
 
@@ -45,6 +45,9 @@ export class OfflineQueue {
     const operationEntry = new OperationQueueEntry(operation, forward);
 
     this.enqueueEntry(operationEntry);
+    return new Observable(observer => {
+      return () => { return; };
+    });
   }
 
   public async forwardOperations() {

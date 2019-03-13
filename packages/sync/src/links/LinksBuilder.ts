@@ -36,7 +36,8 @@ export const defaultLink = async (config: DataSyncConfig) => {
  * - Audit logging
  */
 export const defaultHttpLinks = async (config: DataSyncConfig): Promise<ApolloLink> => {
-  const links: ApolloLink[] = [extensionsLink, createOfflineLink(config)];
+  const offlineLink = await createOfflineLink(config);
+  const links: ApolloLink[] = [extensionsLink, offlineLink];
 
   if (config.auditLogging) {
     links.push(await createAuditLoggingLink());
@@ -78,7 +79,7 @@ const createAuditLoggingLink = async (): Promise<AuditLoggingLink> => {
   return new AuditLoggingLink(metricsBuilder.getClientId(), metricsPayload);
 };
 
-function createOfflineLink(config: DataSyncConfig) {
+async function createOfflineLink(config: DataSyncConfig) {
   const offlineLink = new OfflineLink({
     storage: config.storage,
     storageKey: config.mutationsQueueName,
@@ -86,6 +87,7 @@ function createOfflineLink(config: DataSyncConfig) {
     networkStatus: config.networkStatus as NetworkStatus,
     conflictStateProvider: config.conflictStateProvider
   });
+  await offlineLink.forwardOnOnline();
   const mutationOfflineLink = ApolloLink.split((op: Operation) => {
     return isMutation(op) && !isOnlineOnly(op);
   }, offlineLink);
