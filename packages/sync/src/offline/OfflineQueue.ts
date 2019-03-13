@@ -1,9 +1,10 @@
-import { OperationQueueEntry, OperationQueueEntryOptions } from "./OperationQueueEntry";
+import { OperationQueueEntry } from "./OperationQueueEntry";
 import { PersistedData, PersistentStore } from "../PersistentStore";
 import { OfflineQueueListener } from "./OfflineQueueListener";
 import { isClientGeneratedId } from "../cache/createOptimisticResponse";
 import { ObjectState } from "../conflicts/ObjectState";
 import { Operation, NextLink } from "apollo-link";
+import { OfflineLinkOptions } from "..";
 
 export interface OfflineQueueOptions {
   storage?: PersistentStore<PersistedData>;
@@ -27,37 +28,26 @@ export type OperationQueueChangeHandler = (entry: OperationQueueEntry) => void;
  */
 export class OfflineQueue {
   protected queue: OperationQueueEntry[] = [];
-  protected onEnqueue: OperationQueueChangeHandler;
-  protected onDequeue: OperationQueueChangeHandler;
   private readonly storage?: PersistentStore<PersistedData>;
   private readonly storageKey?: string;
   private readonly listener?: OfflineQueueListener;
   private readonly state?: ObjectState;
 
-  constructor(options: OfflineQueueOptions) {
-    const { storage, storageKey, listener, conflictStateProvider, onEnqueue, onDequeue  } = options;
-
-    this.storage = storage;
-    this.storageKey = storageKey;
-    this.listener = listener;
-    this.state = conflictStateProvider;
-    this.onEnqueue = onEnqueue;
-    this.onDequeue = onDequeue;
+  constructor(options: OfflineLinkOptions) {
+    this.storage = options.storage;
+    this.storageKey = options.storageKey;
+    this.listener = options.listener;
+    this.state = options.conflictStateProvider;
   }
 
-  public enqueue(
-    operation: Operation,
-    forward: NextLink,
-    entry?: new (options: OperationQueueEntryOptions) => OperationQueueEntry
-  ) {
-    const operationEntry = new (entry || OperationQueueEntry)({ operation, forward });
+  public enqueue(operation: Operation) {
+    const operationEntry = new OperationQueueEntry(operation);
 
     this.enqueueEntry(operationEntry);
   }
 
   protected enqueueEntry(entry: OperationQueueEntry) {
     this.queue.push(entry);
-    this.onEnqueue(entry);
     this.persist();
 
     if (this.listener && this.listener.onOperationEnqueued) {
@@ -102,7 +92,6 @@ export class OfflineQueue {
       if (this.queue.length === 0 && this.listener && this.listener.queueCleared) {
         this.listener.queueCleared();
       }
-      this.onDequeue(entry);
     }
   }
 

@@ -1,4 +1,4 @@
-import { ApolloLink, NextLink, Operation } from "apollo-link";
+import { ApolloLink, NextLink, Operation, Observable } from "apollo-link";
 import { PersistedData, PersistentStore } from "../PersistentStore";
 import { NetworkInfo, NetworkStatus, OfflineQueueListener } from "../offline";
 import { OfflineQueue } from "../offline/OfflineQueue";
@@ -35,15 +35,7 @@ export class OfflineLink extends ApolloLink {
 
     this.networkStatus = options.networkStatus;
 
-    this.handleQueueChange = this.handleQueueChange.bind(this);
-
-    const queueOptions = {
-      ...options,
-      onEnqueue: this.handleQueueChange,
-      onDequeue: this.handleQueueChange
-    };
-
-    this.queue = new OfflineQueue(queueOptions);
+    this.queue = new OfflineQueue(options);
 
     // TODO call offlineQueue restore method
   }
@@ -52,14 +44,23 @@ export class OfflineLink extends ApolloLink {
     const enqueuedWhenOffline = isMarkedOffline(operation);
     if (enqueuedWhenOffline) {
       // Operation was processed before and needs to be enqueued again
-      return this.queue.enqueue(operation, forward);
+      this.queue.enqueue(operation);
+      return new Observable(observer => {
+        const optimisticResponse = operation.getContext().optimisticResponse;
+        return () => { return; };
+      });
     }
     if (this.online) {
       // We are online and can skip this link;
       return forward(operation);
     }
     markOffline(operation);
-    return this.queue.enqueue(operation, forward);
+    this.queue.enqueue(operation);
+
+    return new Observable(observer => {
+      const optimisticResponse = operation.getContext().optimisticResponse;
+      return () => { return; };
+    });
   }
 
 }
