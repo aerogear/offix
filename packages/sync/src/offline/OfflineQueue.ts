@@ -1,9 +1,9 @@
-import { OperationQueueEntry } from "./OperationQueueEntry";
+import { OperationQueueEntry, OperationQueueEntryOptions } from "./OperationQueueEntry";
 import { PersistedData, PersistentStore } from "../PersistentStore";
 import { OfflineQueueListener } from "./OfflineQueueListener";
-import { OperationQueue, OperationQueueChangeHandler } from "./OperationQueue";
 import { isClientGeneratedId } from "../cache/createOptimisticResponse";
 import { ObjectState } from "../conflicts/ObjectState";
+import { Operation, NextLink } from "apollo-link";
 
 export interface OfflineQueueOptions {
   storage?: PersistentStore<PersistedData>;
@@ -14,6 +14,8 @@ export interface OfflineQueueOptions {
   onDequeue: OperationQueueChangeHandler;
 }
 
+export type OperationQueueChangeHandler = (entry: OperationQueueEntry) => void;
+
 /**
  * Class implementing persistent operation queue.
  *
@@ -23,29 +25,34 @@ export interface OfflineQueueOptions {
  * - persisting operation queue in provided storage
  * - updating client IDs with server IDs (explained below)
  */
-export class OfflineQueue extends OperationQueue {
+export class OfflineQueue {
+  protected queue: OperationQueueEntry[] = [];
+  protected onEnqueue: OperationQueueChangeHandler;
+  protected onDequeue: OperationQueueChangeHandler;
   private readonly storage?: PersistentStore<PersistedData>;
   private readonly storageKey?: string;
   private readonly listener?: OfflineQueueListener;
   private readonly state?: ObjectState;
 
   constructor(options: OfflineQueueOptions) {
-    super(options);
-
-    const { storage, storageKey, listener, conflictStateProvider } = options;
+    const { storage, storageKey, listener, conflictStateProvider, onEnqueue, onDequeue  } = options;
 
     this.storage = storage;
     this.storageKey = storageKey;
     this.listener = listener;
     this.state = conflictStateProvider;
+    this.onEnqueue = onEnqueue;
+    this.onDequeue = onDequeue;
   }
 
-  /**
-   * Returns list of operations that can be forwarded - i.e. they have not
-   * been forwarded yet and do not have client ID.
-   */
-  public toBeForwarded() {
-    return this.queue.filter(op => !op.subscription && !op.hasClientId());
+  public enqueue(
+    operation: Operation,
+    forward: NextLink,
+    entry?: new (options: OperationQueueEntryOptions) => OperationQueueEntry
+  ) {
+    const operationEntry = new (entry || OperationQueueEntry)({ operation, forward });
+
+    this.enqueueEntry(operationEntry);
   }
 
   protected enqueueEntry(entry: OperationQueueEntry) {
@@ -76,7 +83,7 @@ export class OfflineQueue extends OperationQueue {
     // that is sequential. In case of GraphQL errors (validation/auth etc.) we cannot
     // properly handle those and we return info to users in order to deal with them
     if (entry.result) {
-      super.dequeue(entry, false);
+      this.queue = this.queue.filter(e => e !== entry);
       // Notify about all errors
       if (entry.result.errors) {
         if (this.listener && this.listener.onOperationFailure) {

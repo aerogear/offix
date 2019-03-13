@@ -45,7 +45,7 @@ export class OfflineLink extends ApolloLink {
 
     this.queue = new OfflineQueue(queueOptions);
 
-    this.forwardOnOnline();
+    // TODO call offlineQueue restore method
   }
 
   public request(operation: Operation, forward: NextLink) {
@@ -62,29 +62,4 @@ export class OfflineLink extends ApolloLink {
     return this.queue.enqueue(operation, forward);
   }
 
-  private handleQueueChange() {
-    if (this.online) {
-      this.forward();
-    }
-  }
-
-  private async forward() {
-    for (const operation of this.queue.toBeForwarded()) {
-      await operation.forwardOperation();
-    }
-  }
-
-  private async forwardOnOnline() {
-    this.online = !(await this.networkStatus.isOffline());
-
-    const self = this;
-    this.networkStatus.onStatusChangeListener({
-      onStatusChange(networkInfo: NetworkInfo) {
-        self.online = networkInfo.online;
-        if (self.online) {
-          self.forward();
-        }
-      }
-    });
-  }
 }
