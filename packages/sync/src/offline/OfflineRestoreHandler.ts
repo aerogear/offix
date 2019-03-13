@@ -45,9 +45,6 @@ export class OfflineRestoreHandler {
     // if there is no offline data  then just exit
     if (!this.hasOfflineData()) { return; }
 
-    // wait before it was cleared
-    await this.clearOfflineData();
-
     logger("Replying offline mutations after application restart");
     this.offlineData.forEach(item => {
       const extensions = item.operation.extensions;
