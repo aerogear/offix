@@ -46,7 +46,6 @@ export class OfflineLink extends ApolloLink {
       // Operation was processed before and needs to be enqueued again
       this.queue.enqueue(operation);
       return new Observable(observer => {
-        const optimisticResponse = operation.getContext().optimisticResponse;
         return () => { return; };
       });
     }
@@ -58,7 +57,6 @@ export class OfflineLink extends ApolloLink {
     this.queue.enqueue(operation);
 
     return new Observable(observer => {
-      const optimisticResponse = operation.getContext().optimisticResponse;
       return () => { return; };
     });
   }
