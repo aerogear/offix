@@ -23,7 +23,7 @@ const newClient = async (clientOptions = {}) => {
   return await createClient(config);
 };
 
-describe('AeroGear Apollo GraphQL Voyager client', function() {
+describe('Offline mutations', function () {
 
   this.timeout(1000);
 
@@ -46,7 +46,11 @@ describe('AeroGear Apollo GraphQL Voyager client', function() {
     await server.start();
   });
 
-  beforeEach('reset server', async function() {
+  after('stop server', async function() {
+    await server.stop();
+  });
+
+  beforeEach('reset server', async function () {
     await server.reset();
   });
 
