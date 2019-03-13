@@ -41,10 +41,16 @@ export class OfflineQueue {
     this.state = options.conflictStateProvider;
   }
 
-  public enqueue(operation: Operation) {
-    const operationEntry = new OperationQueueEntry(operation);
+  public enqueue(operation: Operation, forward: NextLink) {
+    const operationEntry = new OperationQueueEntry(operation, forward);
 
     this.enqueueEntry(operationEntry);
+  }
+
+  public async forwardOperations() {
+    for (const op of this.queue) {
+      await op.forward(op.operation);
+    }
   }
 
   protected enqueueEntry(entry: OperationQueueEntry) {

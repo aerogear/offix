@@ -8,12 +8,14 @@ import { isClientGeneratedId } from "../cache/createOptimisticResponse";
  */
 export class OperationQueueEntry {
   public readonly operation: Operation;
+  public readonly forward: NextLink;
   public readonly optimisticResponse?: any;
   public result?: FetchResult;
   public networkError: any;
 
-  constructor(operation: Operation) {
+  constructor(operation: Operation, forward: NextLink) {
     this.operation = operation;
+    this.forward = forward;
     if (typeof operation.getContext === "function") {
       this.optimisticResponse = operation.getContext().optimisticResponse;
     }
