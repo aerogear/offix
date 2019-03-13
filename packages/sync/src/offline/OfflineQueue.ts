@@ -43,10 +43,9 @@ export class OfflineQueue {
 
   public enqueue(operation: Operation, forward: NextLink) {
     const operationEntry = new OperationQueueEntry(operation, forward);
-
     this.enqueueEntry(operationEntry);
-    return new Observable(observer => {
-      return () => { return; };
+    return new Observable(() => {
+      return () => ({ isOffline: true });
     });
   }
 
@@ -58,12 +57,12 @@ export class OfflineQueue {
 
   protected enqueueEntry(entry: OperationQueueEntry) {
     this.queue.push(entry);
+    // If operation was already enqueued before (sent from OfflineRestoreHandler)
     if (!isMarkedOffline(entry.operation)) {
+      if (this.listener && this.listener.onOperationEnqueued) {
+        this.listener.onOperationEnqueued(entry);
+      }
       this.persist();
-    }
-
-    if (this.listener && this.listener.onOperationEnqueued) {
-      this.listener.onOperationEnqueued(entry);
     }
   }
 
