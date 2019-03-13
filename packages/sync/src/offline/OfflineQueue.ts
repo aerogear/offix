@@ -3,7 +3,7 @@ import { PersistedData, PersistentStore } from "../PersistentStore";
 import { OfflineQueueListener } from "./OfflineQueueListener";
 import { isClientGeneratedId } from "../cache/createOptimisticResponse";
 import { ObjectState } from "../conflicts/ObjectState";
-import { Operation, NextLink, Observable } from "apollo-link";
+import { Operation, NextLink, Observable, FetchResult } from "apollo-link";
 import { OfflineLinkOptions } from "..";
 import { isMarkedOffline } from "../utils/helpers";
 
@@ -51,7 +51,26 @@ export class OfflineQueue {
 
   public async forwardOperations() {
     for (const op of this.queue) {
-      await op.forward(op.operation);
+      // FIXME block operations till result is back (completed)
+      await new Promise((resolve, reject) => {
+        op.forward(op.operation).subscribe({
+          next: (result: FetchResult) => {
+            // TODO remove result from operation and pass that directly.
+            op.result = result;
+            this.dequeue(op);
+          },
+          error: (error: any) => {
+            // TODO remove result from operation and handle that directly.
+            op.networkError = error;
+            this.dequeue(op);
+            // TODO - do we want to handle try catch here?
+            return resolve();
+          },
+          complete: () => {
+            return resolve();
+          }
+        });
+      });
     }
   }
 
