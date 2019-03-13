@@ -14,16 +14,35 @@ import { NetworkStatus } from "../offline";
 import { extensionsLink } from "./ExtensionsLink";
 
 /**
- * Default Apollo Link
- * Combines HTTP and WebSocket links
+ * Method for creating "uber" composite Apollo Link implementation including:
+ *
+ * - Http support
+ * - Websocket support
+ * - Offline handling
+ * - Conflict resolution
+ * - Audit logging
+ * - File uploads
  */
-export const defaultLink = async (config: DataSyncConfig) => {
-  let link = await defaultHttpLinks(config);
+export const createDefaultLink = async (config: DataSyncConfig, offlineLink: ApolloLink) => {
+  let link = await defaultHttpLinks(config, offlineLink);
   if (config.wsUrl) {
     const wsLink = defaultWebSocketLink(config, { uri: config.wsUrl });
     link = ApolloLink.split(isSubscription, wsLink, link);
   }
   return link;
+};
+
+/**
+ * Create offline link
+ */
+export const createOfflineLink = async (config: DataSyncConfig) => {
+  return new OfflineLink({
+    storage: config.storage,
+    storageKey: config.mutationsQueueName,
+    listener: config.offlineQueueListener,
+    networkStatus: config.networkStatus as NetworkStatus,
+    conflictStateProvider: config.conflictStateProvider
+  });
 };
 
 /**
@@ -35,9 +54,13 @@ export const defaultLink = async (config: DataSyncConfig) => {
  * - Error handling
  * - Audit logging
  */
-export const defaultHttpLinks = async (config: DataSyncConfig): Promise<ApolloLink> => {
-  const offlineLink = await createOfflineLink(config);
-  const links: ApolloLink[] = [extensionsLink, offlineLink];
+export const defaultHttpLinks = async (config: DataSyncConfig, offlineLink: ApolloLink): Promise<ApolloLink> => {
+  // Enable offline link only for mutations and onlineOnly
+  const mutationOfflineLink = ApolloLink.split((op: Operation) => {
+    return isMutation(op) && !isOnlineOnly(op);
+  }, offlineLink);
+  const localFilterLink = new LocalDirectiveFilterLink();
+  const links: ApolloLink[] = [extensionsLink, mutationOfflineLink, localFilterLink];
 
   if (config.auditLogging) {
     links.push(await createAuditLoggingLink());
@@ -78,21 +101,3 @@ const createAuditLoggingLink = async (): Promise<AuditLoggingLink> => {
   }
   return new AuditLoggingLink(metricsBuilder.getClientId(), metricsPayload);
 };
-
-async function createOfflineLink(config: DataSyncConfig) {
-  const offlineLink = new OfflineLink({
-    storage: config.storage,
-    storageKey: config.mutationsQueueName,
-    listener: config.offlineQueueListener,
-    networkStatus: config.networkStatus as NetworkStatus,
-    conflictStateProvider: config.conflictStateProvider
-  });
-  await offlineLink.forwardOnOnline();
-  const mutationOfflineLink = ApolloLink.split((op: Operation) => {
-    return isMutation(op) && !isOnlineOnly(op);
-  }, offlineLink);
-
-  const localFilterLink = new LocalDirectiveFilterLink();
-
-  return ApolloLink.from([mutationOfflineLink, localFilterLink]);
-}

@@ -3,7 +3,7 @@ import { persistCache } from "apollo-cache-persist";
 import { ApolloClient } from "apollo-client";
 import { DataSyncConfig } from "./config";
 import { SyncConfig } from "./config/SyncConfig";
-import { defaultLink } from "./links/LinksBuilder";
+import { createDefaultLink, createOfflineLink } from "./links/LinksBuilder";
 import { PersistedData, PersistentStore } from "./PersistentStore";
 import { OfflineRestoreHandler } from "./offline/OfflineRestoreHandler";
 
@@ -21,7 +21,8 @@ export const createClient = async (userConfig?: DataSyncConfig): Promise<Voyager
   const clientConfig = extractConfig(userConfig);
   const { cache } = await buildCachePersistence(clientConfig);
 
-  const link = await defaultLink(clientConfig);
+  const offlineLink = await createOfflineLink(clientConfig);
+  const link = await createDefaultLink(clientConfig, offlineLink);
 
   const apolloClient = new ApolloClient({
     link,
@@ -32,6 +33,8 @@ export const createClient = async (userConfig?: DataSyncConfig): Promise<Voyager
     clientConfig);
   // Reschedule offline mutations for new client instance
   await offlineMutationHandler.replayOfflineMutations();
+  // After pushing all online changes check and set network status
+  await offlineLink.initOnlineState();
   return apolloClient;
 };
 
