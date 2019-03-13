@@ -20,7 +20,6 @@ export class OfflineRestoreHandler {
   private apolloClient: ApolloClient<NormalizedCacheObject>;
   private storage: PersistentStore<PersistedData>;
   private readonly storageKey: string;
-  private offlineData: OperationQueueEntry[] = [];
   private mutationCacheUpdates?: CacheUpdates;
 
   constructor(apolloClient: ApolloClient<NormalizedCacheObject>, clientConfig: DataSyncConfig) {
@@ -37,16 +36,17 @@ export class OfflineRestoreHandler {
    */
   public replayOfflineMutations = async () => {
     const stored = await this.getOfflineData();
+    let offlineData;
     if (stored) {
-      this.offlineData = JSON.parse(stored.toString());
+      offlineData = JSON.parse(stored.toString());
     } else {
-      this.offlineData = [];
+      offlineData = [];
     }
     // if there is no offline data  then just exit
-    if (!this.hasOfflineData()) { return; }
+    if (!this.hasOfflineData(offlineData)) { return; }
 
     logger("Replying offline mutations after application restart");
-    for (const item of this.offlineData) {
+    for (const item of offlineData) {
       const extensions = item.operation.extensions;
       const optimisticResponse = item.optimisticResponse;
       const mutationName = getMutationName(item.operation.query);
@@ -66,19 +66,13 @@ export class OfflineRestoreHandler {
       };
       this.apolloClient.mutate(mutationOptions);
     }
-
-    this.offlineData = [];
   }
 
   private getOfflineData = async () => {
     return this.storage.getItem(this.storageKey);
   }
 
-  private hasOfflineData() {
-    return (this.offlineData && this.offlineData.length > 0);
-  }
-
-  private clearOfflineData = async () => {
-    return this.storage.removeItem(this.storageKey);
+  private hasOfflineData(offlineData: OperationQueueEntry[]) {
+    return (offlineData && offlineData.length > 0);
   }
 }
