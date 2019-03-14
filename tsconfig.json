@@ -10,7 +10,8 @@
     "lib": [
       "es6",
       "es2015",
-      "esnext"
+      "esnext",
+      "dom"
     ],
     "module": "CommonJS",
     "jsx": "react",
