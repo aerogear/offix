@@ -55,7 +55,6 @@ export class OfflineQueue {
       await new Promise((resolve, reject) => {
         op.forward(op.operation).subscribe({
           next: (result: FetchResult) => {
-            this.queue = this.queue.filter(e => e !== op);
             if (result.errors) {
               if (this.listener && this.listener.onOperationFailure) {
                 this.listener.onOperationFailure(op.operation, result.errors);
@@ -68,6 +67,7 @@ export class OfflineQueue {
               this.updateIds(op);
               this.updateObjectState(op);
             }
+            this.queue.shift();
             this.persist();
 
             if (this.queue.length === 0 && this.listener && this.listener.queueCleared) {
