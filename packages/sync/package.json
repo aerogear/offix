@@ -59,6 +59,6 @@
     "graphql": "14.1.1",
     "graphql-tag": "2.10.1",
     "graphql-tools": "4.0.4",
-    "subscriptions-transport-ws": "0.9.15"
+    "subscriptions-transport-ws": "0.9.16"
   }
 }
