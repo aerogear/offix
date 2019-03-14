@@ -55,14 +55,33 @@ export class OfflineQueue {
       await new Promise((resolve, reject) => {
         op.forward(op.operation).subscribe({
           next: (result: FetchResult) => {
-            // TODO remove result from operation and pass that directly.
-            op.result = result;
-            this.dequeue(op);
+            this.queue = this.queue.filter(e => e !== op);
+            if (result.errors) {
+              if (this.listener && this.listener.onOperationFailure) {
+                this.listener.onOperationFailure(op.operation, result.errors);
+              }
+              // Notify for success otherwise
+            } else if (result.data) {
+              if (this.listener && this.listener.onOperationSuccess) {
+                this.listener.onOperationSuccess(op.operation, result.data);
+              }
+              this.updateIds(op);
+              this.updateObjectState(op);
+            }
+            this.persist();
+
+            if (this.queue.length === 0 && this.listener && this.listener.queueCleared) {
+              this.listener.queueCleared();
+            }
           },
           error: (error: any) => {
             // TODO remove result from operation and handle that directly.
-            op.networkError = error;
-            this.dequeue(op);
+            if (error) {
+              if (this.listener && this.listener.onOperationFailure) {
+                this.listener.onOperationFailure(op.operation, undefined, op.networkError);
+              }
+              return;
+            }
             // TODO - do we want to handle try catch here?
             return resolve();
           },
