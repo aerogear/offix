@@ -1,7 +1,9 @@
-const { gql } = require('apollo-server')
+const { gql } = require('@aerogear/voyager-server')
 const { makeExecutableSchema } = require('graphql-tools')
 const { conflictHandler, strategies } = require('@aerogear/voyager-conflicts')
-const { pubSub, EVENTS } = require('./subscriptions')
+const { PubSub } = require('graphql-subscriptions');
+
+const pubSub = new PubSub();
 
 const typeDefs = gql`
 type Task {
@@ -12,7 +14,7 @@ type Task {
 }
 
 type Query {
-  allTasks(first: Int, after: String): [Task],
+  allTasks(first: Int, after: String): [Task]
   getTask(id: ID!): Task
 }
 
@@ -29,9 +31,7 @@ type Mutation {
 }
 
 type Subscription {
-  taskCreated: Task,
-  taskModified: Task,
-  taskDeleted: ID
+  taskCreated: Task
 }
 `
 
@@ -59,9 +59,8 @@ const resolvers = {
       console.log('create: ', args);
       const newTask = { ...args, id: (id++).toString(), version: 1 };
       data.push(newTask);
-      // TODO context helper for publishing subscriptions in SDK?
-      pubSub.publish(EVENTS.TASK.CREATED, {
-        taskCreated: newTask,
+      pubSub.publish('taskCreated', {
+        taskCreated: newTask
       });
       return newTask;
     },
@@ -86,9 +85,6 @@ const resolvers = {
       }
   
       data[index] = {...(data[index]), ...args};
-      pubSub.publish(EVENTS.TASK.MODIFIED, {
-        taskModified: data[index]
-      });
       return data[index];
     },
     updateTaskConflictReject: async (_, args) => {
@@ -101,9 +97,6 @@ const resolvers = {
       conflictHandler.nextState(args)
   
       data[index] = {...(data[index]), ...args};
-      pubSub.publish(EVENTS.TASK.MODIFIED, {
-        taskModified: data[index]
-      });
       return data[index];
     },
     updateTaskClientResolution: async (_, args) => {
@@ -117,9 +110,6 @@ const resolvers = {
       conflictHandler.nextState(args)
   
       data[index] = {...(data[index]), ...args};
-      pubSub.publish(EVENTS.TASK.MODIFIED, {
-        taskModified: data[index]
-      });
       return data[index];
     },
     updateTaskCustomClientResolution: async (_, args) => {
@@ -133,9 +123,6 @@ const resolvers = {
       conflictHandler.nextState(args)
   
       data[index] = {...(data[index]), ...args};
-      pubSub.publish(EVENTS.TASK.MODIFIED, {
-        taskModified: data[index]
-      });
       return data[index];
     },
     updateTaskServerResolution: async (_, args) => {
@@ -150,9 +137,6 @@ const resolvers = {
       conflictHandler.nextState(args)
   
       data[index] = {...(data[index]), ...args};
-      pubSub.publish(EVENTS.TASK.MODIFIED, {
-        taskModified: data[index]
-      });
       return data[index];
     },
     updateTaskCustomStrategy: async (_, args) => {
@@ -175,18 +159,12 @@ const resolvers = {
       conflictHandler.nextState(args)
   
       data[index] = {...(data[index]), ...args};
-      pubSub.publish(EVENTS.TASK.MODIFIED, {
-        taskModified: data[index]
-      });
       return data[index];
     },
     deleteTask: (_, args) => {
       console.log('delete: ', args);
       const index = data.findIndex(item => item.id === args.id);
       data.splice(index, 1);
-      pubSub.publish(EVENTS.TASK.DELETED, {
-        taskDeleted: args.id
-      });
       return args.id;
     },
     onlineOnly: (_, args) => {
@@ -194,23 +172,15 @@ const resolvers = {
       return args.id;
     }
   },
-  // TODO add helper/package to support generating subscription resolvers
   Subscription: {
     taskCreated: {
-      subscribe: () => pubSub.asyncIterator(EVENTS.TASK.CREATED)
-    },
-    taskDeleted: {
-      subscribe: () => pubSub.asyncIterator(EVENTS.TASK.DELETED)
-    },
-    taskModified: {
-      subscribe: () => pubSub.asyncIterator(EVENTS.TASK.MODIFIED)
-    },
+      subscribe: () => pubSub.asyncIterator('taskCreated')
+    }
   },
 }
 
-const schema = makeExecutableSchema({ typeDefs, resolvers })
-
 module.exports = {
-  schema,
+  typeDefs,
+  resolvers,
   resetData
 }

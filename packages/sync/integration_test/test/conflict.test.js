@@ -1,18 +1,14 @@
-import { createClient, createOptimisticResponse } from '../../dist';
+import { createClient } from '../../dist';
 import { TestStore } from '../utils/testStore';
 import { ToggleableNetworkStatus } from '../utils/network';
 import server from '../utils/server';
-import waitFor from '../utils/waitFor';
 import {
   ADD_TASK,
   GET_TASKS,
   UPDATE_TASK_CONFLICT_REJECT,
   UPDATE_TASK_CLIENT_RESOLUTION,
   UPDATE_TASK_CUSTOM_CLIENT_RESOLUTION,
-  UPDATE_TASK_SERVER_RESOLUTION,
-  UPDATE_TASK_CUSTOM_STRATEGY,
-  DELETE_TASK,
-  ONLINE_ONLY
+  UPDATE_TASK_SERVER_RESOLUTION
 } from '../utils/graphql.queries';
 
 const newNetworkStatus = (online = true) => {
