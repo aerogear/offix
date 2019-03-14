@@ -101,3 +101,14 @@ export const ONLINE_ONLY = gql`
     }
   }
 `;
+
+export const TASK_CREATED = gql`
+  subscription taskCreated {
+    taskCreated {
+      id
+      title
+      description
+      version
+    }
+  }
+`;
