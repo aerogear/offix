@@ -33,7 +33,6 @@ export class OfflineLink extends ApolloLink {
     super();
     this.networkStatus = options.networkStatus;
     this.queue = new OfflineQueue(options);
-    this.initOnlineState();
   }
 
   public request(operation: Operation, forward: NextLink) {
