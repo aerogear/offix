@@ -55,6 +55,7 @@ export class OfflineQueue {
       await new Promise((resolve, reject) => {
         op.forward(op.operation).subscribe({
           next: (result: FetchResult) => {
+            this.queue.shift();
             if (result.errors) {
               if (this.listener && this.listener.onOperationFailure) {
                 this.listener.onOperationFailure(op.operation, result.errors);
@@ -64,10 +65,9 @@ export class OfflineQueue {
               if (this.listener && this.listener.onOperationSuccess) {
                 this.listener.onOperationSuccess(op.operation, result.data);
               }
-              this.updateIds(op);
-              this.updateObjectState(op);
+              this.updateIds(op, result);
+              this.updateObjectState(op, result);
             }
-            this.queue.shift();
             this.persist();
 
             if (this.queue.length === 0 && this.listener && this.listener.queueCleared) {
@@ -105,46 +105,6 @@ export class OfflineQueue {
     }
   }
 
-  protected dequeue(entry: OperationQueueEntry) {
-    // Network error: Skip dequeue and just notify users that network error happen.
-    // Items will be sent on next offline/online change.
-    // Reason for that is that device may be notifying us about the online state
-    // but technically quality of link will not allow to perform actual requests.
-    // We need to wait for the next offline state to succeed.
-    if (entry.networkError) {
-      if (this.listener && this.listener.onOperationFailure) {
-        this.listener.onOperationFailure(entry.operation, undefined, entry.networkError);
-      }
-      return;
-    }
-
-    // For Success and GraphQL errors
-    // If operation is successful we perform updates on offline data
-    // that is sequential. In case of GraphQL errors (validation/auth etc.) we cannot
-    // properly handle those and we return info to users in order to deal with them
-    if (entry.result) {
-      this.queue = this.queue.filter(e => e !== entry);
-      // Notify about all errors
-      if (entry.result.errors) {
-        if (this.listener && this.listener.onOperationFailure) {
-          this.listener.onOperationFailure(entry.operation, entry.result.errors);
-        }
-        // Notify for success otherwise
-      } else if (entry.result.data) {
-        if (this.listener && this.listener.onOperationSuccess) {
-          this.listener.onOperationSuccess(entry.operation, entry.result.data);
-        }
-        this.updateIds(entry);
-        this.updateObjectState(entry);
-      }
-      this.persist();
-
-      if (this.queue.length === 0 && this.listener && this.listener.queueCleared) {
-        this.listener.queueCleared();
-      }
-    }
-  }
-
   private persist() {
     if (this.storage && this.storageKey) {
       this.storage.setItem(this.storageKey, JSON.stringify(this.queue));
@@ -158,8 +118,8 @@ export class OfflineQueue {
    * generated ID. Once any create operation is successful, we should
    * update entries in queue with ID returned from server.
    */
-  private updateIds(entry: OperationQueueEntry) {
-    const { operation: { operationName }, optimisticResponse, result } = entry;
+  private updateIds(entry: OperationQueueEntry, result: FetchResult) {
+    const { operation: { operationName }, optimisticResponse } = entry;
     if (!result ||
       !optimisticResponse ||
       !optimisticResponse[operationName] ||
@@ -181,8 +141,8 @@ export class OfflineQueue {
    * This is required for the queue items so that we do not get a conflict with ourself
    * @param entry the operation which returns the result we compare with first queue entry
    */
-  private updateObjectState(entry: OperationQueueEntry) {
-    const { result, operation: { operationName } } = entry;
+  private updateObjectState(entry: OperationQueueEntry, result: FetchResult) {
+    const { operation: { operationName } } = entry;
     if (!result || !this.state) {
       return;
     }
