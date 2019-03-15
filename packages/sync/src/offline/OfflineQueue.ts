@@ -44,7 +44,8 @@ export class OfflineQueue {
   public enqueue(operation: Operation, forward: NextLink) {
     const operationEntry = new OperationQueueEntry(operation, forward);
     this.enqueueEntry(operationEntry);
-    return new Observable(() => {
+    return new Observable((observer) => {
+      operationEntry.observer = observer;
       return () => ({ isOffline: true });
     });
   }
@@ -73,6 +74,9 @@ export class OfflineQueue {
             if (this.queue.length === 0 && this.listener && this.listener.queueCleared) {
               this.listener.queueCleared();
             }
+            if (op.observer) {
+              op.observer.next(result);
+            }
           },
           error: (error: any) => {
             // TODO remove result from operation and handle that directly.
@@ -82,10 +86,16 @@ export class OfflineQueue {
               }
               return;
             }
+            if (op.observer) {
+              op.observer.error(error);
+            }
             // TODO - do we want to handle try catch here?
             return resolve();
           },
           complete: () => {
+            if (op.observer) {
+              op.observer.complete();
+            }
             return resolve();
           }
         });

@@ -12,6 +12,7 @@ export class OperationQueueEntry {
   public readonly optimisticResponse?: any;
   public result?: FetchResult;
   public networkError: any;
+  public observer?: ZenObservable.SubscriptionObserver<FetchResult>;
 
   constructor(operation: Operation, forward: NextLink) {
     this.operation = operation;
