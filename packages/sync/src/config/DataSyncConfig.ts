@@ -104,16 +104,6 @@ export interface DataSyncConfig {
   /**
    * [Modifier]
    *
-   * Function that customizes retry mechanism for queries that failed on network errors.
-   * See https://www.apollographql.com/docs/link/links/retry.html for more information
-   * By default offline requests are retried 5 times.
-   */
-   // TODO FIXME XXX !IMPORTANT (use retry link)
-   // shouldRetry?: ShouldRetryFn;
-
-  /**
-   * [Modifier]
-   *
    * Cache updates functions for your mutations
    * Argument allows to restore optimistic responses on application restarts.
    */
