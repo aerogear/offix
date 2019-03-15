@@ -28,7 +28,7 @@ export type OperationQueueChangeHandler = (entry: OperationQueueEntry) => void;
  * - updating client IDs with server IDs (explained below)
  */
 export class OfflineQueue {
-  protected queue: OperationQueueEntry[] = [];
+  public queue: OperationQueueEntry[] = [];
   private readonly storage?: PersistentStore<PersistedData>;
   private readonly storageKey?: string;
   private readonly listener?: OfflineQueueListener;
@@ -55,7 +55,7 @@ export class OfflineQueue {
       await new Promise((resolve, reject) => {
         op.forward(op.operation).subscribe({
           next: (result: FetchResult) => {
-            this.queue.shift();
+            this.queue = this.queue.filter(e => e !== op);
             if (result.errors) {
               if (this.listener && this.listener.onOperationFailure) {
                 this.listener.onOperationFailure(op.operation, result.errors);
