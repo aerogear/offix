@@ -42,13 +42,22 @@ export class OfflineLink extends ApolloLink {
     }
     // We are online and can skip this link;
     return forward(operation);
+  }
 
+  /**
+   * Force forward offline operations
+   */
+  public async forwardOfflineOperations() {
+    await this.queue.forwardOperations();
   }
 
   public async initOnlineState() {
-    this.online = !(await this.networkStatus.isOffline());
     const queue = this.queue;
     const self = this;
+    this.online = !(await this.networkStatus.isOffline());
+    if (this.online) {
+      queue.forwardOperations();
+    }
     this.networkStatus.onStatusChangeListener({
       onStatusChange(networkInfo: NetworkInfo) {
         self.online = networkInfo.online;
