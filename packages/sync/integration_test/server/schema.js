@@ -1,11 +1,9 @@
 const { gql } = require('@aerogear/voyager-server')
 const { conflictHandler, strategies } = require('@aerogear/voyager-conflicts')
-const { pubSub } = require('./subscriptions')
-const { conflictHandler, strategies } = require('@aerogear/voyager-conflicts')
 const { PubSub } = require('graphql-subscriptions');
-const pubSub = new PubSub();
 const fs = require('fs');
 
+const pubSub = new PubSub();
 
 const typeDefs = gql`
 type Task {

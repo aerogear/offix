@@ -110,6 +110,7 @@ export const TASK_CREATED = gql`
       description
       version
     }
+  }
 `;
 
 export const UPLOAD_FILE = gql`
