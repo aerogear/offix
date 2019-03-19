@@ -1,9 +1,11 @@
 const { gql } = require('@aerogear/voyager-server')
-const { makeExecutableSchema } = require('graphql-tools')
+const { conflictHandler, strategies } = require('@aerogear/voyager-conflicts')
+const { pubSub } = require('./subscriptions')
 const { conflictHandler, strategies } = require('@aerogear/voyager-conflicts')
 const { PubSub } = require('graphql-subscriptions');
-
 const pubSub = new PubSub();
+const fs = require('fs');
+
 
 const typeDefs = gql`
 type Task {
@@ -16,6 +18,7 @@ type Task {
 type Query {
   allTasks(first: Int, after: String): [Task]
   getTask(id: ID!): Task
+  uploads: [File]
 }
 
 type Mutation {
@@ -28,19 +31,28 @@ type Mutation {
   updateTaskCustomStrategy(id: ID!, title: String, description: String, version: Int!): Task
   deleteTask(id: ID!): ID
   onlineOnly(id: ID!): ID
+  singleUpload(file: Upload!): File!
 }
 
 type Subscription {
   taskCreated: Task
 }
+
+type File {
+  filename: String!
+  mimetype: String!
+  encoding: String!
+}
 `
 
 let id = 0;
 let data = [];
+let files = [];
 
 const resetData = () => {
   id = 0;
   data = [];
+  files = [];
 };
 
 const resolvers = {
@@ -51,7 +63,10 @@ const resolvers = {
     },
     getTask: (_, args) => {
       return data.find(item => item.id === args.id);
-    }
+    },
+    uploads: () => {
+      return files
+    },
   },
 
   Mutation: {
@@ -170,6 +185,19 @@ const resolvers = {
     onlineOnly: (_, args) => {
       console.log('onlineOnly: ', args);
       return args.id;
+    },
+    singleUpload: async (_, { file }) => {
+      const { stream, filename, mimetype, encoding } = await file;
+      // Save file and return required metadata
+      const writeStream = fs.createWriteStream(filename);
+      stream.pipe(writeStream);
+      const fileRecord = {
+        filename,
+        mimetype,
+        encoding
+      };
+      files.push(fileRecord);
+      return fileRecord;
     }
   },
   Subscription: {

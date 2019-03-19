@@ -17,11 +17,11 @@ app.post('/start', async (_, res) => {
 });
 app.post('/stop', (_, res) => {
   graphqlServer.close();
-  res.sendStatus(200)
+  res.sendStatus(200);
 });
 app.post('/reset', (_, res) => {
   resetData();
-  res.sendStatus(200)
+  res.sendStatus(200);
 });
 
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}!`));
