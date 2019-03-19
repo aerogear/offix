@@ -46,7 +46,10 @@ export class OfflineQueue {
     this.enqueueEntry(operationEntry);
     return new Observable((observer) => {
       operationEntry.observer = observer;
-      return () => ({ isOffline: true });
+      // TODO add support for cancelling offline requests
+      return () => {
+        return;
+      };
     });
   }
 
@@ -56,38 +59,10 @@ export class OfflineQueue {
       await new Promise((resolve, reject) => {
         op.forward(op.operation).subscribe({
           next: (result: FetchResult) => {
-            this.queue = this.queue.filter(e => e !== op);
-            if (result.errors) {
-              if (this.listener && this.listener.onOperationFailure) {
-                this.listener.onOperationFailure(op.operation, result.errors);
-              }
-              // Notify for success otherwise
-            } else if (result.data) {
-              if (this.listener && this.listener.onOperationSuccess) {
-                this.listener.onOperationSuccess(op.operation, result.data);
-              }
-              this.updateIds(op, result);
-              this.updateObjectState(op, result);
-            }
-            this.persist();
-
-            if (this.queue.length === 0 && this.listener && this.listener.queueCleared) {
-              this.listener.queueCleared();
-            }
-            if (op.observer) {
-              op.observer.next(result);
-            }
+            this.onForwardNext(op, result);
           },
           error: (error: any) => {
-            if (error) {
-              if (this.listener && this.listener.onOperationFailure) {
-                this.listener.onOperationFailure(op.operation, undefined, op.networkError);
-              }
-              return;
-            }
-            if (op.observer) {
-              op.observer.error(error);
-            }
+            this.onForwardError(op, error);
             return resolve();
           },
           complete: () => {
@@ -101,7 +76,7 @@ export class OfflineQueue {
     }
   }
 
-  protected enqueueEntry(entry: OperationQueueEntry) {
+  private enqueueEntry(entry: OperationQueueEntry) {
     this.queue.push(entry);
     if (this.listener && this.listener.onOperationEnqueued) {
       this.listener.onOperationEnqueued(entry);
@@ -110,6 +85,38 @@ export class OfflineQueue {
     if (!isMarkedOffline(entry.operation)) {
       markOffline(entry.operation);
       this.persist();
+    }
+  }
+
+  private onForwardError(op: OperationQueueEntry, error: any) {
+    if (this.listener && this.listener.onOperationFailure) {
+      this.listener.onOperationFailure(op.operation, undefined, op.networkError);
+    }
+    if (op.observer) {
+      op.observer.error(error);
+    }
+  }
+
+  private onForwardNext(op: OperationQueueEntry, result: FetchResult<any>) {
+    this.queue = this.queue.filter(e => e !== op);
+    if (result.errors) {
+      if (this.listener && this.listener.onOperationFailure) {
+        this.listener.onOperationFailure(op.operation, result.errors);
+      }
+      // Notify for success otherwise
+    } else if (result.data) {
+      if (this.listener && this.listener.onOperationSuccess) {
+        this.listener.onOperationSuccess(op.operation, result.data);
+      }
+      this.updateIds(op, result);
+      this.updateObjectState(op, result);
+    }
+    this.persist();
+    if (this.queue.length === 0 && this.listener && this.listener.queueCleared) {
+      this.listener.queueCleared();
+    }
+    if (op.observer) {
+      op.observer.next(result);
     }
   }
 
