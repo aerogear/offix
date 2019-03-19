@@ -79,7 +79,6 @@ export class OfflineQueue {
             }
           },
           error: (error: any) => {
-            // TODO remove result from operation and handle that directly.
             if (error) {
               if (this.listener && this.listener.onOperationFailure) {
                 this.listener.onOperationFailure(op.operation, undefined, op.networkError);
@@ -89,7 +88,6 @@ export class OfflineQueue {
             if (op.observer) {
               op.observer.error(error);
             }
-            // TODO - do we want to handle try catch here?
             return resolve();
           },
           complete: () => {
