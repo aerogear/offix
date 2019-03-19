@@ -59,7 +59,7 @@
     "chai-as-promised": "7.1.1",
     "del-cli": "1.1.0",
     "mocha": "6.0.2",
-    "mockttp": "0.12.6",
+    "mockttp": "0.13.0",
     "nyc": "13.3.0",
     "sinon": "7.2.7",
     "source-map-support": "0.5.11",
