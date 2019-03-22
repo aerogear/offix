@@ -150,16 +150,15 @@ When collision is detected it can be handled on both server or client.
 
 See Voyager Server documentation for information about writing conflicts for the server.
 
-### Working with pluggable conflict implementations
+### Working with Conflict Resolution 
 
-Plugable conflict resolution allows developers to define way to determine how conflicts are detected and handled.
+Conflict resolution allows developers to define way to determine how conflicts are detected and handled.
 Conflict resolution can be fully controlled by server side implementation.
-If users chose to resolve conflicts in the client they need to configure their resolvers first return conflict back to client.
-Client will resolve them automatically basing on current strategy and notify listeners if developer supplied any.
+If users chose to resolve conflicts in the client they need to configure their resolvers first return conflict back to client. Client will resolve them automatically basing on current strategy and notify listeners if developer supplied any.
 
 Conflict resolution will work out of the box with recommended defaults and do not require any specific handling on the client.
 
-> Advanced users may customize conflict implementation by supplying custom `conflictStateProvider` in config.
+> For advanced use cases users may customize conflict implementation by supplying custom `conflictStateProvider` in config.
 
 ### Default conflict implementation
 
