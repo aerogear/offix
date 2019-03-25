@@ -45,6 +45,17 @@ export class SyncConfig implements DataSyncConfig {
   public conflictStrategy: ConflictResolutionStrategies;
   public conflictStateProvider = new VersionedState();
 
+  public retryOptions = {
+    delay: {
+      initial: 1000,
+      max: Infinity,
+      jitter: true
+    },
+    attempts: {
+      max: 5
+    }
+  };
+
   public networkStatus: NetworkStatus;
   private readonly clientConfig: DataSyncConfig;
 

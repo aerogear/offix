@@ -6,6 +6,7 @@ import { ObjectState } from "../conflicts/ObjectState";
 import { ConflictListener } from "../conflicts/ConflictListener";
 import { ConfigurationService } from "@aerogear/core";
 import CacheUpdates from "../cache/CacheUpdates";
+import { RetryLink } from "apollo-link-retry";
 
 /**
  * Contains all configuration options required to initialize Voyager Client
@@ -108,4 +109,12 @@ export interface DataSyncConfig {
    * Argument allows to restore optimistic responses on application restarts.
    */
   mutationCacheUpdates?: CacheUpdates;
+
+  /**
+   * [Modifier]
+   *
+   * The options to configure how failed offline mutations are retried.
+   *
+   */
+  retryOptions?: RetryLink.Options;
 }
