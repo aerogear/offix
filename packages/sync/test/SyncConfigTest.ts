@@ -24,7 +24,7 @@ describe("OnOffLink", () => {
     const config = new SyncConfig(userConfig);
     const mergedConfig = config.getClientConfig();
     expect(mergedConfig.httpUrl).eq(userConfig.httpUrl);
-    expect(mergedConfig.retryOptions.attempts).eq(userConfig.retryOptions.attempts);
+    expect(mergedConfig.retryOptions).eq(userConfig.retryOptions);
   });
 
   it("validates config", () => {
