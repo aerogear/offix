@@ -52,7 +52,7 @@ Please refer to the https://github.com/aerogear/aerogear-js-sdk/blob/master/docs
 
 Testing can be done using the showcase application:
 
-https://github.com/aerogear/cordova-showcase-template
+https://github.com/aerogear/ionic-showcase
 
 The master branch of the linked showcase application will always use the latest released sdk packages. However,
 if you wish to use the showcase application for SDK development then ensure you have linked the relevant packages locally as follows:
@@ -60,14 +60,3 @@ if you wish to use the showcase application for SDK development then ensure you 
 [source,bash]
 npm run build
 npm run link
-
-If you wish, you may then also use the provided script cloneExamples.sh to clone the showcase application into the SDK's
-root folder.
-
-Once you have the showcase application cloned you can then run the following from within its root folder:
-
-[source, bash]
-npm install
-npm run linkDev
-
-Which will tell the showcase application to use the linked (local) version of the SDKs instead of the released ones.
