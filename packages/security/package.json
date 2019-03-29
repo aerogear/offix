@@ -8,7 +8,7 @@
     "clean": "del coverage src/**/*.js src/**/*.map test/**/*.js test/**/*.map dist types",
     "build": "tsc",
     "watch": "tsc --watch",
-    "test": "nyc mocha"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -29,7 +29,6 @@
     "@types/chai": "4.1.7",
     "chai": "4.2.0",
     "mocha": "6.0.2",
-    "nyc": "13.3.0",
     "typescript": "3.3.3333"
   },
   "dependencies": {

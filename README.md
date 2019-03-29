@@ -1,6 +1,7 @@
 # AeroGear JavaScript SDK
 
 [![circle-ci](https://img.shields.io/circleci/project/github/aerogear/aerogear-js-sdk/master.svg)](https://circleci.com/gh/aerogear/aerogear-js-sdk)
+[![Coverage Status](https://coveralls.io/repos/github/aerogear/aerogear-js-sdk/badge.svg?branch=master)](https://coveralls.io/github/aerogear/aerogear-js-sdk?branch=master)
 [![License](https://img.shields.io/badge/-Apache%202.0-blue.svg)](https://opensource.org/s/Apache-2.0)
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lernajs.io/)
 
