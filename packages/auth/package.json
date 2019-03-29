@@ -25,28 +25,10 @@
     "clean": "del coverage src/**/*.js src/**/*.map test/**/*.js test/**/*.map dist types",
     "build": "tsc",
     "watch": "tsc --watch",
-    "test": "nyc mocha"
+    "test": "mocha"
   },
   "publishConfig": {
     "access": "public"
-  },
-  "nyc": {
-    "include": [
-      "src/**/*.ts"
-    ],
-    "extension": [
-      ".ts"
-    ],
-    "require": [
-      "ts-node/register"
-    ],
-    "reporter": [
-      "lcov",
-      "text"
-    ],
-    "lines": 75,
-    "functions": 100,
-    "branches": 80
   },
   "devDependencies": {
     "@types/chai": "4.1.7",
@@ -60,7 +42,6 @@
     "chai-as-promised": "7.1.1",
     "del-cli": "1.1.0",
     "mocha": "6.0.2",
-    "nyc": "13.3.0",
     "sinon": "7.2.7",
     "source-map-support": "0.5.11",
     "ts-node": "8.0.3",

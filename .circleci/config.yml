@@ -36,6 +36,9 @@ jobs:
           name: test
           command: npm test
       - run:
+          name: coverage
+          command: npm run coverage
+      - run:
           name: sync integration test
           command: cd packages/sync && npm run integration-test
       - store_artifacts:
