@@ -13,6 +13,7 @@ export class AeroGearApp {
         configuration: metricsConfig
       };
       this.metrics = new MetricsService(metricsOptions);
+      this.metrics.sendAppAndDeviceMetrics();
     }
   }
 }

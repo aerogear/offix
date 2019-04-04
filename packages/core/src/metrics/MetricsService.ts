@@ -43,7 +43,6 @@ export class MetricsService {
         ? options.publisher
         : new NetworkMetricsPublisher(this.configuration.url);
 
-      this.sendAppAndDeviceMetrics();
     } else {
       console.warn("Metrics configuration is missing." +
         "Metrics will not be published to remote server.");
