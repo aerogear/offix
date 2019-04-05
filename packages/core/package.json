@@ -32,9 +32,9 @@
     "@types/lodash.find": "4.6.6",
     "@types/loglevel": "1.5.4",
     "@types/mocha": "5.2.6",
-    "@types/node": "11.11.3",
+    "@types/node": "11.13.0",
     "@types/proxyquire": "1.3.28",
-    "@types/sinon": "7.0.10",
+    "@types/sinon": "7.0.11",
     "@types/uuid": "3.4.4",
     "browserify": "16.2.3",
     "chai": "4.2.0",
@@ -42,10 +42,10 @@
     "del-cli": "1.1.0",
     "mocha": "6.0.2",
     "mockttp": "0.13.0",
-    "sinon": "7.2.7",
+    "sinon": "7.3.1",
     "source-map-support": "0.5.11",
     "ts-node": "8.0.3",
-    "typescript": "3.3.3333"
+    "typescript": "3.4.1"
   },
   "dependencies": {
     "axios": "0.18.0",

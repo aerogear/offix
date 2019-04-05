@@ -33,9 +33,9 @@
     "nyc": "13.3.0",
     "replace": "1.1.0",
     "ts-node": "8.0.3",
-    "tslint": "5.14.0",
+    "tslint": "5.15.0",
     "typedoc": "0.14.2",
-    "typescript": "3.3.3333"
+    "typescript": "3.4.1"
   },
   "dependencies": {
     "@types/mocha": "5.2.6"

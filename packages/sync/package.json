@@ -33,15 +33,15 @@
   "devDependencies": {
     "@types/apollo-upload-client": "8.1.1",
     "@types/chai": "4.1.7",
-    "@types/debug": "4.1.2",
-    "@types/graphql": "14.0.7",
+    "@types/debug": "4.1.3",
+    "@types/graphql": "14.2.0",
     "@types/mocha": "5.2.6",
     "@types/ws": "6.0.1",
     "chai": "4.2.0",
-    "del": "4.0.0",
+    "del": "4.1.0",
     "mocha": "6.0.2",
     "ts-node": "8.0.3",
-    "typescript": "3.3.3333"
+    "typescript": "3.4.1"
   },
   "dependencies": {
     "@aerogear/core": "2.3.1",
@@ -56,7 +56,7 @@
     "apollo-link-ws": "1.0.17",
     "apollo-upload-client": "10.0.0",
     "debug": "4.1.1",
-    "graphql": "14.1.1",
+    "graphql": "14.2.1",
     "graphql-tag": "2.10.1",
     "graphql-tools": "4.0.4",
     "subscriptions-transport-ws": "0.9.16"
