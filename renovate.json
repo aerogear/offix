@@ -1,8 +1,7 @@
 {
   "extends": [
     "config:base",
-    ":pinVersions",
-    ":assignee(wtrocki)"
+    ":pinVersions"
   ],
   "groupName":"all"
 }

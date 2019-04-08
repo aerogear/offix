@@ -1,5 +1,0 @@
-* xref:getting-started.adoc[Getting Started]
-** xref:pages/auth.adoc[Auth]
-** xref:pages/security-checks.adoc[Security]
-** xref:pages/metrics.adoc[Metrics]
-** xref:pages/push.adoc[Push]

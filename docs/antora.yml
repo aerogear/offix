@@ -1,7 +1,0 @@
-name: cordova
-title: AeroGear Cordova SDK
-version: 'latest'
-start_ROOT: ROOT:index.adoc
-nav:
-- modules/ROOT/nav.adoc
-
