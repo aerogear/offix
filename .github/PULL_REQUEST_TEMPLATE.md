@@ -3,8 +3,6 @@ Thank you for your pull request. Please provide a description above and review
 the requirements below.
 
 Bug fixes and new features should include tests.
-
-Contributors guide: https://github.com/aerogear/aerogear-js-sdk/blob/master/CONTRIBUTING.md
 -->
 
 ### Description

@@ -1,7 +1,7 @@
 {
-  "name": "@aerogear/voyager-client",
-  "version": "2.3.1",
-  "description": "AeroGear Voyager GraphQL client",
+  "name": "apollo-offline-client",
+  "version": "1.0.1",
+  "description": "Apollo Offline Client",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
   "scripts": {
@@ -12,21 +12,7 @@
     "preintegration-test": "cd integration_test && npm install",
     "integration-test": "cd integration_test && npm test"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/aerogear/aerogear-js-sdk.git"
-  },
-  "keywords": [
-    "aerogear",
-    "aerogear services",
-    "graphql"
-  ],
-  "author": "AeroGear",
   "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/aerogear/aerogear-js-sdk/issues"
-  },
-  "homepage": "https://github.com/aerogear/aerogear-js-sdk#readme",
   "publishConfig": {
     "access": "public"
   },
