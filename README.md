@@ -20,6 +20,7 @@ https://graphql-heroes.github.io/ApolloOfflineClient
 
 ## Roadmap
 
+- Provide end to end example for conflict support.
 - Support for non blocking mutations
 - Observable based queue listeners
 - More comprehensive Documentation and Getting Started Experience
