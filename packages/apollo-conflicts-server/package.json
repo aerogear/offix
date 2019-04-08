@@ -1,0 +1,33 @@
+{
+  "name": "apollo-conflicts-server",
+  "version": "0.5.1",
+  "description": "A package to provide conflict handler framework for GraphQL server",
+  "main": "dist/index.js",
+  "scripts": {
+    "compile": "tsc --build tsconfig.json",
+    "watch": "tsc --build tsconfig.json --watch",
+    "test": "ava '*.test.ts' '**/*.test.ts'",
+    "compile:clean": "tsc --build tsconfig.json --clean"
+  },
+  "license": "Apache-2.0",
+  "ava": {
+    "compileEnhancements": false,
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
+  },
+  "devDependencies": {
+    "ava": "1.4.0",
+    "ts-node": "8.0.3",
+    "typescript": "3.3.4000"
+  },
+  "peerDependencies": {
+    "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
