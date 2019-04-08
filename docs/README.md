@@ -1,5 +1,3 @@
-# Apollo Offline
-
 # Getting Started
 
 ## Importing the package

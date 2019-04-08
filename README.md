@@ -16,7 +16,7 @@ Community extensions to Apollo GraphQL providing:
 
 ## Documentation
 
-[Documentation](./docs/)
+https://graphql-heroes.github.io/ApolloOfflineClient
 
 ## Roadmap
 
@@ -24,3 +24,9 @@ Community extensions to Apollo GraphQL providing:
 - Observable based queue listeners
 - More comprehensive Documentation and Getting Started Experience
 - Support for Native platforms (Android/IOS)
+
+## How to get involved
+
+1) Star project!
+2) Create issue with ideas or bugs?
+3) Contribute (see Contributing guide)
