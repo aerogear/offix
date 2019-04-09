@@ -1,6 +1,6 @@
 {
   "name": "apollo-conflicts-server",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A package to provide conflict handler framework for GraphQL server",
   "main": "dist/index.js",
   "scripts": {
