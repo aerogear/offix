@@ -46,5 +46,6 @@
     "graphql-tag": "2.10.1",
     "graphql-tools": "4.0.4",
     "subscriptions-transport-ws": "0.9.16"
-  }
+  },
+  "gitHead": "fe086dd22801a260710235753c7c2958a0b9bf42"
 }
