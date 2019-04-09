@@ -1,3 +1,5 @@
-![ApolloOffline](./resources/logo.png)
+## Apollo Offline Client
 
- https://graphql-heroes.github.io/ApolloOfflineClient
+Documentation:
+
+https://graphql-heroes.github.io/ApolloOfflineClient
