@@ -1,5 +1,3 @@
-# Apollo Offline
-
 ![ApolloOffline](./resources/logo.png)
 
 Community extensions to Apollo GraphQL providing:
