@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Notes
-navigation: 5
+navigation: 6
 ---
 
 ## Support
