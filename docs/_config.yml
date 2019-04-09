@@ -1,1 +1,29 @@
-theme: jekyll-theme-midnight
+
+title: Apollo Offline Client
+email:
+description:
+baseurl: "ApolloOfflineClient" # the subpath of your site, e.g. /blog
+url: "https://graphql-heroes.github.io"
+remote_theme: alexander-heimbuch/millidocs
+# theme: millidocs
+markdown: kramdown
+kramdown:
+  syntax_highlighter_opts:
+    disable : true
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+
+
+# Exclude from processing.
+# The following items will not be processed, by default. Create a custom list
+# to override the default setting.
+# exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/

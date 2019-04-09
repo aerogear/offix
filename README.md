@@ -2,8 +2,7 @@
 
 Community extensions to Apollo GraphQL providing:
 
-- Offline support:
-  +  Creation, Edits and Deletion operations when offline
+- Offline support: Creation, Edits and Deletion operations when offline
 - Request Queue offering scheduling and advanced control over data replication
 - Listeners for UI
 - Working seamlessly with OptimisticUI and CacheUpdates
