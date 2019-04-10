@@ -34,22 +34,20 @@ When performing mutations that affects some queries users `update` method:
 
 ## Global Update Functions
 
-Apollo client holds some of the parameters in memory.
-Offline client will save and restore all mutations with exact parameters
-when application is restarted. However we do not support restoring
-`update` functions. As result all optimisticResponses will disappear
-from application after restart.
+Apollo client holds all mutation parameters in memory.
+Offline Client will save and restore all mutations with exact parameters
+when application is restarted. Update functions supplied to mutations cannot be saved in the cache.
+As result all optimisticResponses will disappear from application after restart.
 
-To prevent from that client offers separate `mutationCacheUpdates`
-parameter that can be supplied to client config.
-Adding update functions will reapply optimistic responses, which will show all offline data after application restarts.
+To prevent from that Client offers separate `mutationCacheUpdates` parameter that can be supplied to client config.Adding update functions will reapply optimistic responses, which will show all offline data after application restarts.
 
+
+```javascript
 const updateFunctions = {
+  // Can contain update functions from each component
   ...ItemUpdates,
   ...TasksUpdates
 }
-
-```javascript
 
 let config = {
   mutationCacheUpdates: updateFunctions,
