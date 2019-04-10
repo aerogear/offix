@@ -1,9 +1,7 @@
 const express = require('express')
 const queries = require('./queries')
 const { VoyagerServer, gql } = require('@aerogear/voyager-server')
-const metrics = require('@aerogear/voyager-metrics')
-const auditLogger = require('@aerogear/voyager-audit')
-const { conflictHandler } = require('@aerogear/voyager-conflicts')
+const { conflictHandler } = require('apollo-conflicts-server')
 
 // Types
 const typeDefs = gql`

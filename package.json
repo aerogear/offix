@@ -38,6 +38,7 @@
     "typescript": "3.4.1"
   },
   "dependencies": {
+    "@types/graphql": "^14.2.0",
     "@types/mocha": "5.2.6",
     "graphql": "^14.2.1"
   },

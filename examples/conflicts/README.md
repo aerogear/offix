@@ -1,6 +1,6 @@
 ## Conflict Example Server
 
-This example demonstrates how to use the `@aerogear/voyager-conflicts` package to detect and handle data conflicts within the resolver functions.
+This example demonstrates how to use the `apollo-conflicts-server` package to detect and handle data conflicts within the resolver functions.
 
 ### Running Example
 

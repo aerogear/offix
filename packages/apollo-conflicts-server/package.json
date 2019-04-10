@@ -4,7 +4,7 @@
   "description": "A package to provide conflict handler framework for GraphQL server",
   "main": "dist/index.js",
   "scripts": {
-    "compile": "tsc --build tsconfig.json",
+    "build": "tsc --build tsconfig.json",
     "watch": "tsc --build tsconfig.json --watch",
     "test": "ava '*.test.ts' '**/*.test.ts'",
     "compile:clean": "tsc --build tsconfig.json --clean"
