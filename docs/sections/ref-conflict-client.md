@@ -11,7 +11,7 @@ Edits that happened on the client data need to be replicated back to server.
 When replicating local changes to server it may happen that local changes no longer reflect the server state.
 This situations are often called "Data Conflicts" or "Data Collisions"
 
-Voyager client offers way to detect and handle conflicts for any GraphQL type by supplying
+Offline client offers way to detect and handle conflicts for any GraphQL type by supplying
 `ConflictLink` implementation to client.
 When collision is detected it can be handled on both server or client.
 

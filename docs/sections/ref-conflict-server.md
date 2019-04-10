@@ -31,7 +31,7 @@ To enable conflict resolution developers need to use one of the pluggable confli
 1. Add conflict package dependency to project
 
 ```javascript
-const { conflictHandler } = require('@aerogear/voyager-conflicts')
+const { conflictHandler } = require('apollo-conflicts-server')
 ```
 
 2. Add version field to GraphQL type that should support conflict resolution
@@ -110,12 +110,6 @@ const serverState = ...
 ```
 
 > Note: For complete implementation see example application located in `examples/conflicts` folder.
-
-
-## Client Conflict implementation
-
-See [Voyager Client documentation](https://github.com/aerogear/aerogear-js-sdk/tree/master/packages/sync#conflicts)
-
 
 ## Implementing Custom Conflict Mechanism
 
