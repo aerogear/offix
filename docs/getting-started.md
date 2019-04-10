@@ -21,7 +21,7 @@ To provide custom configuration to the client, the following options are availab
 
 ```javascript
 
-let config: DataSyncConfig = {
+let config = {
   httpUrl: "http://localhost:4000/graphql",
   wsUrl: "ws://localhost:4000/graphql",
 }
