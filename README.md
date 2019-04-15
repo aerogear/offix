@@ -1,4 +1,6 @@
-![ApolloOffline](./resources/logo.png)
+<p align="center">
+  <img width="400" src="https://github.com/graphql-heroes/ApolloOfflineClient/raw/master/resources/logo.png">
+</p>
 
 Community extensions to Apollo GraphQL providing:
 
