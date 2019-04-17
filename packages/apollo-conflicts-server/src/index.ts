@@ -1,15 +1,15 @@
 // Conflict api
-export * from './api/ObjectState'
-export * from './api/ConflictResolution'
-export * from './api/ObjectStateData'
+export * from "./api/ObjectState";
+export * from "./api/ConflictResolution";
+export * from "./api/ObjectStateData";
 
 // State implementations
-export * from './states/VersionedObjectState'
-export * from './states/HashObjectState'
+export * from "./states/VersionedObjectState";
+export * from "./states/HashObjectState";
 
 // Strategy implementations
-export * from './strategies'
+export * from "./strategies";
 
 // Default API state handler
 export { versionStateHandler as conflictHandler }
-  from './states/VersionedObjectState'
+  from "./states/VersionedObjectState";

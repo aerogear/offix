@@ -1,5 +1,5 @@
-import { GraphQLError } from 'graphql'
-import { ObjectStateData } from './ObjectStateData'
+import { GraphQLError } from "graphql";
+import { ObjectStateData } from "./ObjectStateData";
 
 /**
  * Data returned back to client wrapped in error objects.
@@ -12,12 +12,12 @@ export interface ConflictData {
    * Data that was modified on the server.
    * Source of the conflict with additional fields that changed over the time.
    */
-  serverState: ObjectStateData
+  serverState: ObjectStateData;
 
   /**
    * Original data that was sent from client and cannot be applied because of conflict
    */
-  clientState?: ObjectStateData
+  clientState?: ObjectStateData;
 
   /**
    * Flag used to inform client that conflict was already resolved on the server
@@ -25,7 +25,7 @@ export interface ConflictData {
    * resolved information. If value is false client will need to resolve conflict on their side
    * and both `serverState` and `clientState` will be available
    */
-  resolvedOnServer: boolean
+  resolvedOnServer: boolean;
 }
 
 /**
@@ -41,22 +41,22 @@ export class ConflictResolution {
    * response is the full conflict object
    * that should be sent back to the client
    */
-  public response: ObjectConflictError
+  public response: ObjectConflictError;
 
   /**
    * resolvedState is the newly resolved object that should be
    * persisted by developers.
    */
-  public resolvedState?: ObjectStateData
+  public resolvedState?: ObjectStateData;
 
   constructor(resolvedOnServer: boolean, serverState: ObjectStateData, clientState: ObjectStateData) {
     this.response = new ObjectConflictError({
       resolvedOnServer,
       serverState,
       clientState
-    })
+    });
     if (resolvedOnServer) {
-      this.resolvedState = serverState
+      this.resolvedState = serverState;
     }
   }
 }
@@ -66,10 +66,10 @@ export class ConflictResolution {
  * Error specific to Voyager framework
  */
 export class ObjectConflictError extends GraphQLError {
-  public conflictInfo: any
+  public conflictInfo: any;
 
   constructor(data: ConflictData) {
-    super('VoyagerConflict')
-    this.conflictInfo = data
+    super("VoyagerConflict");
+    this.conflictInfo = data;
   }
 }
