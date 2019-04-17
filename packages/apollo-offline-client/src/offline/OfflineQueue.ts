@@ -1,20 +1,10 @@
 import { OperationQueueEntry } from "./OperationQueueEntry";
-import { PersistedData, PersistentStore } from "../PersistentStore";
 import { OfflineQueueListener } from "./OfflineQueueListener";
 import { isClientGeneratedId } from "../cache/createOptimisticResponse";
 import { ObjectState } from "../conflicts/ObjectState";
 import { Operation, NextLink, Observable, FetchResult } from "apollo-link";
-import { OfflineLinkOptions } from "..";
-import { isMarkedOffline, markOffline } from "../utils/helpers";
-
-export interface OfflineQueueOptions {
-  storage?: PersistentStore<PersistedData>;
-  storageKey?: string;
-  listener?: OfflineQueueListener;
-  conflictStateProvider?: ObjectState;
-  onEnqueue: OperationQueueChangeHandler;
-  onDequeue: OperationQueueChangeHandler;
-}
+import { OfflineStore } from "./OfflineStore";
+import { OfflineLinkOptions } from "../links";
 
 export type OperationQueueChangeHandler = (entry: OperationQueueEntry) => void;
 
@@ -29,24 +19,39 @@ export type OperationQueueChangeHandler = (entry: OperationQueueEntry) => void;
  */
 export class OfflineQueue {
   public queue: OperationQueueEntry[] = [];
-  private readonly storage?: PersistentStore<PersistedData>;
-  private readonly storageKey?: string;
   private readonly listener?: OfflineQueueListener;
   private readonly state?: ObjectState;
+  private store: OfflineStore;
 
   constructor(options: OfflineLinkOptions) {
-    this.storage = options.storage;
-    this.storageKey = options.storageKey;
+    this.store = options.store;
     this.listener = options.listener;
     this.state = options.conflictStateProvider;
   }
 
-  public enqueue(operation: Operation, forward: NextLink) {
+  /**
+   * Persist entire queue with the new item to make sure that change
+   * is going to be working across restarts
+   */
+  public async persistItemWithQueue(operation: Operation) {
+    const operationEntry = new OperationQueueEntry(operation);
+    await this.store.persistOfflineData([...this.queue, operationEntry]);
+    return operationEntry;
+  }
+
+  /**
+   * Enqueue offline change and wait for it to be sent to server when online.
+   * Every offline change is added to queue.
+   *
+   */
+  public enqueueOfflineChange(operation: Operation, forward: NextLink) {
     const operationEntry = new OperationQueueEntry(operation, forward);
-    this.enqueueEntry(operationEntry);
+    this.queue.push(operationEntry);
+    if (this.listener && this.listener.onOperationEnqueued) {
+      this.listener.onOperationEnqueued(operationEntry);
+    }
     return new Observable((observer) => {
       operationEntry.observer = observer;
-      // TODO add support for cancelling offline requests
       return () => {
         return;
       };
@@ -55,8 +60,10 @@ export class OfflineQueue {
 
   public async forwardOperations() {
     for (const op of this.queue) {
-      // FIXME block operations till result is back (completed)
       await new Promise((resolve, reject) => {
+        if (!op.forward) {
+          return;
+        }
         op.forward(op.operation).subscribe({
           next: (result: FetchResult) => {
             this.onForwardNext(op, result);
@@ -73,18 +80,6 @@ export class OfflineQueue {
           }
         });
       });
-    }
-  }
-
-  private enqueueEntry(entry: OperationQueueEntry) {
-    this.queue.push(entry);
-    if (this.listener && this.listener.onOperationEnqueued) {
-      this.listener.onOperationEnqueued(entry);
-    }
-    // If operation was already enqueued before (sent from OfflineRestoreHandler)
-    if (!isMarkedOffline(entry.operation)) {
-      markOffline(entry.operation);
-      this.persist();
     }
   }
 
@@ -111,18 +106,12 @@ export class OfflineQueue {
       this.updateIds(op, result);
       this.updateObjectState(op, result);
     }
-    this.persist();
+    this.store.persistOfflineData(this.queue);
     if (this.queue.length === 0 && this.listener && this.listener.queueCleared) {
       this.listener.queueCleared();
     }
     if (op.observer) {
       op.observer.next(result);
-    }
-  }
-
-  private persist() {
-    if (this.storage && this.storageKey) {
-      this.storage.setItem(this.storageKey, JSON.stringify(this.queue));
     }
   }
 

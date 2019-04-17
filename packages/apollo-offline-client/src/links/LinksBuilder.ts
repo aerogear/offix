@@ -5,14 +5,13 @@ import { conflictLink } from "../conflicts";
 import { DataSyncConfig } from "../config";
 import { createAuthLink } from "./AuthLink";
 import { AuditLoggingLink } from "./AuditLoggingLink";
-import { MetricsBuilder } from "@aerogear/core";
+import { DefaultMetricsBuilder, MetricsBuilder } from "@aerogear/core";
 import { LocalDirectiveFilterLink } from "./LocalDirectiveFilterLink";
 import { createUploadLink } from "apollo-upload-client";
-import { isMutation, isOnlineOnly, isSubscription, isMarkedOffline } from "../utils/helpers";
+import { isMutation, isOnlineOnly, isSubscription } from "../utils/helpers";
 import { defaultWebSocketLink } from "./WebsocketLink";
-import { OfflineLink } from "./OfflineLink";
-import { NetworkStatus } from "../offline";
-import { extensionsLink } from "./ExtensionsLink";
+import { OfflineLink } from "../offline/OfflineLink";
+import { NetworkStatus, OfflineMutationsHandler, OfflineStore } from "../offline";
 
 /**
  * Method for creating "uber" composite Apollo Link implementation including:
@@ -38,8 +37,7 @@ export const createDefaultLink = async (config: DataSyncConfig, offlineLink: Apo
  */
 export const createOfflineLink = async (config: DataSyncConfig) => {
   return new OfflineLink({
-    storage: config.storage,
-    storageKey: config.mutationsQueueName,
+    store: new OfflineStore(config),
     listener: config.offlineQueueListener,
     networkStatus: config.networkStatus as NetworkStatus,
     conflictStateProvider: config.conflictStateProvider
@@ -60,9 +58,9 @@ export const defaultHttpLinks = async (config: DataSyncConfig, offlineLink: Apol
   const mutationOfflineLink = ApolloLink.split((op: Operation) => {
     return isMutation(op) && !isOnlineOnly(op);
   }, offlineLink);
-  const retryLink = ApolloLink.split(isMarkedOffline, new RetryLink(config.retryOptions));
+  const retryLink = ApolloLink.split(OfflineMutationsHandler.isMarkedOffline, new RetryLink(config.retryOptions));
   const localFilterLink = new LocalDirectiveFilterLink();
-  const links: ApolloLink[] = [extensionsLink, mutationOfflineLink, retryLink, localFilterLink];
+  const links: ApolloLink[] = [mutationOfflineLink, retryLink, localFilterLink];
 
   if (config.auditLogging) {
     links.push(await createAuditLoggingLink());
@@ -93,7 +91,7 @@ export const defaultHttpLinks = async (config: DataSyncConfig, offlineLink: Apol
 };
 
 const createAuditLoggingLink = async (): Promise<AuditLoggingLink> => {
-  const metricsBuilder: MetricsBuilder = new MetricsBuilder();
+  const metricsBuilder: MetricsBuilder = new DefaultMetricsBuilder();
   const metricsPayload: {
     [key: string]: any;
   } = {};

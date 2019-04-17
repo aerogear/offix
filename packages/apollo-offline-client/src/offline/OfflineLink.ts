@@ -1,14 +1,17 @@
 import { ApolloLink, NextLink, Operation, Observable } from "apollo-link";
-import { PersistedData, PersistentStore } from "../PersistentStore";
-import { NetworkInfo, NetworkStatus, OfflineQueueListener } from "../offline";
-import { OfflineQueue } from "../offline/OfflineQueue";
+import { NetworkInfo, NetworkStatus, OfflineQueueListener, OfflineMutationsHandler, OfflineStore } from ".";
+import { OfflineQueue } from "./OfflineQueue";
 import { ObjectState } from "../conflicts";
-import { isMarkedOffline } from "../utils/helpers";
+import { OperationQueueEntry } from "./OperationQueueEntry";
+import * as debug from "debug";
+import { QUEUE_LOGGER } from "../config/Constants";
+import { OfflineError } from "./OfflineError";
+
+export const logger = debug.default(QUEUE_LOGGER);
 
 export interface OfflineLinkOptions {
   networkStatus: NetworkStatus;
-  storage?: PersistentStore<PersistedData>;
-  storageKey?: string;
+  store: OfflineStore;
   listener?: OfflineQueueListener;
   conflictStateProvider?: ObjectState;
 }
@@ -26,9 +29,11 @@ export interface OfflineLinkOptions {
  *   operations ready to be forwarded - see OfflineQueue class)
  */
 export class OfflineLink extends ApolloLink {
+
+  private online: boolean = false;
   private queue: OfflineQueue;
   private readonly networkStatus: NetworkStatus;
-  private online: boolean = false;
+  private offlineMutationHandler?: OfflineMutationsHandler;
 
   constructor(options: OfflineLinkOptions) {
     super();
@@ -37,11 +42,32 @@ export class OfflineLink extends ApolloLink {
   }
 
   public request(operation: Operation, forward: NextLink) {
-    if (!this.online || isMarkedOffline(operation)) {
-      return this.queue.enqueue(operation, forward);
+    // Reattempting operation that was marked as offline
+    if (OfflineMutationsHandler.isMarkedOffline(operation)) {
+      logger("Enqueueing offline mutation", operation.variables);
+      return this.queue.enqueueOfflineChange(operation, forward);
     }
-    // We are online and can skip this link;
-    return forward(operation);
+
+    if (this.online) {
+      logger("Online: Forwarding mutation", operation.variables);
+      // We are online and can skip this link;
+      return forward(operation);
+    }
+
+    if (!this.offlineMutationHandler) {
+      logger("Error: Offline link setup method was not called");
+      return forward(operation);
+    }
+    const handler = this.offlineMutationHandler;
+    return new Observable(observer => {
+      this.queue.persistItemWithQueue(operation).then((operationEntry) => {
+        // Send mutation request again
+        const offlineMutation = handler.mutateOfflineElement(operationEntry);
+        logger("Returning offline error to client", operation.variables);
+        observer.error(new OfflineError(offlineMutation));
+      });
+      return () => { return; };
+    });
   }
 
   /**
@@ -66,5 +92,9 @@ export class OfflineLink extends ApolloLink {
         }
       }
     });
+  }
+
+  public setup(handler: OfflineMutationsHandler) {
+    this.offlineMutationHandler = handler;
   }
 }
