@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc --build tsconfig.json",
     "watch": "tsc --build tsconfig.json --watch",
-    "test": "ava '*.test.ts' '**/*.test.ts'",
+    "test": "echo TODO",
     "compile:clean": "tsc --build tsconfig.json --clean"
   },
   "license": "Apache-2.0",

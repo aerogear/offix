@@ -49,7 +49,9 @@ export class ConflictResolution {
    */
   public resolvedState?: ObjectStateData;
 
-  constructor(resolvedOnServer: boolean, serverState: ObjectStateData, clientState: ObjectStateData) {
+  public constructor(resolvedOnServer: boolean,
+                     serverState: ObjectStateData,
+                     clientState: ObjectStateData) {
     this.response = new ObjectConflictError({
       resolvedOnServer,
       serverState,

@@ -1,7 +1,6 @@
 import { ConflictResolution } from "./ConflictResolution";
 import { ConflictResolutionStrategy } from "./ConflictResolutionStrategy";
 import { ObjectStateData } from "./ObjectStateData";
-import { GraphQLResolveInfo } from "graphql";
 
 /**
  * Interface for handling changing state of the object.
