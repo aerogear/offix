@@ -1,7 +1,7 @@
-import { ConflictResolution } from './ConflictResolution'
-import { ConflictResolutionStrategy } from './ConflictResolutionStrategy'
-import { ObjectStateData } from './ObjectStateData'
-import { GraphQLResolveInfo } from 'graphql'
+import { ConflictResolution } from "./ConflictResolution";
+import { ConflictResolutionStrategy } from "./ConflictResolutionStrategy";
+import { ObjectStateData } from "./ObjectStateData";
+import { GraphQLResolveInfo } from "graphql";
 
 /**
  * Interface for handling changing state of the object.
@@ -20,20 +20,20 @@ export interface ObjectState {
    * @param context context that's coming from Apollo
    * @param info resolver info that's coming from Apollo
    */
-  hasConflict(serverState: ObjectStateData, clientState: ObjectStateData): boolean
+  hasConflict(serverState: ObjectStateData, clientState: ObjectStateData): boolean;
 
   /**
    *
    * @param objectState the object wish you would like to progress to its next state
    */
-  nextState(objectState: ObjectStateData): ObjectStateData
+  nextState(objectState: ObjectStateData): ObjectStateData;
 
   /**
    *
    * @param serverState the current state of the object on the server
    * @param clientState the state of the object the client wishes to perform some mutation with
    */
-  resolveOnClient(serverState: ObjectStateData, clientState: ObjectStateData): ConflictResolution
+  resolveOnClient(serverState: ObjectStateData, clientState: ObjectStateData): ConflictResolution;
 
   /**
    *
@@ -41,7 +41,9 @@ export interface ObjectState {
    * @param serverState the current state of the object on the server
    * @param clientState the state of the object the client wishes to perform some mutation with
    */
-  resolveOnServer(strategy: ConflictResolutionStrategy, serverState: ObjectStateData, clientState: ObjectStateData): Promise<ConflictResolution>
+  resolveOnServer(strategy: ConflictResolutionStrategy,
+                  serverState: ObjectStateData,
+                  clientState: ObjectStateData): Promise<ConflictResolution>;
 
   /**
    * Inform clients that changes were rejected due to conflict without applying them to server.
@@ -51,5 +53,5 @@ export interface ObjectState {
    * @param serverState
    * @param clientState
    */
-  reject(serverState: ObjectStateData, clientState: ObjectStateData): ConflictResolution
+  reject(serverState: ObjectStateData, clientState: ObjectStateData): ConflictResolution;
 }

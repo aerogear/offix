@@ -1,4 +1,4 @@
-import { ObjectStateData } from './ObjectStateData'
+import { ObjectStateData } from "./ObjectStateData";
 
 /**
  * @param serverState server side data
@@ -6,4 +6,5 @@ import { ObjectStateData } from './ObjectStateData'
  *
  * @throws ObjectConflictError with resolution info
  */
-export type ConflictResolutionStrategy = (serverState: ObjectStateData, clientState: ObjectStateData) => Promise<ObjectStateData> | ObjectStateData
+export type ConflictResolutionStrategy =
+(serverState: ObjectStateData, clientState: ObjectStateData) => Promise<ObjectStateData> | ObjectStateData;

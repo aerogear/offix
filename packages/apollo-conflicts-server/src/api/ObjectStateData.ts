@@ -6,4 +6,4 @@
  * however it should always be used in unmodified state
  * (no new fields are added or removed)
  */
-export type ObjectStateData = any
+export type ObjectStateData = any;
