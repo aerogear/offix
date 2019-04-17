@@ -40,7 +40,7 @@ const newClient = async (clientOptions = {}) => {
   return await createClient(config);
 };
 
-describe('Conflicts', function () {
+describe('Conflicts', function() {
 
   this.timeout(2000);
 
@@ -57,7 +57,7 @@ describe('Conflicts', function () {
 
   let client, networkStatus, store;
 
-  before('start server', async function () {
+  before('start server', async function() {
     await server.start();
   });
 
@@ -65,11 +65,11 @@ describe('Conflicts', function () {
     await server.stop();
   });
 
-  beforeEach('reset server', async function () {
+  beforeEach('reset server', async function() {
     await server.reset();
   });
 
-  beforeEach('create client', async function () {
+  beforeEach('create client', async function() {
     networkStatus = newNetworkStatus(false);
     store = new TestStore();
     client = await newClient({ networkStatus, storage: store });
@@ -110,11 +110,13 @@ describe('Conflicts', function () {
 
     const variables = { title: 'client', description: 'client', id: task.id, version: task.version };
 
-    client.mutate({
+    await client.mutate({
       mutation,
       variables
-    });
-    
+    }).catch(error => {
+      return;
+    })
+
     networkStatus.setOnline(true);
 
     await new Promise(resolve => setTimeout(resolve, 100));
@@ -122,9 +124,9 @@ describe('Conflicts', function () {
     return { success, failure };
   };
 
-  describe('reject update on conflict', function () {
+  describe('reject update on conflict', function() {
 
-    it('should succeed', async function () {
+    it('should succeed', async function() {
       const { success, failure } = await createConflict(UPDATE_TASK_CONFLICT_REJECT);
 
       expect(success).to.equal(0);
@@ -142,9 +144,9 @@ describe('Conflicts', function () {
 
   });
 
-  describe('resolve conflict on client', function () {
+  describe('resolve conflict on client', function() {
 
-    it('should succeed', async function () {
+    it('should succeed', async function() {
       const { success, failure } = await createConflict(UPDATE_TASK_CLIENT_RESOLUTION);
 
       expect(success).to.equal(1);
@@ -162,9 +164,9 @@ describe('Conflicts', function () {
 
   });
 
-  describe('resolve conflict on server', function () {
+  describe('resolve conflict on server', function() {
 
-    it('should succeed', async function () {
+    it('should succeed', async function() {
       const { success, failure } = await createConflict(UPDATE_TASK_SERVER_RESOLUTION);
 
       expect(success).to.equal(1);
@@ -182,9 +184,9 @@ describe('Conflicts', function () {
 
   });
 
-  describe('custom resolution strategy', function () {
+  describe('custom resolution strategy', function() {
 
-    it('should succeed', async function () {
+    it('should succeed', async function() {
       const { success, failure } = await createConflict(UPDATE_TASK_CUSTOM_CLIENT_RESOLUTION);
 
       expect(success).to.equal(1);
