@@ -90,7 +90,7 @@ let config = {
 
 ## Making modifications when offline
 
-AeroGear Sync SDK provides queue that stores mutations performed when offline.
+Client provides queue that stores mutations performed when offline.
 By default queue saves data in storage to be available after application restarts.
 Queue will hold requests until application will come back online.
 
