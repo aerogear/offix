@@ -1,9 +1,11 @@
 <p align="center">
   <img width="400" src="https://github.com/graphql-heroes/ApolloOfflineClient/raw/master/resources/logo.png">
+  <br/>
+  Apollo Offline Client extends capabilities of Apollo GraphQL providing</br>
+  fully featured Offline Workflow and Conflict Resolution.
 </p>
 
-Apollo Offline Client extends capabilities of Apollo GraphQL providing</br>
-fully featured Offline Workflow and Conflict Resolution.
+
 
 ## Features
 
