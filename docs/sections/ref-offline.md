@@ -19,20 +19,37 @@ Please follow chapters bellow for more information.
 
 ## Querying local cache
 
-By default client will save all performed query results in the cache.
-Data will be available to be used when application goes offline.
-Queries are cached out of the box based on the type and `id` field.
-When performing mutations that affects some queries users `update` method:
+By default queries are cached based on the type and id field, and the results of performed queries are cached as well and they will be available when the client is offline.
+
+Because of this, when mutations that can change query results are performed, the `refetchQueries` or update options of the mutate method should be used to ensure the local cache is kept up to date.
+
+In the following example, the app will perform an `ADD_TASK` mutation which will create a new task. The app also has a `GET_TASKS` query to list all the tasks. In order to make sure the cache for the `GET_TASKS` query is kept up to date whenever a new task is created, the update option is used to add the newly created task to the cache:
 
 ```
-    client.mutate<Task>({
-      mutation: ADD_TASK, variables: item,
-      optimisticResponse: createOptimisticResponse('createTask', 'Task', item),
-      update: this.updateCacheOnAdd
+  client.mutate({
+    mutation: ADD_TASK, variables: item,
+    update: updateCacheOnAdd
+  });
+
+  function updateCacheOnAdd(cache, { data: { createTask } }) {
+    let { allTasks } = cache.readQuery({ query: GET_TASKS });
+    if (allTasks) {
+      if (!allTasks.find((task) => task.id === createTask.id)) {
+        allTasks.push(createTask);
+      }
+    } else {
+      allTasks = [createTask];
+    }
+    cache.writeQuery({
+      query: GET_TASKS,
+      data: {
+        'allTasks': allTasks
+      }
     });
+  }
 ```
 
-## Offline workflow
+## Offline Workflow
 
 By design `client.mutate` function will resolve to error when offline.
 Developers can detect offline error and watch offline change to notify
@@ -54,12 +71,9 @@ that can be supplied when creating client.
 
 ## Global Update Functions
 
-Apollo client holds all mutation parameters in memory.
-Offline Client will save and restore all mutations with exact parameters
-when application is restarted. Update functions supplied to mutations cannot be saved in the cache.
-As result all optimisticResponses will disappear from application after restart.
+Apollo client holds all mutation parameters in memory. An offline Apollo client will continue to store mutation parameters and once online, it will restore all mutations to memory. Any Update Functions that are supplied to mutations cannot be cached by an Apollo client resulting in the loss of all optimisticResponses after a restart. Update functions supplied to mutations cannot be saved in the cache. As a result, all optimisticResponses will disappear from the application after a restart and it will only reappear when the Apollo client becomes online and successfully syncs with the server.
 
-To prevent from that Client offers separate `mutationCacheUpdates` parameter that can be supplied to client config.Adding update functions will reapply optimistic responses, which will show all offline data after application restarts.
+To prevent the loss of all optimisticResponses after a restart, you can configure the Update Functions to restore all optimisticResponses.
 
 
 ```javascript
