@@ -7,7 +7,7 @@
     "test": "karma start",
     "posttest": "kill $(lsof -t -i:4001) || true"
   },
-  "author": "AeroGear",
+  "author": "",
   "license": "Apache-2.0",
   "dependencies": {
     "@aerogear/voyager-server": "0.5.1",

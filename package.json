@@ -1,8 +1,8 @@
 {
-  "name": "AeroGearServicesWeb",
+  "name": "ApolloOffline",
   "version": "1.0.0",
   "private": true,
-  "description": "AeroGear Services Web/Cordova SDK mono repository",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "nyc lerna run test",

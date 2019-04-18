@@ -96,7 +96,7 @@ const resolvers = {
         }
         conflictHandler.nextState(args)
       }
-  
+
       data[index] = {...(data[index]), ...args};
       return data[index];
     },
@@ -108,7 +108,7 @@ const resolvers = {
         return conflictHandler.reject(data[index], args);
       }
       conflictHandler.nextState(args)
-  
+
       data[index] = {...(data[index]), ...args};
       return data[index];
     },
@@ -121,7 +121,7 @@ const resolvers = {
         return response
       }
       conflictHandler.nextState(args)
-  
+
       data[index] = {...(data[index]), ...args};
       return data[index];
     },
@@ -134,7 +134,7 @@ const resolvers = {
         return response
       }
       conflictHandler.nextState(args)
-  
+
       data[index] = {...(data[index]), ...args};
       return data[index];
     },
@@ -148,7 +148,7 @@ const resolvers = {
         return response;
       }
       conflictHandler.nextState(args)
-  
+
       data[index] = {...(data[index]), ...args};
       return data[index];
     },
@@ -170,7 +170,7 @@ const resolvers = {
         return response;
       }
       conflictHandler.nextState(args)
-  
+
       data[index] = {...(data[index]), ...args};
       return data[index];
     },
