@@ -51,10 +51,11 @@ In the following example, the app will perform an `ADD_TASK` mutation which will
 
 ## Offline Workflow
 
-By design `client.mutate` function will resolve to error when offline.
-Developers can detect offline error and watch offline change to notify
+When offline `client.mutate` function will return immediately after is called.
+Returned promise will resolve into error (`catch` method is triggered).
+Developers can detect if error is an offline error and watch for change to be replicated back to server.
 
-  Usage:
+Example:
   ```javascript
   client.mutate(...).catch((error)=> {
     // 1. Detect if this was an offline error
