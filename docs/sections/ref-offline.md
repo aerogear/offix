@@ -66,8 +66,7 @@ Developers can detect offline error and watch offline change to notify
   });
   ```
 
-> Note: Additionally to watching individual mutations framework offers global offline listener
-that can be supplied when creating client.
+> Note: Additionally to watching individual mutations framework offers global offline listener that can be supplied when creating client.
 
 ## Global Update Functions
 
