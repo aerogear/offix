@@ -32,6 +32,26 @@ When performing mutations that affects some queries users `update` method:
     });
 ```
 
+## Offline workflow
+
+By design `client.mutate` function will resolve to error when offline.
+Developers can detect offline error and watch offline change to notify
+
+  Usage:
+  ```javascript
+  client.mutate(...).catch((error)=> {
+    // 1. Detect if this was an offline error
+   if(error.networkError && error.networkError.offline){
+     const offlineError: OfflineError =  error.networkError;
+     // 2. We can still track when offline change is going to be replicated.
+     offlineError.watchOfflineChange().then(...)
+   }
+  });
+  ```
+
+> Note: Additionally to watching individual mutations framework offers global offline listener
+that can be supplied when creating client.
+
 ## Global Update Functions
 
 Apollo client holds all mutation parameters in memory.

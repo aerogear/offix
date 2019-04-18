@@ -6,14 +6,15 @@ navigation: 1
 
 ![ApolloOffline](https://github.com/graphql-heroes/ApolloOfflineClient/raw/master/resources/logo.png)
 
-Community extensions to Apollo GraphQL providing:
+Apollo Offline Client extends capabilities of Apollo GraphQL providing
+fully featured offline workflow and conflict resolution.
 
-- Offline support:
-  +  Creation, Edits and Deletion operations when offline
-- Request Queue offering scheduling and advanced control over data replication
-- Listeners for UI
-- Working seamlessly with OptimisticUI and CacheUpdates
-- Conflict resolution using different Conflict resolution strategies.
-- Out of the box Subscriptions and Binary upload that works offline.
-- Multi platform support. Works with Web, Cordova, Capacitor and React Native.
+## Features
+
+- Offline support. Mutations are persisted when Offline.
+- Offline Listeners and workflows for seamless UI.
+- Flexible, out of the box Conflict Resolution implementations
+- Subscriptions and Binary Upload that works offline.
+- Multi platform support.
+    - Works with Web, Cordova, Capacitor and React Native.
 - Framework agnostic (works with React, Angular and Vue)
