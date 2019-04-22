@@ -26,6 +26,8 @@
     "generate:docs": "./scripts/docs.sh"
   },
   "devDependencies": {
+    "@types/graphql": "^14.2.0",
+    "graphql": "^14.2.1",
     "coveralls": "3.0.3",
     "del-cli": "1.1.0",
     "lerna": "3.13.3",
@@ -38,9 +40,7 @@
     "typescript": "3.4.1"
   },
   "dependencies": {
-    "@types/graphql": "^14.2.0",
-    "@types/mocha": "5.2.6",
-    "graphql": "^14.2.1"
+    "@types/mocha": "5.2.6"
   },
   "nyc": {
     "extension": [
