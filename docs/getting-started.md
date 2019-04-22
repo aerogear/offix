@@ -12,7 +12,7 @@ navigation: 2
 import {
   createClient,
   strategies
-} from 'apollo-offline-client';
+} from 'offix-client';
 ```
 
 ## Configuration

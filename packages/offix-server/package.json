@@ -1,7 +1,7 @@
 {
-  "name": "apollo-conflicts-server",
-  "version": "0.3.0",
-  "description": "A package to provide conflict handler framework for GraphQL server",
+  "name": "offix-server",
+  "version": "0.4.0",
+  "description": "Offix GraphQL server",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc --build tsconfig.json",
@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "ava": "1.4.1",
+    "graphql": "^14.2.1",
     "ts-node": "8.1.0",
     "typescript": "3.4.4"
   },

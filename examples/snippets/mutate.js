@@ -1,4 +1,4 @@
-const createOptimisticResponse = require("apollo-offline-client").createOptimisticResponse
+const createOptimisticResponse = require("offix-client").createOptimisticResponse
 
 export const deleteTask = (client, task) => {
   // 1. Execute mutation

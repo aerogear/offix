@@ -1,7 +1,7 @@
 {
-  "name": "apollo-offline-client",
-  "version": "0.3.0",
-  "description": "Apollo Offline Client",
+  "name": "offix-client",
+  "version": "0.4.0",
+  "description": "Offix GraphQL Offline Client",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
   "scripts": {
