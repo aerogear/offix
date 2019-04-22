@@ -6,7 +6,7 @@ navigation: 1
 <p align="center">
   <img width="400" src="https://github.com/graphql-heroes/ApolloOfflineClient/raw/master/resources/logo.png">
   <br/>
-  Apollo Offline Client extends capabilities of Apollo GraphQL providing
+  Offix extends capabilities of Apollo GraphQL providing
   fully featured Offline Workflow and Conflict Resolution.
 </p>
 
