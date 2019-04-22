@@ -37,7 +37,7 @@ jobs:
           command: npm test
       - run:
           name: integration test
-          command: cd packages/apollo-offline-client && npm run integration-test
+          command: cd packages/offix-client && npm run integration-test
       - store_artifacts:
           path: test-results.xml
           prefix: tests
