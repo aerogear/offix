@@ -3,7 +3,7 @@ title: Apollo Offline Client
 email:
 description:
 baseurl: "ApolloOfflineClient" # the subpath of your site, e.g. /blog
-url: "https://graphql-heroes.github.io"
+url: "https://offix.dev"
 remote_theme: alexander-heimbuch/millidocs
 # theme: millidocs
 markdown: kramdown
