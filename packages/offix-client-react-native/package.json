@@ -1,0 +1,31 @@
+{
+  "name": "offix-client-react-native",
+  "version": "0.3.0",
+  "description": "Offix Offline Client for React Native",
+  "main": "dist/index.js",
+  "types": "types/index.d.ts",
+  "scripts": {
+    "clean": "del coverage src/**/*.js src/**/*.map test/**/*.js test/**/*.map dist types",
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "test": "mocha"
+  },
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/chai": "4.1.7",
+    "@types/debug": "4.1.4",
+    "@types/graphql": "14.2.0",
+    "@types/mocha": "5.2.6",
+    "@types/ws": "6.0.1",
+    "chai": "4.2.0",
+    "del": "4.1.0",
+    "mocha": "6.1.4",
+    "ts-node": "8.1.0",
+    "typescript": "3.4.4"
+  },
+  "dependencies": {
+  }
+}
