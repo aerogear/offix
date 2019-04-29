@@ -1,4 +1,4 @@
-export * from "./createClient";
+export * from "./OfflineClient";
 export * from "./config";
 export * from "./conflicts";
 export * from "./links";

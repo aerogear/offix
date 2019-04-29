@@ -35,9 +35,9 @@ export const createDefaultLink = async (config: DataSyncConfig, offlineLink: Apo
 /**
  * Create offline link
  */
-export const createOfflineLink = async (config: DataSyncConfig) => {
+export const createOfflineLink = async (config: DataSyncConfig, store: OfflineStore) => {
   return new OfflineLink({
-    store: new OfflineStore(config),
+    store,
     listener: config.offlineQueueListener,
     networkStatus: config.networkStatus as NetworkStatus,
     conflictStateProvider: config.conflictStateProvider
