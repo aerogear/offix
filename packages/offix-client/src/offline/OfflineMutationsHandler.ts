@@ -18,14 +18,12 @@ export const logger = debug.default(MUTATION_QUEUE_LOGGER);
 // TODO rename
 export class OfflineMutationsHandler {
 
-  private apolloClient: ApolloClient<NormalizedCacheObject>;
-  private store: OfflineStore;
   private mutationCacheUpdates?: CacheUpdates;
 
-  constructor(apolloClient: ApolloClient<NormalizedCacheObject>, clientConfig: DataSyncConfig) {
-    this.apolloClient = apolloClient;
+  constructor(private store: OfflineStore,
+              private apolloClient: ApolloClient<NormalizedCacheObject>,
+              clientConfig: DataSyncConfig) {
     this.mutationCacheUpdates = clientConfig.mutationCacheUpdates;
-    this.store = new OfflineStore(clientConfig);
   }
 
   /**
