@@ -1,23 +1,19 @@
-import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
+import { InMemoryCache } from "apollo-cache-inmemory";
 import { persistCache } from "apollo-cache-persist";
 import { ApolloClient } from "apollo-client";
 import { DataSyncConfig } from "./config";
 import { SyncConfig } from "./config/SyncConfig";
 import { createDefaultLink, createOfflineLink } from "./links/LinksBuilder";
-import { OfflineStore } from "./offline";
+import { OfflineStore, OfflineQueueListener } from "./offline";
 import { OfflineLink } from "./offline/OfflineLink";
 import { OfflineMutationsHandler } from "./offline/OfflineMutationsHandler";
 import { PersistedData, PersistentStore } from "./PersistentStore";
+import { CompositeQueueListener } from "./offline/events/CompositeQueueListener";
+import { ListenerProvider } from "./offline/events/ListenerProvider";
+import { ApolloOfflineClient } from "./OfflineApolloClient";
 
 /**
- * @see ApolloClient
- */
-export interface ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
-  offlineStore: OfflineStore;
-}
-
-/**
-* Factory for creating Apollo Client
+* Factory for creating Apollo Offline Client
 *
 * @param userConfig options object used to build client
 * @deprecated use OfflineClient class directly:
@@ -36,7 +32,7 @@ export const createClient = async (userConfig: DataSyncConfig):
  * OfflineClient
  *
  * Enables offline workflows, conflict resolution and cache
- * storage for Apollo GraphQL client.
+ * storage on top Apollo GraphQL JavaScript client.
  *
  * Usage:
  *
@@ -45,7 +41,9 @@ export const createClient = async (userConfig: DataSyncConfig):
  *  await offlineClient.init();
  *  ```
  */
-export class OfflineClient {
+export class OfflineClient implements ListenerProvider {
+
+  public queueListeners: OfflineQueueListener[] = [];
   private apolloClient?: ApolloOfflineClient;
   private store: OfflineStore;
   private config: DataSyncConfig;
@@ -53,20 +51,11 @@ export class OfflineClient {
   constructor(userConfig: DataSyncConfig) {
     this.config = this.extractConfig(userConfig);
     this.store = new OfflineStore(this.config);
+    this.setupEventListeners();
   }
 
   /**
-   * Get access to offline store that can be used to
-   * visualize  offline  operations that are currently pending
-   */
-  public get offlineStore(): OfflineStore {
-    return this.store;
-  }
-
-  /**
-  * Create new client
-  *
-  * @param userConfig options object used to build client
+  * Initialize client
   */
   public async init(): Promise<ApolloOfflineClient> {
     const { cache } = await this.buildCachePersistence(this.config);
@@ -82,14 +71,32 @@ export class OfflineClient {
     return this.apolloClient;
   }
 
+  /**
+   * Get access to offline store that can be used to
+   * visualize  offline  operations that are currently pending
+   */
+  public get offlineStore(): OfflineStore {
+    return this.store;
+  }
+
+  /**
+   * Add new listener for listening for queue changes
+   *
+   * @param listener
+   */
+  public registerOfflineEventListener(listener: OfflineQueueListener) {
+    this.queueListeners.push(listener);
+  }
+
   protected decorateApolloClient(apolloClient: any): ApolloOfflineClient {
     apolloClient.offlineStore = this.offlineStore;
+    apolloClient.registerOfflineEventListener = this.registerOfflineEventListener.bind(this);
     return apolloClient;
   }
 
   /**
- * Extract configuration from user and external sources
- */
+   * Extract configuration from user and external sources
+   */
   protected extractConfig(userConfig: DataSyncConfig | undefined) {
     const config = new SyncConfig(userConfig);
     const clientConfig = config.getClientConfig();
@@ -101,7 +108,7 @@ export class OfflineClient {
    */
   protected async restoreOfflineOperations(offlineLink: OfflineLink) {
 
-    const offlineMutationHandler = new OfflineMutationsHandler(
+    const offlineMutationHandler = new OfflineMutationsHandler(this.store,
       this.apolloClient as ApolloOfflineClient,
       this.config);
     offlineLink.setup(offlineMutationHandler);
@@ -111,11 +118,11 @@ export class OfflineClient {
     await offlineLink.initOnlineState();
   }
 
-/**
- * Build storage that will be used for caching data
- *
- * @param clientConfig
- */
+  /**
+   * Build storage that will be used for caching data
+   *
+   * @param clientConfig
+   */
   protected async buildCachePersistence(clientConfig: DataSyncConfig) {
     const cache = new InMemoryCache();
     await persistCache({
@@ -127,4 +134,11 @@ export class OfflineClient {
     return { cache };
   }
 
+  private setupEventListeners() {
+    // Check if user provided legacy listener
+    // To provide backwards compatibility we ignore this case
+    if (!this.config.offlineQueueListener) {
+      this.config.offlineQueueListener = new CompositeQueueListener(this);
+    }
+  }
 }

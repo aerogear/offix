@@ -86,6 +86,8 @@ export interface DataSyncConfig {
 
   /**
    * Interface that can be implemented to receive information about the data conflict
+   *
+   * @deprecated see OfflineClient.registerOfflineEventListener
    */
   conflictListener?: ConflictListener;
 

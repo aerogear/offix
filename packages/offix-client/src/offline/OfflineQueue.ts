@@ -1,5 +1,5 @@
 import { OperationQueueEntry } from "./OperationQueueEntry";
-import { OfflineQueueListener } from "./OfflineQueueListener";
+import { OfflineQueueListener } from "./events/OfflineQueueListener";
 import { isClientGeneratedId } from "../cache/createOptimisticResponse";
 import { ObjectState } from "../conflicts/ObjectState";
 import { Operation, NextLink, Observable, FetchResult } from "apollo-link";
