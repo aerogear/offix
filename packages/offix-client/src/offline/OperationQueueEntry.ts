@@ -1,5 +1,5 @@
 import { FetchResult, NextLink, Operation } from "apollo-link";
-import { isClientGeneratedId } from "../cache/createOptimisticResponse";
+import { isClientGeneratedId, generateId } from "../cache/createOptimisticResponse";
 
 /**
  * Represents data that is being saved to the offlien store
@@ -7,6 +7,7 @@ import { isClientGeneratedId } from "../cache/createOptimisticResponse";
 export interface OfflineItem {
   operation: Operation;
   optimisticResponse?: any;
+  id: string;
 }
 
 /**
@@ -18,15 +19,20 @@ export class OperationQueueEntry implements OfflineItem {
 
   public readonly operation: Operation;
   public readonly optimisticResponse?: any;
-
+  public id: string;
   public forward?: NextLink;
   public result?: FetchResult;
   public networkError: any;
   public observer?: ZenObservable.SubscriptionObserver<FetchResult>;
 
-  constructor(operation: Operation, forward?: NextLink) {
+  constructor(operation: Operation, offlineId?: number, forward?: NextLink) {
     this.operation = operation;
     this.forward = forward;
+    if (offlineId) {
+      this.id = offlineId.toString();
+    } else {
+      this.id = generateId();
+    }
     if (typeof operation.getContext === "function") {
       this.optimisticResponse = operation.getContext().optimisticResponse;
     }
@@ -46,7 +52,8 @@ export class OperationQueueEntry implements OfflineItem {
   public toOfflineItem(): OfflineItem {
     return {
       operation: this.operation,
-      optimisticResponse: this.optimisticResponse
+      optimisticResponse: this.optimisticResponse,
+      id: this.id
     };
   }
 }

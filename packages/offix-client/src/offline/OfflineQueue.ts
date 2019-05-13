@@ -3,7 +3,7 @@ import { OfflineQueueListener } from "./events/OfflineQueueListener";
 import { isClientGeneratedId } from "../cache/createOptimisticResponse";
 import { ObjectState } from "../conflicts/ObjectState";
 import { Operation, NextLink, Observable, FetchResult } from "apollo-link";
-import { OfflineStore } from "./OfflineStore";
+import { OfflineStore } from "./storage/OfflineStore";
 import { OfflineLinkOptions } from "../links";
 
 export type OperationQueueChangeHandler = (entry: OperationQueueEntry) => void;
@@ -35,7 +35,7 @@ export class OfflineQueue {
    */
   public async persistItemWithQueue(operation: Operation) {
     const operationEntry = new OperationQueueEntry(operation);
-    await this.store.persistOfflineData([...this.queue, operationEntry]);
+    await this.store.saveEntry(operationEntry);
     return operationEntry;
   }
 
@@ -45,7 +45,8 @@ export class OfflineQueue {
    *
    */
   public enqueueOfflineChange(operation: Operation, forward: NextLink) {
-    const operationEntry = new OperationQueueEntry(operation, forward);
+    const offlineId = operation.getContext().offlineId;
+    const operationEntry = new OperationQueueEntry(operation, offlineId, forward);
     this.queue.push(operationEntry);
     if (this.listener && this.listener.onOperationEnqueued) {
       this.listener.onOperationEnqueued(operationEntry);
@@ -93,6 +94,7 @@ export class OfflineQueue {
   }
 
   private onForwardNext(op: OperationQueueEntry, result: FetchResult<any>) {
+    const entry = this.queue.find(e => e === op);
     this.queue = this.queue.filter(e => e !== op);
     if (result.errors) {
       if (this.listener && this.listener.onOperationFailure) {
@@ -106,7 +108,9 @@ export class OfflineQueue {
       this.updateIds(op, result);
       this.updateObjectState(op, result);
     }
-    this.store.persistOfflineData(this.queue);
+    if (entry) {
+      this.store.removeEntry(entry);
+    }
     if (this.queue.length === 0 && this.listener && this.listener.queueCleared) {
       this.listener.queueCleared();
     }

@@ -4,14 +4,16 @@ export class TestStore {
   }
 
   getItem(key) {
-    return this.data[key];
+    return Promise.resolve(this.data[key]);
   }
 
   setItem(key, data) {
     this.data[key] = data;
+    return Promise.resolve();
   }
 
   removeItem(key) {
     delete this.data[key];
+    return Promise.resolve();
   }
 }
