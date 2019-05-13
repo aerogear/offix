@@ -34,7 +34,8 @@
   "dependencies": {
     "@aerogear/core": "2.4.0",
     "apollo-cache-inmemory": "1.5.1",
-    "apollo-cache-persist": "0.1.1",
+    "@graphqlheroes/apollo-cache-persist": "0.1.2",
+    "idb-localstorage": "^0.2.0",
     "apollo-client": "2.5.1",
     "apollo-link": "1.2.11",
     "apollo-link-context": "1.0.17",

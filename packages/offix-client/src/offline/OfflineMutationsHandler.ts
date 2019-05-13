@@ -7,7 +7,7 @@ import { DataSyncConfig } from "../config";
 import CacheUpdates from "../cache/CacheUpdates";
 import { getMutationName } from "../utils/helpers";
 import { Operation } from "apollo-link";
-import { OfflineStore } from "./OfflineStore";
+import { OfflineStore } from "./storage/OfflineStore";
 
 export const logger = debug.default(MUTATION_QUEUE_LOGGER);
 
@@ -34,7 +34,7 @@ export class OfflineMutationsHandler {
   public replayOfflineMutations = async () => {
     const offlineData = await this.store.getOfflineData();
     // if there is no offline data  then just exit
-    if (offlineData.length === 0) { return; }
+    if (offlineData && offlineData.length === 0) { return; }
 
     logger("Replying offline mutations after application restart");
     for (const item of offlineData) {
@@ -62,7 +62,7 @@ export class OfflineMutationsHandler {
       // Pass client update functions
       update: updateFunction,
       // Pass extensions as part of the context
-      context: this.getOfflineContext()
+      context: this.getOfflineContext(item.id)
     };
     await this.apolloClient.mutate(mutationOptions);
   }
@@ -70,8 +70,8 @@ export class OfflineMutationsHandler {
   /**
    * Add info to operation that was done when offline
    */
-  public getOfflineContext() {
-    return { isOffline: true };
+  public getOfflineContext(id: string) {
+    return { isOffline: true, offlineId: id };
   }
 
   /**

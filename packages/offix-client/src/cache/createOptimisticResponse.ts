@@ -7,7 +7,7 @@ export const isClientGeneratedId = (id: string) => {
 };
 
 // Helper method for ID generation ()
-const generateId = (length = 8) => {
+export const generateId = (length = 8) => {
   let result = CLIENT_ID_PREFIX;
   const chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 

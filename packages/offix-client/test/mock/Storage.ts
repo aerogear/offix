@@ -1,12 +1,11 @@
 export const storage = {
   getItem: () => {
-    console.info("Called");
-    return "{}";
+    return Promise.resolve({});
   },
   setItem: () => {
-    console.info("Called");
+    return Promise.resolve();
   },
   removeItem: () => {
-    console.info("Called");
+    return Promise.resolve();
   }
 };
