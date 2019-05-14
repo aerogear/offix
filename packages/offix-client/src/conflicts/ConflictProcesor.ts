@@ -12,7 +12,8 @@ export class ConflictProcessor implements IResultProcessor {
     constructor(private state: ObjectState) {
     }
 
-    execute(queue: OperationQueueEntry[], entry: OperationQueueEntry, result: FetchResult): void {
+    public execute(queue: OperationQueueEntry[],
+                   entry: OperationQueueEntry, result: FetchResult): void {
         const { operation: { operationName } } = entry;
         if (!result || !this.state) {
             return;
@@ -20,7 +21,8 @@ export class ConflictProcessor implements IResultProcessor {
 
         if (result.data && result.data[operationName]) {
             for (const { operation: op } of queue) {
-                if (op.variables.id === entry.operation.variables.id && op.operationName === entry.operation.operationName) {
+                if (op.variables.id === entry.operation.variables.id
+                    && op.operationName === entry.operation.operationName) {
                     const opVersion = this.state.currentState(op.variables);
                     const prevOpVersion = this.state.currentState(entry.operation.variables);
                     if (opVersion === prevOpVersion) {

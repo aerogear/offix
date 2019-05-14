@@ -10,7 +10,7 @@ import { isClientGeneratedId } from "./createOptimisticResponse";
    * generated ID. Once any create operation is successful, we should
    * update entries in queue with ID returned from server.
    */
-  export class IDProcessor implements IResultProcessor {
+export class IDProcessor implements IResultProcessor {
 
     public execute(queue: OperationQueueEntry[], entry: OperationQueueEntry, result: FetchResult) {
         const { operation: { operationName }, optimisticResponse } = entry;
@@ -20,9 +20,9 @@ import { isClientGeneratedId } from "./createOptimisticResponse";
           !isClientGeneratedId(optimisticResponse[operationName].id)) {
           return;
         }
-    
+
         const clientId = optimisticResponse && optimisticResponse[operationName].id;
-    
+
         queue.forEach(({ operation: op }) => {
           if (op.variables.id === clientId) {
             op.variables.id = result.data && result.data[operationName].id;

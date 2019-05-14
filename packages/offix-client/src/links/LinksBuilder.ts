@@ -39,7 +39,10 @@ export const createDefaultLink = async (config: DataSyncConfig, offlineLink: Apo
  * Create offline link
  */
 export const createOfflineLink = async (config: DataSyncConfig, store: OfflineStore) => {
-  const resultProcessors: IResultProcessor[] = [new IDProcessor(), new ConflictProcessor(config.conflictStateProvider as ObjectState)]
+  const resultProcessors: IResultProcessor[] = [
+    new IDProcessor(),
+    new ConflictProcessor(config.conflictStateProvider as ObjectState)
+  ];
   return new OfflineLink({
     store,
     listener: config.offlineQueueListener,
