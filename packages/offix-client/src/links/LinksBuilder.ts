@@ -1,7 +1,7 @@
 import { ApolloLink, Operation } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { RetryLink } from "apollo-link-retry";
-import { conflictLink } from "../conflicts";
+import { conflictLink, ObjectState } from "../conflicts";
 import { DataSyncConfig } from "../config";
 import { createAuthLink } from "./AuthLink";
 import { AuditLoggingLink } from "./AuditLoggingLink";
@@ -12,6 +12,9 @@ import { isMutation, isOnlineOnly, isSubscription } from "../utils/helpers";
 import { defaultWebSocketLink } from "./WebsocketLink";
 import { OfflineLink } from "../offline/OfflineLink";
 import { NetworkStatus, OfflineMutationsHandler, OfflineStore } from "../offline";
+import { IDProcessor } from "../cache/IDProcessor";
+import { ConflictProcessor } from "../conflicts/ConflictProcesor";
+import { IResultProcessor } from "../offline/procesors/IResultProcessor";
 
 /**
  * Method for creating "uber" composite Apollo Link implementation including:
@@ -36,11 +39,12 @@ export const createDefaultLink = async (config: DataSyncConfig, offlineLink: Apo
  * Create offline link
  */
 export const createOfflineLink = async (config: DataSyncConfig, store: OfflineStore) => {
+  const resultProcessors: IResultProcessor[] = [new IDProcessor(), new ConflictProcessor(config.conflictStateProvider as ObjectState)]
   return new OfflineLink({
     store,
     listener: config.offlineQueueListener,
     networkStatus: config.networkStatus as NetworkStatus,
-    conflictStateProvider: config.conflictStateProvider
+    resultProcessors
   });
 };
 

@@ -5,6 +5,7 @@ import { ObjectState } from "../conflicts/ObjectState";
 import { Operation, NextLink, Observable, FetchResult } from "apollo-link";
 import { OfflineStore } from "./OfflineStore";
 import { OfflineLinkOptions } from "../links";
+import { IResultProcessor } from "./procesors/IResultProcessor";
 
 export type OperationQueueChangeHandler = (entry: OperationQueueEntry) => void;
 
@@ -20,13 +21,13 @@ export type OperationQueueChangeHandler = (entry: OperationQueueEntry) => void;
 export class OfflineQueue {
   public queue: OperationQueueEntry[] = [];
   private readonly listener?: OfflineQueueListener;
-  private readonly state?: ObjectState;
   private store: OfflineStore;
+  private resultProcessors: IResultProcessor[] | undefined;
 
   constructor(options: OfflineLinkOptions) {
     this.store = options.store;
     this.listener = options.listener;
-    this.state = options.conflictStateProvider;
+    this.resultProcessors = options.resultProcessors;
   }
 
   /**
@@ -103,8 +104,7 @@ export class OfflineQueue {
       if (this.listener && this.listener.onOperationSuccess) {
         this.listener.onOperationSuccess(op.operation, result.data);
       }
-      this.updateIds(op, result);
-      this.updateObjectState(op, result);
+      this.executeResultProcessors(op, result);
     }
     this.store.persistOfflineData(this.queue);
     if (this.queue.length === 0 && this.listener && this.listener.queueCleared) {
@@ -115,52 +115,10 @@ export class OfflineQueue {
     }
   }
 
-  /**
-   * Allow updates on items created while offline.
-   * If item is created while offline and client generated ID is provided
-   * to optimisticResponse, later mutations on this item will be using this client
-   * generated ID. Once any create operation is successful, we should
-   * update entries in queue with ID returned from server.
-   */
-  private updateIds(entry: OperationQueueEntry, result: FetchResult) {
-    const { operation: { operationName }, optimisticResponse } = entry;
-    if (!result ||
-      !optimisticResponse ||
-      !optimisticResponse[operationName] ||
-      !isClientGeneratedId(optimisticResponse[operationName].id)) {
-      return;
-    }
-
-    const clientId = optimisticResponse && optimisticResponse[operationName].id;
-
-    this.queue.forEach(({ operation: op }) => {
-      if (op.variables.id === clientId) {
-        op.variables.id = result.data && result.data[operationName].id;
-      }
-    });
-  }
-
-  /**
-   * Manipulate state of item that is being used for conflict resolution purposes.
-   * This is required for the queue items so that we do not get a conflict with ourself
-   * @param entry the operation which returns the result we compare with first queue entry
-   */
-  private updateObjectState(entry: OperationQueueEntry, result: FetchResult) {
-    const { operation: { operationName } } = entry;
-    if (!result || !this.state) {
-      return;
-    }
-
-    if (result.data && result.data[operationName]) {
-      for (const { operation: op } of this.queue) {
-        if (op.variables.id === entry.operation.variables.id && op.operationName === entry.operation.operationName) {
-          const opVersion = this.state.currentState(op.variables);
-          const prevOpVersion = this.state.currentState(entry.operation.variables);
-          if (opVersion === prevOpVersion) {
-            op.variables = this.state.nextState(op.variables);
-            break;
-          }
-        }
+  public executeResultProcessors(op: OperationQueueEntry, result: FetchResult<any, Record<string, any>, Record<string, any>> | FetchResult<{ [key: string]: any; }, Record<string, any>, Record<string, any>>) {
+    if(this.resultProcessors){
+      for(const resultProcesor of this.resultProcessors){
+        resultProcesor.execute(this.queue, op, result);
       }
     }
   }
