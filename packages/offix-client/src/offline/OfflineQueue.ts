@@ -85,6 +85,15 @@ export class OfflineQueue {
     }
   }
 
+  public executeResultProcessors(op: OperationQueueEntry,
+                                 result: FetchResult<any>) {
+      if (this.resultProcessors) {
+        for (const resultProcesor of this.resultProcessors) {
+          resultProcesor.execute(this.queue, op, result);
+        }
+      }
+  }
+
   private onForwardError(op: OperationQueueEntry, error: any) {
     if (this.listener && this.listener.onOperationFailure) {
       this.listener.onOperationFailure(op.operation, undefined, op.networkError);
@@ -116,14 +125,6 @@ export class OfflineQueue {
     }
     if (op.observer) {
       op.observer.next(result);
-    }
-  }
-
-  public executeResultProcessors(op: OperationQueueEntry, result: FetchResult<any, Record<string, any>, Record<string, any>> | FetchResult<{ [key: string]: any; }, Record<string, any>, Record<string, any>>) {
-    if(this.resultProcessors){
-      for(const resultProcesor of this.resultProcessors){
-        resultProcesor.execute(this.queue, op, result);
-      }
     }
   }
 }
