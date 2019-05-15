@@ -1,18 +1,38 @@
 import { createOptimisticResponse } from "../src";
+import { MutationHelperOptions, CacheOperation } from "../src/cache";
 import { expect, should } from "chai";
+import { CREATE_ITEM, GET_ITEMS } from "./mock/mutations";
 
 describe("Optimistic Response tests", () => {
 
   it("check createNewOptimisticResponse", () => {
-    const result = createOptimisticResponse("updateTest", "Test", { name: "test" });
-    expect(result.updateTest.__typename).eq("Test");
-    expect(result.updateTest.name).eq("test");
+    const options: MutationHelperOptions = {
+      mutation: CREATE_ITEM,
+      operationType: CacheOperation.ADD,
+      typeName: "Test",
+      variables: {
+        name: "test"
+      },
+      updateQuery: GET_ITEMS
+    };
+    const result = createOptimisticResponse(options);
+    expect(result.createItem.__typename).eq("Test");
+    expect(result.createItem.name).eq("test");
   });
 
   it("check createNewOptimisticResponse without id", () => {
-    const result = createOptimisticResponse("updateTest", "Test", { name: "test" }, false);
-    expect(result.updateTest.__typename).eq("Test");
-    expect(result.updateTest.name).eq("test");
-    should().not.exist(result.updateTest.id);
+    const options: MutationHelperOptions = {
+      mutation: CREATE_ITEM,
+      operationType: CacheOperation.REFRESH,
+      typeName: "Test",
+      variables: {
+        name: "test"
+      },
+      updateQuery: GET_ITEMS
+    };
+    const result = createOptimisticResponse(options);
+    expect(result.createItem.__typename).eq("Test");
+    expect(result.createItem.name).eq("test");
+    should().not.exist(result.createItem.id);
   });
 });

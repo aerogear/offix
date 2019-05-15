@@ -1,3 +1,6 @@
+import { MutationHelperOptions } from "./createMutationOptions";
+import { getOperationFieldName } from "../utils/helpers";
+import { CacheOperation } from "./CacheOperation";
 
 const CLIENT_ID_PREFIX = "client:";
 
@@ -39,18 +42,24 @@ export const generateId = (length = 8) => {
  * @param addId generate client id for response
  * @param idField name of id field (default:id)
  */
-export const createOptimisticResponse =
-  (operation: string, typeName: string, data: any, addId: boolean = true, idField: string = "id") => {
+export const createOptimisticResponse = (options: MutationHelperOptions) => {
+    const operation = getOperationFieldName(options.mutation);
+    const {
+      typeName,
+      variables,
+      idField = "id",
+      operationType
+    } = options;
     const optimisticResponse: any = {
       __typename: "Mutation"
     };
 
     optimisticResponse[operation] = {
       __typename: typeName,
-      ...data,
+      ...variables,
       optimisticResponse: true
     };
-    if (addId) {
+    if (operationType === CacheOperation.ADD) {
       optimisticResponse[operation][idField] = generateId();
     }
 

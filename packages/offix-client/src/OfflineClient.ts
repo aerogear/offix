@@ -9,6 +9,9 @@ import { CompositeQueueListener } from "./offline/events/CompositeQueueListener"
 import { ListenerProvider } from "./offline/events/ListenerProvider";
 import { ApolloOfflineClient } from "./OfflineApolloClient";
 import { buildCachePersistence } from "./offline/storage/defaultStorage";
+import { MutationHelperOptions, createMutationOptions } from "./cache";
+import { Options } from "graphql/utilities/buildClientSchema";
+import { FetchResult } from "apollo-link";
 
 /**
 * Factory for creating Apollo Offline Client
@@ -87,9 +90,25 @@ export class OfflineClient implements ListenerProvider {
     this.queueListeners.push(listener);
   }
 
+  /**
+   * Offline wrapper for apollo mutations. Provide Mutation Helper Options and use
+   * this offline friendly function to handle the optimistic UI and cache updates.
+   * @param options the MutationHelperOptions to create the mutation
+   */
+  public offlineMutation<T>(options: MutationHelperOptions): Promise<FetchResult<T>> {
+    if (!this.apolloClient) {
+      throw new Error("Apollo offline client not initialised before mutation called.");
+    } else {
+        return this.apolloClient.mutate<T>(
+          createMutationOptions(options)
+        );
+    }
+  }
+
   protected decorateApolloClient(apolloClient: any): ApolloOfflineClient {
     apolloClient.offlineStore = this.offlineStore;
     apolloClient.registerOfflineEventListener = this.registerOfflineEventListener.bind(this);
+    apolloClient.offlineMutation = this.offlineMutation.bind(this);
     return apolloClient;
   }
 
