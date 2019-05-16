@@ -14,6 +14,7 @@
 - Multi platform support.
     - Works with Web, Cordova, Capacitor and React Native.
 - Framework agnostic (works with React, Angular and Vue)
+- Works with Apollo GraphQL Server and Prisma (Yoga)
 
 ## Documentation
 
