@@ -1,5 +1,6 @@
 
-import { MutationUpdaterFn } from "apollo-client";
+import { MutationUpdaterFn, OperationVariables } from "apollo-client";
+import { DocumentNode } from "graphql";
 
 /**
  * Interface map mutation names to their respective update functions.
@@ -12,8 +13,19 @@ import { MutationUpdaterFn } from "apollo-client";
  *  createTask: () => {...}
  * }
  */
-interface CacheUpdates {
+export interface CacheUpdates {
   [key: string]: MutationUpdaterFn;
 }
 
-export default CacheUpdates;
+export type UpdateFunction = (array: [CacheItem], newItem?: CacheItem) => CacheItem[];
+
+export interface CacheItem {
+  [key: string]: any;
+}
+
+export interface QueryWithVariables {
+  query: DocumentNode;
+  variables?: OperationVariables;
+}
+
+export type Query = QueryWithVariables | DocumentNode;

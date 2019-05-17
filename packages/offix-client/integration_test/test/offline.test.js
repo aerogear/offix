@@ -1,4 +1,4 @@
-import { createClient, createOptimisticResponse } from '../../dist';
+import { createClient, createOptimisticResponse, CacheOperation } from '../../dist';
 import { TestStore } from '../utils/testStore';
 import { ToggleableNetworkStatus } from '../utils/network';
 import server from '../utils/server';
@@ -38,6 +38,14 @@ describe('Offline mutations', function () {
     version: 1
   };
 
+  const optimisticOptions = {
+    mutation: ADD_TASK,
+    operationType: CacheOperation.ADD,
+    typeName: "Task",
+    variables: newTask,
+    updateQuery: GET_TASKS
+  };
+
   const updatedTask = {
     description: 'updated',
     title: 'updated'
@@ -63,7 +71,7 @@ describe('Offline mutations', function () {
     client = await newClient({ networkStatus, storage: store, mutationsQueueName });
   });
 
-  async function isQueueEmpty(){
+  async function isQueueEmpty() {
     const store = await store.getItem(offlineMetaKey);
     return store.length === 0
   }
@@ -214,7 +222,7 @@ describe('Offline mutations', function () {
         await client.mutate({
           mutation: ADD_TASK,
           variables: newTask,
-          optimisticResponse: createOptimisticResponse('createTask', 'Task', newTask),
+          optimisticResponse: createOptimisticResponse(optimisticOptions),
           update: (_, { data: { createTask } }) => task = createTask
         });
       } catch (ignore) { }
@@ -250,7 +258,7 @@ describe('Offline mutations', function () {
         await client.mutate({
           mutation: ADD_TASK,
           variables: newTask,
-          optimisticResponse: createOptimisticResponse('createTask', 'Task', newTask),
+          optimisticResponse: createOptimisticResponse(optimisticOptions),
           update: (_, { data: { createTask } }) => task = createTask
         });
       } catch (ignore) { }
@@ -288,7 +296,7 @@ describe('Offline mutations', function () {
         await client.mutate({
           mutation: ADD_TASK,
           variables: newTask,
-          optimisticResponse: createOptimisticResponse('createTask', 'Task', newTask),
+          optimisticResponse: createOptimisticResponse(optimisticOptions),
           update: updateMethod
         });
       } catch (ignore) { }
@@ -329,7 +337,7 @@ describe('Offline mutations', function () {
       const response = await client.mutate({
         mutation: ADD_TASK,
         variables: newTask,
-        optimisticResponse: createOptimisticResponse('createTask', 'Task', newTask),
+        optimisticResponse: createOptimisticResponse(optimisticOptions),
       });
 
       task = response.data.createTask;
@@ -354,9 +362,9 @@ describe('Offline mutations', function () {
           variables
         });
       } catch (ignore) { }
-    
+
       const offlineKeys = await store.getItem(offlineMetaKey);
-     
+
 
       const offlineMutation1 = await store.getItem("offline:" + offlineKeys[0]);
       const offlineMutation2 = await store.getItem("offline:" + offlineKeys[1]);
@@ -382,7 +390,7 @@ describe('Offline mutations', function () {
       expect(response.data.allTasks).to.exist;
       expect(response.data.allTasks.length).to.equal(1);
       expect(response.data.allTasks[0].title).to.equal(variables.title);
-      
+
     });
   });
 
@@ -397,7 +405,7 @@ describe('Offline mutations', function () {
       const response = await client.mutate({
         mutation: ADD_TASK,
         variables: newTask,
-        optimisticResponse: createOptimisticResponse('createTask', 'Task', newTask),
+        optimisticResponse: createOptimisticResponse(optimisticOptions),
       });
 
       task = response.data.createTask;
