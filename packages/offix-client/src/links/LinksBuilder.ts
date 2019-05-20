@@ -36,22 +36,6 @@ export const createDefaultLink = async (config: DataSyncConfig, offlineLink: Apo
 };
 
 /**
- * Create offline link
- */
-export const createOfflineLink = async (config: DataSyncConfig, store: OfflineStore) => {
-  const resultProcessors: IResultProcessor[] = [
-    new IDProcessor(),
-    new ConflictProcessor(config.conflictStateProvider as ObjectState)
-  ];
-  return new OfflineLink({
-    store,
-    listener: config.offlineQueueListener,
-    networkStatus: config.networkStatus as NetworkStatus,
-    resultProcessors
-  });
-};
-
-/**
  * Default HTTP Apollo Links
  * Provides out of the box functionality for:
  *
