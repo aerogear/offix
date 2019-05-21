@@ -1,7 +1,7 @@
 {
-  "name": "offix-client",
+  "name": "offix-link-offline",
   "version": "0.5.0",
-  "description": "Offix GraphQL Offline Client",
+  "description": "Offix GraphQL Offline Link",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
   "scripts": {

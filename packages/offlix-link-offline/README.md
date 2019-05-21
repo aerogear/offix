@@ -1,4 +1,4 @@
-## Offix GraphQL Offline Client
+## Offix GraphQL Offline Link
 
 Documentation:
 

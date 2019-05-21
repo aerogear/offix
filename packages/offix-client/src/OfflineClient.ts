@@ -1,17 +1,11 @@
 import { ApolloClient } from "apollo-client";
 import { DataSyncConfig } from "./config";
 import { SyncConfig } from "./config/SyncConfig";
-import { createDefaultLink, createOfflineLink } from "./links/LinksBuilder";
-import { OfflineStore, OfflineQueueListener } from "./offline";
-import { OfflineLink } from "./offline/OfflineLink";
-import { OfflineMutationsHandler } from "./offline/OfflineMutationsHandler";
-import { CompositeQueueListener } from "./offline/events/CompositeQueueListener";
-import { ListenerProvider } from "./offline/events/ListenerProvider";
+import { createDefaultLink } from "./links/LinksBuilder";
 import { ApolloOfflineClient } from "./OfflineApolloClient";
-import { buildCachePersistence } from "./offline/storage/defaultStorage";
-import { MutationHelperOptions, createMutationOptions } from "./cache";
-import { Options } from "graphql/utilities/buildClientSchema";
+import { buildCachePersistence, createOfflineLink, OfflineQueueListener, OfflineStore, OfflineLink, OfflineMutationsHandler } from "offix-link-offline";
 import { FetchResult } from "apollo-link";
+import { ListenerProvider } from "offix-link-offline/types/offline/events/ListenerProvider";
 
 /**
 * Factory for creating Apollo Offline Client

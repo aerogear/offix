@@ -32,6 +32,7 @@
     "typescript": "3.4.5"
   },
   "dependencies": {
+    "offix-link-offline":"0.5.0",
     "@aerogear/core": "2.4.0",
     "apollo-cache-inmemory": "1.5.1",
     "@graphqlheroes/apollo-cache-persist": "0.1.2",
