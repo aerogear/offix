@@ -4,11 +4,12 @@ import { CacheOperation } from "./CacheOperation";
 import { createOptimisticResponse } from "./createOptimisticResponse";
 import { Query } from "./CacheUpdates";
 import { getOperationFieldName, deconstructQuery } from "../utils/helpers";
+import { isArray } from "util";
 
 export interface MutationHelperOptions {
   mutation: DocumentNode;
   variables: OperationVariables;
-  updateQuery: Query;
+  updateQuery: Query | Query[];
   typeName: string;
   operationType?: CacheOperation;
   idField?: string;
@@ -33,14 +34,31 @@ export const createMutationOptions = (options: MutationHelperOptions): MutationO
     typeName
   });
 
-  const update = getUpdateFunction(operationName, idField, updateQuery, operationType);
+  const update: MutationUpdaterFn = (cache, { data }) => {
+    if (isArray(updateQuery)) {
+      for (const query of updateQuery) {
+        const updateFunction = getUpdateFunction(operationName, idField, query, operationType);
+        updateFunction(cache, { data });
+      }
+    } else {
+      const updateFunction = getUpdateFunction(operationName, idField, updateQuery, operationType);
+      updateFunction(cache, { data });
+    }
+  };
+
   return { mutation, variables, optimisticResponse, update };
 };
 
-// returns the update function used to update the cache by the client
-// ignores the scenario where the cache operation is an update as this is handled automatically
-// from Apollo client 2.5 onwards.
-const getUpdateFunction = (
+/**
+ * Generate the update function to update the cache for a given operation and query.
+ * Ignores the scenario where the cache operation is an update as this is handled automatically
+ * from Apollo Client 2.5 onwards.
+ * @param operation The title of the operation being performed
+ * @param idField The id field the item keys off
+ * @param updateQuery The Query to update in the cache
+ * @param opType The type of operation being performed
+ */
+export const getUpdateFunction = (
   operation: string,
   idField: string,
   updateQuery: Query,

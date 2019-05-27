@@ -1,12 +1,16 @@
 import { expect, should } from "chai";
-import { MutationHelperOptions, CacheOperation, createMutationOptions, createSubscriptionOptions } from "../src/cache";
+import { CacheOperation, createMutationOptions, createSubscriptionOptions } from "../src/cache";
 import {
   CREATE_ITEM,
   GET_ITEMS,
+  GET_LISTS,
   DELETE_ITEM,
   ITEM_CREATED_SUB,
   ITEM_DELETED_SUB,
-  ITEM_UPDATED_SUB
+  ITEM_UPDATED_SUB,
+  CREATE_LIST,
+  DOESNT_EXIST,
+  GET_NON_EXISTENT
 } from "./mock/mutations";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
 import { OfflineClient } from "../src";
@@ -37,6 +41,26 @@ describe("CacheHelpers", () => {
     updateQuery: GET_ITEMS,
     typeName: "Item",
     operationType: CacheOperation.DELETE,
+    idField: "id"
+  });
+  const builtOptionsWithArray = createMutationOptions({
+    mutation: CREATE_LIST,
+    variables: {
+      "title": "new list"
+    },
+    updateQuery: [{ query: GET_ITEMS, variables: {} }, { query: GET_LISTS, variables: {} }],
+    typeName: "List",
+    operationType: CacheOperation.ADD,
+    idField: "id"
+  });
+  const builtNonExistent = createMutationOptions({
+    mutation: DOESNT_EXIST,
+    variables: {
+      "title": "new list"
+    },
+    updateQuery: { query: GET_NON_EXISTENT, variables: {} },
+    typeName: "Something",
+    operationType: CacheOperation.ADD,
     idField: "id"
   });
   const builtSubCreateOptions = createSubscriptionOptions({
@@ -70,6 +94,34 @@ describe("CacheHelpers", () => {
     }
   };
 
+  const createList = (id: string) => {
+    if (builtOptionsWithArray && builtOptionsWithArray.update) {
+      builtOptionsWithArray.update(client.cache, {
+        data: {
+          "createList": {
+            "id": id,
+            "title": "new list" + id,
+            "__typename": "Item"
+          }
+        }
+      });
+    }
+  };
+
+  const createNonExistent = (id: string) => {
+    if (builtNonExistent && builtNonExistent.update) {
+      builtNonExistent.update(client.cache, {
+        data: {
+          "somethingFake": {
+            "id": id,
+            "title": "new list" + id,
+            "__typename": "Item"
+          }
+        }
+      });
+    }
+  };
+
   const remove = (id: string) => {
     if (builtDeleteOptions && builtDeleteOptions.update) {
       builtDeleteOptions.update(client.cache, {
@@ -96,6 +148,12 @@ describe("CacheHelpers", () => {
         "allItems": []
       }
     });
+    client.writeQuery({
+      query: GET_LISTS,
+      data: {
+        "allLists": []
+      }
+    });
   });
 
   it("ensures built mutation options include a function", () => {
@@ -106,6 +164,13 @@ describe("CacheHelpers", () => {
   it("add item to cache", () => {
     expect(client.readQuery({ query: GET_ITEMS }).allItems).to.have.length(0);
     create("1");
+    expect(client.readQuery({ query: GET_ITEMS }).allItems).to.have.length(1);
+  });
+
+  it("add item to cache with multiple", () => {
+    expect(client.readQuery({ query: GET_LISTS }).allLists).to.have.length(0);
+    createList("1");
+    expect(client.readQuery({ query: GET_LISTS }).allLists).to.have.length(1);
     expect(client.readQuery({ query: GET_ITEMS }).allItems).to.have.length(1);
   });
 
@@ -232,7 +297,7 @@ describe("CacheHelpers", () => {
         {
           subscriptionData: {
             data: {
-              itemUpdated: { }
+              itemUpdated: {}
             }
           }
         });

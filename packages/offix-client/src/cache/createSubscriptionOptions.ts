@@ -11,6 +11,11 @@ export interface SubscriptionHelperOptions {
   idField?: string;
 }
 
+/**
+ * Helper function which can be used to call subscribeToMore for multiple SubscriptionHelperOptions
+ * @param observableQuery the query which you would like to call subscribeToMore on.
+ * @param arrayOfHelperOptions the array of `SubscriptionHelperOptions`
+ */
 export const subscribeToMoreHelper = (observableQuery: ObservableQuery,
                                       arrayOfHelperOptions: SubscriptionHelperOptions[]) => {
   for (const option of arrayOfHelperOptions) {
@@ -18,6 +23,11 @@ export const subscribeToMoreHelper = (observableQuery: ObservableQuery,
   }
 };
 
+/**
+ * Creates a SubscribeToMoreOptions object which can be used with Apollo Client's subscribeToMore function
+ * on an observable query.
+ * @param options see `SubscriptionHelperOptions`
+ */
 export const createSubscriptionOptions = (options: SubscriptionHelperOptions): SubscribeToMoreOptions => {
   const {
     subscriptionQuery,
@@ -53,6 +63,11 @@ export const createSubscriptionOptions = (options: SubscriptionHelperOptions): S
   };
 };
 
+/**
+ * Generate the standard update function to update the cache for a given operation type and query.
+ * @param opType The type of operation being performed
+ * @param idField The id field the item keys off
+ */
 export const getUpdateQueryFunction = (opType: CacheOperation, idField = "id"): UpdateFunction => {
   let updateFunction: UpdateFunction;
 

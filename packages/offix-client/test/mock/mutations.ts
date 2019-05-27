@@ -8,6 +8,14 @@ mutation createItem($title: String!){
   }
 `;
 
+export const CREATE_LIST = gql`
+mutation createList($title: String!){
+    createList(title: $title){
+      title
+    }
+  }
+`;
+
 export const DELETE_ITEM = gql`
 mutation deleteItem($id: ID!){
     deleteItem(id: $id){
@@ -16,9 +24,35 @@ mutation deleteItem($id: ID!){
   }
 `;
 
+export const DOESNT_EXIST = gql`
+mutation somethingFake($id: ID!){
+    somethingFake(id: $id){
+      title
+    }
+  }
+`;
+
 export const GET_ITEMS = gql`
   query allItems($first: Int) {
     allItems(first: $first) {
+      id
+      title
+    }
+}
+`;
+
+export const GET_LISTS = gql`
+  query allLists($first: Int) {
+    allLists(first: $first) {
+      id
+      title
+    }
+}
+`;
+
+export const GET_NON_EXISTENT = gql`
+  query somethingFake($first: Int) {
+    somethingFake(first: $first) {
       id
       title
     }
