@@ -19,6 +19,7 @@
     "fetch-mock": "^7.3.3",
     "graphql-tag": "^2.10.1",
     "mocha": "6.1.4",
+    "offix-client": "0.5.0",
     "ts-node": "8.1.0",
     "typescript": "3.4.5"
   },
