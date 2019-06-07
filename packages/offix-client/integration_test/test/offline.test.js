@@ -1,4 +1,5 @@
-import { createClient, createOptimisticResponse, CacheOperation } from '../../dist';
+import { createClient } from '../../dist'
+import { createOptimisticResponse, CacheOperation } from 'offix-cache';
 import { TestStore } from '../utils/testStore';
 import { ToggleableNetworkStatus } from '../utils/network';
 import server from '../utils/server';

@@ -13,7 +13,7 @@ import {
   GET_NON_EXISTENT
 } from "./mock/mutations";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
-import { OfflineClient } from "../src";
+import { OfflineClient } from "offix-client";
 import ApolloClient from "apollo-client";
 import { mock } from "fetch-mock";
 import { storage } from "./mock/Storage";
@@ -29,7 +29,7 @@ describe("CacheHelpers", () => {
       "title": "new item"
     },
     updateQuery: GET_ITEMS,
-    typeName: "Item",
+    returnType: "Item",
     operationType: CacheOperation.ADD,
     idField: "id"
   });
@@ -39,7 +39,7 @@ describe("CacheHelpers", () => {
       "id": "5"
     },
     updateQuery: GET_ITEMS,
-    typeName: "Item",
+    returnType: "Item",
     operationType: CacheOperation.DELETE,
     idField: "id"
   });
@@ -49,7 +49,7 @@ describe("CacheHelpers", () => {
       "title": "new list"
     },
     updateQuery: [{ query: GET_ITEMS, variables: {} }, { query: GET_LISTS, variables: {} }],
-    typeName: "List",
+    returnType: "List",
     operationType: CacheOperation.ADD,
     idField: "id"
   });
@@ -59,7 +59,7 @@ describe("CacheHelpers", () => {
       "title": "new list"
     },
     updateQuery: { query: GET_NON_EXISTENT, variables: {} },
-    typeName: "Something",
+    returnType: "Something",
     operationType: CacheOperation.ADD,
     idField: "id"
   });
@@ -99,20 +99,6 @@ describe("CacheHelpers", () => {
       builtOptionsWithArray.update(client.cache, {
         data: {
           "createList": {
-            "id": id,
-            "title": "new list" + id,
-            "__typename": "Item"
-          }
-        }
-      });
-    }
-  };
-
-  const createNonExistent = (id: string) => {
-    if (builtNonExistent && builtNonExistent.update) {
-      builtNonExistent.update(client.cache, {
-        data: {
-          "somethingFake": {
             "id": id,
             "title": "new list" + id,
             "__typename": "Item"
