@@ -1,6 +1,5 @@
 import { FetchResult } from "apollo-link";
 import { OperationQueueEntry } from "../OperationQueueEntry";
-import { isClientGeneratedId } from "../..";
 
 /**
  * Interface that can be used to perform operation on result data for offline queue.

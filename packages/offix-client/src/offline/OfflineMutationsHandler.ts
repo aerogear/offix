@@ -4,8 +4,7 @@ import { OfflineItem } from "./OperationQueueEntry";
 import { MUTATION_QUEUE_LOGGER } from "../config/Constants";
 import * as debug from "debug";
 import { DataSyncConfig } from "../config";
-import { CacheUpdates } from "../cache/CacheUpdates";
-import { getMutationName } from "../utils/helpers";
+import { CacheUpdates, getMutationName } from "offix-cache";
 import { Operation } from "apollo-link";
 import { OfflineStore } from "./storage/OfflineStore";
 

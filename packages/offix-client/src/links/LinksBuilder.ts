@@ -12,7 +12,7 @@ import { isMutation, isOnlineOnly, isSubscription } from "../utils/helpers";
 import { defaultWebSocketLink } from "./WebsocketLink";
 import { OfflineLink } from "../offline/OfflineLink";
 import { NetworkStatus, OfflineMutationsHandler, OfflineStore } from "../offline";
-import { IDProcessor } from "../cache/IDProcessor";
+import { IDProcessor } from "../offline/procesors/IDProcessor";
 import { ConflictProcessor } from "../conflicts/ConflictProcesor";
 import { IResultProcessor } from "../offline/procesors/IResultProcessor";
 

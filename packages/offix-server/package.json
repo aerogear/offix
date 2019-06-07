@@ -31,5 +31,8 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "c52429fc496cfdbaaf06fd55a509f14b12c7ce1c"
+  "gitHead": "c52429fc496cfdbaaf06fd55a509f14b12c7ce1c",
+  "dependencies": {
+    "offix-cache": "^0.1.0"
+  }
 }

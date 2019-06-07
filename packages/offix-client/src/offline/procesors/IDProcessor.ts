@@ -1,7 +1,7 @@
-import { IResultProcessor } from "../offline/procesors/IResultProcessor";
-import { OperationQueueEntry } from "../offline/OperationQueueEntry";
+import { IResultProcessor } from "../../offline/procesors/IResultProcessor";
+import { OperationQueueEntry } from "../../offline/OperationQueueEntry";
 import { FetchResult } from "apollo-link";
-import { isClientGeneratedId } from "./createOptimisticResponse";
+import { isClientGeneratedId } from "offix-cache";
 
   /**
    * Allow updates on items created while offline.

@@ -1,5 +1,5 @@
 import { FetchResult, NextLink, Operation } from "apollo-link";
-import { isClientGeneratedId, generateId } from "../cache/createOptimisticResponse";
+import { isClientGeneratedId, generateClientId } from "offix-cache";
 
 /**
  * Represents data that is being saved to the offlien store
@@ -31,7 +31,7 @@ export class OperationQueueEntry implements OfflineItem {
     if (offlineId) {
       this.id = offlineId.toString();
     } else {
-      this.id = generateId();
+      this.id = generateClientId();
     }
     if (typeof operation.getContext === "function") {
       this.optimisticResponse = operation.getContext().optimisticResponse;

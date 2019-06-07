@@ -9,8 +9,7 @@ import { CompositeQueueListener } from "./offline/events/CompositeQueueListener"
 import { ListenerProvider } from "./offline/events/ListenerProvider";
 import { ApolloOfflineClient } from "./OfflineApolloClient";
 import { buildCachePersistence } from "./offline/storage/defaultStorage";
-import { MutationHelperOptions, createMutationOptions } from "./cache";
-import { Options } from "graphql/utilities/buildClientSchema";
+import { MutationHelperOptions, createMutationOptions } from "offix-cache";
 import { FetchResult } from "apollo-link";
 
 /**

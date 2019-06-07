@@ -1,24 +1,7 @@
-import { MutationHelperOptions } from "./createMutationOptions";
-import { getOperationFieldName } from "../utils/helpers";
-import { CacheOperation } from "./CacheOperation";
-
-const CLIENT_ID_PREFIX = "client:";
-
-// Returns true if ID was generated on client
-export const isClientGeneratedId = (id: string) => {
-  return id && id.startsWith(CLIENT_ID_PREFIX);
-};
-
-// Helper method for ID generation ()
-export const generateId = (length = 8) => {
-  let result = CLIENT_ID_PREFIX;
-  const chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-  for (let i = length; i > 0; i -= 1) {
-    result += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return result;
-};
+import { MutationHelperOptions } from "../cache";
+import { getOperationFieldName } from "../utils/helperFunctions";
+import { CacheOperation } from "../cache/CacheOperation";
+import { generateClientId } from "../utils";
 
 /**
  * Create optimistic response.
@@ -45,7 +28,7 @@ export const generateId = (length = 8) => {
 export const createOptimisticResponse = (options: MutationHelperOptions) => {
     const operation = getOperationFieldName(options.mutation);
     const {
-      typeName,
+      returnType,
       variables,
       idField = "id",
       operationType
@@ -55,12 +38,12 @@ export const createOptimisticResponse = (options: MutationHelperOptions) => {
     };
 
     optimisticResponse[operation] = {
-      __typename: typeName,
+      __typename: returnType,
       ...variables,
       optimisticResponse: true
     };
     if (operationType === CacheOperation.ADD) {
-      optimisticResponse[operation][idField] = generateId();
+      optimisticResponse[operation][idField] = generateClientId();
     }
 
     return optimisticResponse;

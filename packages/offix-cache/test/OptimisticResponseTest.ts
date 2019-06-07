@@ -1,4 +1,5 @@
-import { createOptimisticResponse, MutationHelperOptions, CacheOperation  } from "offix-cache";
+import { createOptimisticResponse } from "../src";
+import { MutationHelperOptions, CacheOperation } from "../src/cache";
 import { expect, should } from "chai";
 import { CREATE_ITEM, GET_ITEMS } from "./mock/mutations";
 

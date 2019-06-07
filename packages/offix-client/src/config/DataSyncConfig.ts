@@ -3,7 +3,7 @@ import { NetworkStatus, OfflineQueueListener } from "../offline";
 import { AuthContextProvider } from "../auth/AuthContextProvider";
 import { ObjectState } from "../conflicts/ObjectState";
 import { ConflictListener } from "../conflicts/ConflictListener";
-import { CacheUpdates } from "../cache/CacheUpdates";
+import { CacheUpdates } from "offix-cache";
 import { RetryLink } from "apollo-link-retry";
 import { ConfigurationService } from "@aerogear/core";
 import { PersistentStore, PersistedData } from "../offline/storage/PersistentStore";

@@ -1,37 +1,40 @@
-import { MutationOptions, OperationVariables, MutationUpdaterFn } from "apollo-client";
-import { DocumentNode } from "graphql";
+import { MutationOptions, MutationUpdaterFn } from "apollo-client";
 import { CacheOperation } from "./CacheOperation";
-import { createOptimisticResponse } from "./createOptimisticResponse";
+import { createOptimisticResponse } from "../optimisticResponse";
 import { Query } from "./CacheUpdates";
-import { getOperationFieldName, deconstructQuery } from "../utils/helpers";
+import { getOperationFieldName, deconstructQuery } from "../utils/helperFunctions";
 import { isArray } from "util";
 
-export interface MutationHelperOptions {
-  mutation: DocumentNode;
-  variables: OperationVariables;
+export interface MutationHelperOptions extends MutationOptions {
   updateQuery: Query | Query[];
-  typeName: string;
   operationType?: CacheOperation;
   idField?: string;
+  returnType?: string;
 }
 
+/**
+ * Creates a MutationOptions object which can be used with Apollo Client's mutate function
+ * Provides useful helpers for cache updates, optimistic responses, and context
+ * @param options see `MutationHelperOptions`
+ */
 export const createMutationOptions = (options: MutationHelperOptions): MutationOptions => {
   const {
     mutation,
     variables,
     updateQuery,
-    typeName,
+    returnType,
     operationType = CacheOperation.ADD,
-    idField = "id"
+    idField = "id",
+    context
   } = options;
   const operationName = getOperationFieldName(mutation);
   const optimisticResponse = createOptimisticResponse({
     mutation,
     variables,
     updateQuery,
+    returnType,
     operationType,
-    idField,
-    typeName
+    idField
   });
 
   const update: MutationUpdaterFn = (cache, { data }) => {
@@ -46,7 +49,7 @@ export const createMutationOptions = (options: MutationHelperOptions): MutationO
     }
   };
 
-  return { mutation, variables, optimisticResponse, update };
+  return { ...options, optimisticResponse, update, context: {...context, returnType} };
 };
 
 /**
