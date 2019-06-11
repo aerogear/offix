@@ -28,14 +28,16 @@ export const createMutationOptions = (options: MutationHelperOptions): MutationO
     context
   } = options;
   const operationName = getOperationFieldName(mutation);
-  const optimisticResponse = createOptimisticResponse({
-    mutation,
-    variables,
-    updateQuery,
-    returnType,
-    operationType,
-    idField
-  });
+  if (returnType && !options.optimisticResponse) {
+    options.optimisticResponse = createOptimisticResponse({
+      mutation,
+      variables,
+      updateQuery,
+      returnType,
+      operationType,
+      idField
+    });
+  }
 
   const update: MutationUpdaterFn = (cache, { data }) => {
     if (isArray(updateQuery)) {
@@ -48,8 +50,7 @@ export const createMutationOptions = (options: MutationHelperOptions): MutationO
       updateFunction(cache, { data });
     }
   };
-
-  return { ...options, optimisticResponse, update, context: {...context, returnType} };
+  return { ...options, update, context: {...context, returnType} };
 };
 
 /**
