@@ -9,9 +9,9 @@ import { OperationVariables, MutationOptions } from "apollo-client";
 
 export interface OptimisticOptions {
   mutation: DocumentNode;
-  idField: string;
   operationType: CacheOperation;
   returnType: string;
+  idField?: string;
   variables?: OperationVariables;
 }
 

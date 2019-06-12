@@ -1,19 +1,18 @@
-import { createOptimisticResponse } from "../src";
-import { MutationHelperOptions, CacheOperation } from "../src/cache";
+import { createOptimisticResponse, OptimisticOptions } from "../src";
+import { CacheOperation } from "../src/cache";
 import { expect, should } from "chai";
 import { CREATE_ITEM, GET_ITEMS } from "./mock/mutations";
 
 describe("Optimistic Response tests", () => {
 
   it("check createNewOptimisticResponse", () => {
-    const options: MutationHelperOptions = {
+    const options: OptimisticOptions = {
       mutation: CREATE_ITEM,
       operationType: CacheOperation.ADD,
       returnType: "Test",
       variables: {
         name: "test"
-      },
-      updateQuery: GET_ITEMS
+      }
     };
     const result = createOptimisticResponse(options);
     expect(result.createItem.__typename).eq("Test");
@@ -21,14 +20,13 @@ describe("Optimistic Response tests", () => {
   });
 
   it("check createNewOptimisticResponse without id", () => {
-    const options: MutationHelperOptions = {
+    const options: OptimisticOptions = {
       mutation: CREATE_ITEM,
       operationType: CacheOperation.REFRESH,
       returnType: "Test",
       variables: {
         name: "test"
-      },
-      updateQuery: GET_ITEMS
+      }
     };
     const result = createOptimisticResponse(options);
     expect(result.createItem.__typename).eq("Test");
