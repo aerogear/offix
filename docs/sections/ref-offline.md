@@ -4,16 +4,11 @@ title: Apollo Offline Client
 navigation: 3
 ---
 
-# Offline support
+# Offline Support
 
-SDK provides first class support for performing GraphQL operations while offline.
-Queries and mutations are hold in queue that is being configured to hold requests when client goes offline.
-When client goes offline for long periods of time clients will be able still negotiate local updates with the server state thanks to powerful conflict resolution strategies.
+Offix provides first class support for performing GraphQL operations while offline. Mutations are held in a queue that is configured to hold requests while the client is offline. When the client goes offline for long periods of time they will still be able negotiate local updates with the server state thanks to powerful conflict resolution strategies.
 
-
-Client offers comprehensive set of features to perform data operations when offline.
-Thanks to offline mutation store users can stage their changes to be replicated back
-to server when becoming online:
+Offix-client offers a comprehensive set of features to perform data operations when offline. Thanks to the offline mutation store users can stage their changes to be replicated back to the server when they return online.
 
 Please follow chapters bellow for more information.
 
@@ -23,30 +18,59 @@ By default queries are cached based on the type and id field, and the results of
 
 Because of this, when mutations that can change query results are performed, the `refetchQueries` or update options of the mutate method should be used to ensure the local cache is kept up to date.
 
-In the following example, the app will perform an `ADD_TASK` mutation which will create a new task. The app also has a `GET_TASKS` query to list all the tasks. In order to make sure the cache for the `GET_TASKS` query is kept up to date whenever a new task is created, the update option is used to add the newly created task to the cache:
+Offix makes your cache simple to manage, with out of the box cache helpers in `offix-cache` or by automatically wrapping these helpers in offix-client through the `OfflineClient` class.
 
-```
-  client.mutate({
-    mutation: ADD_TASK, variables: item,
-    update: updateCacheOnAdd
-  });
+To use the `offlineMutation` function, we first need to create our `MutationHelperOptions` object. This is an extension of Apollo's MutationOptions.
 
-  function updateCacheOnAdd(cache, { data: { createTask } }) {
-    let { allTasks } = cache.readQuery({ query: GET_TASKS });
-    if (allTasks) {
-      if (!allTasks.find((task) => task.id === createTask.id)) {
-        allTasks.push(createTask);
-      }
-    } else {
-      allTasks = [createTask];
+```javascript
+const { CacheOperation } = require('offix-cache');
+
+const mutationOptions = {
+  mutation: ADD_TASK,
+  variables: {
+    title: 'item title'
+  },
+  updateQuery: {
+    query: GET_TASKS,
+    variables: {
+      filterBy: 'some filter'
     }
-    cache.writeQuery({
-      query: GET_TASKS,
-      data: {
-        'allTasks': allTasks
-      }
-    });
-  }
+  },
+  typeName: 'Task',
+  operationType: CacheOperation.ADD,
+  idField: 'id'
+};
+```
+
+We can also provide more than one query to update in the cache by providing an array to the `updateQuery` parameter:
+
+```javascript
+
+const mutationOptions = {
+  ...
+  updateQuery: [
+    { query: GET_TASKS, variables: {} }
+  ]
+  ,
+  ...
+};
+```
+
+We then simply pass this object to `offlineMutation` and our cache is automatically kept up to date.
+
+```javascript
+client.offlineMutation(mutationOptions);
+```
+
+If you do not wish to use the `offlineMutation` function you can also use the `createMutationOptions` function directly. This function provides an Apollo compatible `MutationOptions` object to pass to your pre-existing client.
+This is shown below where `mutationOptions` is the same object shown in the above code example.
+
+```javascript
+const { createMutationOptions } = require('offix-cache');
+
+const options = createMutationOptions(mutationOptions);
+
+client.mutate(options);
 ```
 
 ## Offline Workflow
@@ -56,16 +80,17 @@ Returned promise will resolve into error (`catch` method is triggered).
 Developers can detect if error is an offline error and watch for change to be replicated back to server.
 
 Example:
-  ```javascript
-  client.mutate(...).catch((error)=> {
-    // 1. Detect if this was an offline error
-   if(error.networkError && error.networkError.offline){
-     const offlineError: OfflineError =  error.networkError;
-     // 2. We can still track when offline change is going to be replicated.
-     offlineError.watchOfflineChange().then(...)
-   }
-  });
-  ```
+
+```javascript
+client.mutate(...).catch((error)=> {
+  // 1. Detect if this was an offline error
+  if(error.networkError && error.networkError.offline){
+    const offlineError: OfflineError =  error.networkError;
+    // 2. We can still track when offline change is going to be replicated.
+    offlineError.watchOfflineChange().then(...)
+  }
+});
+```
 
 > Note: Additionally to watching individual mutations framework offers global offline listener that can be supplied when creating client.
 
@@ -74,7 +99,6 @@ Example:
 Apollo client holds all mutation parameters in memory. An offline Apollo client will continue to store mutation parameters and once online, it will restore all mutations to memory. Any Update Functions that are supplied to mutations cannot be cached by an Apollo client resulting in the loss of all optimisticResponses after a restart. Update functions supplied to mutations cannot be saved in the cache. As a result, all optimisticResponses will disappear from the application after a restart and it will only reappear when the Apollo client becomes online and successfully syncs with the server.
 
 To prevent the loss of all optimisticResponses after a restart, you can configure the Update Functions to restore all optimisticResponses.
-
 
 ```javascript
 const updateFunctions = {
@@ -101,7 +125,7 @@ Developers can adjust how queue will process new mutations by supplying custom `
 To ensure certain queries are not queued and are always delivered to the network layer, you must make use of Graphql directives.
 To do so on your client, ensure the query has the annotation attached like so:
 
-```
+```javascript
 exampleQuery(...) @onlineOnly {
   ...
 }
@@ -116,10 +140,9 @@ It is possible to provide `offlineQueueListener` in config to be notified about 
 - `onOperationFailure` - Called when back online and operation fails with GraphQL error
 - `queueCleared` - Called when offline operation queue is cleared
 
-
 ## Cache
 
-Apollo Offline Client is strongly leveraging Apollo Cache.
+Apollo Offline Client strongly leverages Apollo Cache.
 Please follow documentation for more information about caching in Apollo GraphQL
 
 https://www.apollographql.com/docs/react/advanced/caching.html
@@ -131,7 +154,7 @@ To effectively work with cache users can use `cache-first` fetchPolicy
 when performing queries. This policy will try to use local cache in
 situations when cache was already populated with the server side data.
 
-```
+```javascript
     return this.apollo.watchQuery<YourType>({
       query: YOUR_QUERY,
       fetchPolicy: 'cache-first',

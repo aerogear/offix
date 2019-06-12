@@ -4,14 +4,13 @@ title: Getting Started
 navigation: 2
 ---
 
-
 # Getting Started
 
 ## Importing the package
+
 ```javascript
 import {
-  createClient,
-  strategies
+  OfflineClient
 } from 'offix-client';
 ```
 
@@ -28,15 +27,16 @@ let config = {
 ```
 
 ## Creating a Client
+
 ```javascript
-let client = createClient(config);
+let client = new OfflineClient(config);
+client.init();
 ```
 
-# Basic concepts
+## Basic concepts
 
-Client is basing on Apollo GraphQL client that can be used with various web and mobile frameworks.
-We provide version for web and Apache Cordova.
-For basic concepts about Apollo GraphQL please refer to documentation for your own platform.
+OfflineClient is based on Apollo GraphQL client and can be used with various web and mobile frameworks.
+We provide a version for web and Apache Cordova. For basic concepts about Apollo GraphQL please refer to the documentation for your own platform.
 
 For React:
 https://www.apollographql.com/docs/react/
