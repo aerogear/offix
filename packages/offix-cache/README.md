@@ -21,7 +21,7 @@ const optimisticResponse = createOptimisticResponse({
 
 apolloClient.mutate({
   mutation: ADD_TASK,
-  optimisticResponse
+  optimisticResponse: optimisticResponse
 })
 ```
 
