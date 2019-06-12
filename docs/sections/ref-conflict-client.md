@@ -31,20 +31,20 @@ By default plugable conflict resolution is configured to rely on `version` field
 GraphQL type.
 For example:
 
-``
+```javascript
 type User {
   id: ID!
   version: String!
   name: String!
 }
-``
+```
 
 Version field is going to be controlled on the server and will map last version
 that was sent from server. All operations on version field happen automatically
 however users need to make sure that version field is always being passed to server
 for mutations that supports conflict resolution:
 
-```
+```javascript
 type Mutation {
   updateUser(id: ID!, version: String!): User
 }
@@ -53,7 +53,7 @@ type Mutation {
 Alternatively developers can create input element that can be reused in every mutation
 that supports conflict resolution
 
-```
+```javascript
 type Mutation {
   updateUser(user: UserInput): User
 }
@@ -64,7 +64,6 @@ type Mutation {
 Client can define custom resolution strategies.
 You can provide custom conflict resolution strategies to the client in the config by using the provided `ConflictResolutionStrategies` type from the SDK. By default developers do not need to pass any strategy (`clientVersionWins` strategy is used).
 Custom strategies can be used also to provide different resolution strategy for certain operations:
-
 
 ```javascript
 let updateUserConflictResolver = (serverData, clientData) => {
@@ -99,7 +98,6 @@ Framework allows to receive information about the data conflict that occurred be
 
 Developers can supply their own `conflictListener` implementation
 
-
 ```typescript
 class ConflictLogger implements ConflictListener {
     console.log(`data: ${JSON.stringify(resolvedData)}, server: ${JSON.stringify(server)} client: ${JSON.stringify(client)} `);
@@ -112,4 +110,3 @@ let config = {
 ...
 }
 ```
-

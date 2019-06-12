@@ -35,7 +35,7 @@ until they going to be synced to server. In some circumstances users may want to
 When performing mutations users can decide to supply `optimisticResponse` object that will
 appear instantly in the application UI. SDK provides helper method to work with optimistic responses.
 
-```
+```javascript
  import { createOptimisticResponse } from "@aerogear/datasync-js";
 
  createOptimisticResponse("updateTest", "Test", { data: "test" });
