@@ -32,7 +32,6 @@ export const createMutationOptions = (options: MutationHelperOptions): MutationO
     options.optimisticResponse = createOptimisticResponse({
       mutation,
       variables,
-      updateQuery,
       returnType,
       operationType,
       idField
@@ -108,8 +107,14 @@ export const getUpdateFunction = (
             const queryResult = cache.readQuery({ query, variables }) as any;
             const operationData = data[operation];
             if (operationData) {
+              let toBeRemoved = {} as any;
+              if (typeof operationData === "string") {
+                toBeRemoved[idField] = operationData;
+              } else {
+                toBeRemoved = operationData;
+              }
               const newData = queryResult[queryField].filter((item: any) => {
-                return operationData[idField] !== item[idField];
+                return toBeRemoved[idField] !== item[idField];
               });
               queryResult[queryField] = newData;
               cache.writeQuery({
