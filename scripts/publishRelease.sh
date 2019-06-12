@@ -15,10 +15,10 @@ fi
 
 if [[ "$(echo $TAG | grep -E $RELEASE_SYNTAX)" == "$TAG" ]]; then
   echo "publishing a new release: $TAG"
-  lerna exec npm publish
+  lerna --no-private exec npm publish
 elif [[ "$(echo $TAG | grep -E $PRERELEASE_SYNTAX)" == "$TAG" ]]; then
   echo "publishing a new pre release: $TAG"
-  lerna exec "npm publish --tag next"
+  lerna --no-private exec "npm publish --tag next"
 else
   echo "Error: the tag $TAG is not valid. exiting..."
   exit 1
