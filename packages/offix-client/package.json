@@ -13,6 +13,10 @@
     "integration-test": "cd integration_test && npm test"
   },
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aerogear/offix.git"
+  },
   "publishConfig": {
     "access": "public"
   },
