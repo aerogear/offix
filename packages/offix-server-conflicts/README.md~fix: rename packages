@@ -1,4 +1,4 @@
-## Offix GraphQL Offline Server
+## offix-server-conflicts
 
 Documentation:
 
