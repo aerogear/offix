@@ -26,8 +26,8 @@
     "generate:docs": "./scripts/docs.sh"
   },
   "devDependencies": {
-    "@types/graphql": "^14.2.0",
-    "graphql": "^14.2.1",
+    "@types/graphql": "14.2.0",
+    "graphql": "14.3.1",
     "coveralls": "3.0.3",
     "del-cli": "1.1.0",
     "lerna": "3.15.0",
