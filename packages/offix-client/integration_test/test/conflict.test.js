@@ -124,27 +124,8 @@ describe('Conflicts', function() {
     return { success, failure };
   };
 
-  describe('reject update on conflict', function() {
-
-    it('should succeed', async function() {
-      const { success, failure } = await createConflict(UPDATE_TASK_CONFLICT_REJECT);
-
-      expect(success).to.equal(0);
-      expect(failure).to.equal(1);
-
-      const response = await client.query({
-        query: GET_TASKS
-      });
-
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal(updatedTask.title);
-      expect(response.data.allTasks[0].description).to.equal(updatedTask.description);
-    });
-
-  });
-
-  describe('resolve conflict on client', function() {
+ 
+  describe('resolve conflict', function() {
 
     it('should succeed', async function() {
       const { success, failure } = await createConflict(UPDATE_TASK_CLIENT_RESOLUTION);
@@ -164,44 +145,7 @@ describe('Conflicts', function() {
 
   });
 
-  describe('resolve conflict on server', function() {
-
-    it('should succeed', async function() {
-      const { success, failure } = await createConflict(UPDATE_TASK_SERVER_RESOLUTION);
-
-      expect(success).to.equal(1);
-      expect(failure).to.equal(0);
-
-      const response = await client.query({
-        query: GET_TASKS
-      });
-
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal('client');
-      expect(response.data.allTasks[0].description).to.equal('client');
-    });
-
-  });
-
-  describe('custom resolution strategy', function() {
-
-    it('should succeed', async function() {
-      const { success, failure } = await createConflict(UPDATE_TASK_CUSTOM_CLIENT_RESOLUTION);
-
-      expect(success).to.equal(1);
-      expect(failure).to.equal(0);
-
-      const response = await client.query({
-        query: GET_TASKS
-      });
-
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal('custom');
-      expect(response.data.allTasks[0].description).to.equal('client');
-    });
-
-  });
+ 
+   
 
 });

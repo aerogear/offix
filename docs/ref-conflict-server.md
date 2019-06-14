@@ -5,7 +5,7 @@ Server side conflict resolution is possible using Node.js package.
 ## Usage
 
 ```
-npm install apollo-conflicts-server
+npm install offix-server-conflict
 ```
 
 # Conflict Resolution
@@ -51,67 +51,18 @@ Every conflict can be handled using a set of predefined steps
 ```javascript
     // 1. Read data from data source
     // 2. Check for conflicts
-    if (conflictHandler.hasConflict(serverData,clientData)) {
-      // 3. Resolve conflict (client or server) and return error to client
-      return await conflictHandler.resolveOnClient(serverData, clientData).response
+    const conflict = conflictHandler.checkForConflicts(serverData,clientData)
+    if(conflict) {
+        throw conflict;
     }
-    // 4. Call next state to update
-    greeting = conflictHandler.nextState(clientData)
     // 5. Save object to data source
 ```
 
-Resolvers can be implemented to handle conflicts on client or server.
-Depending on  the strategy used, the resolver implementation will differ.
-Please see the chapter below for individual implementations.
-
-## Options for Resolving Conflicts
-
-Conflicts can be resolved on server or client depending on the resolver implementation
-
-### Conflicts on the Client
-
-```javascript
-// Data
-const serverState = ...
-
-changeGreeting: async (obj, clientState, context, info) => {
-    if (conflictHandler.hasConflict(serverState, args)) {
-      const clientState = args
-      return await conflictHandler.resolveOnClient(serverState, clientState).response
-    }
-    serverState = conflictHandler.nextState(clientState)
-    return serverState
-}
-```
-
-### Conflicts on the Server
-
-```javascript
-// Data
-const serverState = ...
-
- changeGreeting: async (obj, clientState, context, info) => {
-      if (conflictHandler.hasConflict(serverState, clientState)) {
-        const strategy = customGreetingResolutionStrategy
-        const { resolvedState, response } = await conflictHandler.resolveOnServer(strategy, serverState, clientState)
-        serverState = resolvedState
-        return response
-      }
-      serverState = conflictHandler.nextState(clientState)
-      return serverState
-    }
-```
-
-> Note: For complete implementation see example application located in `examples/conflicts` folder.
+Resolvers can be implemented to handle conflicts on client .
 
 ## Implementing Custom Conflict Mechanism
 
-The`ObjectState` interface is a complete conflict resolution implementation that provides a set of rules to detect and handle conflict. Interface will allow developers to handle conflict on the client or the server. `nextSate` method is a way for interface to modify existing object before is being saved to the database.
-For example when using `lastModified` field as a way to detect conflicts:
+The`ObjectState` interface is a complete conflict resolution implementation that provides a set of rules to detect and handle conflict. Interface will allow developers to handle conflict on the client. Client side application will need to match the server side implementation. Currently we support following implementations:
 
-```typescript
- public nextState(currentObjectState: ObjectStateData) {
-    currentObjectState.lastModified = new Date()
-    return currentObjectState
-  }
-```
+- `VersionObjectState` - allows to operate based on version field in schema
+- `HashObjectState` - allows to operate based on object hashes

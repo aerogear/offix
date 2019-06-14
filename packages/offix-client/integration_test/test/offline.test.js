@@ -377,9 +377,7 @@ describe('Offline mutations', function () {
 
       networkStatus.setOnline(true);
       console.log("offlineKeys for ", offlineKeys);
-      // console.log("waiting for 1",  (await store.getItem("offline:" + offlineKeys[0])))
-      // console.log("waiting for 2",  (await store.getItem("offline:" + offlineKeys[1])))
-
+      
       await waitFor(() => isQueueEmpty, 100);
       await timeout(100);
 
