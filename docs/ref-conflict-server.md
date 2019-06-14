@@ -34,7 +34,7 @@ type Greeting {
     msg: String
     version: Int
   }
-```
+```n b
 
 3. Add example mutations
 
