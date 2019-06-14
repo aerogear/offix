@@ -22,6 +22,7 @@ export const conflictLink = (config: DataSyncConfig): ApolloLink => {
   };
 
   return onError(({ response, operation, forward, graphQLErrors }) => {
+    console.log(JSON.stringify(graphQLErrors))
     const data = getConflictData(graphQLErrors);
     if (data && config.conflictStrategy && config.conflictStateProvider) {
       let resolvedConflict;
@@ -38,6 +39,7 @@ export const conflictLink = (config: DataSyncConfig): ApolloLink => {
             resolvedConflict, data.serverState, data.clientState);
         }
       } else {
+        console.log("AAIUufishfoswhfioewfjiopewkfp[o")
         // resolve on client
         // ConflictResolutionStrategies interface is used
         if (config.conflictStrategy.strategies &&
