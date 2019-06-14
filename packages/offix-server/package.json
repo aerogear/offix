@@ -24,7 +24,7 @@
     ]
   },
   "devDependencies": {
-    "ava": "1.4.1",
+    "ava": "2.1.0",
     "graphql": "14.3.1",
     "ts-node": "8.1.0",
     "typescript": "3.4.4"
