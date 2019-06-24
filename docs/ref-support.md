@@ -1,9 +1,3 @@
----
-layout: page
-title: Support
-navigation: 7
----
-
 ## Support
 
 Following extension is supported by Apollo GraphQL community.

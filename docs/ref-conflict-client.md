@@ -1,9 +1,3 @@
----
-layout: page
-title: Client Conflict
-navigation: 4
----
-
 ## Conflicts
 
 When obtaining copy of the server side data, client data can get out of the sync.

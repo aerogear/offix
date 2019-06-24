@@ -1,9 +1,3 @@
----
-layout: page
-title: Apollo Offline Client
-navigation: 3
----
-
 # Offline Support
 
 Offix provides first class support for performing GraphQL operations while offline. Mutations are held in a queue that is configured to hold requests while the client is offline. When the client goes offline for long periods of time they will still be able negotiate local updates with the server state thanks to powerful conflict resolution strategies.

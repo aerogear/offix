@@ -1,10 +1,3 @@
----
-layout: page
-title: Server Conflicts
-navigation: 5
----
-
-
 # Server side conflict resolution
 
 Server side conflict resolution is possible using Node.js package.
