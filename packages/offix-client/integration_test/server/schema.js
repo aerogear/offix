@@ -80,7 +80,6 @@ const resolvers = {
       if(conflict){
         throw conflict;
       }
-
       data[index] = {...(data[index]), ...args};
       return data[index];
     },
