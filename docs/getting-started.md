@@ -1,9 +1,3 @@
----
-layout: page
-title: Getting Started
-navigation: 2
----
-
 # Getting Started
 
 ## Importing the package

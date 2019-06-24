@@ -1,9 +1,3 @@
----
-layout: page
-title: Advanced Topics
-navigation: 6
----
-
 # Advanced topics
 
 ## Implementing Custom Network Status checks

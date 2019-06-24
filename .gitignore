@@ -89,3 +89,4 @@ cordova-example
 
 docs/api/**
 
+.DS_Store
