@@ -18,7 +18,7 @@ const newClient = async (options) => {
   return { client, networkStatus, storage };
 }
 
-describe.only("Offline cache and mutations", () => {
+describe("Offline cache and mutations", () => {
 
   before('start server', async function () {
     await server.start();
