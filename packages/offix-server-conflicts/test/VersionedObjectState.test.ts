@@ -22,7 +22,7 @@ test("Missing version", (t) => {
   const serverData = { name: "AeroGear" };
   const clientData = { name: "AeroGear", version: 1 };
 
- t.throws(() => {
+  t.throws(() => {
     objectState.checkForConflict(serverData, clientData);
   });
 });
