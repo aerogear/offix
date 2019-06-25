@@ -24,6 +24,28 @@ export const GET_TASKS = gql`
   }
 `;
 
+export const GET_TASK = gql`
+  query getTask($id: ID!) {
+    getTask(id: $id) {
+      id
+      title
+      description
+      version
+    }
+  }
+`
+
+export const FIND_TASK_BY_TITLE = gql`
+  query findTaskByTitle($title: String!) {
+    findTaskByTitle(title: $title) {
+      id
+      title
+      description
+      version
+    }
+  }
+`;
+
 export const DELETE_TASK = gql`
   mutation deleteTask($id: ID!) {
     deleteTask(id: $id)
