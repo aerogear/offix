@@ -2,8 +2,9 @@ import server from '../utils/server';
 import { createClient } from '../../dist';
 import { CacheOperation, getUpdateFunction } from '../../../offix-cache/dist';
 import { ToggleableNetworkStatus } from '../utils/network';
-import { ADD_TASK, GET_TASKS } from '../utils/graphql.queries';
+import { ADD_TASK, GET_TASKS, DELETE_TASK } from '../utils/graphql.queries';
 import { TestStore } from '../utils/testStore';
+import timeout from '../utils/timeout';
 
 const newClient = async (options) => {
   const networkStatus = new ToggleableNetworkStatus();
@@ -213,4 +214,93 @@ describe("Offline cache and mutations", () => {
     expect(response.data.allTasks[0].title).to.equal("Test");
   });
 
-})
+  it("delete items while offline should succeed", async () => {
+
+    const {client, networkStatus} = await newClient({
+      mutationCacheUpdates: {
+        createTask: getUpdateFunction('createTask', 'id', GET_TASKS, CacheOperation.ADD),
+        deleteTask: getUpdateFunction('deleteTask', 'id', GET_TASKS, CacheOperation.DELETE),
+      },
+    });
+
+    // Workaround: initialize cache
+    await client.query({ query: GET_TASKS });
+
+    networkStatus.setOnline(false);
+
+    // Create a new Task
+    let addTaskPromise;
+    try {
+      await client.offlineMutation({
+        mutation: ADD_TASK,
+        variables: {
+          title: "Test",
+          description: "Blablabla",
+          version: 1,
+        },
+        updateQuery: GET_TASKS,
+        returnType: 'Task'
+      });
+    } catch(e) {
+      if (e.networkError && e.networkError.offline) {
+        // store watcher globally and continue
+        addTaskPromise = e.networkError.watchOfflineChange();
+      } else {
+        throw e;
+      }
+    }
+
+    await timeout(100);
+
+    // Retrieve the new Task from the cache
+    const response = await client.query({query: GET_TASKS});
+
+    expect(response.data.allTasks).to.exist;
+    expect(response.data.allTasks.length).to.equal(1);
+
+    const task = response.data.allTasks[0];
+    expect(task.title).to.equal("Test");
+    expect(task.id).to.exist;
+
+    // Delete the task
+    let deleteTaskPromise;
+    try {
+      await client.offlineMutation({
+        mutation: DELETE_TASK,
+        variables: {
+          id: task.id,
+        },
+        updateQuery: GET_TASKS,
+        returnType: 'Task',
+        operationType: CacheOperation.DELETE,
+      });
+    } catch(e) {
+      if (e.networkError && e.networkError.offline) {
+        // store watcher globally and continue
+        deleteTaskPromise = e.networkError.watchOfflineChange();
+      } else {
+        throw e;
+      }
+    }
+
+    await timeout(100);
+
+    // Retrieve the new Task from the cache while still offline
+    const response2 = await client.query({query: GET_TASKS});
+    expect(response2.data.allTasks).to.exist;
+    expect(response2.data.allTasks.length).to.equal(0);
+
+    // Go back online
+    networkStatus.setOnline(true);
+
+    // Wait for all offline transactions to be executed
+    await addTaskPromise;
+    await deleteTaskPromise;
+
+    // Retrieve again the Tasks
+    const response3 = await client.query({query: GET_TASKS});
+    expect(response3.data.allTasks).to.exist;
+    expect(response3.data.allTasks.length).to.equal(0);
+
+  });
+});
