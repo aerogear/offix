@@ -4,7 +4,6 @@ import { CacheOperation, getUpdateFunction } from '../../../offix-cache/dist';
 import { ToggleableNetworkStatus } from '../utils/network';
 import { ADD_TASK, GET_TASKS, DELETE_TASK } from '../utils/graphql.queries';
 import { TestStore } from '../utils/testStore';
-import timeout from '../utils/timeout';
 
 const newClient = async (options) => {
   const networkStatus = new ToggleableNetworkStatus();
@@ -250,8 +249,6 @@ describe("Offline cache and mutations", () => {
       }
     }
 
-    await timeout(100);
-
     // Retrieve the new Task from the cache
     const response = await client.query({query: GET_TASKS});
 
@@ -282,8 +279,6 @@ describe("Offline cache and mutations", () => {
         throw e;
       }
     }
-
-    await timeout(100);
 
     // Retrieve the new Task from the cache while still offline
     const response2 = await client.query({query: GET_TASKS});
