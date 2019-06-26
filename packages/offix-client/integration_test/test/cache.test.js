@@ -384,7 +384,7 @@ describe("Offline cache and mutations", () => {
 
       // search the task while still offline from the cache
       const result1 = await findTaskByTitle(client, { fetchPolicy: CACHE_ONLY });
-      
+
       assertTaskEqualTaskTemplate(result1.data.findTaskByTitle);
     });
 
@@ -426,18 +426,14 @@ describe("Offline cache and mutations", () => {
 
       // search the task while still offline from the cache
       const result1 = await findTaskByTitle(client, { fetchPolicy: CACHE_ONLY });
-      
+
       assertTaskEqualTaskTemplate(result1);
     });
 
 
-    it('getTask with previous generated optimisticResponse', async () => {
-
-      // TODO: Work in progress
+    it('create a task and query it by id while offline', async () => {
 
       const { client, networkStatus } = await newClient();
-
-      goOffline(networkStatus);
 
       const newOptimisticTask = createOptimisticResponse({
         mutation: ADD_TASK,
@@ -447,8 +443,16 @@ describe("Offline cache and mutations", () => {
         idField: 'id',
       });
 
-      // Add the task while offline using the self generated optimistic response
-      await addTaskWhileOffline(client, { optimisticResponse: newOptimisticTask });
+      goOffline(networkStatus);
+
+      // create the task while offline using the self generated optimistic response
+      await addTaskWhileOffline(client, {
+        optimisticResponse: newOptimisticTask,
+        updateQuery: {
+          query: GET_TASK,
+          variables: { d: newOptimisticTask.id },
+        }
+      });
 
       // Get the task while still offline
       const result = await client.query({
@@ -460,6 +464,7 @@ describe("Offline cache and mutations", () => {
       expect(result.data.findTaskByTitle).to.exist;
       expect(result.data.findTaskByTitle.title).to.equal(TASK_TEMPLATE.title);
     });
+
 
   })
 });
