@@ -311,7 +311,7 @@ describe("Offline cache and mutations", () => {
 
   });
 
-  describe.only('update single object query while offline', () => {
+  describe('update single object query while offline', () => {
 
     const CACHE_ONLY = 'cache-only';
 
