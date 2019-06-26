@@ -435,7 +435,7 @@ describe("Offline cache and mutations", () => {
 
       const { client, networkStatus } = await newClient();
 
-      const newOptimisticTask = createOptimisticResponse({
+      const optimistic = createOptimisticResponse({
         mutation: ADD_TASK,
         variables: TASK_TEMPLATE,
         returnType: 'Task',
@@ -447,24 +447,21 @@ describe("Offline cache and mutations", () => {
 
       // create the task while offline using the self generated optimistic response
       await addTaskWhileOffline(client, {
-        optimisticResponse: newOptimisticTask,
+        optimisticResponse: optimistic,
         updateQuery: {
           query: GET_TASK,
-          variables: { d: newOptimisticTask.id },
+          variables: { d: optimistic.id },
         }
       });
 
       // Get the task while still offline
       const result = await client.query({
         query: GET_TASK,
-        variables: { id: newOptimisticTask.id },
+        variables: { id: optimistic.id },
         fetchPolicy: 'cache-only'
       });
 
-      expect(result.data.findTaskByTitle).to.exist;
-      expect(result.data.findTaskByTitle.title).to.equal(TASK_TEMPLATE.title);
+      assertTaskEqualTaskTemplate(result.data.getTask, { id: optimistic.id });
     });
-
-
-  })
+  });
 });
