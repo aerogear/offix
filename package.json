@@ -26,21 +26,21 @@
     "generate:docs": "./scripts/docs.sh"
   },
   "devDependencies": {
-    "@types/graphql": "14.2.0",
-    "graphql": "14.3.1",
-    "coveralls": "3.0.3",
+    "@types/graphql": "14.2.2",
+    "graphql": "14.4.1",
+    "coveralls": "3.0.4",
     "del-cli": "2.0.0",
     "lerna": "3.15.0",
     "npm-run-all": "4.1.5",
-    "nyc": "14.0.0",
+    "nyc": "14.1.1",
     "replace": "1.1.0",
-    "ts-node": "8.1.0",
-    "tslint": "5.16.0",
+    "ts-node": "8.3.0",
+    "tslint": "5.18.0",
     "typedoc": "0.14.2",
-    "typescript": "3.4.1"
+    "typescript": "3.5.2"
   },
   "dependencies": {
-    "@types/mocha": "5.2.6"
+    "@types/mocha": "5.2.7"
   },
   "nyc": {
     "extension": [
