@@ -1,6 +1,6 @@
 {
   "name": "offix-client",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Offix GraphQL Offline Client",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -52,7 +52,7 @@
     "graphql-tag": "2.10.1",
     "graphql-tools": "4.0.5",
     "idb-localstorage": "0.2.0",
-    "offix-cache": "0.6.0",
+    "offix-cache": "0.6.1",
     "subscriptions-transport-ws": "0.9.16",
     "util": "0.12.0"
   },
