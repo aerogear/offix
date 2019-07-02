@@ -90,3 +90,7 @@ cordova-example
 docs/api/**
 
 .DS_Store
+
+testfile.png
+
+testfile.txt

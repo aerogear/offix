@@ -16,7 +16,7 @@ export interface ConflictHandlerOptions {
     client: ConflictResolutionData;
 
     /**
-     *
+     * Server side changes since the last edit the client knew about
      */
     server: ConflictResolutionData;
 
