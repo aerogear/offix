@@ -50,7 +50,7 @@ export class OfflineQueue {
     if (this.listener && this.listener.onOperationEnqueued) {
       this.listener.onOperationEnqueued(operationEntry);
     }
-    return new Observable((observer) => {
+    return new Observable<FetchResult>((observer) => {
       operationEntry.observer = observer;
       return () => {
         return;
