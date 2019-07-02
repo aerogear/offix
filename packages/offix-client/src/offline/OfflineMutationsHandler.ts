@@ -4,7 +4,7 @@ import { OfflineItem } from "./OperationQueueEntry";
 import { MUTATION_QUEUE_LOGGER } from "../config/Constants";
 import * as debug from "debug";
 import { DataSyncConfig } from "../config";
-import { CacheUpdates, getMutationName } from "offix-cache";
+import { CacheUpdates, getMutationName, MutationHelperOptions } from "offix-cache";
 import { Operation } from "apollo-link";
 import { OfflineStore } from "./storage/OfflineStore";
 
@@ -20,8 +20,8 @@ export class OfflineMutationsHandler {
   private mutationCacheUpdates?: CacheUpdates;
 
   constructor(private store: OfflineStore,
-              private apolloClient: ApolloClient<NormalizedCacheObject>,
-              clientConfig: DataSyncConfig) {
+    private apolloClient: ApolloClient<NormalizedCacheObject>,
+    clientConfig: DataSyncConfig) {
     this.mutationCacheUpdates = clientConfig.mutationCacheUpdates;
   }
 
@@ -53,7 +53,12 @@ export class OfflineMutationsHandler {
     if (this.mutationCacheUpdates && mutationName) {
       updateFunction = this.mutationCacheUpdates[mutationName];
     }
-    const mutationOptions = {
+    let previousContext;
+    if (item.operation.getContext) {
+      previousContext = item.operation.getContext();
+    }
+    const newContext = this.getOfflineContext(item);
+    const mutationOptions: MutationHelperOptions = {
       variables: item.operation.variables,
       mutation: item.operation.query,
       // Restore optimistic response from operation in order to see it
@@ -61,7 +66,7 @@ export class OfflineMutationsHandler {
       // Pass client update functions
       update: updateFunction,
       // Pass extensions as part of the context
-      context: this.getOfflineContext(item.id)
+      context: { ...previousContext, ...newContext }
     };
     await this.apolloClient.mutate(mutationOptions);
   }
@@ -69,8 +74,8 @@ export class OfflineMutationsHandler {
   /**
    * Add info to operation that was done when offline
    */
-  public getOfflineContext(id: string) {
-    return { isOffline: true, offlineId: id };
+  public getOfflineContext(item: OfflineItem) {
+    return { isOffline: true, offlineId: item.id, conflictBase: item.conflictBase, returnType: item.returnType};
   }
 
   /**

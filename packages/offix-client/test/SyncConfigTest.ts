@@ -1,7 +1,7 @@
 import { SyncConfig } from "../src/config/SyncConfig";
 import { expect } from "chai";
 import { ConfigurationService } from "@aerogear/core";
-import { ConflictResolutionData } from "../src/conflicts/ConflictResolutionData";
+import { ConflictResolutionData } from "../src/conflicts/strategies/ConflictResolutionData";
 import { DataSyncConfig } from "../src/config/DataSyncConfig";
 import { storage } from "./mock/Storage";
 
@@ -20,13 +20,11 @@ describe("OnOffLink", () => {
       }
     }
   };
-  const configWithConflictDictionary: DataSyncConfig = {
+  const configWithStrategy: DataSyncConfig = {
     httpUrl: "test",
     storage,
     conflictStrategy: {
-      strategies: {
-        "aMethod": (server: ConflictResolutionData, client: ConflictResolutionData) => server
-      }
+      resolve: (base: ConflictResolutionData, server: ConflictResolutionData, client: ConflictResolutionData) => server
     }
   };
 
@@ -60,19 +58,11 @@ describe("OnOffLink", () => {
     expect(mergedConfig.httpUrl).eq(userConfig.httpUrl);
   });
 
-  it("conflict strategy is a dictionary", () => {
-    const mergedConfig = new SyncConfig(configWithConflictDictionary);
-    expect(mergedConfig.conflictStrategy).to.be.an("object");
-    if (mergedConfig.conflictStrategy && mergedConfig.conflictStrategy.strategies) {
-      expect(mergedConfig.conflictStrategy.strategies.aMethod).to.be.a("Function");
+  it("conflict strategy is a function", () => {
+    const mergedConfig = new SyncConfig(configWithStrategy);
+    if (mergedConfig.conflictStrategy && mergedConfig.conflictStrategy) {
+      expect(mergedConfig.conflictStrategy.resolve).to.be.a("Function");
     }
   });
 
-  it("conflict strategy has a default", () => {
-    const mergedConfig = new SyncConfig(configWithConflictDictionary);
-    expect(mergedConfig.conflictStrategy).to.be.an("object");
-    if (mergedConfig.conflictStrategy) {
-      expect(mergedConfig.conflictStrategy.default).to.be.a("Function");
-    }
-  });
 });

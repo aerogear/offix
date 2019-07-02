@@ -3,9 +3,9 @@ import { PersistedData, PersistentStore } from "../offline/storage/PersistentSto
 import { ConfigError } from "./ConfigError";
 import { DataSyncConfig } from "./DataSyncConfig";
 import { CordovaNetworkStatus, NetworkStatus, WebNetworkStatus, OfflineQueueListener } from "../offline";
-import { clientWins } from "../conflicts/strategies";
-import { VersionedState } from "../conflicts/VersionedState";
-import { ConflictResolutionStrategies } from "../conflicts";
+import { clientWins } from "../conflicts/strategies/strategies";
+import { VersionedState } from "../conflicts/state/VersionedState";
+import { ConflictResolutionStrategy } from "../conflicts";
 import { createDefaultCacheStorage, createDefaultOfflineStorage } from "../offline/storage/defaultStorage";
 import { AuthContextProvider } from ".";
 
@@ -26,8 +26,8 @@ export class SyncConfig implements DataSyncConfig {
   public fileUpload?: boolean;
   public openShiftConfig?: ConfigurationService;
   public auditLogging = false;
-  public conflictStrategy: ConflictResolutionStrategies;
-  public conflictStateProvider = new VersionedState();
+  public conflictStrategy: ConflictResolutionStrategy;
+  public conflictProvider = new VersionedState();
   public networkStatus: NetworkStatus;
 
   public cacheStorage: PersistentStore<PersistedData>;
@@ -57,11 +57,8 @@ export class SyncConfig implements DataSyncConfig {
 
     if (clientOptions && clientOptions.conflictStrategy) {
       this.conflictStrategy = clientOptions.conflictStrategy;
-      if (!clientOptions.conflictStrategy.default) {
-        this.conflictStrategy.default = clientWins;
-      }
     } else {
-      this.conflictStrategy = { default: clientWins };
+      this.conflictStrategy = clientWins;
     }
     this.init(clientOptions);
   }

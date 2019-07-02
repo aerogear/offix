@@ -1,4 +1,4 @@
-import { IResultProcessor } from "../../offline/procesors/IResultProcessor";
+import { IResultProcessor } from "./IResultProcessor";
 import { OperationQueueEntry } from "../../offline/OperationQueueEntry";
 import { FetchResult } from "apollo-link";
 import { isClientGeneratedId } from "offix-cache";

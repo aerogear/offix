@@ -6,8 +6,11 @@ import { isClientGeneratedId, generateClientId } from "offix-cache";
  */
 export interface OfflineItem {
   operation: Operation;
-  optimisticResponse?: any;
   id: string;
+  conflictBase?: any;
+  returnType?: string;
+  optimisticResponse?: any;
+  conflictStrategy?: string;
 }
 
 /**
@@ -16,10 +19,13 @@ export interface OfflineItem {
  * It exposes method for forwarding the operation.
  */
 export class OperationQueueEntry implements OfflineItem {
-
   public readonly operation: Operation;
   public readonly optimisticResponse?: any;
-  public id: string;
+  public readonly id: string;
+  public readonly returnType?: string;
+  public readonly conflictBase: any;
+  public conflictStrategy?: string;
+
   public forward?: NextLink;
   public result?: FetchResult;
   public networkError: any;
@@ -34,7 +40,13 @@ export class OperationQueueEntry implements OfflineItem {
       this.id = generateClientId();
     }
     if (typeof operation.getContext === "function") {
-      this.optimisticResponse = operation.getContext().optimisticResponse;
+      const context = operation.getContext();
+      this.conflictBase = context.conflictBase;
+      this.returnType = context.returnType;
+      this.optimisticResponse = context.optimisticResponse;
+      if (context.conflictStrategy) {
+        this.conflictStrategy = context.conflictStrategy.id;
+      }
     }
   }
 
@@ -53,7 +65,10 @@ export class OperationQueueEntry implements OfflineItem {
     return {
       operation: this.operation,
       optimisticResponse: this.optimisticResponse,
-      id: this.id
+      id: this.id,
+      returnType: this.returnType,
+      conflictBase: this.conflictBase,
+      conflictStrategy: this.conflictStrategy
     };
   }
 }

@@ -6,11 +6,12 @@
     ]
   },
   "rules": {
-    "jsdoc-format":false,
+    "jsdoc-format": false,
     "quotemark": [
       true,
       "double"
     ],
+    "align": false,
     "only-arrow-functions": [
       false
     ],
