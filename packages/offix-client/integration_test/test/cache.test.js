@@ -320,7 +320,7 @@ describe("Offline cache and mutations", () => {
 
   describe('update list query while offline and then go back online', () => {
 
-    it.only("query tasks while online, go offline, create task, delete task, go back online using mutationCacheUpdates", async () => {
+    it("query tasks while online, go offline, create task, delete task, go back online using mutationCacheUpdates", async () => {
 
       const { client, networkStatus: network } = await newClient({
         mutationCacheUpdates: {
