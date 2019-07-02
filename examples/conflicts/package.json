@@ -1,6 +1,6 @@
 {
   "name": "examples",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "private": true,
   "description": "",
   "scripts": {
@@ -17,7 +17,7 @@
     "express": "^4.16.4",
     "graphql": "0.13.2",
     "graphql-tools": "^4.0.3",
-    "offix-cache": "0.6.0"
+    "offix-cache": "0.6.1"
   },
   "devDependencies": {
     "@types/graphql": "^14.0.3",

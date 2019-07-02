@@ -1,6 +1,6 @@
 {
   "name": "offix-cache",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "GraphQL Mutation and Subscription Helpers",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -19,7 +19,7 @@
     "fetch-mock": "7.3.3",
     "graphql-tag": "2.10.1",
     "mocha": "6.1.4",
-    "offix-client": "0.6.0",
+    "offix-client": "0.6.1",
     "ts-node": "8.3.0",
     "typescript": "3.5.2"
   },
