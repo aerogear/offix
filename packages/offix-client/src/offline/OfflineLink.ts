@@ -1,4 +1,4 @@
-import { ApolloLink, NextLink, Operation, Observable } from "apollo-link";
+import { ApolloLink, NextLink, Operation, Observable, FetchResult } from "apollo-link";
 import { NetworkInfo, NetworkStatus, OfflineQueueListener, OfflineMutationsHandler, OfflineStore } from ".";
 import { OfflineQueue } from "./OfflineQueue";
 import * as debug from "debug";
@@ -40,7 +40,10 @@ export class OfflineLink extends ApolloLink {
     this.queue = new OfflineQueue(options);
   }
 
-  public request(operation: Operation, forward: NextLink) {
+  request(operation: Operation, forward?: NextLink): Observable<FetchResult> | null {
+    if (!forward) {
+      return null;
+    }
     // Reattempting operation that was marked as offline
     if (OfflineMutationsHandler.isMarkedOffline(operation)) {
       logger("Enqueueing offline mutation", operation.variables);
@@ -58,7 +61,7 @@ export class OfflineLink extends ApolloLink {
       return forward(operation);
     }
     const handler = this.offlineMutationHandler;
-    return new Observable(observer => {
+    return new Observable<FetchResult>(observer => {
       this.queue.persistItemWithQueue(operation).then((operationEntry) => {
         // Send mutation request again
         const offlineMutation = handler.mutateOfflineElement(operationEntry);

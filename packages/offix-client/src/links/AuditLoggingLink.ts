@@ -12,6 +12,9 @@ export class AuditLoggingLink extends ApolloLink {
   }
 
   public request(operation: Operation, forward?: NextLink) {
+    if (!forward) {
+      return null;
+    }
     if (!operation.extensions) {
       operation.extensions = {};
     }
@@ -21,10 +24,6 @@ export class AuditLoggingLink extends ApolloLink {
       timestamp: new Date().getTime(),
       data: this.metricsPayload
     };
-
-    if (!forward) {
-      return null;
-    }
     return forward(operation);
   }
 }
