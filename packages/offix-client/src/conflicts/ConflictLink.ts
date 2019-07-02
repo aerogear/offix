@@ -52,15 +52,18 @@ export interface ConflictConfig {
 }
 
 /**
- * Conflict handling link implementation that provides ability to determine
+ * Conflict handling link implementation that provides ability to determine whether or not a conflict should be handled.
+ * Leverages Apollo's onError link to keep track of the observables and the retried operations.
  */
 export class ConflictLink extends ApolloLink {
   private stater: ObjectState;
+  private link: ApolloLink;
   private strategy: ConflictResolutionStrategy | undefined;
   private listener: ConflictListener | undefined;
 
   constructor(private config: ConflictConfig) {
     super();
+    this.link = onError(this.conflictHandler.bind(this));
     this.stater = this.config.conflictProvider;
     this.strategy = this.config.conflictStrategy;
     this.listener = this.config.conflictListener;
@@ -72,75 +75,21 @@ export class ConflictLink extends ApolloLink {
   ): Observable<FetchResult> | null {
     if (isMutation(operation)) {
       if (this.stater.currentState(operation.variables) !== undefined) {
-        return new Observable(observer => {
-          let retriedResult: any;
-          let sub: any;
-          let retriedSub: any;
-          sub = forward(operation).subscribe({
-            next: (result: FetchResult) => {
-              retriedResult = this.conflictHandler({
-                response: result,
-                operation,
-                forward,
-                graphQLErrors: result.errors
-              });
-
-              if (retriedResult) {
-                retriedSub = retriedResult.subscribe({
-                  next: observer.next.bind(observer),
-                  error: observer.error.bind(observer),
-                  complete: observer.complete.bind(observer)
-                });
-                return;
-              }
-              observer.next(result);
-            },
-            error: networkError => {
-              retriedResult = this.conflictHandler({
-                operation,
-                networkError,
-                graphQLErrors:
-                  networkError &&
-                  networkError.result &&
-                  networkError.result.errors,
-                forward
-              });
-              if (retriedResult) {
-                retriedSub = retriedResult.subscribe({
-                  next: observer.next.bind(observer),
-                  error: observer.error.bind(observer),
-                  complete: observer.complete.bind(observer)
-                });
-                return;
-              }
-              observer.error(networkError);
-            },
-            complete: () => {
-              if (!retriedResult) {
-                observer.complete.bind(observer)();
-              }
-            }
-          });
-          return () => {
-            if (sub) {
-              sub.unsubscribe();
-            }
-            if (retriedSub) {
-              retriedSub.unsubscribe();
-            }
-          };
-        });
+        return this.link.request(operation, forward);
       }
+      return forward(operation);
     }
     return forward(operation);
   }
 
-  private conflictHandler(errorResponse: ErrorResponse) {
+  // this is a custom onError ErrorHandler. It determines executes the conflictHandler and provides a new operation
+  // to work with if necessary.
+  private conflictHandler(errorResponse: ErrorResponse): Observable<FetchResult> {
     const { response, operation, forward, graphQLErrors } = errorResponse;
     const data = this.getConflictData(graphQLErrors);
     const individualStrategy = this.strategy || clientWins;
     if (data && operation.getContext().returnType) {
-      const base = operation.getContext().base;
+      const base = operation.getContext().conflictBase;
       const conflictHandler = new ConflictHandler({
         base,
         client: data.clientState,
@@ -153,10 +102,10 @@ export class ConflictLink extends ApolloLink {
       const resolvedConflict = conflictHandler.executeStrategy();
       if (resolvedConflict) {
         operation.variables = resolvedConflict;
-        return forward(operation);
       }
-
     }
+    return forward(operation);
+
   }
 
   /**

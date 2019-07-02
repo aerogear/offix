@@ -5,15 +5,12 @@ import { Query } from "./CacheUpdates";
 import { getOperationFieldName, deconstructQuery } from "../utils/helperFunctions";
 import { isArray } from "util";
 
-export interface Context {
-  conflictBase?: any;
-  returnType?: string;
-}
-
+/**
+ * Interface to overlay helper internals on top of mutation options.
+ */
 export interface MutationHelperOptions extends MutationOptions {
   updateQuery?: Query | Query[];
   operationType?: CacheOperation;
-  context: Context | any;
   idField?: string;
   returnType?: string;
 }
@@ -55,7 +52,7 @@ export const createMutationOptions = (options: MutationHelperOptions): MutationO
       updateFunction(cache, { data });
     }
   };
-  return { ...options, update, context: {...context, returnType} };
+  return { ...options, update, context: { ...context, returnType } };
 };
 
 /**
@@ -75,8 +72,8 @@ export const getUpdateFunction = (
 
   if (!updateQuery) {
     return () => {
-        return;
-      };
+      return;
+    };
   }
 
   const { query, variables } = deconstructQuery(updateQuery);
@@ -141,6 +138,7 @@ export const getUpdateFunction = (
         }
       };
       break;
+    // this default catches the REFRESH case and returns an empty update function which does nothing
     default:
       updateFunction = () => {
         return;

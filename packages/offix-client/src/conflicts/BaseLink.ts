@@ -42,7 +42,6 @@ export class BaseLink extends ApolloLink {
         // 🙊 Input data is conflicted with the latest server projection
         return this.createLocalConflict(conflictBase, operation.variables);
       }
-      // TODO use conflictBase as name
       operation.setContext({ conflictBase });
     }
     return forward(operation);

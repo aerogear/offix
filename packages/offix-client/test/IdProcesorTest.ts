@@ -1,4 +1,4 @@
-import { IDProcessor } from "../src/offline/procesors/IDProcessor";
+import { IDProcessor } from "../src/offline/processors/IDProcessor";
 import { OperationQueueEntry } from "../src/offline/OperationQueueEntry";
 import { expect } from "chai";
 

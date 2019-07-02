@@ -22,9 +22,7 @@ export class ConflictHandler {
   }
 
   /**
-   * Executes supplied strategy
-   *
-   * @param operationName - name of operation that triggered that conflict
+   * Executes the supplied strategy for each handler
    */
   public executeStrategy() {
     const resolvedData = this.options.strategy.resolve(this.options.base,
@@ -47,7 +45,6 @@ export class ConflictHandler {
         filteredData[key] = resolvedData[key];
       }
     }
-    filteredData.version = this.options.server.version;
     return filteredData;
   }
 

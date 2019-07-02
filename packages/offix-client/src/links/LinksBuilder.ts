@@ -84,18 +84,18 @@ export const defaultHttpLinks = async (config: DataSyncConfig, offlineLink: Apol
   const baseLink = new BaseLink(config.conflictProvider as ObjectState, cache);
   const links: ApolloLink[] = [baseLink, mutationOfflineLink];
   links.push(conflictLink);
-  // const retryLink = ApolloLink.split(OfflineMutationsHandler.isMarkedOffline, new RetryLink(config.retryOptions));
-  // links.push(retryLink);
+  const retryLink = ApolloLink.split(OfflineMutationsHandler.isMarkedOffline, new RetryLink(config.retryOptions));
+  links.push(retryLink);
 
-  // if (config.auditLogging) {
-  //   links.push(await createAuditLoggingLink());
-  // }
+  if (config.auditLogging) {
+    links.push(await createAuditLoggingLink());
+  }
 
-  // if (config.authContextProvider) {
-  //   links.push(createAuthLink(config));
-  // }
-  // const localFilterLink = new LocalDirectiveFilterLink();
-  // links.push(localFilterLink);
+  if (config.authContextProvider) {
+    links.push(createAuthLink(config));
+  }
+  const localFilterLink = new LocalDirectiveFilterLink();
+  links.push(localFilterLink);
 
   if (config.fileUpload) {
     links.push(createUploadLink({
