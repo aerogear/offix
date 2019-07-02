@@ -1,4 +1,4 @@
-import { ApolloLink, Observable, Operation } from "apollo-link";
+import { ApolloLink, Observable, Operation, FetchResult } from "apollo-link";
 import { ExecutionResult } from "graphql";
 
 export class TestLink extends ApolloLink {
@@ -10,7 +10,7 @@ export class TestLink extends ApolloLink {
 
   public request(operation: Operation) {
     this.operations.push(operation);
-    return new Observable(observer => {
+    return new Observable<FetchResult>(observer => {
       if (operation.getContext().testError) {
         setTimeout(() => observer.error(operation.getContext().testError), 0);
         return;
