@@ -13,6 +13,9 @@ import { isClientGeneratedId } from "offix-cache";
 export class IDProcessor implements IResultProcessor {
 
   public execute(queue: OperationQueueEntry[], entry: OperationQueueEntry, result: FetchResult) {
+    if (!entry || !entry.operation) {
+      return;
+    }
     const { operation: { operationName }, optimisticResponse } = entry;
     if (!result ||
       !optimisticResponse ||
@@ -26,13 +29,12 @@ export class IDProcessor implements IResultProcessor {
     }
     // Ensure we dealing with string
     clientId = clientId.toString();
-    if (!isClientGeneratedId(optimisticResponse[operationName].id)) {
-      return;
+    if (isClientGeneratedId(optimisticResponse[operationName].id)) {
+      queue.forEach(({ operation: op }) => {
+        if (op.variables.id === clientId) {
+          op.variables.id = result.data && result.data[operationName].id;
+        }
+      });
     }
-    queue.forEach(({ operation: op }) => {
-      if (op.variables.id === clientId) {
-        op.variables.id = result.data && result.data[operationName].id;
-      }
-    });
   }
 }
