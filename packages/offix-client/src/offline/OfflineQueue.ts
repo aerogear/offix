@@ -3,7 +3,7 @@ import { OfflineQueueListener } from "./events/OfflineQueueListener";
 import { Operation, NextLink, Observable, FetchResult } from "apollo-link";
 import { OfflineStore } from "./storage/OfflineStore";
 import { OfflineLinkOptions } from "../links";
-import { IResultProcessor } from "./procesors/IResultProcessor";
+import { IResultProcessor } from "./processors";
 
 export type OperationQueueChangeHandler = (entry: OperationQueueEntry) => void;
 
@@ -41,9 +41,8 @@ export class OfflineQueue {
   /**
    * Enqueue offline change and wait for it to be sent to server when online.
    * Every offline change is added to queue.
-   *
    */
-  public enqueueOfflineChange(operation: Operation, forward: NextLink) {
+  public enqueueOfflineChange(operation: Operation, forward: NextLink): Observable<FetchResult> {
     const offlineId = operation.getContext().offlineId;
     const operationEntry = new OperationQueueEntry(operation, offlineId, forward);
     this.queue.push(operationEntry);
@@ -84,12 +83,12 @@ export class OfflineQueue {
   }
 
   public executeResultProcessors(op: OperationQueueEntry,
-                                 result: FetchResult<any>) {
-      if (this.resultProcessors) {
-        for (const resultProcesor of this.resultProcessors) {
-          resultProcesor.execute(this.queue, op, result);
-        }
+    result: FetchResult<any>) {
+    if (this.resultProcessors) {
+      for (const resultProcesor of this.resultProcessors) {
+        resultProcesor.execute(this.queue, op, result);
       }
+    }
   }
 
   private onForwardError(op: OperationQueueEntry, error: any) {
@@ -125,4 +124,5 @@ export class OfflineQueue {
       op.observer.next(result);
     }
   }
+
 }

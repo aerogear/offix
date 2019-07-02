@@ -1,6 +1,6 @@
-import { IResultProcessor } from "../offline/procesors/IResultProcessor";
+import { IResultProcessor } from "../offline/processors/IResultProcessor";
 import { OperationQueueEntry } from "../offline/OperationQueueEntry";
-import { ObjectState } from "./ObjectState";
+import { ObjectState } from "./state/ObjectState";
 import { FetchResult } from "apollo-link";
 
 /**
@@ -13,7 +13,7 @@ export class ConflictProcessor implements IResultProcessor {
     }
 
     public execute(queue: OperationQueueEntry[],
-                   entry: OperationQueueEntry, result: FetchResult): void {
+        entry: OperationQueueEntry, result: FetchResult): void {
         const { operation: { operationName } } = entry;
         if (!result || !this.state) {
             return;
@@ -23,12 +23,7 @@ export class ConflictProcessor implements IResultProcessor {
             for (const { operation: op } of queue) {
                 if (op.variables.id === entry.operation.variables.id
                     && op.operationName === entry.operation.operationName) {
-                    const opVersion = this.state.currentState(op.variables);
-                    const prevOpVersion = this.state.currentState(entry.operation.variables);
-                    if (opVersion === prevOpVersion) {
-                        op.variables = this.state.nextState(op.variables);
-                        break;
-                    }
+                    this.state.assignServerState(op.variables, result.data[operationName])
                 }
             }
         }

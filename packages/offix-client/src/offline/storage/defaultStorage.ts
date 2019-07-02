@@ -16,6 +16,7 @@ export const createDefaultOfflineStorage = () => {
  */
 export const buildCachePersistence = async (store: PersistentStore<PersistedData>) => {
   const cache = new InMemoryCache();
+
   await persistCache({
     cache,
     serialize: false,

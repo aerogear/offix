@@ -5,9 +5,15 @@ import { Query } from "./CacheUpdates";
 import { getOperationFieldName, deconstructQuery } from "../utils/helperFunctions";
 import { isArray } from "util";
 
+export interface Context {
+  conflictBase?: any;
+  returnType?: string;
+}
+
 export interface MutationHelperOptions extends MutationOptions {
-  updateQuery: Query | Query[];
+  updateQuery?: Query | Query[];
   operationType?: CacheOperation;
+  context: Context | any;
   idField?: string;
   returnType?: string;
 }
@@ -41,11 +47,11 @@ export const createMutationOptions = (options: MutationHelperOptions): MutationO
   const update: MutationUpdaterFn = (cache, { data }) => {
     if (isArray(updateQuery)) {
       for (const query of updateQuery) {
-        const updateFunction = getUpdateFunction(operationName, idField, query, operationType);
+        const updateFunction = getUpdateFunction(operationName, idField, operationType, query);
         updateFunction(cache, { data });
       }
     } else {
-      const updateFunction = getUpdateFunction(operationName, idField, updateQuery, operationType);
+      const updateFunction = getUpdateFunction(operationName, idField, operationType, updateQuery);
       updateFunction(cache, { data });
     }
   };
@@ -64,8 +70,14 @@ export const createMutationOptions = (options: MutationHelperOptions): MutationO
 export const getUpdateFunction = (
   operation: string,
   idField: string,
-  updateQuery: Query,
-  opType: CacheOperation): MutationUpdaterFn => {
+  opType: CacheOperation,
+  updateQuery?: Query): MutationUpdaterFn => {
+
+  if (!updateQuery) {
+    return () => {
+        return;
+      };
+  }
 
   const { query, variables } = deconstructQuery(updateQuery);
   const queryField = getOperationFieldName(query);

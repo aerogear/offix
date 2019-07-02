@@ -1,12 +1,13 @@
-import { ConflictResolutionStrategies } from "../conflicts/ConflictResolutionStrategy";
-import { NetworkStatus, OfflineQueueListener } from "../offline";
+import { ConflictResolutionStrategy } from "../conflicts/strategies/ConflictResolutionStrategy";
+import { PersistedData, PersistentStore } from "../offline/storage/PersistentStore";
+import { NetworkStatus } from "../offline";
+import { OfflineQueueListener } from "../offline/events/OfflineQueueListener";
 import { AuthContextProvider } from "../auth/AuthContextProvider";
-import { ObjectState } from "../conflicts/ObjectState";
-import { ConflictListener } from "../conflicts/ConflictListener";
+import { ObjectState } from "../conflicts/state/ObjectState";
+import { ConflictListener } from "../conflicts/strategies/ConflictListener";
+import { ConfigurationService } from "@aerogear/core";
 import { CacheUpdates } from "offix-cache";
 import { RetryLink } from "apollo-link-retry";
-import { ConfigurationService } from "@aerogear/core";
-import { PersistentStore, PersistedData } from "../offline/storage/PersistentStore";
 
 /**
  * Contains all configuration options required to initialize Voyager Client
@@ -44,13 +45,6 @@ export interface DataSyncConfig {
   networkStatus?: NetworkStatus;
 
   /**
-   * [Modifier]
-   *
-   * The name to store requests under in your offline queue. By default "offline-mutation-store"
-   */
-  mutationsQueueName?: string | any;
-
-  /**
    * User provided listener that contains set of methods that can be used to detect
    * when operations were added to queue
    */
@@ -82,7 +76,7 @@ export interface DataSyncConfig {
    * Interface that defines how object state is progressed
    * This interface needs to match state provider supplied on server.
    */
-  conflictStateProvider?: ObjectState;
+  conflictProvider?: ObjectState;
 
   /**
    * Interface that can be implemented to receive information about the data conflict
@@ -92,17 +86,17 @@ export interface DataSyncConfig {
   conflictListener?: ConflictListener;
 
   /**
-   * OpenShift specific configuration that provides alternative way to setup
-   * http and websocket urls.
-   */
-  openShiftConfig?: ConfigurationService;
-
-  /**
    * [Modifier]
    *
    * The conflict resolution strategy your client should use. By default it takes client version.
    */
-  conflictStrategy?: ConflictResolutionStrategies;
+  conflictStrategy?: ConflictResolutionStrategy;
+
+  /**
+   * OpenShift specific configuration that provides alternative way to setup
+   * http and websocket urls.
+   */
+  openShiftConfig?: ConfigurationService;
 
   /**
    * [Modifier]
