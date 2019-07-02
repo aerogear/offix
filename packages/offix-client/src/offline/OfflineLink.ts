@@ -40,7 +40,7 @@ export class OfflineLink extends ApolloLink {
     this.queue = new OfflineQueue(options);
   }
 
-  request(operation: Operation, forward?: NextLink): Observable<FetchResult> | null {
+  public request(operation: Operation, forward?: NextLink): Observable<FetchResult> | null {
     if (!forward) {
       return null;
     }
