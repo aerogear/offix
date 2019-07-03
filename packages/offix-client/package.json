@@ -33,7 +33,8 @@
     "fetch-mock": "7.3.3",
     "mocha": "6.1.4",
     "ts-node": "8.3.0",
-    "typescript": "3.5.2"
+    "typescript": "3.5.2",
+    "graphql": "14.4.1"
   },
   "dependencies": {
     "@aerogear/core": "2.5.0",
@@ -48,13 +49,15 @@
     "apollo-link-ws": "1.0.17",
     "apollo-upload-client": "10.0.1",
     "debug": "4.1.1",
-    "graphql": "14.4.1",
     "graphql-tag": "2.10.1",
     "graphql-tools": "4.0.5",
     "idb-localstorage": "0.2.0",
     "offix-cache": "0.6.1",
     "subscriptions-transport-ws": "0.9.16",
     "util": "0.12.0"
+  },
+  "peerDependencies": {
+    "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0"
   },
   "gitHead": "c52429fc496cfdbaaf06fd55a509f14b12c7ce1c"
 }
