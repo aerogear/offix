@@ -1,6 +1,6 @@
 {
     "name": "offix-conflicts-server",
-    "version": "0.6.0",
+    "version": "0.7.0",
     "description": "Offix GraphQL server",
     "main": "dist/index.js",
     "scripts": {
@@ -30,7 +30,8 @@
         "ava": "2.1.0",
         "graphql": "14.0.0",
         "ts-node": "8.2.0",
-        "typescript": "3.5.2"
+        "typescript": "3.5.2",
+        "graphql": "14.4.1"
     },
     "peerDependencies": {
         "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0"
