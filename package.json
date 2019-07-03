@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@types/graphql": "14.2.2",
-    "graphql": "14.4.1",
+    "graphql": "14.4.2",
     "coveralls": "3.0.4",
     "del-cli": "2.0.0",
     "lerna": "3.15.0",

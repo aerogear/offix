@@ -34,7 +34,7 @@
     "mocha": "6.1.4",
     "ts-node": "8.3.0",
     "typescript": "3.5.2",
-    "graphql": "14.4.1"
+    "graphql": "14.4.2"
   },
   "dependencies": {
     "@aerogear/core": "2.5.0",
