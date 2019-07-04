@@ -23,7 +23,7 @@ export class ConflictProcessor implements IResultProcessor {
             for (const { operation: op } of queue) {
                 if (op.variables.id === entry.operation.variables.id
                     && op.operationName === entry.operation.operationName) {
-                    this.state.assignServerState(op.variables, result.data[operationName])
+                    this.state.assignServerState(op.variables, result.data[operationName]);
                 }
             }
         }
