@@ -13,7 +13,7 @@ import { defaultWebSocketLink } from "./WebsocketLink";
 import { OfflineLink } from "../offline/OfflineLink";
 import { NetworkStatus, OfflineMutationsHandler, OfflineStore } from "../offline";
 import { IDProcessor } from "../offline/processors/IDProcessor";
-import { ConflictProcessor } from "../conflicts/ConflictProcesor";
+import { ConflictProcessor } from "../conflicts/ConflictProcessor";
 import { IResultProcessor } from "../offline/processors";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { BaseLink } from "../conflicts/BaseLink";
