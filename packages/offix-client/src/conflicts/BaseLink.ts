@@ -23,7 +23,7 @@ export class LocalConflictError extends Error {
 
 export class BaseLink extends ApolloLink {
 
-  constructor(private stater: ObjectState, private cache: InMemoryCache) {
+  constructor(private stater: ObjectState) {
     super();
   }
 

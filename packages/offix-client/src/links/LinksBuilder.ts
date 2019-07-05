@@ -81,7 +81,7 @@ export const defaultHttpLinks = async (config: DataSyncConfig, offlineLink: Apol
   const mutationOfflineLink = ApolloLink.split((op: Operation) => {
     return isMutation(op) && !isOnlineOnly(op);
   }, offlineLink);
-  const baseLink = new BaseLink(config.conflictProvider as ObjectState, cache);
+  const baseLink = new BaseLink(config.conflictProvider as ObjectState);
   const links: ApolloLink[] = [baseLink, mutationOfflineLink];
   links.push(conflictLink);
   const retryLink = ApolloLink.split(OfflineMutationsHandler.isMarkedOffline, new RetryLink(config.retryOptions));

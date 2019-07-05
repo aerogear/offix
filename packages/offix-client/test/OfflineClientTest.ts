@@ -34,16 +34,4 @@ describe("Top level api tests", () => {
       new CompositeQueueListener({ queueListeners: [] }));
   });
 
-  // it("check direct cache read", async () => {
-  //   const client = new OfflineClient({ httpUrl: url, storage, networkStatus });
-  //   const initClient = await client.init();
-  //   initClient.restore({
-  //     "test:1": {
-  //       __typename: "test",
-  //       value: 1
-  //     }
-  //   });
-  //   const cacheObj = getObjectFromCache(op, "test");
-  //   should().equal(cacheObj.value, 1);
-  // });
 });
