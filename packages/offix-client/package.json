@@ -54,7 +54,7 @@
     "idb-localstorage": "0.2.0",
     "offix-cache": "0.6.1",
     "subscriptions-transport-ws": "0.9.16",
-    "util": "0.12.0"
+    "util": "0.12.1"
   },
   "peerDependencies": {
     "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0"
