@@ -1,7 +1,7 @@
 const express = require('express')
 const queries = require('./queries')
 const { VoyagerServer, gql } = require('@aerogear/voyager-server')
-const { conflictHandler } = require('apollo-conflicts-server')
+const { conflictHandler } = require('offix-conflicts-server')
 
 // Types
 const typeDefs = gql`
@@ -16,10 +16,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    ## Server resolution policy
     changeGreeting(msg: String!, version: Int!): Greeting
-    ## Client resolution policy
-    changeGreetingClient(msg: String!, version: Int!): Greeting
   }
 `
 // In Memory Data Source
@@ -28,38 +25,15 @@ let greeting = {
   version: 1
 }
 
-// Custom conflict resolution strategy that concatenates the msg properties together
-const customGreetingResolutionStrategy = function (serverData, clientData, baseData) {
-  return {
-    msg: serverData.msg + ' ' + clientData.msg
-  }
-}
-
 // Resolver functions. This is our business logic
 const resolvers = {
   Mutation: {
     changeGreeting: async (obj, args, context, info) => {
-      if (conflictHandler.hasConflict(greeting, args, obj, args, context, info)) {
-        const serverState = greeting
-        const clientState = args
-        const strategy = customGreetingResolutionStrategy
-
-        // resolvedState is the new record the user should persist
-        // response is the specially built message that should be returned to the client
-        const { resolvedState, response } = await conflictHandler.resolveOnServer(strategy, serverState, clientState)
-        greeting = resolvedState
-        return response
+      const conflictError = conflictHandler.checkForConflict(greeting, args);
+      if (conflictError) {
+        throw conflictError;
       }
-      greeting = conflictHandler.nextState(args)
-      return greeting
-    },
-    changeGreetingClient: async (obj, args, context, info) => {
-      if (conflictHandler.hasConflict(greeting, args, obj, args, context, info)) {
-        const serverState = greeting
-        const clientState = args
-        return conflictHandler.resolveOnClient(serverState, clientState).response
-      }
-      greeting = conflictHandler.nextState(args)
+      greeting = args;
       return greeting
     }
   },
@@ -93,16 +67,11 @@ const apolloConfig = {
 }
 
 const voyagerConfig = {
-  metrics,
-  auditLogger
 }
 
 const server = VoyagerServer(apolloConfig, voyagerConfig)
 
 const app = express()
-
-metrics.applyMetricsMiddlewares(app)
-
 server.applyMiddleware({ app })
 
 module.exports = { app, server }
