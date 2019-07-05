@@ -1,4 +1,4 @@
-## offix-server-conflicts
+## offix-conflicts-server
 
 Documentation:
 
