@@ -9,10 +9,10 @@ import { ConflictHandlerOptions } from "./ConflictHandlerOptions";
  */
 export class ConflictHandler {
 
+  public conflicted: boolean = false;
   private clientDiff: any = {};
   private serverDiff: any = {};
   private options: ConflictHandlerOptions;
-  private conflicted: boolean = false;
   private ignoredKeys: string[];
 
   constructor(options: ConflictHandlerOptions) {

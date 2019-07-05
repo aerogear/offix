@@ -11,6 +11,7 @@ export class TestLink extends ApolloLink {
   public request(operation: Operation) {
     this.operations.push(operation);
     return new Observable<FetchResult>(observer => {
+      const context = operation.getContext();
       if (operation.getContext().testError) {
         setTimeout(() => observer.error(operation.getContext().testError), 0);
         return;

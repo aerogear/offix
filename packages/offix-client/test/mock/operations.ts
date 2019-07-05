@@ -1,4 +1,5 @@
 import { GraphQLRequest, Operation } from "apollo-link";
+import { InMemoryCache } from "apollo-cache-inmemory";
 
 export const op: Operation = {
   variables: {
@@ -36,6 +37,46 @@ export const requestWithOnlineDirective: GraphQLRequest = {
     dateOfBirth: "Fri Nov 30 2018 09:43:22 GMT+0000",
     id: "1",
     version: 3
+  },
+  operationName: "updateUser",
+  query: {
+    kind: "Document",
+    definitions: [{
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: {
+        kind: "Name",
+        value: "updateUser"
+      },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [{
+          kind: "Field",
+          name: {
+            kind: "Name",
+            value: "updateUser"
+          },
+          directives: [{
+            kind: "Directive",
+            name: {
+              kind: "Name",
+              value: "onlineOnly"
+            },
+            arguments: []
+          }]
+        }]
+      }
+    }]
+  },
+  extensions: {} as any
+};
+
+export const requestWithConflict: GraphQLRequest = {
+  variables: {
+    title: "a title",
+    description: "something",
+    id: "1",
+    version: 1
   },
   operationName: "updateUser",
   query: {
