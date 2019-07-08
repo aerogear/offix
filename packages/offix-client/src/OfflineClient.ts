@@ -50,7 +50,7 @@ export class OfflineClient implements ListenerProvider {
 
   constructor(userConfig: DataSyncConfig) {
     this.config = new SyncConfig(userConfig);
-    this.store = new OfflineStore(this.config);
+    this.store = new OfflineStore(this.config.offlineStorage);
     this.setupEventListeners();
   }
 

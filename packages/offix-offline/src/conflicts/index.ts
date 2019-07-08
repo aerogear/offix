@@ -6,3 +6,4 @@ export * from "./strategies/ConflictResolutionStrategy";
 export * from "./state/VersionedState";
 export * from "./BaseLink";
 export * from "./ConflictProcessor";
+export * from "./strategies/ConflictResolutionData";
