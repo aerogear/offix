@@ -14,8 +14,8 @@ $ node ./conflicts/index.js
 Open [http://localhost:4000/graphql](http://localhost:4000/graphql).
 You will see the GraphQL Playground. This is a space where you can try out queries and see the results.
 
-Conflict will be triggered when version supplied as mutation parameter will be
-different than version that server expects. To mitigate that in GraphQL Playground please:
+A conflict will be triggered when the version supplied as a mutation parameter is
+different than the version that the server expects. To mitigate that in the GraphQL Playground please:
 
 1) Execute `changeGreeting` mutation.
 First execution of the `changeGreeting` is going to perform successful update.
