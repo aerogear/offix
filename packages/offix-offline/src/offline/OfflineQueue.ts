@@ -2,8 +2,8 @@ import { OperationQueueEntry } from "./OperationQueueEntry";
 import { OfflineQueueListener } from "./events/OfflineQueueListener";
 import { Operation, NextLink, Observable, FetchResult } from "apollo-link";
 import { OfflineStore } from "./storage/OfflineStore";
-import { OfflineLinkConfig } from "./OfflineLink";
 import { IResultProcessor } from "./processors";
+import { OfflineLinkConfig } from "./OfflineLinkConfig";
 
 export type OperationQueueChangeHandler = (entry: OperationQueueEntry) => void;
 

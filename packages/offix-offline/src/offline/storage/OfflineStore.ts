@@ -1,6 +1,5 @@
 import { PersistentStore, PersistedData } from "./PersistentStore";
-import { OperationQueueEntry, OfflineItem } from "../OperationQueueEntry"
-import { OfflineLinkConfig } from "../OfflineLink";
+import { OperationQueueEntry, OfflineItem } from "../OperationQueueEntry";
 
 /**
  * Abstract Offline storage

@@ -1,9 +1,9 @@
 import { onError, ErrorResponse } from "apollo-link-error";
-import { GraphQLError, ExecutionResult, subscribe } from "graphql";
+import { GraphQLError } from "graphql";
 import { ApolloLink, Operation, NextLink, Observable, FetchResult } from "apollo-link";
 import { ConflictResolutionData } from "./strategies/ConflictResolutionData";
 import { isMutation } from "../utils/helpers";
-import { ObjectState, ConflictListener } from "../conflicts";
+import { ObjectState, ConflictListener } from "../index";
 import { ConflictResolutionStrategy } from "./strategies/ConflictResolutionStrategy";
 import { clientWins } from "./strategies/strategies";
 import { ConflictHandler } from "./handler/ConflictHandler";
