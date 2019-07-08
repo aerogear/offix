@@ -1,5 +1,5 @@
 import { ApolloLink, NextLink, Operation, Observable, FetchResult } from "apollo-link";
-import { NetworkInfo, NetworkStatus, OfflineMutationsHandler, OfflineStore } from ".";
+import { NetworkInfo, NetworkStatus, OfflineMutationsHandler, OfflineStore } from "../index";
 import { OfflineQueueListener } from "./events/OfflineQueueListener";
 import { OfflineQueue } from "./OfflineQueue";
 import * as debug from "debug";
@@ -9,17 +9,9 @@ import { IResultProcessor } from "./processors/IResultProcessor";
 import { CacheUpdates } from "offix-cache";
 import { PersistentStore, PersistedData } from "./storage/PersistentStore";
 import { WebNetworkStatus } from "./network/WebNetworkStatus";
+import { OfflineLinkConfig } from "./OfflineLinkConfig";
 
 const logger = debug.default(QUEUE_LOGGER);
-
-// TODO move to separate file
-export interface OfflineLinkConfig {
-  networkStatus?: NetworkStatus;
-  listener?: OfflineQueueListener;
-  resultProcessors?: IResultProcessor[];
-  mutationCacheUpdates?: CacheUpdates;
-  offlineStorage?: PersistentStore<PersistedData>;
-}
 
 /**
  * Apollo link implementation used to queue graphql requests.

@@ -1,6 +1,7 @@
 import { ConflictResolutionData } from "../strategies/ConflictResolutionData";
-import { ConflictResolutionStrategy, ConflictListener } from "../../conflicts";
+import { ConflictListener } from "../strategies/ConflictListener";
 import { ObjectState } from "../state/ObjectState";
+import { ConflictResolutionStrategy } from "../strategies/ConflictResolutionStrategy";
 
 /**
  *

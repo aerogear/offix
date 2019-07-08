@@ -2,7 +2,7 @@ import { ApolloLink, NextLink, Operation, Observable, FetchResult } from "apollo
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { isMutation } from "../utils/helpers";
 import { getObjectFromCache } from "../utils/cacheHelper";
-import { ObjectState } from "../conflicts";
+import { ObjectState } from "../conflicts/state/ObjectState";
 import { ConflictResolutionData } from "./strategies/ConflictResolutionData";
 
 /**
