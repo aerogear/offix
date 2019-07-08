@@ -10,4 +10,4 @@ export interface OfflineLinkConfig {
     resultProcessors?: IResultProcessor[];
     mutationCacheUpdates?: CacheUpdates;
     offlineStorage?: PersistentStore<PersistedData>;
-  };
+  }

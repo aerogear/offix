@@ -50,7 +50,7 @@ export const createOfflineLink = async (config: DataSyncConfig, store: OfflineSt
     listener: config.offlineQueueListener,
     networkStatus: config.networkStatus as NetworkStatus,
     resultProcessors
-  }, );
+  } );
 };
 
 /**
