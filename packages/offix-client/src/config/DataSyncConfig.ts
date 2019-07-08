@@ -1,10 +1,10 @@
-import { ConflictResolutionStrategy } from "../conflicts/strategies/ConflictResolutionStrategy";
-import { PersistedData, PersistentStore } from "../offline/storage/PersistentStore";
-import { NetworkStatus } from "../offline";
-import { OfflineQueueListener } from "../offline/events/OfflineQueueListener";
+import { ConflictResolutionStrategy } from "offix-offline";
+import { PersistedData, PersistentStore } from "offix-offline";
+import { NetworkStatus } from "offix-offline";
+import { OfflineQueueListener } from "offix-offline";
 import { AuthContextProvider } from "../auth/AuthContextProvider";
-import { ObjectState } from "../conflicts/state/ObjectState";
-import { ConflictListener } from "../conflicts/strategies/ConflictListener";
+import { ObjectState } from "offix-offline";
+import { ConflictListener } from "offix-offline";
 import { ConfigurationService } from "@aerogear/core";
 import { CacheUpdates } from "offix-cache";
 import { RetryLink } from "apollo-link-retry";

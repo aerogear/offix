@@ -1,7 +1,7 @@
 {
-  "name": "offix-client",
+  "name": "offix-offline",
   "version": "0.6.1",
-  "description": "Offix GraphQL Offline Client",
+  "description": "Offix GraphQL Offline package that exposes Apollo Links ",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
   "scripts": {
@@ -53,7 +53,6 @@
     "graphql-tools": "4.0.5",
     "idb-localstorage": "0.2.0",
     "offix-cache": "0.6.1",
-    "np": "0.6.1",
     "subscriptions-transport-ws": "0.9.16",
     "util": "0.12.1"
   },

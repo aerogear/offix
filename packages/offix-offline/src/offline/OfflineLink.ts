@@ -3,17 +3,22 @@ import { NetworkInfo, NetworkStatus, OfflineMutationsHandler, OfflineStore } fro
 import { OfflineQueueListener } from "./events/OfflineQueueListener";
 import { OfflineQueue } from "./OfflineQueue";
 import * as debug from "debug";
-import { QUEUE_LOGGER } from "../config/Constants";
+import { QUEUE_LOGGER } from "../utils/Constants";
 import { OfflineError } from "./OfflineError";
 import { IResultProcessor } from "./processors/IResultProcessor";
+import { CacheUpdates } from "offix-cache";
+import { PersistentStore, PersistedData } from "./storage/PersistentStore";
 
-export const logger = debug.default(QUEUE_LOGGER);
+const logger = debug.default(QUEUE_LOGGER);
 
-export interface OfflineLinkOptions {
+// TODO move to separate file
+export interface OfflineLinkConfig {
   networkStatus: NetworkStatus;
-  store: OfflineStore;
+  storage: OfflineStore;
   listener?: OfflineQueueListener;
   resultProcessors?: IResultProcessor[];
+  mutationCacheUpdates?: CacheUpdates;
+  offlineStorage: PersistentStore<PersistedData>;
 }
 
 /**
@@ -35,7 +40,7 @@ export class OfflineLink extends ApolloLink {
   private readonly networkStatus: NetworkStatus;
   private offlineMutationHandler?: OfflineMutationsHandler;
 
-  constructor(options: OfflineLinkOptions) {
+  constructor(options: OfflineLinkConfig) {
     super();
     this.networkStatus = options.networkStatus;
     this.queue = new OfflineQueue(options);

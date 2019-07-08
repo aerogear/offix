@@ -3,20 +3,10 @@ import { GraphQLError, ExecutionResult, subscribe } from "graphql";
 import { ApolloLink, Operation, NextLink, Observable, FetchResult } from "apollo-link";
 import { ConflictResolutionData } from "./strategies/ConflictResolutionData";
 import { isMutation } from "../utils/helpers";
-import { ObjectState, ConflictListener } from ".";
+import { ObjectState, ConflictListener } from "../conflicts";
 import { ConflictResolutionStrategy } from "./strategies/ConflictResolutionStrategy";
 import { clientWins } from "./strategies/strategies";
 import { ConflictHandler } from "./handler/ConflictHandler";
-
-/**
- * Local conflict thrown when data outdates even before sending it to the server.
- * Can be used to correct any data in flight or shown user another UI to visualize new state
- */
-export class LocalConflictError extends Error {
-  constructor(private base: any, private variables: any) {
-    super();
-  }
-}
 
 /**
  * Represents conflict information that was returned from server

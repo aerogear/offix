@@ -1,6 +1,6 @@
 import { getMainDefinition, hasDirectives } from "apollo-utilities";
 import { Operation } from "apollo-link";
-import { localDirectives } from "../config/Constants";
+import { localDirectives } from "./Constants";
 
 export const isSubscription = (op: Operation) => {
   const { kind, operation } = getMainDefinition(op.query) as any;

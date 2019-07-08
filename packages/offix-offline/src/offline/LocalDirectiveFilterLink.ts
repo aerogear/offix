@@ -1,6 +1,6 @@
 import { ApolloLink, NextLink, Operation } from "apollo-link";
 import { hasDirectives, removeDirectivesFromDocument } from "apollo-utilities";
-import { localDirectivesArray, MUTATION_QUEUE_LOGGER } from "../config/Constants";
+import { localDirectivesArray, MUTATION_QUEUE_LOGGER } from "../utils/Constants";
 import * as debug from "debug";
 
 export const logger = debug.default(MUTATION_QUEUE_LOGGER);

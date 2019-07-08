@@ -1,5 +1,5 @@
 import { ConflictResolutionData } from "../strategies/ConflictResolutionData";
-import { ConflictResolutionStrategy, ConflictListener } from "..";
+import { ConflictResolutionStrategy, ConflictListener } from "../../conflicts";
 import { ObjectState } from "../state/ObjectState";
 
 /**
