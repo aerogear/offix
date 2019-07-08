@@ -1,11 +1,11 @@
 # Server side conflict resolution
 
-Offix provides out of the box conflict resolution for Node.JS platform.
-For other languages you can follow Conflict specification chapter to implement custom detectiom mechanism for your resolvers.
+Offix provides out of the box conflict resolution for any Node.JS platform.
+For other languages, you can follow the conflict specification chapter to implement a custom detection mechanism for your resolvers.
 
 ## Usage
 
-Install conflict package inside your Node.js project.
+Install the conflict package inside your Node.js project.
 
 ```
 npm install offix-conflicts-server
@@ -64,19 +64,19 @@ Every conflict can be handled using a set of predefined steps
 
 Resolvers can be implemented to handle conflicts on client .
 
-## Implementing Custom Conflict Implementation
+## Implementing Custom Conflict Resolution
 
-The`ObjectState` interface is a complete conflict resolution implementation that provides a set of rules to detect and handle conflict. Interface will allow developers to handle conflict on the client. Client side application will need to match the server side implementation. Currently we support following implementations:
+The`ObjectState` interface is a complete conflict resolution implementation that provides a set of rules to detect and handle conflicts. The interface will allow developers to handle conflicts on the client. Client-side applications will need to match the server side implementation. Currently, we support the following implementations:
 
 - `VersionObjectState` - allows to operate based on version field in schema
 - `HashObjectState` - allows to operate based on object hashes
 
 ## Conflict Resolution Specification for other languages
 
-Conflict resolution package can be replicated to any language by implementing conflict detection logic in resolvers. 
+The conflict resolution package can be replicated to any language by implementing conflict detection logic in resolvers.
 
-Conflict detection should return specific format of error when conflict will be detected. This error will be processed by offix client and send back again as new mutation. To detect conflicts on the server 
-you can use one of many strategies for example:
+Conflict detection should return a specific format of error when a conflict has been detected. This error will be processed by offix-client and sent back again as a new mutation. To detect conflicts on the server 
+you can use one of many strategies, for example:
 
 - Calculate hashes of the data
 - Use specialized field like version or lastChangedDate
@@ -84,8 +84,8 @@ you can use one of many strategies for example:
 
 ### Structure of the conflict error
 
-Server needs to return specific error when conflict is detected
-containing server and client states:
+The server needs to return a specific error when a conflict is detected
+containing both the server and client states:
 
 ```js
  "extensions": {
