@@ -1,7 +1,7 @@
 import { SyncConfig } from "../src/config/SyncConfig";
 import { expect } from "chai";
 import { ConfigurationService } from "@aerogear/core";
-import { ConflictResolutionData } from "../src/conflicts/strategies/ConflictResolutionData";
+import { ConflictResolutionData } from "offix-offline";
 import { DataSyncConfig } from "../src/config/DataSyncConfig";
 import { storage } from "./mock/Storage";
 

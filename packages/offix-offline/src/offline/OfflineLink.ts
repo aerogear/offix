@@ -8,17 +8,17 @@ import { OfflineError } from "./OfflineError";
 import { IResultProcessor } from "./processors/IResultProcessor";
 import { CacheUpdates } from "offix-cache";
 import { PersistentStore, PersistedData } from "./storage/PersistentStore";
+import { WebNetworkStatus } from "./network/WebNetworkStatus";
 
 const logger = debug.default(QUEUE_LOGGER);
 
 // TODO move to separate file
 export interface OfflineLinkConfig {
-  networkStatus: NetworkStatus;
-  storage: OfflineStore;
+  networkStatus?: NetworkStatus;
   listener?: OfflineQueueListener;
   resultProcessors?: IResultProcessor[];
   mutationCacheUpdates?: CacheUpdates;
-  offlineStorage: PersistentStore<PersistedData>;
+  offlineStorage?: PersistentStore<PersistedData>;
 }
 
 /**
@@ -40,10 +40,14 @@ export class OfflineLink extends ApolloLink {
   private readonly networkStatus: NetworkStatus;
   private offlineMutationHandler?: OfflineMutationsHandler;
 
-  constructor(options: OfflineLinkConfig) {
+  constructor(store: OfflineStore, options: OfflineLinkConfig) {
     super();
-    this.networkStatus = options.networkStatus;
-    this.queue = new OfflineQueue(options);
+    if (options.networkStatus) {
+      this.networkStatus = options.networkStatus;
+    } else {
+      this.networkStatus = new WebNetworkStatus();
+    }
+    this.queue = new OfflineQueue(store, options);
   }
 
   public request(operation: Operation, forward: NextLink): Observable<FetchResult> {

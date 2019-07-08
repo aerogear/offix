@@ -11,8 +11,8 @@ export class OfflineStore {
   private offlineMetaKey: string = "offline-meta-data";
   private arrayOfKeys: string[];
 
-  constructor(config: OfflineLinkConfig) {
-    this.storage = config.offlineStorage;
+  constructor(storage: PersistentStore<PersistedData>) {
+    this.storage = storage;
     this.arrayOfKeys = [];
   }
 

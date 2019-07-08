@@ -3,9 +3,7 @@ import { should } from "chai";
 import { mock } from "fetch-mock";
 import { storage } from "./mock/Storage";
 import { networkStatus } from "./mock/NetworkState";
-import { CompositeQueueListener } from "../src/offline/events/CompositeQueueListener";
-import { getObjectFromCache } from "../src/utils/cacheHelper";
-import { op } from "./mock/operations";
+import { CompositeQueueListener } from "offix-offline";
 
 const url = "http://test";
 

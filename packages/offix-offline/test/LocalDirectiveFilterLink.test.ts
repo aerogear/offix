@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { requestWithMultipleDirectives, requestWithOnlineDirective } from "./mock/operations";
 import { TestLink } from "./mock/TestUtils";
 import { ApolloLink, execute } from "apollo-link";
-import { LocalDirectiveFilterLink } from "../src/links/LocalDirectiveFilterLink";
+import { LocalDirectiveFilterLink } from "../src/offline/LocalDirectiveFilterLink";
 import { hasDirectives } from "apollo-utilities";
 
 describe("LocalDirectives", () => {

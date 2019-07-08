@@ -46,12 +46,11 @@ export const createOfflineLink = async (config: DataSyncConfig, store: OfflineSt
     new IDProcessor(),
     new ConflictProcessor(config.conflictProvider as ObjectState)
   ];
-  return new OfflineLink({
-    store,
+  return new OfflineLink(store, {
     listener: config.offlineQueueListener,
     networkStatus: config.networkStatus as NetworkStatus,
     resultProcessors
-  });
+  }, );
 };
 
 /**
