@@ -1,6 +1,6 @@
 # Server Side Conflict Resolution
 
-When performing data synchronization between multiple clients it is common for remote devices to become offline for a certain amount of time or that data that was previously obtained by the client was modified on the server. As a result of being offline, data that is being modified by the client can become outdated with the server. Further operations on that record can cause conflict (often called a collision). 
+When performing data synchronization between multiple clients it is common for remote devices to become offline for a certain amount of time. As a result of being offline, data that is modified by a client can become outdated with the server. Further operations on that record can cause a conflict (often called a collision).
 
 Offix provides out of the box conflict resolution for any Node.JS platform.
 For other languages, you can follow the conflict specification chapter to implement a custom detection mechanism for your resolvers. 
