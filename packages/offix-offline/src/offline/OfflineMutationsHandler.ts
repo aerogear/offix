@@ -7,7 +7,7 @@ import { CacheUpdates, getMutationName, MutationHelperOptions } from "offix-cach
 import { Operation } from "apollo-link";
 import { OfflineStore } from "./storage/OfflineStore";
 import { OfflineLinkConfig } from "./OfflineLinkConfig";
- 
+
 const logger = debug.default(MUTATION_QUEUE_LOGGER);
 
 /**
