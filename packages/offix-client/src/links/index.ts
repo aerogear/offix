@@ -1,5 +1,5 @@
 export * from "./LinksBuilder";
-export { OfflineLink, OfflineLinkOptions } from "../offline/OfflineLink";
-export { LocalDirectiveFilterLink } from "./LocalDirectiveFilterLink";
+export { OfflineLink, OfflineLinkConfig } from "offix-offline";
+export { LocalDirectiveFilterLink } from "offix-offline";
 export * from "./AuthLink";
 export * from "./WebsocketLink";

@@ -1,0 +1,33 @@
+import { ApolloLink, Observable, Operation, FetchResult } from "apollo-link";
+import { ExecutionResult } from "graphql";
+
+export class TestLink extends ApolloLink {
+  public operations: Operation[];
+  constructor() {
+    super();
+    this.operations = [];
+  }
+
+  public request(operation: Operation) {
+    this.operations.push(operation);
+    return new Observable<FetchResult>(observer => {
+      const context = operation.getContext();
+      if (operation.getContext().testError) {
+        setTimeout(() => observer.error(operation.getContext().testError), 0);
+        return;
+      }
+      setTimeout(() => observer.next(operation.getContext().testResponse), 0);
+      setTimeout(() => observer.complete(), 0);
+    });
+  }
+}
+
+export interface ObservableValue {
+  value?: ExecutionResult | Error;
+  delay?: number;
+  type: "next" | "error" | "complete";
+}
+
+export interface Unsubscribable {
+  unsubscribe: () => void;
+}

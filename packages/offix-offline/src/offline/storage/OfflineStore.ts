@@ -1,7 +1,6 @@
 import { PersistentStore, PersistedData } from "./PersistentStore";
-import { DataSyncConfig } from "../..";
-import { OperationQueueEntry, OfflineItem } from "../OperationQueueEntry";
-import { SyncConfig } from "../../config/SyncConfig";
+import { OperationQueueEntry, OfflineItem } from "../OperationQueueEntry"
+import { OfflineLinkConfig } from "../OfflineLink";
 
 /**
  * Abstract Offline storage
@@ -12,7 +11,7 @@ export class OfflineStore {
   private offlineMetaKey: string = "offline-meta-data";
   private arrayOfKeys: string[];
 
-  constructor(config: SyncConfig) {
+  constructor(config: OfflineLinkConfig) {
     this.storage = config.offlineStorage;
     this.arrayOfKeys = [];
   }

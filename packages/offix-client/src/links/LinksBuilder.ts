@@ -1,22 +1,22 @@
 import { ApolloLink, Operation } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { RetryLink } from "apollo-link-retry";
-import { ConflictLink, ObjectState } from "../conflicts";
+import { ConflictLink, ObjectState } from "offix-offline";
 import { DataSyncConfig } from "../config";
 import { createAuthLink } from "./AuthLink";
 import { AuditLoggingLink } from "./AuditLoggingLink";
 import { DefaultMetricsBuilder, MetricsBuilder } from "@aerogear/core";
-import { LocalDirectiveFilterLink } from "./LocalDirectiveFilterLink";
+import { LocalDirectiveFilterLink } from "offix-offline";
 import { createUploadLink } from "apollo-upload-client";
-import { isMutation, isOnlineOnly, isSubscription } from "../utils/helpers";
+import { isMutation, isOnlineOnly, isSubscription } from "offix-offline";
 import { defaultWebSocketLink } from "./WebsocketLink";
-import { OfflineLink } from "../offline/OfflineLink";
-import { NetworkStatus, OfflineMutationsHandler, OfflineStore } from "../offline";
-import { IDProcessor } from "../offline/processors/IDProcessor";
-import { ConflictProcessor } from "../conflicts/ConflictProcessor";
-import { IResultProcessor } from "../offline/processors";
+import { OfflineLink } from "offix-offline";
+import { NetworkStatus, OfflineMutationsHandler, OfflineStore } from "offix-offline";
+import { IDProcessor } from "offix-offline";
+import { ConflictProcessor } from "offix-offline";
+import { IResultProcessor } from "offix-offline";
 import { InMemoryCache } from "apollo-cache-inmemory";
-import { BaseLink } from "../conflicts/BaseLink";
+import { BaseLink } from "offix-offline";
 
 /**
  * Method for creating "uber" composite Apollo Link implementation including:

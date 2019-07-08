@@ -1,27 +1,26 @@
 import ApolloClient from "apollo-client";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
 import { OfflineItem } from "./OperationQueueEntry";
-import { MUTATION_QUEUE_LOGGER } from "../config/Constants";
+import { MUTATION_QUEUE_LOGGER } from "../utils/Constants";
 import * as debug from "debug";
-import { DataSyncConfig } from "../config";
 import { CacheUpdates, getMutationName, MutationHelperOptions } from "offix-cache";
 import { Operation } from "apollo-link";
 import { OfflineStore } from "./storage/OfflineStore";
-
-export const logger = debug.default(MUTATION_QUEUE_LOGGER);
+import { OfflineLinkConfig } from "./OfflineLink";
+ 
+const logger = debug.default(MUTATION_QUEUE_LOGGER);
 
 /**
  * Class used to send offline changes again after error is sent to user or after application restart.
  * It will trigger saved offline mutations using client to restore all elements in the link.
  */
-// TODO rename
 export class OfflineMutationsHandler {
 
   private mutationCacheUpdates?: CacheUpdates;
 
   constructor(private store: OfflineStore,
     private apolloClient: ApolloClient<NormalizedCacheObject>,
-    clientConfig: DataSyncConfig) {
+    clientConfig: OfflineLinkConfig) {
     this.mutationCacheUpdates = clientConfig.mutationCacheUpdates;
   }
 

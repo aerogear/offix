@@ -1,13 +1,14 @@
 import { isMobileCordova, ServiceConfiguration, ConfigurationService } from "@aerogear/core";
-import { PersistedData, PersistentStore } from "../offline/storage/PersistentStore";
+import { PersistedData, PersistentStore } from "offix-offline";
 import { ConfigError } from "./ConfigError";
 import { DataSyncConfig } from "./DataSyncConfig";
-import { CordovaNetworkStatus, NetworkStatus, WebNetworkStatus, OfflineQueueListener } from "../offline";
-import { clientWins } from "../conflicts/strategies/strategies";
-import { VersionedState } from "../conflicts/state/VersionedState";
-import { ConflictResolutionStrategy } from "../conflicts";
-import { createDefaultCacheStorage, createDefaultOfflineStorage } from "../offline/storage/defaultStorage";
+import { CordovaNetworkStatus, NetworkStatus, WebNetworkStatus, OfflineQueueListener } from "offix-offline";
+import { clientWins } from "offix-offline";
+import { VersionedState } from "offix-offline";
+import { ConflictResolutionStrategy } from "offix-offline";
+import { createDefaultOfflineStorage } from "offix-offline";
 import { AuthContextProvider } from ".";
+import { createDefaultCacheStorage } from "../cache";
 
 declare var window: any;
 

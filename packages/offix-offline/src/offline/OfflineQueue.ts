@@ -2,7 +2,7 @@ import { OperationQueueEntry } from "./OperationQueueEntry";
 import { OfflineQueueListener } from "./events/OfflineQueueListener";
 import { Operation, NextLink, Observable, FetchResult } from "apollo-link";
 import { OfflineStore } from "./storage/OfflineStore";
-import { OfflineLinkOptions } from "../links";
+import { OfflineLinkConfig } from "./OfflineLink";
 import { IResultProcessor } from "./processors";
 
 export type OperationQueueChangeHandler = (entry: OperationQueueEntry) => void;
@@ -22,8 +22,8 @@ export class OfflineQueue {
   private store: OfflineStore;
   private resultProcessors: IResultProcessor[] | undefined;
 
-  constructor(options: OfflineLinkOptions) {
-    this.store = options.store;
+  constructor(options: OfflineLinkConfig) {
+    this.store = options.storage;
     this.listener = options.listener;
     this.resultProcessors = options.resultProcessors;
   }

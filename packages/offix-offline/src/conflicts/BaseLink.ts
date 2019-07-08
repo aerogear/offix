@@ -2,8 +2,7 @@ import { ApolloLink, NextLink, Operation, Observable, FetchResult } from "apollo
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { isMutation } from "../utils/helpers";
 import { getObjectFromCache } from "../utils/cacheHelper";
-import { ObjectState } from ".";
-import { logger } from "../links/LocalDirectiveFilterLink";
+import { ObjectState } from "../conflicts";
 import { ConflictResolutionData } from "./strategies/ConflictResolutionData";
 
 /**
@@ -56,7 +55,6 @@ export class BaseLink extends ApolloLink {
   private createLocalConflict(conflictBase: ConflictResolutionData,
                               variables: ConflictResolutionData): Observable<FetchResult> {
     return new Observable(observer => {
-      logger("Returning local conflict error to client");
       observer.error(new LocalConflictError(conflictBase, variables));
       return () => { return; };
     });
