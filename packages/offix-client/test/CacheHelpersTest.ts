@@ -1,5 +1,5 @@
 import { expect, should } from "chai";
-import { CacheOperation, createMutationOptions, createSubscriptionOptions } from "../src/cache";
+import { CacheOperation, createMutationOptions, createSubscriptionOptions } from "../../offix-cache/src/cache";
 import {
   CREATE_ITEM,
   GET_ITEMS,
@@ -13,7 +13,7 @@ import {
   GET_NON_EXISTENT
 } from "./mock/mutations";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
-import { OfflineClient } from "offix-client";
+import { OfflineClient } from "../src";
 import ApolloClient from "apollo-client";
 import { mock } from "fetch-mock";
 import { storage } from "./mock/Storage";
