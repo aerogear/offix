@@ -1,7 +1,7 @@
 import { createOptimisticResponse, OptimisticOptions } from "../src";
 import { CacheOperation } from "../src/cache";
 import { expect, should } from "chai";
-import { CREATE_ITEM, GET_ITEMS } from "./mock/mutations";
+import { CREATE_ITEM } from "./mock/mutations";
 
 describe("Optimistic Response tests", () => {
 
