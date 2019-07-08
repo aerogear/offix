@@ -52,6 +52,7 @@
     "graphql-tag": "2.10.1",
     "graphql-tools": "4.0.5",
     "idb-localstorage": "0.2.0",
+    "offix-cache": "0.6.1",
     "offix-offline": "0.6.1",
     "subscriptions-transport-ws": "0.9.16",
     "util": "0.12.1"
