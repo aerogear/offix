@@ -59,11 +59,6 @@ export interface DataSyncConfig {
   authContextProvider?: AuthContextProvider;
 
   /**
-   * If set to true, GraphGL requests will include some additional data to audit log in the server side.
-   */
-  auditLogging?: boolean;
-
-  /**
    * [Modifier]
    *
    * If set to true, GraphGL file uploads will be enabled and supported
@@ -91,12 +86,6 @@ export interface DataSyncConfig {
    * The conflict resolution strategy your client should use. By default it takes client version.
    */
   conflictStrategy?: ConflictResolutionStrategy;
-
-  /**
-   * OpenShift specific configuration that provides alternative way to setup
-   * http and websocket urls.
-   */
-  openShiftConfig?: ConfigurationService;
 
   /**
    * [Modifier]

@@ -4,8 +4,6 @@ import { RetryLink } from "apollo-link-retry";
 import { ConflictLink, ObjectState } from "offix-offline";
 import { DataSyncConfig } from "../config";
 import { createAuthLink } from "./AuthLink";
-import { AuditLoggingLink } from "./AuditLoggingLink";
-import { DefaultMetricsBuilder, MetricsBuilder } from "@aerogear/core";
 import { LocalDirectiveFilterLink } from "offix-offline";
 import { createUploadLink } from "apollo-upload-client";
 import { isMutation, isOnlineOnly, isSubscription } from "offix-offline";
@@ -86,10 +84,6 @@ export const defaultHttpLinks = async (config: DataSyncConfig, offlineLink: Apol
   const retryLink = ApolloLink.split(OfflineMutationsHandler.isMarkedOffline, new RetryLink(config.retryOptions));
   links.push(retryLink);
 
-  if (config.auditLogging) {
-    links.push(await createAuditLoggingLink());
-  }
-
   if (config.authContextProvider) {
     links.push(createAuthLink(config));
   }
@@ -98,28 +92,14 @@ export const defaultHttpLinks = async (config: DataSyncConfig, offlineLink: Apol
 
   if (config.fileUpload) {
     links.push(createUploadLink({
-      uri: config.httpUrl,
-      includeExtensions: config.auditLogging
+      uri: config.httpUrl
     }));
   } else {
     const httpLink = new HttpLink({
-      uri: config.httpUrl,
-      includeExtensions: config.auditLogging
+      uri: config.httpUrl
     }) as ApolloLink;
     links.push(httpLink);
   }
 
   return ApolloLink.from(links);
-};
-
-const createAuditLoggingLink = async (): Promise<AuditLoggingLink> => {
-  const metricsBuilder: MetricsBuilder = new DefaultMetricsBuilder();
-  const metricsPayload: {
-    [key: string]: any;
-  } = {};
-  const metrics = metricsBuilder.buildDefaultMetrics();
-  for (const metric of metrics) {
-    metricsPayload[metric.identifier] = await metric.collect();
-  }
-  return new AuditLoggingLink(metricsBuilder.getClientId(), metricsPayload);
 };

@@ -39,25 +39,6 @@ describe("OnOffLink", () => {
     expect(badConstructor).to.throw();
   });
 
-  it("applyPlatformConfig", () => {
-    const app = new ConfigurationService({
-      clusterName: "",
-      version: 1,
-      namespace: "Test",
-      services: [
-        {
-          id: "sync",
-          name: "sync",
-          type: "sync-app",
-          url: userConfig.httpUrl,
-          config: {}
-        }
-      ]
-    });
-    const mergedConfig = new SyncConfig({ openShiftConfig: app, storage });
-    expect(mergedConfig.httpUrl).eq(userConfig.httpUrl);
-  });
-
   it("conflict strategy is a function", () => {
     const mergedConfig = new SyncConfig(configWithStrategy);
     if (mergedConfig.conflictStrategy && mergedConfig.conflictStrategy) {
