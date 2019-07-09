@@ -5,6 +5,11 @@
   fully featured Offline Workflow and Conflict Resolution.
 </p>
 
+## Offix in Action
+
+<iframe width="560" height="560" src="https://www.youtube.com/embed/CrYinCtTHds" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
 ## Features
 
 - Offline support. Mutations are persisted when Offline.
