@@ -6,7 +6,8 @@ The offix-cache package helps developers to manage some of their client's state 
 
 In Apollo Client, mutation results are not applied to the UI until responses are received from the server. To provide a better user experience, an application may want to update the UI immediately. [Optimistic Responses](https://www.apollographql.com/docs/react/api/react-apollo.html#graphql-mutation-options-optimisticResponse "Optimistic Responses") are an easy to way to achieve this goal. However, creating individual optimistic responses for each mutation in your application can introduce boilerplate code. offix-cache can automatically create optimistic responses for you to reduce this boilerplate.
 
-The `createOptimisticResponse` function returns an object which can be passed directly to Apollo Client's mutate function. Its signature is as follows:
+The `createOptimisticResponse` function returns an object which can be passed directly to Apollo Client's mutate function. `createOptimisticResponse` will help to build expected response object from input arguments.
+if you mutation returns different values you will still need to build it manually
 
 ```javascript
 import { createOptimisticResponse } from "offix-cache";
@@ -27,7 +28,7 @@ apolloClient.mutate({
 
 ## Mutation Cache Helpers
 
-offix-cache also provides a mechanism to automatically update your cache based on the result of mutations. The `createMutationOptions` function returns a `MutationOptions` object compatible with Apollo Client's mutate.
+`offix-cache` provides a mechanism to automatically update client cache based on the result returned by mutation. The `createMutationOptions` function returns a `MutationOptions` object compatible with Apollo Client's mutate.
 
 ```javascript
 const { createMutationOptions, CacheOperation } = require('offix-cache');
@@ -71,7 +72,7 @@ apolloClient.mutate(options);
 
 ## Subscription Helpers
 
-offix-cache provides a subscription helper which can generate the necessary options to be used with Apollo Client's `subscribeToMore` function.
+`offix-cache` provides a subscription cache update method helper which can generate the necessary options to be used with Apollo Client's `subscribeToMore` function.
 
 To use this helper, we first need to create some options. These options should take the folowing form:
 
@@ -109,7 +110,7 @@ The cache will now be kept up to date with automatic data deduplication being pe
 
 ### Multiple Subscriptions
 
-offix-cache also provides the ability to automatically call `subscribeToMore` on your `ObservableQuery`. This can be useful in a situation where you may have multiple subscriptions which can affect one single query. For example, if you have a `TaskAdded`, `TaskDeleted` and a `TaskUpdated` subscription you would need three separate `subscribeToMore` function calls. This can become tedious as your number of subscriptions grow. To combat this, we can use the `subscribeToMoreHelper` function from offix-cache to automatically handle this for us by passing it an array of subscriptions and their corresponding queries which need to be updated.
+`offix-cache` also provides the ability to automatically call `subscribeToMore` on your `ObservableQuery`. This can be useful in a situation where you may have multiple subscriptions which can affect one single query. For example, if you have a `TaskAdded`, `TaskDeleted` and a `TaskUpdated` subscription you would need three separate `subscribeToMore` function calls. This can become tedious as your number of subscriptions grow. To combat this, we can use the `subscribeToMoreHelper` function from offix-cache to automatically handle this for us by passing it an array of subscriptions and their corresponding queries which need to be updated.
 
 ```javascript
 const { CacheOperation } = require('offix-cache');

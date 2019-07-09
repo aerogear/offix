@@ -1,21 +1,39 @@
 # Client Side Conflict Resolution
 
-When performing data synchronization between multiple clients it is common for remote devices to become offline for a certain amount of time. As a result of being offline, data that is modified by a client can become outdated with the server. Further operations on that record can cause a conflict (often called a collision).
+When performing data synchronization between multiple clients it is common for remote devices to become offline for a certain amount of time. As a result of being offline, data that is modified by a client can become outdated with the server. Further operations on that record can cause a conflict (often called a collision). For more information about offline workflows, please see [Offline Support](ref-offline.md)
 
-Offix provides a way to manage and resolve these conflicts for any GraphQL type by supplying a `returnType` field with any mutation you wish to resolve conflicts for. For more information, please see [Offline Support](ref-offline.md). Offix attempts to resolve all conflicts at the field level first, meaning that even if the client data is outdated with the server data it may not trigger a conflict.
+Offix provides a way to manage and resolve these conflicts for any GraphQL type.
+Conflict implementation will require additional elements in your application in order to work:
 
-## Working with Conflict Resolution
+ - Mutation `returnType` added on context to any mutation
+ - Additional metadata inside types (for example version field) depending on conflict implementation 
 
-To enable the client to resolve conflicts, developers first need to configure their resolvers to return the conflict back to the client upon detection. For more information about how to do this, please see [Server Side Conflict Resolution](ref-conflict-server.md)
+Conflict mechanism is divided between:
+
+- Conflict detection
+Developers can detect conflicts on resolver level
+- Conflict resolution 
+Conflicts are sent back to client and resolved by resending data back to server.
+
+. Offix will allow to detect and resolve conflict without user interactions. 
+By default when no changes were made on the same fields, implementation will try to resend modified payload back to server. When changes on server and client covering the same fields one of the specified conflict resolution strategies can be used. Default strategy will apply client changes on top of the server side.
+Developers can modify strategies for their needs.
+
+## Working with Conflict Resolution on Client
+
+To enable conflict resolution we fist need to configure our server side resolvers to perform conflict detection. Detection can rely on many different implementations and return the conflict error back to the client. For more information about how to do this, please see [Server Side Conflict Resolution](ref-conflict-server.md)
+
 The client will then automatically resolve them based on the current strategy and notify listeners if the developer supplied any.
 
-Conflict resolution will work out of the box with the recommended defaults and does not require any specific handling on the client.
+Conflict resolution will work out of the box with the recommended defaults and does not require any specific handling on the client. 
 
 > For advanced use cases developers may customize their conflict implementation by supplying a custom `conflictProvider` in config. See Conflict Resolution Strategies below.
 
 ## Default Conflict Implementation
 
 By default, conflict resolution is configured to rely on a `version` field on each GraphQL type.
+Version field will also need to be saved to the database in order to detect changes on the server
+
 For example:
 
 ```javascript
@@ -42,9 +60,16 @@ type Mutation {
 }
 ```
 
-### Custom Conflict State
+### Custom Conflict implementation by extening ObjectState
 
-The default object state Offix uses is `VersionedObjectState`. This means Offix expects all data which could be conflicted to have a version field. If this is not the case, developers can also provide custom state which Offix will then use for conflict resolution. To do this, Offix expects certain functions to be available under the `conflictProvider` option in config. These functions and their signatures are:
+Offix enables flexibility on how conflicts are detected and resolved. 
+In many cases developers may need different ways of detecting conflits than relying on version field
+stored in database. For example if database already have `changedAt` field that is being supported by trigger it can be used as custom conflict implemementation.
+
+Under the hood conflicts implementations are extending an `ObjectState` interface.
+This interface exist on both client and server and provides functions that help with detection and resolution of conflicts.
+
+Default implementation an `VersionedObjectState`. This means Offix expects all data which could be conflicted to have a version field. If this is not the case, developers can also provide custom state which Offix will then use for conflict resolution. To do this, Offix expects certain functions to be available under the `conflictProvider` option in config. These functions and their signatures are:
 
 `assignServerState(client, server)` - assigns the server state to the client state to reduce the chance of a second conflict.
 
@@ -56,7 +81,7 @@ The default object state Offix uses is `VersionedObjectState`. This means Offix 
 
 ## Conflict Resolution Strategies
 
-Offix allows developers to define custom conflict resolution strategies. You can provide custom conflict resolution strategies to the client in the config by using the provided `ConflictResolutionStrategies` type. By default developers do not need to pass any strategy as `ClientWins` is the default. Custom strategies can be used also to provide different resolution strategy for certain operations:
+Offix allows developers to define custom conflict resolution strategies. You can provide custom conflict resolution strategies to the client in the config by using the provided `ConflictResolutionStrategies` type. By default developers do not need to pass any strategy as `UseClient` is the default. Custom strategies can be used also to provide different resolution strategy for certain operations:
 
 ```javascript
 let customStrategy = {
