@@ -5,12 +5,6 @@
   fully featured Offline Workflow and Conflict Resolution.
 </p>
 
-## Offix in Action
-
-
-[![Offix](http://img.youtube.com/vi/CrYinCtTHds/0.jpg)](http://www.youtube.com/watch?v=CrYinCtTHds "Offix")
-
-
 ## Features
 
 - Offline support. Mutations are persisted when Offline.
@@ -25,6 +19,10 @@
 ## Documentation
 
 https://offix.dev
+
+## Offix demo
+
+[![Offix](http://img.youtube.com/vi/CrYinCtTHds/0.jpg)](http://www.youtube.com/watch?v=CrYinCtTHds "Offix")
 
 ## How to get involved
 
