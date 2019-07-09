@@ -47,8 +47,11 @@ type Mutation {
 The default object state Offix uses is `VersionedObjectState`. This means Offix expects all data which could be conflicted to have a version field. If this is not the case, developers can also provide custom state which Offix will then use for conflict resolution. To do this, Offix expects certain functions to be available under the `conflictProvider` option in config. These functions and their signatures are:
 
 `assignServerState(client, server)` - assigns the server state to the client state to reduce the chance of a second conflict.
+
 `hasConlict(client, server)` - detects whether or not both sets of data are conflicted.
+
 `getStateFields()` - returns an array of fields that should not be taken into account for conflict purposes.
+
 `currentState(objectWithState)` - returns the current state of the object.
 
 ## Conflict Resolution Strategies
