@@ -30,7 +30,7 @@ const mutationOptions = {
       filterBy: 'some filter'
     }
   },
-  typeName: 'Task',
+  returnType: 'Task',
   operationType: CacheOperation.ADD,
   idField: 'id'
 };
