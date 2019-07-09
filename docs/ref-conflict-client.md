@@ -17,7 +17,7 @@ Conflicts are sent back to client and resolved by resending data back to server.
 
 Offix allows developers to detect and resolve conflict without user interactions. 
 By default when no changes were made on the same fields, implementation will try to resend modified payload back to server. When changes on server and client covering the same fields one of the specified conflict resolution strategies can be used. Default strategy will apply client changes on top of the server side.
-Developers can modify strategies for their needs.
+Developers can modify strategies to suit their needs.
 
 ## Working with Conflict Resolution on Client
 
