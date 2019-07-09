@@ -69,7 +69,7 @@ stored in database. For example if database already have `changedAt` field that 
 Under the hood conflicts implementations are extending an `ObjectState` interface.
 This interface exist on both client and server and provides functions that help with detection and resolution of conflicts.
 
-Default implementation an `VersionedObjectState`. This means Offix expects all data which could be conflicted to have a version field. If this is not the case, developers can also provide custom state which Offix will then use for conflict resolution. To do this, Offix expects certain functions to be available under the `conflictProvider` option in config. These functions and their signatures are:
+The default implementation is `VersionedObjectState`. This means Offix expects all data which could be conflicted to have a version field. If this is not the case, developers can also provide custom state which Offix will then use for conflict resolution. To do this, Offix expects certain functions to be available under the `conflictProvider` option in config. These functions and their signatures are:
 
 `assignServerState(client, server)` - assigns the server state to the client state to reduce the chance of a second conflict.
 
