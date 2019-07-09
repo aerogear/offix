@@ -2,7 +2,7 @@
 
 ### 0.7.0 
 
-#### Extented conflict support
+#### Extended conflict support
 
 New conflict implementation requires changes on both client and server.
 On server we have changed conflict detection mechanism to single method.
@@ -21,9 +21,8 @@ reliable diff source without separate store.
 
 ##### Client side implementation:
 
-Client side implementation requires now users to apply `returnType` to context when performing mutation.
-Conflict interface have now additional method `mergeOccured` that will be triggered when conflict was 
-resolved without data loss.
+Client side implementation now requires users to apply `returnType` to context when performing a mutation.
+Conflict interface now has an additional method `mergeOccured` that will be triggered when a conflict was  resolved without data loss.
 
 Please refer to documentation for more details.
 
