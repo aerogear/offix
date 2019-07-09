@@ -7,7 +7,7 @@ The offix-cache package helps developers to manage some of their client's state 
 In Apollo Client, mutation results are not applied to the UI until responses are received from the server. To provide a better user experience, an application may want to update the UI immediately. [Optimistic Responses](https://www.apollographql.com/docs/react/api/react-apollo.html#graphql-mutation-options-optimisticResponse "Optimistic Responses") are an easy to way to achieve this goal. However, creating individual optimistic responses for each mutation in your application can introduce boilerplate code. offix-cache can automatically create optimistic responses for you to reduce this boilerplate.
 
 The `createOptimisticResponse` function returns an object which can be passed directly to Apollo Client's mutate function. `createOptimisticResponse` will help to build expected response object from input arguments.
-if you mutation returns different values you will still need to build it manually
+if your mutation returns different values you will still need to build it manually.
 
 ```javascript
 import { createOptimisticResponse } from "offix-cache";
