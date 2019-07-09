@@ -28,7 +28,7 @@ apolloClient.mutate({
 
 ## Mutation Cache Helpers
 
-`offix-cache` provides a mechanism to automatically update client cache based on the result returned by mutation. The `createMutationOptions` function returns a `MutationOptions` object compatible with Apollo Client's mutate.
+`offix-cache` provides a mechanism to automatically update the client cache based on the result returned by a mutation. The `createMutationOptions` function returns a `MutationOptions` object compatible with Apollo Client's mutate.
 
 ```javascript
 const { createMutationOptions, CacheOperation } = require('offix-cache');
