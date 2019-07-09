@@ -11,7 +11,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@aerogear/voyager-server": "0.5.1",
-    "apollo-server": "2.6.7",
+    "apollo-server": "2.6.8",
     "chai": "4.2.0",
     "cors": "2.8.5",
     "express": "4.17.1",
