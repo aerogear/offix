@@ -7,7 +7,8 @@
 
 ## Offix in Action
 
-<iframe width="560" height="560" src="https://www.youtube.com/embed/CrYinCtTHds" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+[![Offix](http://img.youtube.com/vi/CrYinCtTHds/0.jpg)](http://www.youtube.com/watch?v=CrYinCtTHds "Offix")
 
 
 ## Features
