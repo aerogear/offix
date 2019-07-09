@@ -1,6 +1,6 @@
 {
   "name": "offix-cache",
-  "version": "0.6.1",
+  "version": "0.7.0-rc.1",
   "description": "GraphQL Mutation and Subscription Helpers",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -17,11 +17,11 @@
     "apollo-cache-inmemory": "1.6.2",
     "chai": "4.2.0",
     "fetch-mock": "7.3.3",
+    "graphql": "14.4.2",
     "graphql-tag": "2.10.1",
     "mocha": "6.1.4",
     "ts-node": "8.3.0",
-    "typescript": "3.5.2",
-    "graphql": "14.4.2"
+    "typescript": "3.5.2"
   },
   "dependencies": {
     "apollo-client": "2.5.1",

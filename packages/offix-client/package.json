@@ -1,6 +1,6 @@
 {
   "name": "offix-client",
-  "version": "0.6.1",
+  "version": "0.7.0-rc.1",
   "description": "Offix GraphQL Offline Client",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -31,10 +31,10 @@
     "chai": "4.2.0",
     "del": "5.0.0",
     "fetch-mock": "7.3.3",
+    "graphql": "14.4.2",
     "mocha": "6.1.4",
     "ts-node": "8.3.0",
-    "typescript": "3.5.2",
-    "graphql": "14.4.2"
+    "typescript": "3.5.2"
   },
   "dependencies": {
     "@aerogear/core": "2.5.0",
@@ -52,8 +52,8 @@
     "graphql-tag": "2.10.1",
     "graphql-tools": "4.0.5",
     "idb-localstorage": "0.2.0",
-    "offix-cache": "0.6.1",
-    "offix-offline": "0.6.1",
+    "offix-cache": "0.7.0-rc.1",
+    "offix-offline": "0.7.0-rc.1",
     "subscriptions-transport-ws": "0.9.16",
     "util": "0.12.1"
   },
