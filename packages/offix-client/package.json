@@ -46,7 +46,7 @@
     "apollo-link-http": "1.5.14",
     "apollo-link-retry": "2.2.13",
     "apollo-link-ws": "1.0.17",
-    "apollo-upload-client": "10.0.1",
+    "apollo-upload-client": "11.0.0",
     "debug": "4.1.1",
     "graphql-tag": "2.10.1",
     "graphql-tools": "4.0.5",
