@@ -10,6 +10,7 @@
     "cleanInstall": "lerna exec npm install --ignore-scripts",
     "bootstrap": "lerna bootstrap --no-ci",
     "lint": "tslint '*/*/src/**/*.ts' '*/*/test/**/*.ts'",
+    "lint-fix": "tslint '*/*/src/**/*.ts' '*/*/test/**/*.ts' --fix",
     "build": "lerna run build",
     "watch": "lerna run watch",
     "release:prep": "./scripts/prepareRelease.sh",
