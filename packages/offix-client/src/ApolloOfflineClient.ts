@@ -1,5 +1,5 @@
 import {  NormalizedCacheObject } from "apollo-cache-inmemory";
-import { ApolloClient } from "apollo-client";
+import { ApolloClient, MutationOptions } from "apollo-client";
 import { OfflineStore, OfflineQueueListener } from "offix-offline";
 import { MutationHelperOptions } from "offix-cache";
 import { FetchResult } from "apollo-link";
@@ -28,6 +28,6 @@ export interface ApolloOfflineClient extends ApolloClient<NormalizedCacheObject>
    * Allows the client to perform an offline mutation
    * @param options the mutation helper options used to build the offline mutation
    */
-  offlineMutation<T>(options: MutationHelperOptions): Promise<FetchResult<T>>;
+  offlineMutation<T>(options: MutationOptions & MutationHelperOptions): Promise<FetchResult<T>>;
 
 }

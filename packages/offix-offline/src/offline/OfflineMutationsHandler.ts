@@ -1,9 +1,9 @@
-import ApolloClient from "apollo-client";
+import ApolloClient, { MutationOptions } from "apollo-client";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
 import { OfflineItem } from "./OperationQueueEntry";
 import { MUTATION_QUEUE_LOGGER } from "../utils/Constants";
 import * as debug from "debug";
-import { CacheUpdates, getMutationName, MutationHelperOptions } from "offix-cache";
+import { CacheUpdates, getMutationName } from "offix-cache";
 import { Operation } from "apollo-link";
 import { OfflineStore } from "./storage/OfflineStore";
 import { OfflineLinkConfig } from "./OfflineLinkConfig";
@@ -57,7 +57,7 @@ export class OfflineMutationsHandler {
       previousContext = item.operation.getContext();
     }
     const newContext = this.getOfflineContext(item);
-    const mutationOptions: MutationHelperOptions = {
+    const mutationOptions: MutationOptions = {
       variables: item.operation.variables,
       mutation: item.operation.query,
       // Restore optimistic response from operation in order to see it
