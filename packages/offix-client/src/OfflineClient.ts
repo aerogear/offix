@@ -1,4 +1,4 @@
-import { ApolloClient, MutationOptions } from "apollo-client";
+import { ApolloClient, MutationOptions, OperationVariables } from "apollo-client";
 import { OffixClientConfig } from "./config";
 import { OffixDefaultConfig } from "./config/OffixDefaultConfig";
 import { createDefaultLink, createOfflineLink, createConflictLink } from "./links/LinksBuilder";
@@ -8,7 +8,8 @@ import {
   OfflineLink,
   OfflineMutationsHandler,
   CompositeQueueListener,
-  ListenerProvider } from "offix-offline";
+  ListenerProvider
+} from "offix-offline";
 import { ApolloOfflineClient } from "./ApolloOfflineClient";
 import { MutationHelperOptions, createMutationOptions } from "offix-cache";
 import { FetchResult } from "apollo-link";
@@ -96,14 +97,16 @@ export class OfflineClient implements ListenerProvider {
   /**
    * Offline wrapper for apollo mutations. Provide Mutation Helper Options and use
    * this offline friendly function to handle the optimistic UI and cache updates.
+   *
    * @param options the MutationHelperOptions to create the mutation
    */
-  public offlineMutation<T>(options: MutationOptions & MutationHelperOptions): Promise<FetchResult<T>> {
+  public offlineMutation<T = any, TVariables = OperationVariables>(
+    options: MutationHelperOptions<T, TVariables>): Promise<FetchResult<T>> {
     if (!this.apolloClient) {
       throw new Error("Apollo offline client not initialised before mutation called.");
     } else {
-      return this.apolloClient.mutate<T>(
-        createMutationOptions(options)
+      return this.apolloClient.mutate<T, TVariables>(
+        createMutationOptions<T, TVariables>(options)
       );
     }
   }

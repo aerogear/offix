@@ -1,4 +1,4 @@
-import { MutationOptions, MutationUpdaterFn } from "apollo-client";
+import { MutationOptions, MutationUpdaterFn, OperationVariables } from "apollo-client";
 import { CacheOperation } from "./CacheOperation";
 import { createOptimisticResponse } from "../optimisticResponse";
 import { Query } from "./CacheUpdates";
@@ -8,7 +8,9 @@ import { isArray } from "util";
 /**
  * Interface to overlay helper internals on top of mutation options.
  */
-export interface MutationHelperOptions {
+export interface MutationHelperOptions<T = {
+  [key: string]: any;
+}, TVariables = OperationVariables> extends MutationOptions<T, TVariables> {
   updateQuery?: Query | Query[];
   operationType?: CacheOperation;
   idField?: string;
@@ -20,7 +22,10 @@ export interface MutationHelperOptions {
  * Provides useful helpers for cache updates, optimistic responses, and context
  * @param options see `MutationHelperOptions`
  */
-export const createMutationOptions = (options: MutationOptions & MutationHelperOptions): MutationOptions => {
+export const createMutationOptions = <T = {
+  [key: string]: any;
+}, TVariables = OperationVariables>(options: MutationHelperOptions<T, TVariables>):
+  MutationOptions<T, TVariables> => {
   const {
     mutation,
     variables,
@@ -52,7 +57,9 @@ export const createMutationOptions = (options: MutationOptions & MutationHelperO
       updateFunction(cache, { data });
     }
   };
-  return { ...options, update, context: { ...context, returnType } };
+  options.update = update;
+  options.context = { ...context, returnType };
+  return options;
 };
 
 /**
