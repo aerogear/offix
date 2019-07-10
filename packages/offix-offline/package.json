@@ -36,10 +36,10 @@
     "graphql-tag": "2.10.1"
   },
   "dependencies": {
-    "apollo-cache-inmemory": "1.5.1",
-    "apollo-client": "2.5.1",
-    "apollo-link": "1.2.11",
-    "apollo-link-error": "1.1.10",
+    "apollo-cache-inmemory": "1.6.2",
+    "apollo-client": "2.6.3",
+    "apollo-link": "1.2.12",
+    "apollo-link-error": "1.1.11",
     "debug": "4.1.1",
     "idb-localstorage": "0.2.0",
     "offix-cache": "0.7.0-rc.1"
