@@ -3,7 +3,7 @@ import { PersistedData, PersistentStore } from "offix-offline";
 import { ConfigError } from "./ConfigError";
 import { OffixClientConfig } from "./OffixClientConfig";
 import { CordovaNetworkStatus, NetworkStatus, WebNetworkStatus, OfflineQueueListener } from "offix-offline";
-import { clientWins } from "offix-offline";
+import { UseClient } from "offix-offline";
 import { VersionedState } from "offix-offline";
 import { ConflictResolutionStrategy } from "offix-offline";
 import { createDefaultOfflineStorage } from "offix-offline";
@@ -52,7 +52,7 @@ export class OffixDefaultConfig implements OffixClientConfig {
     if (clientOptions && clientOptions.conflictStrategy) {
       this.conflictStrategy = clientOptions.conflictStrategy;
     } else {
-      this.conflictStrategy = clientWins;
+      this.conflictStrategy = UseClient;
     }
     this.init(clientOptions);
   }
