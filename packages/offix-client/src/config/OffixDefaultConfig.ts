@@ -1,4 +1,4 @@
-import { isMobileCordova} from "@aerogear/core";
+import { isMobileCordova} from "../utils/platform";
 import { PersistedData, PersistentStore } from "offix-offline";
 import { ConfigError } from "./ConfigError";
 import { OffixClientConfig } from "./OffixClientConfig";
