@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="400" src="https://github.com/graphql-heroes/ApolloOfflineClient/raw/master/resources/logo.png">
+  <img width="400" src="https://github.com/aerogear/offix/raw/master/resources/logo.png">
   <br/>
   Offix extends the capabilities of Apollo GraphQL providing a
   fully featured Offline Workflow and Conflict Resolution.

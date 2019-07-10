@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/graphql-heroes
+    working_directory: ~/offix
     docker:
       # Node 8 LTS
       - image: circleci/node:lts-browsers
@@ -47,7 +47,7 @@ jobs:
       - store_test_results:
           path: test-results.xml
   npm_publish:
-    working_directory: ~/graphqlheroes
+    working_directory: ~/offix
     docker:
       # Node 8 LTS
       - image: circleci/node:lts
