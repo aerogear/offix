@@ -16,9 +16,8 @@ import { RetryLink } from "apollo-link-retry";
  * Users do not need to pass them for normal initialization of the client.
  * Please refer to documentation for more information about the individual flag and it's side effects.
  *
- * @see DefaultOptions for defaults
  */
-export interface DataSyncConfig {
+export interface OffixClientConfig {
   /**
    * The URL of http server
    */

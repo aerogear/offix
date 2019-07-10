@@ -2,7 +2,7 @@ import { ApolloLink, Operation } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { RetryLink } from "apollo-link-retry";
 import { ConflictLink, ObjectState } from "offix-offline";
-import { DataSyncConfig } from "../config";
+import { OffixClientConfig } from "../config";
 import { createAuthLink } from "./AuthLink";
 import { LocalDirectiveFilterLink } from "offix-offline";
 import { createUploadLink } from "apollo-upload-client";
@@ -26,7 +26,7 @@ import { BaseLink } from "offix-offline";
  * - Audit logging
  * - File uploads
  */
-export const createDefaultLink = async (config: DataSyncConfig, offlineLink: ApolloLink,
+export const createDefaultLink = async (config: OffixClientConfig, offlineLink: ApolloLink,
                                         conflictLink: ApolloLink, cache: InMemoryCache) => {
   let link = await defaultHttpLinks(config, offlineLink, conflictLink, cache);
   if (config.wsUrl) {
@@ -39,7 +39,7 @@ export const createDefaultLink = async (config: DataSyncConfig, offlineLink: Apo
 /**
  * Create offline link
  */
-export const createOfflineLink = async (config: DataSyncConfig, store: OfflineStore) => {
+export const createOfflineLink = async (config: OffixClientConfig, store: OfflineStore) => {
   const resultProcessors: IResultProcessor[] = [
     new IDProcessor(),
     new ConflictProcessor(config.conflictProvider as ObjectState)
@@ -54,7 +54,7 @@ export const createOfflineLink = async (config: DataSyncConfig, store: OfflineSt
 /**
  * Create conflict link
  */
-export const createConflictLink = async (config: DataSyncConfig) => {
+export const createConflictLink = async (config: OffixClientConfig) => {
   return new ConflictLink({
     conflictProvider: config.conflictProvider as ObjectState,
     conflictListener: config.conflictListener,
@@ -71,7 +71,7 @@ export const createConflictLink = async (config: DataSyncConfig) => {
  * - Error handling
  * - Audit logging
  */
-export const defaultHttpLinks = async (config: DataSyncConfig, offlineLink: ApolloLink,
+export const defaultHttpLinks = async (config: OffixClientConfig, offlineLink: ApolloLink,
                                        conflictLink: ApolloLink, cache: InMemoryCache): Promise<ApolloLink> => {
 
   // Enable offline link only for mutations and onlineOnly

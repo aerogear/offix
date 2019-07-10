@@ -1,2 +1,2 @@
-export * from "./DataSyncConfig";
+export * from "./OffixClientConfig";
 export * from "../auth/AuthContextProvider";

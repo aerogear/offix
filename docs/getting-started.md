@@ -10,7 +10,7 @@ import {
 
 ## Configuration
 
-To provide custom configuration to the client, the following options are available. If you wish, these are also available by using the `DataSyncConfig` interface from the SDK.
+To provide custom configuration to the client, the following options are available. If you wish, these are also available by using the `OffixClientConfig` interface from the SDK.
 
 ```javascript
 

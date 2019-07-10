@@ -1,7 +1,7 @@
-import { isMobileCordova, ServiceConfiguration, ConfigurationService } from "@aerogear/core";
+import { isMobileCordova} from "@aerogear/core";
 import { PersistedData, PersistentStore } from "offix-offline";
 import { ConfigError } from "./ConfigError";
-import { DataSyncConfig } from "./DataSyncConfig";
+import { OffixClientConfig } from "./OffixClientConfig";
 import { CordovaNetworkStatus, NetworkStatus, WebNetworkStatus, OfflineQueueListener } from "offix-offline";
 import { clientWins } from "offix-offline";
 import { VersionedState } from "offix-offline";
@@ -10,16 +10,11 @@ import { createDefaultOfflineStorage } from "offix-offline";
 import { AuthContextProvider } from ".";
 import { createDefaultCacheStorage } from "../cache";
 
-declare var window: any;
-
-// Legacy platform configuration that needs to be merged into sync configuration
-const TYPE: string = "sync-app";
-
 /**
  * Class for managing user and default configuration.
  * Default config is applied on top of user provided configuration
  */
-export class SyncConfig implements DataSyncConfig {
+export class OffixDefaultConfig implements OffixClientConfig {
   public wsUrl?: string;
   public httpUrl?: string;
   public offlineQueueListener?: OfflineQueueListener;
@@ -43,7 +38,7 @@ export class SyncConfig implements DataSyncConfig {
     }
   };
 
-  constructor(clientOptions?: DataSyncConfig) {
+  constructor(clientOptions?: OffixClientConfig) {
     if (clientOptions && clientOptions.storage) {
       this.cacheStorage = clientOptions.storage;
       this.offlineStorage = clientOptions.storage;
@@ -62,7 +57,7 @@ export class SyncConfig implements DataSyncConfig {
     this.init(clientOptions);
   }
 
-  private init(clientOptions?: DataSyncConfig) {
+  private init(clientOptions?: OffixClientConfig) {
     Object.assign(this, clientOptions);
     this.validate();
   }
