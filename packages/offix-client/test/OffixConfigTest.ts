@@ -1,6 +1,5 @@
 import { OffixDefaultConfig } from "../src/config/OffixDefaultConfig";
 import { expect } from "chai";
-import { ConfigurationService } from "@aerogear/core";
 import { ConflictResolutionData } from "offix-offline";
 import { OffixClientConfig } from "../src/config/OffixClientConfig";
 import { storage } from "./mock/Storage";

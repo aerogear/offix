@@ -5,7 +5,6 @@ import { OfflineQueueListener } from "offix-offline";
 import { AuthContextProvider } from "../auth/AuthContextProvider";
 import { ObjectState } from "offix-offline";
 import { ConflictListener } from "offix-offline";
-import { ConfigurationService } from "@aerogear/core";
 import { CacheUpdates } from "offix-cache";
 import { RetryLink } from "apollo-link-retry";
 

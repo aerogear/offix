@@ -37,7 +37,6 @@
     "typescript": "3.5.3"
   },
   "dependencies": {
-    "@aerogear/core": "2.5.0",
     "apollo-cache-persist": "0.1.1",
     "apollo-cache-inmemory": "1.5.1",
     "apollo-client": "2.5.1",
