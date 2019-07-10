@@ -1,5 +1,5 @@
 import { Store } from "idb-localstorage";
-import { persistCache } from "@graphqlheroes/apollo-cache-persist";
+import { persistCache } from "apollo-cache-persist";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { PersistedData, PersistentStore } from "offix-offline";
 
