@@ -1,4 +1,3 @@
-import { MutationHelperOptions } from "../cache";
 import { getOperationFieldName } from "../utils/helperFunctions";
 import { CacheOperation } from "../cache/CacheOperation";
 import { generateClientId } from "../utils";

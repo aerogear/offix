@@ -8,7 +8,7 @@ import { isArray } from "util";
 /**
  * Interface to overlay helper internals on top of mutation options.
  */
-export interface MutationHelperOptions extends MutationOptions {
+export interface MutationHelperOptions {
   updateQuery?: Query | Query[];
   operationType?: CacheOperation;
   idField?: string;
@@ -20,7 +20,7 @@ export interface MutationHelperOptions extends MutationOptions {
  * Provides useful helpers for cache updates, optimistic responses, and context
  * @param options see `MutationHelperOptions`
  */
-export const createMutationOptions = (options: MutationHelperOptions): MutationOptions => {
+export const createMutationOptions = (options: MutationOptions & MutationHelperOptions): MutationOptions => {
   const {
     mutation,
     variables,
