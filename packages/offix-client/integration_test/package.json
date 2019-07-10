@@ -26,6 +26,7 @@
     "karma-webpack": "4.0.2",
     "mocha": "6.1.4",
     "offix-server-conflicts": "0.6.0",
+    "subscriptions-transport-ws": "0.9.16",
     "webpack": "4.35.3"
   },
   "devDependencies": {}

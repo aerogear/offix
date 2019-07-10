@@ -9,8 +9,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@aerogear/voyager-server": "^0.5.1",
-    "axios": "^0.18.0",
+    "@aerogear/voyager-server": "0.5.1",
     "express": "^4.16.4",
     "graphql": "0.13.2",
     "graphql-tools": "^4.0.3",

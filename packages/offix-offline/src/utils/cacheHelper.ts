@@ -2,7 +2,7 @@
 import debug from "debug";
 import { Operation } from "apollo-link";
 
-export const logger = debug.default("Offix:Helpers");
+const logger = debug.default("Offix:Helpers");
 
 /**
  * Reads object from cache
