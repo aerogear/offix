@@ -1,8 +1,8 @@
-import { SyncConfig } from "../src/config/SyncConfig";
+import { OffixDefaultConfig } from "../src/config/OffixDefaultConfig";
 import { expect } from "chai";
 import { ConfigurationService } from "@aerogear/core";
 import { ConflictResolutionData } from "offix-offline";
-import { DataSyncConfig } from "../src/config/DataSyncConfig";
+import { OffixClientConfig } from "../src/config/OffixClientConfig";
 import { storage } from "./mock/Storage";
 
 declare var global: any;
@@ -20,7 +20,7 @@ describe("OnOffLink", () => {
       }
     }
   };
-  const configWithStrategy: DataSyncConfig = {
+  const configWithStrategy: OffixClientConfig = {
     httpUrl: "test",
     storage,
     conflictStrategy: {
@@ -29,18 +29,18 @@ describe("OnOffLink", () => {
   };
 
   it("merges config", () => {
-    const config = new SyncConfig(userConfig);
+    const config = new OffixDefaultConfig(userConfig);
     expect(config.httpUrl).eq(userConfig.httpUrl);
     expect(config.retryOptions).eq(userConfig.retryOptions);
   });
 
   it("validates config", () => {
-    const badConstructor = () => new SyncConfig({ storage });
+    const badConstructor = () => new OffixDefaultConfig({ storage });
     expect(badConstructor).to.throw();
   });
 
   it("conflict strategy is a function", () => {
-    const mergedConfig = new SyncConfig(configWithStrategy);
+    const mergedConfig = new OffixDefaultConfig(configWithStrategy);
     if (mergedConfig.conflictStrategy && mergedConfig.conflictStrategy) {
       expect(mergedConfig.conflictStrategy.resolve).to.be.a("Function");
     }

@@ -1,6 +1,6 @@
 import { ApolloClient } from "apollo-client";
-import { DataSyncConfig } from "./config";
-import { SyncConfig } from "./config/SyncConfig";
+import { OffixClientConfig } from "./config";
+import { OffixDefaultConfig } from "./config/OffixDefaultConfig";
 import { createDefaultLink, createOfflineLink, createConflictLink } from "./links/LinksBuilder";
 import { OfflineStore, OfflineQueueListener } from "offix-offline";
 import { OfflineLink } from "offix-offline";
@@ -22,7 +22,7 @@ import { buildCachePersistence } from "./cache";
 *  await offlineClient.init();
 *  ```
 */
-export const createClient = async (userConfig: DataSyncConfig):
+export const createClient = async (userConfig: OffixClientConfig):
   Promise<ApolloOfflineClient> => {
   const offlineClient = new OfflineClient(userConfig);
   return offlineClient.init();
@@ -46,10 +46,10 @@ export class OfflineClient implements ListenerProvider {
   public queueListeners: OfflineQueueListener[] = [];
   private apolloClient?: ApolloOfflineClient;
   private store: OfflineStore;
-  private config: SyncConfig;
+  private config: OffixDefaultConfig;
 
-  constructor(userConfig: DataSyncConfig) {
-    this.config = new SyncConfig(userConfig);
+  constructor(userConfig: OffixClientConfig) {
+    this.config = new OffixDefaultConfig(userConfig);
     this.store = new OfflineStore(this.config.offlineStorage);
     this.setupEventListeners();
   }

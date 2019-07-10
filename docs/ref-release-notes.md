@@ -26,5 +26,11 @@ Conflict interface now has an additional method `mergeOccured` that will be trig
 
 Please refer to documentation for more details.
 
+#### Breaking changes
+
+`DataSyncConfig` interface was renamed to `OffixClientConfig`.
+Please review if your configuration still conforms to the new interface.
+
+
 
 

@@ -1,7 +1,7 @@
 import { WebSocketLink } from "apollo-link-ws";
-import { DataSyncConfig } from "../config";
+import { OffixClientConfig } from "../config";
 
-export const defaultWebSocketLink = (userOptions: DataSyncConfig, config: WebSocketLink.Configuration) => {
+export const defaultWebSocketLink = (userOptions: OffixClientConfig, config: WebSocketLink.Configuration) => {
   const options = config.options || {};
   return new WebSocketLink({
     uri: config.uri,
