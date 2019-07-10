@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { ConflictHandler } from "../src/conflicts/handler/ConflictHandler";
-import { ConflictListener, ConflictResolutionStrategy, clientWins } from "../src";
+import { ConflictListener, ConflictResolutionStrategy, UseClient } from "../src";
 import { VersionedState } from "../src/conflicts/state/VersionedState";
 
 const listener: ConflictListener = {
@@ -11,7 +11,7 @@ const listener: ConflictListener = {
     return "mergeOccurred";
   }
 };
-const strategy: ConflictResolutionStrategy = clientWins;
+const strategy: ConflictResolutionStrategy = UseClient;
 
 const objectState = new VersionedState();
 const nonConflictedSet = {

@@ -5,7 +5,7 @@ import { ConflictResolutionData } from "./strategies/ConflictResolutionData";
 import { isMutation } from "../utils/helpers";
 import { ObjectState, ConflictListener } from "../index";
 import { ConflictResolutionStrategy } from "./strategies/ConflictResolutionStrategy";
-import { clientWins } from "./strategies/strategies";
+import { UseClient } from "./strategies/strategies";
 import { ConflictHandler } from "./handler/ConflictHandler";
 
 /**
@@ -77,7 +77,7 @@ export class ConflictLink extends ApolloLink {
   private conflictHandler(errorResponse: ErrorResponse): Observable<FetchResult> {
     const { response, operation, forward, graphQLErrors } = errorResponse;
     const data = this.getConflictData(graphQLErrors);
-    const individualStrategy = this.strategy || clientWins;
+    const individualStrategy = this.strategy || UseClient;
     if (data && operation.getContext().returnType) {
       const base = operation.getContext().conflictBase;
       const conflictHandler = new ConflictHandler({
