@@ -74,8 +74,12 @@ export const createMutationOptions = <T = {
 export const getUpdateFunction = (
   operation: string,
   idField: string,
-  opType: CacheOperation,
+  opType?: CacheOperation,
   updateQuery?: Query): MutationUpdaterFn => {
+
+  if (!opType) {
+    opType = CacheOperation.ADD;
+  }
 
   if (!updateQuery) {
     return () => {
