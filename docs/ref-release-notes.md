@@ -2,6 +2,10 @@
 
 ### 0.7.0 
 
+#### Support Apollo 2.6.x
+
+Apollo Client 2.6.x with new typings is now supported.
+
 #### Extended conflict support
 
 New conflict implementation requires changes on both client and server.
