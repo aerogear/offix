@@ -319,7 +319,7 @@ describe('Offline mutations', function () {
 
       const response = await client.query({
         query: GET_TASKS,
-        fetchPolicy: 'network-only'
+        fetchPolicy: 'cache-first'
       });
 
       expect(response.data.allTasks).to.exist;
