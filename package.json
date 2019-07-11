@@ -7,7 +7,7 @@
   "scripts": {
     "test": "nyc lerna run test",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "cleanInstall": "lerna exec npm install --ignore-scripts",
+    "cleanInstall": "lerna exec yarn install --ignore-scripts",
     "bootstrap": "lerna bootstrap --no-ci",
     "lint": "tslint '*/*/src/**/*.ts' '*/*/test/**/*.ts'",
     "lint-fix": "tslint '*/*/src/**/*.ts' '*/*/test/**/*.ts' --fix",
@@ -18,7 +18,7 @@
     "updateXml": "lerna exec -- \\$LERNA_ROOT_PATH/scripts/updateCordovaVersions.sh",
     "publish:canary": "lerna publish --canary",
     "publish": "./scripts/publishRelease.sh",
-    "link": "lerna exec npm link .",
+    "link": "lerna exec yarn link",
     "clean": "npm-run-all clean:*",
     "clean:packages": "lerna run clean",
     "clean:dependencies": "lerna clean --yes",

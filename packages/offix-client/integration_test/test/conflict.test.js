@@ -31,12 +31,8 @@ describe('Conflicts', function () {
   const newTask = {
     description: 'new',
     title: 'new',
-    version: 1
-  };
-
-  const updatedTask = {
-    description: 'updated',
-    title: 'updated'
+    version: 1,
+    author: 'new'
   };
 
   let client, networkStatus, store;
@@ -59,7 +55,87 @@ describe('Conflicts', function () {
     client = await newClient({ networkStatus, storage: store });
   });
 
-  const createConflict = async (mutation, variables1, variables2, secondClient, customConflict) => {
+  const createBasicConflict = async (mutation, variables1, variables2, secondClient, customConflict) => {
+    networkStatus.setOnline(true);
+
+    const response = await client.mutate({
+      mutation: ADD_TASK,
+      variables: newTask
+    }).catch(error => {
+      return;
+    })
+
+    const task = response.data.createTask;
+
+    let success = 0;
+    let failure = 0;
+
+    let conflict = 0;
+    let merge = 0;
+
+    const listener = {
+      onOperationSuccess: () => success++,
+      onOperationFailure: () => failure++
+    };
+
+    const conflictListener = {
+      conflictOccurred: () => conflict++,
+      mergeOccurred: () => merge++
+    }
+
+
+    if (customConflict) {
+      const customStrategy = {
+        resolve: ({base: baseData, server: serverData, client: clientData}) => {
+          const something = Object.assign(baseData, serverData, clientData);
+          something.description = 'custom';
+          return something;
+        }
+      };
+      client = await newClient({ networkStatus, storage: store, offlineQueueListener: listener, conflictListener, conflictStrategy: customStrategy });
+    } else {
+      client = await newClient({ networkStatus, storage: store, offlineQueueListener: listener, conflictListener });
+    }
+
+    const result = await client.query({
+      query: GET_TASKS
+    });
+
+    console.log("GET TASKS", result.data.allTasks[0]);
+
+    await secondClient.query({
+      query: GET_TASKS
+    });
+
+    const vars1 = { ...variables1, id: 0, version: 1 };
+    const vars2 = { ...variables2, id: 0, version: 1 };
+    await secondClient.offlineMutation({
+      mutation,
+      variables: vars1,
+      returnType: 'Task'
+    }).catch(error => {
+      return;
+    })
+
+    networkStatus.setOnline(false);
+
+    await client.offlineMutation({
+      mutation,
+      variables: vars2,
+      returnType: 'Task'
+
+    }).catch(error => {
+      return;
+    })
+
+    networkStatus.setOnline(true);
+
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    return { success, failure, conflict, merge };
+  };
+
+  const createAdvancedClientConflict = async (mutation, variables1, variables2, secondClient, customConflict) => {
     networkStatus.setOnline(true);
 
     const response = await client.mutate({
@@ -85,20 +161,7 @@ describe('Conflicts', function () {
       mergeOccurred: () => merge++
     }
 
-
-    if (customConflict) {
-      const customStrategy = {
-        resolve: (base, serverData, clientData, opName) => {
-          const something = Object.assign(base, serverData, clientData);
-          something.description = 'custom';
-          return something;
-        }
-      };
-      client = await newClient({ networkStatus, storage: store, offlineQueueListener: listener, conflictListener, conflictStrategy: customStrategy });
-    } else {
-      client = await newClient({ networkStatus, storage: store, offlineQueueListener: listener, conflictListener });
-    }
-
+    client = await newClient({ networkStatus, storage: store, offlineQueueListener: listener, conflictListener });
 
     await client.query({
       query: GET_TASKS
@@ -110,6 +173,7 @@ describe('Conflicts', function () {
 
     const vars1 = { ...variables1, id: 0, version: 1 };
     const vars2 = { ...variables2, id: 0, version: 1 };
+    const vars3 = { ...variables2, id: 0, version: 1, author: "Advanced conflict author" };
     await secondClient.offlineMutation({
       mutation,
       variables: vars1,
@@ -123,6 +187,84 @@ describe('Conflicts', function () {
       variables: vars2,
       returnType: 'Task'
 
+    }).catch(error => {
+      return;
+    })
+
+    await client.offlineMutation({
+      mutation,
+      variables: vars3,
+      returnType: 'Task'
+
+    }).catch(error => {
+      return;
+    })
+
+    networkStatus.setOnline(true);
+
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    return { success, failure, conflict, merge };
+  };
+
+  const createAdvancedServerConflict = async (mutation, variables1, variables2, secondClient, customConflict) => {
+    networkStatus.setOnline(true);
+
+    const response = await client.mutate({
+      mutation: ADD_TASK,
+      variables: newTask
+    });
+
+    const task = response.data.createTask;
+
+    let success = 0;
+    let failure = 0;
+
+    let conflict = 0;
+    let merge = 0;
+
+    const listener = {
+      onOperationSuccess: () => success++,
+      onOperationFailure: () => failure++
+    };
+
+    const conflictListener = {
+      conflictOccurred: () => conflict++,
+      mergeOccurred: () => merge++
+    }
+
+    client = await newClient({ networkStatus, storage: store, offlineQueueListener: listener, conflictListener });
+
+    await client.query({
+      query: GET_TASKS
+    });
+
+    await secondClient.query({
+      query: GET_TASKS
+    });
+
+    const vars1 = { ...variables1, id: 0, version: 1 };
+    const vars2 = { ...variables2, id: 0, version: 1 };
+    const vars3 = { ...variables2, id: 0, version: 1, author: "Advanced conflict author" };
+    await secondClient.offlineMutation({
+      mutation,
+      variables: vars1,
+      returnType: 'Task'
+    });
+
+    await secondClient.offlineMutation({
+      mutation,
+      variables: vars2,
+      returnType: 'Task'
+    }).catch(ignore => {
+      return;
+    });
+    networkStatus.setOnline(false);
+
+    await client.offlineMutation({
+      mutation,
+      variables: vars3,
+      returnType: 'Task'
     }).catch(error => {
       return;
     })
@@ -143,13 +285,14 @@ describe('Conflicts', function () {
       const networkStatus = newNetworkStatus();
 
       const client2 = await newClient({ networkStatus, storage: store2 });
-      const { success, failure } = await createConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2);
+      const { success, failure } = await createBasicConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2);
 
 
       const response = await client.query({
         query: GET_TASKS,
         fetchPolicy: 'network-only'
       });
+
 
       console.log("ALL TASKS", response.data.allTasks);
 
@@ -167,13 +310,13 @@ describe('Conflicts', function () {
     describe('merge should be called for mergeable conflict', function () {
 
     it('should succeed', async function () {
-      const updatedTitle = { title: "updated", description: "new" };
-      const updatedDescription = { title: "new", description: "updated" };
+      const updatedTitle = { title: "updated", description: "new", author: "new" };
+      const updatedDescription = { title: "new", description: "updated", author: "new" };
       const store2 = new TestStore();
       const networkStatus = newNetworkStatus();
 
       const client2 = await newClient({ networkStatus, storage: store2 });
-      const { success, failure, conflict, merge } = await createConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2);
+      const { success, failure, conflict, merge } = await createBasicConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2);
 
       const response = await client.query({
         query: GET_TASKS,
@@ -203,7 +346,7 @@ describe('Conflicts', function () {
 
       const store2 = new TestStore();
       const client2 = await newClient({ networkStatus, storage: store2 });
-      const { success, failure, conflict } = await createConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedTitleAgain, client2);
+      const { success, failure, conflict } = await createBasicConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedTitleAgain, client2);
 
       const response = await client.query({
         query: GET_TASKS,
@@ -222,8 +365,8 @@ describe('Conflicts', function () {
   describe('custom resolution strategy should override', function () {
 
     it('should succeed', async function () {
-      const updatedTitle = { title: "new", description: "new" };
-      const updatedDescription = { title: "updated", description: "new" };
+      const updatedTitle = { title: "new", description: "new", author: "new" };
+      const updatedDescription = { title: "updated", description: "new", author: "new" };
       const store = new TestStore();
       const networkStatus = newNetworkStatus();
 
@@ -231,7 +374,7 @@ describe('Conflicts', function () {
         networkStatus, storage: store
       });
 
-      const { success, failure } = await createConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2, true);
+      const { success, failure } = await createBasicConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2, true);
 
       const response = await client.query({
         query: GET_TASKS,
@@ -260,7 +403,7 @@ describe('Conflicts', function () {
       const networkStatus = newNetworkStatus();
 
       const client2 = await newClient({ networkStatus, storage: store2 });
-      const { success, failure } = await createConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedBoth, client2);
+      const { success, failure } = await createBasicConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedBoth, client2);
 
       const response = await client.query({
         query: GET_TASKS,
@@ -280,6 +423,67 @@ describe('Conflicts', function () {
 
   });
 
+    describe('multiple offline conflicts should be resolved', function () {
+
+    it('should succeed', async function () {
+      const updatedTitle = { title: "updated", description: "new", author: "new" };
+      const updatedDescription = { title: "new", description: "updated", author: "new" };
+
+      const store2 = new TestStore();
+      const networkStatus = newNetworkStatus();
+
+      const client2 = await newClient({ networkStatus, storage: store2 });
+      const { success, failure } = await createAdvancedClientConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2);
+
+      const response = await client.query({
+        query: GET_TASKS,
+        fetchPolicy: 'network-only'
+      });
+
+      console.log("ALL TASKS", response.data.allTasks);
+
+      expect(success).to.equal(2);
+      expect(failure).to.equal(0);
+
+      expect(response.data.allTasks).to.exist;
+      expect(response.data.allTasks.length).to.equal(1);
+      expect(response.data.allTasks[0].title).to.equal('updated');
+      expect(response.data.allTasks[0].description).to.equal('updated');
+      expect(response.data.allTasks[0].author).to.equal('Advanced conflict author');
+    });
+
+  });
+
+    describe('offline conflict should not be affected by multiple server edits', function () {
+
+    it('should succeed', async function () {
+      const updatedTitle = { title: "updated", description: "new", author: "new" };
+      const updatedDescription = { title: "new", description: "updated", author: "new" };
+
+      const store2 = new TestStore();
+      const networkStatus = newNetworkStatus();
+
+      const client2 = await newClient({ networkStatus, storage: store2 });
+      const { success, failure } = await createAdvancedServerConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2);
+
+      const response = await client.query({
+        query: GET_TASKS,
+        fetchPolicy: 'network-only'
+      });
+
+      console.log("ALL TASKS", response.data.allTasks);
+
+      expect(success).to.equal(1);
+      expect(failure).to.equal(0);
+
+      expect(response.data.allTasks).to.exist;
+      expect(response.data.allTasks.length).to.equal(1);
+      expect(response.data.allTasks[0].title).to.equal('updated');
+      expect(response.data.allTasks[0].description).to.equal('updated');
+      expect(response.data.allTasks[0].author).to.equal('Advanced conflict author');
+    });
+
+  });
 
   server.stop();
 });

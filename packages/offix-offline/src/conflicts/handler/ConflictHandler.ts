@@ -8,7 +8,6 @@ import { ConflictHandlerOptions } from "./ConflictHandlerOptions";
  * - notify listeners about merge/conflict
  */
 export class ConflictHandler {
-
   public conflicted: boolean = false;
   private clientDiff: any = {};
   private serverDiff: any = {};
@@ -25,16 +24,30 @@ export class ConflictHandler {
    * Executes the supplied strategy for each handler
    */
   public executeStrategy() {
-    const resolvedData = this.options.strategy.resolve(this.options.base,
-                                                      this.serverDiff, this.clientDiff, this.options.operationName);
+    const resolvedData = this.options.strategy.resolve({
+      base: this.options.base,
+      server: this.options.server,
+      serverDiff: this.serverDiff,
+      client: this.options.client,
+      clientDiff: this.clientDiff,
+      operation: this.options.operationName
+    });
     this.options.objectState.assignServerState(resolvedData, this.options.server);
     if (this.options.listener) {
       if (this.conflicted) {
-        this.options.listener.conflictOccurred(this.options.operationName, resolvedData,
-          this.options.server, this.options.client);
+        this.options.listener.conflictOccurred(
+          this.options.operationName,
+          resolvedData,
+          this.options.server,
+          this.options.client
+        );
       } else if (this.options.listener.mergeOccurred) {
-        this.options.listener.mergeOccurred(this.options.operationName, resolvedData,
-          this.options.server, this.options.client);
+        this.options.listener.mergeOccurred(
+          this.options.operationName,
+          resolvedData,
+          this.options.server,
+          this.options.client
+        );
       }
     }
 
