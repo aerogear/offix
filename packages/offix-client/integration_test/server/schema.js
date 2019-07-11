@@ -11,6 +11,7 @@ type Task {
   version: Int
   title: String!
   description: String!
+  author: String
 }
 
 type Query {
@@ -20,8 +21,8 @@ type Query {
 }
 
 type Mutation {
-  createTask(title: String!, description: String!): Task
-  updateTask(id: ID!, title: String, description: String, version: Int!): Task
+  createTask(title: String!, description: String!, author: String): Task
+  updateTask(id: ID!, title: String, description: String, version: Int!, author: String): Task
   deleteTask(id: ID!): ID
   onlineOnly(id: ID!): ID
   singleUpload(file: Upload!): File!

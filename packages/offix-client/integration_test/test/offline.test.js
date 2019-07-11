@@ -36,7 +36,8 @@ describe('Offline mutations', function () {
   const newTask = {
     description: 'new',
     title: 'new',
-    version: 1
+    version: 1,
+    author: "new"
   };
 
   const optimisticOptions = {
@@ -335,9 +336,10 @@ describe('Offline mutations', function () {
     beforeEach('prepare data', async function () {
       networkStatus.setOnline(true);
 
-      const response = await client.mutate({
+      const response = await client.offlineMutation({
         mutation: ADD_TASK,
         variables: newTask,
+        returnType: "Task",
         optimisticResponse: createOptimisticResponse(optimisticOptions),
       });
 
@@ -349,8 +351,9 @@ describe('Offline mutations', function () {
     it('should succeed', async function () {
       const variables = { title: 'update1', description: 'merge', id: task.id, version: task.version };
       try {
-        await client.mutate({
+        await client.offlineMutation({
           mutation: UPDATE_TASK,
+          returnType: 'Task',
           variables
         });
       } catch (ignore) { }
@@ -358,8 +361,9 @@ describe('Offline mutations', function () {
 
       variables.title = 'update2';
       try {
-        await client.mutate({
+        await client.offlineMutation({
           mutation: UPDATE_TASK,
+          returnType: 'Task',
           variables
         });
       } catch (ignore) { }
@@ -376,8 +380,7 @@ describe('Offline mutations', function () {
       expect(offlineMutation2.operation.variables.title).to.equal(variables.title);
 
       networkStatus.setOnline(true);
-      console.log("offlineKeys for ", offlineKeys);
-      
+
       await waitFor(() => isQueueEmpty, 100);
       await timeout(100);
 
@@ -415,16 +418,18 @@ describe('Offline mutations', function () {
     it('should succeed', async function () {
       const variables = { title: 'nomerge1', description: 'nomerge', id: task.id, version: task.version };
       try {
-        await client.mutate({
+        await client.offlineMutation({
           mutation: UPDATE_TASK,
+          returnType: "Task",
           variables
         });
       } catch (ignore) { }
 
       variables.title = 'nomerge2';
       try {
-        await client.mutate({
+        await client.offlineMutation({
           mutation: UPDATE_TASK,
+          returnType: "Task",
           variables
         });
       } catch (ignore) { }

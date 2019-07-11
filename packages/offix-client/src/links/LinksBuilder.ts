@@ -11,7 +11,6 @@ import { defaultWebSocketLink } from "./WebsocketLink";
 import { OfflineLink } from "offix-offline";
 import { NetworkStatus, OfflineMutationsHandler, OfflineStore } from "offix-offline";
 import { IDProcessor } from "offix-offline";
-import { ConflictProcessor } from "offix-offline";
 import { IResultProcessor } from "offix-offline";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { BaseLink } from "offix-offline";
@@ -41,8 +40,7 @@ export const createDefaultLink = async (config: OffixClientConfig, offlineLink: 
  */
 export const createOfflineLink = async (config: OffixClientConfig, store: OfflineStore) => {
   const resultProcessors: IResultProcessor[] = [
-    new IDProcessor(),
-    new ConflictProcessor(config.conflictProvider as ObjectState)
+    new IDProcessor()
   ];
   return new OfflineLink(store, {
     listener: config.offlineQueueListener,

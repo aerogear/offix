@@ -9,8 +9,8 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "test": "mocha",
-    "preintegration-test": "cd integration_test && npm install",
-    "integration-test": "cd integration_test && npm test"
+    "preintegration-test": "cd integration_test && yarn install",
+    "integration-test": "cd integration_test && yarn run test"
   },
   "license": "Apache-2.0",
   "repository": {

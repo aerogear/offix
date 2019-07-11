@@ -5,7 +5,6 @@ import { OperationQueueEntry } from "../OperationQueueEntry";
  * Interface that can be used to perform operation on result data for offline queue.
  *
  * @see IDProcessor
- * @see ConflictProcessor
  */
 export interface IResultProcessor {
 

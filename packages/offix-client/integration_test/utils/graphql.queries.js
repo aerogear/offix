@@ -1,12 +1,13 @@
 import gql from 'graphql-tag';
 
 export const ADD_TASK = gql`
-  mutation createTask($description: String!, $title: String!) {
-    createTask(description: $description, title: $title) {
+  mutation createTask($description: String!, $title: String!, $author: String ) {
+    createTask(description: $description, title: $title, author: $author) {
       id
       title
       description
       version
+      author
     }
   }
 `;
@@ -18,6 +19,7 @@ export const GET_TASKS = gql`
       title
       description
       version
+      author
     }
   }
 `;
@@ -29,23 +31,25 @@ export const DELETE_TASK = gql`
 `;
 
 export const UPDATE_TASK = gql`
-  mutation updateTask($description: String, $id: ID!, $title: String, $version: Int!) {
-    updateTask(description: $description, id: $id, title: $title, version: $version) {
+  mutation updateTask($description: String, $id: ID!, $title: String, $version: Int!, $author: String) {
+    updateTask(description: $description, id: $id, title: $title, version: $version, author: $author) {
       description
       id
       title
       version
+      author
     }
   }
 `;
 
 export const UPDATE_TASK_CLIENT_RESOLUTION = gql`
-  mutation updateTask($description: String, $id: ID!, $title: String, $version: Int!) {
-    updateTask(description: $description, id: $id, title: $title, version: $version) {
+  mutation updateTask($description: String, $id: ID!, $title: String, $version: Int!, $author: String) {
+    updateTask(description: $description, id: $id, title: $title, version: $version, author: $author) {
       description
       id
       title
       version
+      author
     }
   }
 `;
@@ -53,7 +57,7 @@ export const UPDATE_TASK_CLIENT_RESOLUTION = gql`
 export const ONLINE_ONLY = gql`
   mutation onlineOnly($id: ID!) {
     onlineOnly(id: $id) @onlineOnly {
-      id
+      title
     }
   }
 `;
@@ -65,6 +69,7 @@ export const TASK_CREATED = gql`
       title
       description
       version
+      author
     }
   }
 `;

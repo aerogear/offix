@@ -63,7 +63,7 @@ describe('Subscriptions', function () {
         query: GET_TASKS,
         fetchPolicy: 'network-only'
       });
-    
+
       tasks.subscribeToMore({
         document: TASK_CREATED,
         updateQuery: (prev, { subscriptionData }) => {
@@ -79,17 +79,17 @@ describe('Subscriptions', function () {
           }
         }
       });
-      
-      let allTasks = [];
 
+      let allTasks = [];
       tasks.subscribe(result => {
         allTasks = result.data && result.data.allTasks;
       });
 
       await new Promise(resolve => setTimeout(resolve, 100));
 
-      await client.mutate({
+      await client.offlineMutation({
         mutation: ADD_TASK,
+        returnType: "Task",
         variables: newTask
       });
 

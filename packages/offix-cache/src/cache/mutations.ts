@@ -17,6 +17,13 @@ export interface MutationHelperOptions<T = {
   returnType?: string;
 }
 
+export interface CacheUpdateOptions {
+  operation: string;
+  idField?: string;
+  operationType?: CacheOperation;
+  updateQuery?: Query;
+}
+
 /**
  * Creates a MutationOptions object which can be used with Apollo Client's mutate function
  * Provides useful helpers for cache updates, optimistic responses, and context
@@ -49,11 +56,21 @@ export const createMutationOptions = <T = {
   const update: MutationUpdaterFn = (cache, { data }) => {
     if (isArray(updateQuery)) {
       for (const query of updateQuery) {
-        const updateFunction = getUpdateFunction(operationName, idField, operationType, query);
+        const updateFunction = getUpdateFunction({
+            operation: operationName,
+            idField,
+            operationType,
+            updateQuery: query
+          });
         updateFunction(cache, { data });
       }
     } else {
-      const updateFunction = getUpdateFunction(operationName, idField, operationType, updateQuery);
+      const updateFunction = getUpdateFunction({
+        operation: operationName,
+        idField,
+        operationType,
+        updateQuery
+      });
       updateFunction(cache, { data });
     }
   };
@@ -69,14 +86,15 @@ export const createMutationOptions = <T = {
  * @param operation The title of the operation being performed
  * @param idField The id field the item keys off
  * @param updateQuery The Query to update in the cache
- * @param opType The type of operation being performed
+ * @param operationType The type of operation being performed. Defaults to "add".
  */
-export const getUpdateFunction = (
-  operation: string,
-  idField: string,
-  opType: CacheOperation,
-  updateQuery?: Query): MutationUpdaterFn => {
-
+export const getUpdateFunction = (options: CacheUpdateOptions): MutationUpdaterFn => {
+  const {
+    operation,
+    updateQuery,
+    operationType = CacheOperation.ADD,
+    idField = "id"
+  } = options;
   if (!updateQuery) {
     return () => {
       return;
@@ -88,7 +106,7 @@ export const getUpdateFunction = (
 
   let updateFunction: MutationUpdaterFn;
 
-  switch (opType) {
+  switch (operationType) {
     case CacheOperation.ADD:
       updateFunction = (cache, { data }) => {
         try {
