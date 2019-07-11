@@ -49,7 +49,7 @@ export const createMutationOptions = (options: MutationHelperOptions): MutationO
       updateFunction(cache, { data });
     }
   };
-  return { ...options, update, context: {...context, returnType} };
+  return { ...options, update, context: { ...context, returnType } };
 };
 
 /**
@@ -75,29 +75,38 @@ export const getUpdateFunction = (
   switch (opType) {
     case CacheOperation.ADD:
       updateFunction = (cache, { data }) => {
-        try {
-          if (data) {
-            let queryResult = cache.readQuery({ query, variables }) as any;
-            const operationData = data[operation];
-            const result = queryResult[queryField];
-            if (result && operationData) {
-              if (!result.find((item: any) => {
-                return item[idField] === operationData[idField];
-              })) {
-                result.push(operationData);
-              }
-            } else {
-              queryResult = [result];
-            }
-            cache.writeQuery({
-              query,
-              variables,
-              data: queryResult
-            });
+        if (data) {
+          const operationData = data[operation];
+          let queryResult;
+          try {
+            queryResult = cache.readQuery({ query, variables }) as any;
+          } catch (e) {
+            // Cache do not contain query item and we can create it
+            cache.writeQuery({ query, variables, data });
+            return;
           }
-        } catch (e) {
-          console.info(e);
+
+          const result = queryResult[queryField];
+          if (result && operationData) {
+            if (!Array.isArray(result)) {
+              return;
+            }
+            const foundResult = result.find((item: any) => {
+              return item[idField] === operationData[idField];
+            });
+            if (!foundResult) {
+              result.push(operationData);
+            }
+          } else {
+            queryResult = [result];
+          }
+          cache.writeQuery({
+            query,
+            variables,
+            data: queryResult
+          });
         }
+
       };
       break;
     case CacheOperation.DELETE:
