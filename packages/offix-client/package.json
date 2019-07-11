@@ -1,6 +1,6 @@
 {
   "name": "offix-client",
-  "version": "0.7.0-rc.1",
+  "version": "0.7.0-rc.2",
   "description": "Offix GraphQL Offline Client",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -32,10 +32,10 @@
     "del": "5.0.0",
     "fetch-mock": "7.3.6",
     "graphql": "14.4.2",
+    "graphql-tag": "2.10.1",
     "mocha": "6.1.4",
     "ts-node": "8.3.0",
-    "typescript": "3.5.3",
-    "graphql-tag": "2.10.1"
+    "typescript": "3.5.3"
   },
   "dependencies": {
     "apollo-cache-inmemory": "1.6.2",
@@ -49,8 +49,8 @@
     "apollo-upload-client": "11.0.0",
     "debug": "4.1.1",
     "idb-localstorage": "0.2.0",
-    "offix-cache": "0.7.0-rc.1",
-    "offix-offline": "0.7.0-rc.1",
+    "offix-cache": "0.7.0-rc.2",
+    "offix-offline": "0.7.0-rc.2",
     "subscriptions-transport-ws": "0.9.16"
   },
   "peerDependencies": {
