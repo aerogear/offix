@@ -23,7 +23,7 @@ describe("OnOffLink", () => {
     httpUrl: "test",
     storage,
     conflictStrategy: {
-      resolve: (base: ConflictResolutionData, server: ConflictResolutionData, client: ConflictResolutionData) => server
+      resolve: ({ base, server, client }) => server
     }
   };
 
