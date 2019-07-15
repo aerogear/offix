@@ -109,29 +109,32 @@ export const getUpdateFunction = (options: CacheUpdateOptions): MutationUpdaterF
   switch (operationType) {
     case CacheOperation.ADD:
       updateFunction = (cache, { data }) => {
-        try {
-          if (data) {
-            let queryResult = cache.readQuery({ query, variables }) as any;
-            const operationData = data[operation];
-            const result = queryResult[queryField];
-            if (result && operationData) {
-              if (!result.find((item: any) => {
-                return item[idField] === operationData[idField];
-              })) {
-                result.push(operationData);
-              }
-            } else {
-              queryResult = [result];
-            }
-            cache.writeQuery({
-              query,
-              variables,
-              data: queryResult
-            });
+        let queryResult;
+        if (data) {
+          const operationData = data[operation];
+          try {
+            queryResult = cache.readQuery({ query, variables }) as any;
+          } catch (e) {
+            queryResult = {};
           }
-        } catch (e) {
-          console.info(e);
+
+          const result = queryResult[queryField];
+          if (result && operationData) {
+            if (!result.find((item: any) => {
+              return item[idField] === operationData[idField];
+            })) {
+              result.push(operationData);
+            }
+          } else {
+            queryResult[queryField] = [result];
+          }
+          cache.writeQuery({
+            query,
+            variables,
+            data: queryResult
+          });
         }
+
       };
       break;
     case CacheOperation.DELETE:
