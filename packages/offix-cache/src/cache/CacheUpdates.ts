@@ -17,9 +17,12 @@ export interface CacheUpdates {
   [key: string]: MutationUpdaterFn;
 }
 
-export type UpdateFunction = (array: [CacheItem], newItem?: CacheItem) => CacheItem[];
+/**
+ * Definition of function used for subscribeToMore cache updates
+ */
+export type SubscribeToMoreUpdateFunction = (array: [CacheItem], newItem?: CacheItem) => CacheItem[];
 
-export interface CacheItem {
+interface CacheItem {
   [key: string]: any;
 }
 
@@ -28,4 +31,7 @@ export interface QueryWithVariables {
   variables?: OperationVariables;
 }
 
-export type Query = QueryWithVariables | DocumentNode;
+/**
+ * Defines query with variables or single query as DocumentNode
+ */
+export type CacheUpdatesQuery = QueryWithVariables | DocumentNode;
