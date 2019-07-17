@@ -1,7 +1,7 @@
 import { MutationOptions, MutationUpdaterFn, OperationVariables } from "apollo-client";
 import { CacheOperation } from "./CacheOperation";
 import { createOptimisticResponse } from "../optimisticResponse";
-import { Query } from "./CacheUpdates";
+import { CacheUpdatesQuery } from "./CacheUpdates";
 import { getOperationFieldName, deconstructQuery } from "../utils/helperFunctions";
 import { isArray } from "util";
 
@@ -11,17 +11,60 @@ import { isArray } from "util";
 export interface MutationHelperOptions<T = {
   [key: string]: any;
 }, TVariables = OperationVariables> extends MutationOptions<T, TVariables> {
-  updateQuery?: Query | Query[];
+  /**
+   * Query or many queries we want to update
+   */
+  updateQuery: CacheUpdatesQuery | CacheUpdatesQuery[];
+  /**
+   * Defines operation type used to make appropriate changes in cache
+   *
+   * @default CacheOperation.ADD will append object to existing array of objects
+   */
   operationType?: CacheOperation;
+
+  /**
+   * String value for the id field for particular object.
+   *
+   * @default `id` field on the type
+   */
   idField?: string;
+
+  /**
+   * Mutation return type
+   * For example for `modifyObject(value: String!): Object` value will be `Object`
+   */
   returnType?: string;
 }
 
+/**
+ * Set of parameters used to generate the update function to
+ * update the cache for a given operation and query.
+ */
 export interface CacheUpdateOptions {
-  operation: string;
-  idField?: string;
+  /**
+   * Key used to access mutation result.
+   * For example for `modifyObject(value: String!)` mutation it will be `modifyObject`
+   */
+  mutationName: string;
+
+  /**
+   * GraphQL query we want to update
+   */
+  updateQuery: CacheUpdatesQuery;
+
+  /**
+   * Defines operation type used to make appropriate changes in cache
+   *
+   * @default CacheOperation.ADD
+   */
   operationType?: CacheOperation;
-  updateQuery?: Query;
+
+  /**
+   * String value for the id field for particular object.
+   *
+   * @default uses `id` field on the type
+   */
+  idField?: string;
 }
 
 /**
@@ -42,7 +85,7 @@ export const createMutationOptions = <T = {
     idField = "id",
     context
   } = options;
-  const operationName = getOperationFieldName(mutation);
+
   if (returnType && !options.optimisticResponse) {
     options.optimisticResponse = createOptimisticResponse({
       mutation,
@@ -53,65 +96,63 @@ export const createMutationOptions = <T = {
     });
   }
 
-  const update: MutationUpdaterFn = (cache, { data }) => {
-    if (isArray(updateQuery)) {
-      for (const query of updateQuery) {
-        const updateFunction = getUpdateFunction({
-            operation: operationName,
+  const mutationName = getOperationFieldName(mutation);
+  if (updateQuery) {
+    const update: MutationUpdaterFn = (cache, { data }) => {
+      if (isArray(updateQuery)) {
+        for (const query of updateQuery) {
+          const updateFunction = getUpdateFunction({
+            mutationName,
             idField,
             operationType,
             updateQuery: query
           });
+          updateFunction(cache, { data });
+        }
+      } else {
+        const updateFunction = getUpdateFunction({
+          mutationName,
+          idField,
+          operationType,
+          updateQuery
+        });
         updateFunction(cache, { data });
       }
-    } else {
-      const updateFunction = getUpdateFunction({
-        operation: operationName,
-        idField,
-        operationType,
-        updateQuery
-      });
-      updateFunction(cache, { data });
-    }
-  };
-  options.update = update;
+    };
+    options.update = update;
+  }
+
   options.context = { ...context, returnType };
   return options;
 };
 
 /**
  * Generate the update function to update the cache for a given operation and query.
- * Ignores the scenario where the cache operation is an update as this is handled automatically
- * from Apollo Client 2.5 onwards.
- * @param operation The title of the operation being performed
- * @param idField The id field the item keys off
- * @param updateQuery The Query to update in the cache
- * @param operationType The type of operation being performed. Defaults to "add".
- */
+
+ **/
 export const getUpdateFunction = (options: CacheUpdateOptions): MutationUpdaterFn => {
+  if (!options.updateQuery) {
+    throw new Error("Required updateQuery parameter is not supplied");
+  }
+  if (!options.mutationName) {
+    throw new Error("Required mutationName parameter is not supplied");
+  }
   const {
-    operation,
+    mutationName,
     updateQuery,
     operationType = CacheOperation.ADD,
     idField = "id"
   } = options;
-  if (!updateQuery) {
-    return () => {
-      return;
-    };
-  }
 
   const { query, variables } = deconstructQuery(updateQuery);
   const queryField = getOperationFieldName(query);
-
   let updateFunction: MutationUpdaterFn;
-
   switch (operationType) {
     case CacheOperation.ADD:
       updateFunction = (cache, { data }) => {
         let queryResult;
         if (data) {
-          const operationData = data[operation];
+          const operationData = data[mutationName];
           try {
             queryResult = cache.readQuery({ query, variables }) as any;
           } catch (e) {
@@ -120,13 +161,15 @@ export const getUpdateFunction = (options: CacheUpdateOptions): MutationUpdaterF
 
           const result = queryResult[queryField];
           if (result && operationData) {
+            // FIXME deduplication should happen on subscriptions
+            // We do that every time no matter if we have subscription
             if (!result.find((item: any) => {
               return item[idField] === operationData[idField];
             })) {
               result.push(operationData);
             }
           } else {
-            queryResult[queryField] = [result];
+            queryResult[queryField] = [operationData];
           }
           cache.writeQuery({
             query,
@@ -139,30 +182,26 @@ export const getUpdateFunction = (options: CacheUpdateOptions): MutationUpdaterF
       break;
     case CacheOperation.DELETE:
       updateFunction = (cache, { data }) => {
-        try {
-          if (data) {
-            const queryResult = cache.readQuery({ query, variables }) as any;
-            const operationData = data[operation];
-            if (operationData) {
-              let toBeRemoved = {} as any;
-              if (typeof operationData === "string") {
-                toBeRemoved[idField] = operationData;
-              } else {
-                toBeRemoved = operationData;
-              }
-              const newData = queryResult[queryField].filter((item: any) => {
-                return toBeRemoved[idField] !== item[idField];
-              });
-              queryResult[queryField] = newData;
-              cache.writeQuery({
-                query,
-                variables,
-                data: queryResult
-              });
+        if (data) {
+          const queryResult = cache.readQuery({ query, variables }) as any;
+          const operationData = data[mutationName];
+          if (operationData) {
+            let toBeRemoved = {} as any;
+            if (typeof operationData === "string") {
+              toBeRemoved[idField] = operationData;
+            } else {
+              toBeRemoved = operationData;
             }
+            const newData = queryResult[queryField].filter((item: any) => {
+              return toBeRemoved[idField] !== item[idField];
+            });
+            queryResult[queryField] = newData;
+            cache.writeQuery({
+              query,
+              variables,
+              data: queryResult
+            });
           }
-        } catch (e) {
-          console.info(e);
         }
       };
       break;
