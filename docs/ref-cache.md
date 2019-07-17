@@ -70,6 +70,10 @@ const options = createMutationOptions(mutationOptions);
 apolloClient.mutate(options);
 ```
 
+> NOTE: Cache helpers currently support only GraphQL Queries that return arrays. 
+For example `getUsers():[User]`.
+When working with single objects returned by Queries we usually do not need use any helper as Query will be updated automatically on every update
+
 ## Subscription Helpers
 
 `offix-cache` provides a subscription cache update method helper which can generate the necessary options to be used with Apollo Client's `subscribeToMore` function.
