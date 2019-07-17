@@ -2,7 +2,7 @@ import { DocumentNode } from "apollo-link";
 import { OperationVariables } from "apollo-client";
 import { resultKeyNameFromField } from "apollo-utilities";
 import { OperationDefinitionNode, FieldNode } from "graphql";
-import { Query, QueryWithVariables } from "../cache/CacheUpdates";
+import { CacheUpdatesQuery, QueryWithVariables } from "../cache/CacheUpdates";
 import { CLIENT_ID_PREFIX } from "./constants";
 
 // Returns true if ID was generated on client
@@ -32,7 +32,7 @@ export const getOperationFieldName = (operation: DocumentNode): string => result
 );
 
 // this function takes a Query and returns its constituent parts, if available.
-export const deconstructQuery = (updateQuery: Query): QueryWithVariables => {
+export const deconstructQuery = (updateQuery: CacheUpdatesQuery): QueryWithVariables => {
   let query: DocumentNode;
   let variables: OperationVariables | undefined;
   if (isQueryWithVariables(updateQuery)) {
@@ -44,7 +44,7 @@ export const deconstructQuery = (updateQuery: Query): QueryWithVariables => {
   return { query, variables };
 };
 
-const isQueryWithVariables = (doc: Query): doc is QueryWithVariables => {
+const isQueryWithVariables = (doc: CacheUpdatesQuery): doc is QueryWithVariables => {
   if ((doc as QueryWithVariables).variables) {
     return true;
   } else {

@@ -1,12 +1,12 @@
-import { SubscribeToMoreOptions, OperationVariables, ObservableQuery } from "apollo-client";
-import { QueryWithVariables, UpdateFunction, Query } from "./CacheUpdates";
+import { SubscribeToMoreOptions, OperationVariables, ObservableQuery, MutationUpdaterFn } from "apollo-client";
+import { QueryWithVariables, CacheUpdatesQuery, SubscribeToMoreUpdateFunction } from "./CacheUpdates";
 import { DocumentNode } from "graphql";
 import { CacheOperation } from "./CacheOperation";
 import { getOperationFieldName } from "..";
 
 export interface SubscriptionHelperOptions {
-  subscriptionQuery: Query;
-  cacheUpdateQuery: Query;
+  subscriptionQuery: CacheUpdatesQuery;
+  cacheUpdateQuery: CacheUpdatesQuery;
   operationType: CacheOperation;
   idField?: string;
 }
@@ -68,8 +68,8 @@ export const createSubscriptionOptions = (options: SubscriptionHelperOptions): S
  * @param opType The type of operation being performed
  * @param idField The id field the item keys off
  */
-export const getUpdateQueryFunction = (opType: CacheOperation, idField = "id"): UpdateFunction => {
-  let updateFunction: UpdateFunction;
+export const getUpdateQueryFunction = (opType: CacheOperation, idField = "id"): SubscribeToMoreUpdateFunction => {
+  let updateFunction: SubscribeToMoreUpdateFunction;
 
   switch (opType) {
     case CacheOperation.ADD:
