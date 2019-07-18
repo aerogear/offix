@@ -9,6 +9,7 @@ export interface OfflineItem {
   id: string;
   conflictBase?: any;
   returnType?: string;
+  idField?: string;
   optimisticResponse?: any;
   conflictStrategy?: string;
 }
@@ -22,6 +23,7 @@ export class OperationQueueEntry implements OfflineItem {
   public readonly operation: Operation;
   public readonly optimisticResponse?: any;
   public readonly id: string;
+  public readonly idField?: string = "id";
   public readonly returnType?: string;
   public readonly conflictBase: any;
   public conflictStrategy?: string;
@@ -43,6 +45,7 @@ export class OperationQueueEntry implements OfflineItem {
       const context = operation.getContext();
       this.conflictBase = context.conflictBase;
       this.returnType = context.returnType;
+      this.idField = context.idField;
       this.optimisticResponse = context.optimisticResponse;
       if (context.conflictStrategy) {
         this.conflictStrategy = context.conflictStrategy.id;
@@ -55,7 +58,7 @@ export class OperationQueueEntry implements OfflineItem {
    * For new items made when offline changes will always have client side id.
    */
   public hasClientId() {
-    return isClientGeneratedId(this.operation.variables.id);
+    return isClientGeneratedId(this.operation.variables[this.idField as string]);
   }
 
   /**
@@ -66,6 +69,7 @@ export class OperationQueueEntry implements OfflineItem {
       operation: this.operation,
       optimisticResponse: this.optimisticResponse,
       id: this.id,
+      idField: this.idField,
       returnType: this.returnType,
       conflictBase: this.conflictBase,
       conflictStrategy: this.conflictStrategy

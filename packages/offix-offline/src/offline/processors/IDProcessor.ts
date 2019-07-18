@@ -17,22 +17,24 @@ export class IDProcessor implements IResultProcessor {
       return;
     }
     const { operation: { operationName }, optimisticResponse } = entry;
+    const idField = entry.idField || "id";
+
     if (!result ||
       !optimisticResponse ||
       !optimisticResponse[operationName]) {
       return;
     }
 
-    let clientId = optimisticResponse[operationName].id;
+    let clientId = optimisticResponse[operationName][idField];
     if (!clientId) {
       return;
     }
     // Ensure we dealing with string
     clientId = clientId.toString();
-    if (isClientGeneratedId(optimisticResponse[operationName].id)) {
+    if (isClientGeneratedId(optimisticResponse[operationName][idField])) {
       queue.forEach(({ operation: op }) => {
-        if (op.variables.id === clientId) {
-          op.variables.id = result.data && result.data[operationName].id;
+        if (op.variables[idField] === clientId) {
+          op.variables[idField] = result.data && result.data[operationName][idField];
         }
       });
     }

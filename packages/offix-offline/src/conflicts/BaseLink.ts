@@ -35,7 +35,8 @@ export class BaseLink extends ApolloLink {
   }
 
   private processBaseState(operation: Operation, forward: NextLink): Observable<FetchResult> {
-    const conflictBase = getObjectFromCache(operation, operation.variables.id);
+    const idField = operation.getContext().idField || "id";
+    const conflictBase = getObjectFromCache(operation, operation.variables[idField]);
     if (conflictBase && Object.keys(conflictBase).length !== 0) {
       if (this.stater.hasConflict(operation.variables, conflictBase)) {
         // 🙊 Input data is conflicted with the latest server projection
