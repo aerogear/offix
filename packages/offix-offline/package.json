@@ -28,10 +28,10 @@
     "@types/mocha": "5.2.7",
     "chai": "4.2.0",
     "del": "5.0.0",
-    "fetch-mock": "7.3.6",
+    "fetch-mock": "7.3.7",
     "graphql": "14.4.2",
     "graphql-tag": "2.10.1",
-    "mocha": "6.1.4",
+    "mocha": "6.2.0",
     "ts-node": "8.3.0",
     "typescript": "3.5.3"
   },
