@@ -10,7 +10,9 @@ export const defaultWebSocketLink = (userOptions: OffixClientConfig, config: Web
       connectionParams: async () => {
         if (userOptions.authContextProvider) {
           const { header } = await userOptions.authContextProvider();
-          return { Authorization: header };
+          return {
+            headers: header
+          };
         }
       },
       connectionCallback: options.connectionCallback,
