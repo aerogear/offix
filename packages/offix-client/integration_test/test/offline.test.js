@@ -459,6 +459,48 @@ describe('Offline mutations', function () {
     });
   });
 
+  describe('ensure offline params are added to offline object ', function () {
+
+    let task;
+
+    beforeEach('prepare data', async function () {
+      client = await newClient({ networkStatus, storage: store, mutationsQueueName });
+      networkStatus.setOnline(true);
+
+      const response = await client.mutate({
+        mutation: ADD_TASK,
+        variables: newTask,
+        optimisticResponse: createOptimisticResponse(optimisticOptions),
+      });
+
+      task = response.data.createTask;
+
+      networkStatus.setOnline(false);
+    });
+
+    it('should succeed', async function () {
+      const variables = { title: 'nomerge1', description: 'nomerge', id: task.id, version: task.version };
+      try {
+        await client.offlineMutation({
+          mutation: UPDATE_TASK,
+          returnType: "Task",
+          variables,
+          idField: "someOtherField",
+          returnType: "ADifferentType"
+        });
+      } catch (ignore) { }
+
+
+      const offlineKeys = await store.getItem(offlineMetaKey);
+      const offlineMutation1 = await store.getItem("offline:" + offlineKeys[0]);
+
+      expect(offlineMutation1).to.exist;
+      expect(offlineMutation1.returnType).to.equal('ADifferentType');
+      expect(offlineMutation1.idField).to.equal('someOtherField');
+
+    });
+  });
+
   describe('notify about offline changes', function () {
     it('should succeed', async function () {
       let offlineOps = 0;
