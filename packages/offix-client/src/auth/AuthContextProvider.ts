@@ -1,7 +1,7 @@
 /**
  * Contains header information that can be supplied to graphql requests.
  * E.g.:
- * 
+ *
  * ```
  *  {
  *    headers: {
@@ -13,7 +13,7 @@
 export interface AuthContext {
   headers: {
     [headerName: string]: any
-  }
+  };
 }
 
 /**
