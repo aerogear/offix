@@ -28,7 +28,7 @@ export interface ApolloOfflineClient extends ApolloClient<NormalizedCacheObject>
    * Allows the client to perform an offline mutation
    * @param options the mutation helper options used to build the offline mutation
    */
-  offlineMutation<T = any, TVariables = OperationVariables>(
+  offlineMutate<T = any, TVariables = OperationVariables>(
     options: MutationHelperOptions<T, TVariables>): Promise<FetchResult<T>>;
 
 }

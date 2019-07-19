@@ -64,7 +64,7 @@ const findTaskByTitle = async (client, options) => {
 
 const offlineMutationWhileOffline = async (client, options) => {
   try {
-    await client.offlineMutation(options);
+    await client.offlineMutate(options);
   } catch (e) {
     if (e.networkError && e.networkError.offline) {
       // expected result

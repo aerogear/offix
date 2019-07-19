@@ -14,7 +14,7 @@ Because of this, when mutations that can change query results are performed, the
 
 Offix makes your cache simple to manage, with out of the box cache helpers in `offix-cache` or by automatically wrapping these helpers in offix-client through the `OfflineClient` class.
 
-To use the `offlineMutation` function, we first need to create our `MutationHelperOptions` object. This is an extension of Apollo's MutationOptions.
+To use the `offlineMutate` function, we first need to create our `MutationHelperOptions` object. This is an extension of Apollo's MutationOptions.
 
 ```javascript
 const { CacheOperation } = require('offix-cache');
@@ -50,23 +50,23 @@ const mutationOptions = {
 };
 ```
 
-We then simply pass this object to `offlineMutation` and our cache is automatically kept up to date.
+We then simply pass this object to `offlineMutate` and our cache is automatically kept up to date.
 
 ```javascript
-client.offlineMutation(mutationOptions);
+client.offlineMutate(mutationOptions);
 ```
 
 
 ## Offline Workflow
 
-When offline `client.offlineMutation` function will return immediately after is called.
+When offline `client.offlineMutate` function will return immediately after is called.
 Returned promise will resolve into error (`catch` method is triggered).
 Developers can detect if error is an offline error and watch for change to be replicated back to server.
 
 Example:
 
 ```javascript
-client.offlineMutation(...).catch((error)=> {
+client.offlineMutate(...).catch((error)=> {
   // 1. Detect if this was an offline error
   if(error.networkError && error.networkError.offline){
     const offlineError: OfflineError =  error.networkError;

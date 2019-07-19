@@ -87,7 +87,7 @@ describe('Subscriptions', function () {
 
       await new Promise(resolve => setTimeout(resolve, 100));
 
-      await client.offlineMutation({
+      await client.offlineMutate({
         mutation: ADD_TASK,
         returnType: "Task",
         variables: newTask
