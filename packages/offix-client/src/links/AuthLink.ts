@@ -5,9 +5,9 @@ import { OffixClientConfig } from "../config/OffixClientConfig";
 export const createAuthLink = (config: OffixClientConfig): ApolloLink => {
   const asyncHeadersLink = setContext(async (operation, previousContext) => {
     if (config.authContextProvider) {
-      const { header } = await config.authContextProvider();
+      const { headers } = await config.authContextProvider();
       return {
-        headers: header
+        headers
       };
     }
   });
