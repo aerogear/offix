@@ -2,6 +2,13 @@
 
 ### 0.7.0 
 
+#### Dopping support for Apollo mutate method
+
+Apollo Client mutate method is no longer going to offer offline capabilities.
+Developers can have more choice where to use offline and conflict resolution capabilties. 
+
+If you want to use offline capabiltiies for particular operation use `client.offlineMutate` method
+
 #### Support Apollo 2.6.x
 
 Apollo Client 2.6.x with new typings is now supported.
@@ -32,7 +39,13 @@ Please refer to documentation for more details.
 
 #### Breaking changes
 
+##### Renamed offline client method
+
+`offlineMutation` method was renamed to `offlineMutate`
+
+
 ##### DataSync Config renamed 
+
 `DataSyncConfig` interface was renamed to `OffixClientConfig`.
 Please review if your configuration still conforms to the new interface.
 
@@ -48,4 +61,3 @@ Cache Helper interface now will now accept object instead of individual paramete
             updateQuery
  });
 ```
-

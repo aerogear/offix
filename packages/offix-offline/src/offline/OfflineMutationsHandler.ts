@@ -16,7 +16,6 @@ const logger = debug.default(MUTATION_QUEUE_LOGGER);
  */
 export class OfflineMutationsHandler {
 
-
   private mutationCacheUpdates?: CacheUpdates;
 
   constructor(private store: OfflineStore,
