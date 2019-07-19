@@ -58,7 +58,7 @@ describe('Conflicts', function () {
   const createBasicConflict = async (mutation, variables1, variables2, secondClient, customConflict) => {
     networkStatus.setOnline(true);
 
-    const response = await client.mutate({
+    const response = await client.offlineMutation({
       mutation: ADD_TASK,
       variables: newTask
     }).catch(error => {
@@ -138,7 +138,7 @@ describe('Conflicts', function () {
   const createAdvancedClientConflict = async (mutation, variables1, variables2, secondClient, customConflict) => {
     networkStatus.setOnline(true);
 
-    const response = await client.mutate({
+    const response = await client.offlineMutation({
       mutation: ADD_TASK,
       variables: newTask
     });
@@ -210,7 +210,7 @@ describe('Conflicts', function () {
   const createAdvancedServerConflict = async (mutation, variables1, variables2, secondClient, customConflict) => {
     networkStatus.setOnline(true);
 
-    const response = await client.mutate({
+    const response = await client.offlineMutation({
       mutation: ADD_TASK,
       variables: newTask
     });

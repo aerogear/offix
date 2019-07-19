@@ -82,7 +82,7 @@ describe('Offline mutations', function () {
 
     it('should succeed', async function () {
       try {
-        await client.mutate({
+        await client.offlineMutation({
           mutation: ADD_TASK,
           variables: newTask
         });
@@ -105,7 +105,7 @@ describe('Offline mutations', function () {
 
     beforeEach('prepare data', async function () {
       try {
-        await client.mutate({
+        await client.offlineMutation({
           mutation: ADD_TASK,
           variables: newTask
         })
@@ -136,7 +136,7 @@ describe('Offline mutations', function () {
     beforeEach('prepare data', async function () {
       networkStatus.setOnline(true);
 
-      const response = await client.mutate({
+      const response = await client.offlineMutation({
         mutation: ADD_TASK,
         variables: newTask
       });
@@ -149,14 +149,14 @@ describe('Offline mutations', function () {
     it('should succeed', async function () {
       const variables = { ...updatedTask, id: task.id, version: task.version };
       try {
-        await client.mutate({
+        await client.offlineMutation({
           mutation: UPDATE_TASK,
           variables
         });
       } catch (ignore) { }
 
       try {
-        await client.mutate({
+        await client.offlineMutation({
           mutation: DELETE_TASK,
           variables: { id: task.id }
         });
@@ -178,7 +178,7 @@ describe('Offline mutations', function () {
     beforeEach('prepare data', async function () {
       networkStatus.setOnline(true);
 
-      const response = await client.mutate({
+      const response = await client.offlineMutation({
         mutation: ADD_TASK,
         variables: newTask
       });
@@ -189,13 +189,13 @@ describe('Offline mutations', function () {
       const variables = { ...task, ...updatedTask };
 
       try {
-        await client.mutate({
+        await client.offlineMutation({
           mutation: UPDATE_TASK,
           variables
         });
       } catch (ignore) { }
       try {
-        await client.mutate({
+        await client.offlineMutation({
           mutation: DELETE_TASK,
           variables: { id: task.id }
         });
@@ -221,7 +221,7 @@ describe('Offline mutations', function () {
     it('should succeed', async function () {
       let task;
       try {
-        await client.mutate({
+        await client.offlineMutation({
           mutation: ADD_TASK,
           variables: newTask,
           optimisticResponse: createOptimisticResponse(optimisticOptions),
@@ -232,7 +232,7 @@ describe('Offline mutations', function () {
       const variables = { ...updatedTask, id: task.id, version: task.version };
 
       try {
-        await client.mutate({
+        await client.offlineMutation({
           mutation: UPDATE_TASK,
           variables
         });
@@ -257,7 +257,7 @@ describe('Offline mutations', function () {
     it('should succeed', async function () {
       let task;
       try {
-        await client.mutate({
+        await client.offlineMutation({
           mutation: ADD_TASK,
           variables: newTask,
           optimisticResponse: createOptimisticResponse(optimisticOptions),
@@ -268,7 +268,7 @@ describe('Offline mutations', function () {
 
       const variables = { ...updatedTask, id: task.id, version: task.version };
       try {
-        await client.mutate({
+        await client.offlineMutation({
           mutation: UPDATE_TASK,
           variables
         });
@@ -295,7 +295,7 @@ describe('Offline mutations', function () {
       let task;
       let updateMethod = (_, { data: { createTask } }) => task = createTask;
       try {
-        await client.mutate({
+        await client.offlineMutation({
           mutation: ADD_TASK,
           variables: newTask,
           optimisticResponse: createOptimisticResponse(optimisticOptions),
@@ -305,7 +305,7 @@ describe('Offline mutations', function () {
 
       const variables = { ...updatedTask, id: task.id, version: task.version };
       try {
-        await client.mutate({
+        await client.offlineMutation({
           mutation: UPDATE_TASK,
           variables
         });
@@ -404,7 +404,7 @@ describe('Offline mutations', function () {
       client = await newClient({ networkStatus, storage: store, mutationsQueueName });
       networkStatus.setOnline(true);
 
-      const response = await client.mutate({
+      const response = await client.offlineMutation({
         mutation: ADD_TASK,
         variables: newTask,
         optimisticResponse: createOptimisticResponse(optimisticOptions),
@@ -513,7 +513,7 @@ describe('Offline mutations', function () {
 
       client = await newClient({ networkStatus, storage: store, mutationsQueueName, offlineQueueListener: listener });
       try {
-        await client.mutate({
+        await client.offlineMutation({
           mutation: ADD_TASK,
           variables: newTask
         });
@@ -533,7 +533,7 @@ describe('Offline mutations', function () {
     it('should succeed', async function () {
       networkStatus.setOnline(false);
       try {
-        await client.mutate({
+        await client.offlineMutation({
           mutation: ONLINE_ONLY,
           variables: { id: 0 }
         }).catch((error) => {
@@ -541,7 +541,7 @@ describe('Offline mutations', function () {
         });
       } catch (ignore) { }
       try {
-        await client.mutate({
+        await client.offlineMutation({
           mutation: ADD_TASK,
           variables: newTask
         });
