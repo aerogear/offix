@@ -147,42 +147,45 @@ export const getUpdateFunction = (options: CacheUpdateOptions): MutationUpdaterF
   const { query, variables } = deconstructQuery(updateQuery);
   const queryField = getOperationFieldName(query);
   let updateFunction: MutationUpdaterFn;
-  switch (operationType) {
-    case CacheOperation.ADD:
-      updateFunction = (cache, { data }) => {
-        let queryResult;
-        if (data) {
-          const operationData = data[mutationName];
-          try {
-            queryResult = cache.readQuery({ query, variables }) as any;
-          } catch (e) {
-            queryResult = {};
-          }
+  if (operationType === CacheOperation.ADD) {
+    updateFunction = (cache, { data }) => {
+      let queryResult;
+      if (data) {
+        const operationData = data[mutationName];
+        try {
+          queryResult = cache.readQuery({ query, variables }) as any;
+        } catch (e) {
+          queryResult = {};
+        }
 
-          const result = queryResult[queryField];
-          if (result && operationData) {
-            // FIXME deduplication should happen on subscriptions
-            // We do that every time no matter if we have subscription
-            if (!result.find((item: any) => {
-              return item[idField] === operationData[idField];
-            })) {
-              result.push(operationData);
-            }
-          } else {
-            queryResult[queryField] = [operationData];
+        const result = queryResult[queryField];
+        if (result && operationData) {
+          // FIXME deduplication should happen on subscriptions
+          // We do that every time no matter if we have subscription
+          if (!result.find((item: any) => {
+            return item[idField] === operationData[idField];
+          })) {
+            result.push(operationData);
           }
+        } else {
+          queryResult[queryField] = [operationData];
+        }
+        try {
           cache.writeQuery({
             query,
             variables,
             data: queryResult
           });
+          // tslint:disable-next-line: no-empty
+        } finally {
         }
+      }
+    };
 
-      };
-      break;
-    case CacheOperation.DELETE:
-      updateFunction = (cache, { data }) => {
-        if (data) {
+  } else if (operationType === CacheOperation.DELETE) {
+    updateFunction = (cache, { data }) => {
+      if (data) {
+        try {
           const queryResult = cache.readQuery({ query, variables }) as any;
           const operationData = data[mutationName];
           if (operationData) {
@@ -202,14 +205,17 @@ export const getUpdateFunction = (options: CacheUpdateOptions): MutationUpdaterF
               data: queryResult
             });
           }
+          // tslint:disable-next-line: no-empty
+        } finally {
         }
-      };
-      break;
+      }
+    };
+  } else {
     // this default catches the REFRESH case and returns an empty update function which does nothing
-    default:
-      updateFunction = () => {
-        return;
-      };
+    updateFunction = () => {
+      return;
+    };
   }
+
   return updateFunction;
 };
