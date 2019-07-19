@@ -8,11 +8,12 @@ import {
   OfflineLink,
   OfflineMutationsHandler,
   CompositeQueueListener,
-  ListenerProvider
+  ListenerProvider,
+  OfflineError
 } from "offix-offline";
 import { ApolloOfflineClient } from "./ApolloOfflineClient";
 import { MutationHelperOptions, createMutationOptions } from "offix-cache";
-import { FetchResult } from "apollo-link";
+import { FetchResult, Observable } from "apollo-link";
 import { buildCachePersistence } from "./cache";
 
 /**
@@ -104,10 +105,16 @@ export class OfflineClient implements ListenerProvider {
     options: MutationHelperOptions<T, TVariables>): Promise<FetchResult<T>> {
     if (!this.apolloClient) {
       throw new Error("Apollo offline client not initialised before mutation called.");
+    }
+
+    const mutationOptions = createMutationOptions<T, TVariables>(options);
+    if (this.config.networkStatus.isOffline) {
+      // FIXME use internal part of the offline engine for this
+      OfflineMutationsHandler.markAsOffline(mutationOptions);
+      const offlineMutation = this.apolloClient.mutate<T, TVariables>(mutationOptions);
+      return Promise.reject(new OfflineError(offlineMutation));
     } else {
-      return this.apolloClient.mutate<T, TVariables>(
-        createMutationOptions<T, TVariables>(options)
-      );
+      return this.apolloClient.mutate<T, TVariables>(mutationOptions);
     }
   }
 

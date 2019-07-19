@@ -19,7 +19,7 @@ export * from "./offline/storage/defaultStorage";
 export * from "./offline/processors/IDProcessor";
 export * from "./offline/processors/IResultProcessor";
 export * from "./offline/OfflineLinkConfig";
-
+export * from "./offline/OfflineError";
 export * from "./conflicts/strategies/strategies";
 export * from "./conflicts/ConflictLink";
 export * from "./conflicts/strategies/ConflictListener";
