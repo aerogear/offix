@@ -66,9 +66,9 @@ const offlineMutationWhileOffline = async (client, options) => {
   try {
     await client.offlineMutate(options);
   } catch (e) {
-    if (e.networkError && e.networkError.offline) {
+    if (e && e.offline) {
       // expected result
-      return e.networkError;
+      return e;
     } else {
       throw e;
     }

@@ -6,8 +6,8 @@
  * Usage:
  * ```javascript
  * client.offlineMutate(...).catch((error)=> {
- *  if(error.networkError && error.networkError.offline){
- *    const offlineError: OfflineError =  error.networkError;
+ *  if(error && error.offline){
+ *    const offlineError: OfflineError =  error;
  *    offlineError.watchOfflineChange().then(...)
  *  }
  * });

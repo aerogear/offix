@@ -101,14 +101,15 @@ export class OfflineClient implements ListenerProvider {
    *
    * @param options the MutationHelperOptions to create the mutation
    */
-  public offlineMutate<T = any, TVariables = OperationVariables>(
+  public async offlineMutate<T = any, TVariables = OperationVariables>(
     options: MutationHelperOptions<T, TVariables>): Promise<FetchResult<T>> {
     if (!this.apolloClient) {
       throw new Error("Apollo offline client not initialised before mutation called.");
     }
 
     const mutationOptions = createMutationOptions<T, TVariables>(options);
-    if (this.config.networkStatus.isOffline) {
+    const isOffline = await this.config.networkStatus.isOffline();
+    if (isOffline) {
       // FIXME use internal part of the offline engine for this
       OfflineMutationsHandler.markAsOffline(mutationOptions);
       const offlineMutation = this.apolloClient.mutate<T, TVariables>(mutationOptions);

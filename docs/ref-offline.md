@@ -68,8 +68,8 @@ Example:
 ```javascript
 client.offlineMutate(...).catch((error)=> {
   // 1. Detect if this was an offline error
-  if(error.networkError && error.networkError.offline){
-    const offlineError: OfflineError =  error.networkError;
+  if(error && error.offline){
+    const offlineError: OfflineError =  error;
     // 2. We can still track when offline change is going to be replicated.
     offlineError.watchOfflineChange().then(...)
   }
