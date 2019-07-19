@@ -132,7 +132,7 @@ export class OfflineClient implements ListenerProvider {
     const offlineMutationHandler = new OfflineMutationsHandler(this.store,
       this.apolloClient as ApolloOfflineClient,
       this.config);
-    offlineLink.setup(offlineMutationHandler);
+
     // Reschedule offline mutations for new client instance
     await offlineMutationHandler.replayOfflineMutations();
     // After pushing all online changes check and set network status

@@ -1,13 +1,10 @@
 import { ApolloLink, NextLink, Operation, Observable, FetchResult } from "apollo-link";
 import { NetworkInfo, NetworkStatus, OfflineMutationsHandler, OfflineStore } from "../index";
-import { OfflineQueueListener } from "./events/OfflineQueueListener";
+
 import { OfflineQueue } from "./OfflineQueue";
 import * as debug from "debug";
 import { QUEUE_LOGGER } from "../utils/Constants";
-import { OfflineError } from "./OfflineError";
-import { IResultProcessor } from "./processors/IResultProcessor";
-import { CacheUpdates } from "offix-cache";
-import { PersistentStore, PersistedData } from "./storage/PersistentStore";
+
 import { WebNetworkStatus } from "./network/WebNetworkStatus";
 import { OfflineLinkConfig } from "./OfflineLinkConfig";
 
@@ -30,7 +27,6 @@ export class OfflineLink extends ApolloLink {
   private online: boolean = false;
   private queue: OfflineQueue;
   private readonly networkStatus: NetworkStatus;
-  private offlineMutationHandler?: OfflineMutationsHandler;
 
   constructor(store: OfflineStore, options: OfflineLinkConfig) {
     super();
@@ -45,8 +41,8 @@ export class OfflineLink extends ApolloLink {
   public request(operation: Operation, forward: NextLink): Observable<FetchResult> {
     // Reattempting operation that was marked as offline
     if (OfflineMutationsHandler.isMarkedOffline(operation)) {
-      this.queue.persistItemWithQueue(operation).then((operationEntry) => {
-        logger("Enqueueing offline mutation", operation.variables);
+      logger("Enqueueing offline mutation", operation.variables);
+      this.queue.persistItemWithQueue(operation).then(() => {
         return this.queue.enqueueOfflineChange(operation, forward);
       });
     }
@@ -62,6 +58,8 @@ export class OfflineLink extends ApolloLink {
     await this.queue.forwardOperations();
   }
 
+  // FIXME This should not be part of the offline link anymore.
+  // Offline link should be able to enqueue data but we should be using external queue mechanism
   public async initOnlineState() {
     const queue = this.queue;
     const self = this;
@@ -79,7 +77,4 @@ export class OfflineLink extends ApolloLink {
     });
   }
 
-  public setup(handler: OfflineMutationsHandler) {
-    this.offlineMutationHandler = handler;
-  }
 }

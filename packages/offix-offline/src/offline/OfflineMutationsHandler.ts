@@ -16,7 +16,6 @@ const logger = debug.default(MUTATION_QUEUE_LOGGER);
  */
 export class OfflineMutationsHandler {
 
-  public static OFFLINE_MARKER = "isOffline";
 
   private mutationCacheUpdates?: CacheUpdates;
 
@@ -77,7 +76,7 @@ export class OfflineMutationsHandler {
    */
   public getOfflineContext(item: OfflineItem) {
     return {
-      [OfflineMutationsHandler.OFFLINE_MARKER]: true,
+      isOffline: true,
       offlineId: item.id,
       conflictBase: item.conflictBase,
       returnType: item.returnType
@@ -91,7 +90,7 @@ export class OfflineMutationsHandler {
    */
   // tslint:disable-next-line:member-ordering
   public static isMarkedOffline(operation: Operation) {
-    return !!operation.getContext()[OfflineMutationsHandler.OFFLINE_MARKER];
+    return !!operation.getContext().isOffline;
   }
 
   /**
@@ -99,6 +98,6 @@ export class OfflineMutationsHandler {
    */
   // tslint:disable-next-line:member-ordering
   public static markAsOffline(context: any) {
-    return context[OfflineMutationsHandler.OFFLINE_MARKER] = true;
+    return context.isOffline = true;
   }
 }
