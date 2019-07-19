@@ -56,27 +56,17 @@ We then simply pass this object to `offlineMutation` and our cache is automatica
 client.offlineMutation(mutationOptions);
 ```
 
-If you do not wish to use the `offlineMutation` function you can also use the `createMutationOptions` function directly. This function provides an Apollo compatible `MutationOptions` object to pass to your pre-existing client.
-This is shown below where `mutationOptions` is the same object shown in the above code example.
-
-```javascript
-const { createMutationOptions } = require('offix-cache');
-
-const options = createMutationOptions(mutationOptions);
-
-client.mutate(options);
-```
 
 ## Offline Workflow
 
-When offline `client.mutate` function will return immediately after is called.
+When offline `client.offlineMutation` function will return immediately after is called.
 Returned promise will resolve into error (`catch` method is triggered).
 Developers can detect if error is an offline error and watch for change to be replicated back to server.
 
 Example:
 
 ```javascript
-client.mutate(...).catch((error)=> {
+client.offlineMutation(...).catch((error)=> {
   // 1. Detect if this was an offline error
   if(error.networkError && error.networkError.offline){
     const offlineError: OfflineError =  error.networkError;
@@ -87,6 +77,9 @@ client.mutate(...).catch((error)=> {
 ```
 
 > Note: Additionally to watching individual mutations framework offers global offline listener that can be supplied when creating client.
+
+> Note: When using `client.mutate` method offline capabilities will not be enabled.
+Users can easily differenciate between offline enabled API and other API that might not require offline persistence.
 
 ## Global Update Functions
 

@@ -20,7 +20,7 @@ const optimisticResponse = createOptimisticResponse({
   idField: "id"
 })
 
-apolloClient.mutate({
+apolloClient.offlineMutation({
   mutation: ADD_TASK,
   optimisticResponse: optimisticResponse
 })
@@ -67,7 +67,7 @@ Where `mutationOptions` is either of the two objects shown above, we can then pa
 ```javascript
 const options = createMutationOptions(mutationOptions);
 
-apolloClient.mutate(options);
+apolloClient.offlineMutation(options);
 ```
 
 > NOTE: Cache helpers currently support only GraphQL Queries that return arrays. 
