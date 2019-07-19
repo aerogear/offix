@@ -9,9 +9,9 @@ export const defaultWebSocketLink = (userOptions: OffixClientConfig, config: Web
       // Params that can be used to send authentication token etc.
       connectionParams: async () => {
         if (userOptions.authContextProvider) {
-          const { header } = await userOptions.authContextProvider();
+          const { headers } = await userOptions.authContextProvider();
           return {
-            headers: header
+            headers
           };
         }
       },

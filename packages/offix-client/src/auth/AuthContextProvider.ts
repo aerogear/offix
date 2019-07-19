@@ -1,9 +1,19 @@
 /**
- * Contains header and auth token information that can be supplied to graphql requests
+ * Contains header information that can be supplied to graphql requests.
+ * E.g.:
+ * 
+ * ```
+ *  {
+ *    headers: {
+ *      Authorization: 'Bearer 123...'
+ *    }
+ *  }
+ * ```
  */
 export interface AuthContext {
-  header: any;
-  token: string;
+  headers: {
+    [headerName: string]: any
+  }
 }
 
 /**
