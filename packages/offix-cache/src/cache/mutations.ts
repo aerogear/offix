@@ -14,7 +14,7 @@ export interface MutationHelperOptions<T = {
   /**
    * Query or many queries we want to update
    */
-  updateQuery: CacheUpdatesQuery | CacheUpdatesQuery[];
+  updateQuery?: CacheUpdatesQuery | CacheUpdatesQuery[];
   /**
    * Defines operation type used to make appropriate changes in cache
    *
