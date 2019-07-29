@@ -1,5 +1,12 @@
 ## What is new in Offix
 
+### 0.8.0 
+
+#### Offline operations persist optimistic response
+
+Offline operations will now cache update functional and automatically apply optimistic response
+`OffixClientConfig.mutationCacheUpdates` is still required to see optimistic responses after application restart.
+
 ### 0.7.0 
 
 #### Support Apollo 2.6.x
