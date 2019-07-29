@@ -170,7 +170,7 @@ describe("Offline cache and mutations", () => {
       assertTaskEqualTaskTemplate(response.data.allTasks[0]);
     });
 
-    it.skip('query tasks while online, go offline, create task and query tasks again using updateQuery', async function () {
+    it('query tasks while online, go offline, create task and query tasks again using updateQuery', async function () {
 
       const { client, networkStatus: network } = await newClient()
 

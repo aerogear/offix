@@ -48,15 +48,19 @@ export class OfflineMutationsHandler {
   public async mutateOfflineElement(item: OfflineItem) {
     const optimisticResponse = item.optimisticResponse;
     const mutationName = getMutationName(item.operation.query);
+    let context;
     let updateFunction;
+
+    const previousContext = item.operation.getContext();
+    if (previousContext.updateFunction) {
+      updateFunction = previousContext.updateFunction;
+    }
+    context = { ...previousContext, ...this.getOfflineContext(item) };
+
     if (this.mutationCacheUpdates && mutationName) {
       updateFunction = this.mutationCacheUpdates[mutationName];
     }
-    let previousContext;
-    if (item.operation.getContext) {
-      previousContext = item.operation.getContext();
-    }
-    const newContext = this.getOfflineContext(item);
+
     const mutationOptions: MutationOptions = {
       variables: item.operation.variables,
       mutation: item.operation.query,
@@ -65,7 +69,7 @@ export class OfflineMutationsHandler {
       // Pass client update functions
       update: updateFunction,
       // Pass extensions as part of the context
-      context: { ...previousContext, ...newContext }
+      context
     };
     await this.apolloClient.mutate(mutationOptions);
   }
@@ -74,7 +78,7 @@ export class OfflineMutationsHandler {
    * Add info to operation that was done when offline
    */
   public getOfflineContext(item: OfflineItem) {
-    return { isOffline: true, offlineId: item.id, conflictBase: item.conflictBase, returnType: item.returnType};
+    return { isOffline: true, offlineId: item.id, conflictBase: item.conflictBase, returnType: item.returnType };
   }
 
   /**
