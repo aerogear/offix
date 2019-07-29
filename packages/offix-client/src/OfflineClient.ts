@@ -105,10 +105,10 @@ export class OfflineClient implements ListenerProvider {
     if (!this.apolloClient) {
       throw new Error("Apollo offline client not initialised before mutation called.");
     } else {
-      const helperOptions = createMutationOptions<T, TVariables>(options);
-      helperOptions.context.updateFunction = helperOptions.update;
+      const mutationOptions = createMutationOptions<T, TVariables>(options);
+      mutationOptions.context.updateFunction = mutationOptions.update;
       return this.apolloClient.mutate<T, TVariables>(
-        helperOptions
+        mutationOptions
       );
     }
   }
