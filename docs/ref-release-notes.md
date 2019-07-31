@@ -1,11 +1,16 @@
 ## What is new in Offix
 
-### 0.8.0 
+### 0.7.1
 
 #### Offline operations persist optimistic response
 
 Offline operations will now cache update functional and automatically apply optimistic response
 `OffixClientConfig.mutationCacheUpdates` is still required to see optimistic responses after application restart.
+
+#### watchOfflineChange returns result now  
+
+We have discovered bug where `watchOfflineChange` method from `OfflineError` was missing mutation results.
+This is now fixed so your UI can instantly watch for offline chances and render when succeeded.
 
 ### 0.7.0 
 
