@@ -45,7 +45,7 @@ export class OfflineMutationsHandler {
    *
    * @param item
    */
-  public async mutateOfflineElement(item: OfflineItem) {
+  public mutateOfflineElement(item: OfflineItem) {
     const optimisticResponse = item.optimisticResponse;
     const mutationName = getMutationName(item.operation.query);
     let updateFunction;
@@ -67,7 +67,7 @@ export class OfflineMutationsHandler {
       // Pass extensions as part of the context
       context: { ...previousContext, ...newContext }
     };
-    await this.apolloClient.mutate(mutationOptions);
+    return this.apolloClient.mutate(mutationOptions);
   }
 
   /**
