@@ -395,5 +395,37 @@ describe("Offline cache and mutations", () => {
       expect(response3.data.allTasks).to.exist;
       expect(response3.data.allTasks.length).to.equal(0);
     });
+
+    it("query tasks while online, go offline, create task, delete task, go back online using mutationCacheUpdates", async () => {
+
+      const { client, networkStatus: network } = await newClient({
+        mutationCacheUpdates: {
+          createTask: getUpdateFunction({
+            mutationName: 'createTask',
+            updateQuery: GET_TASKS
+          })
+        },
+      });
+
+      // search tasks while online
+      await getTasks(client);
+
+      goOffline(network);
+
+      // create new task while offline
+      const addTaskError = await addTaskWhileOffline(client, { updateQuery: GET_TASKS });
+
+      // retrieve the new task from the cache
+      const getTasksQuery = await getTasks(client, { fetchPolicy: CACHE_ONLY });
+      const task = getTasksQuery.data.allTasks[0];
+
+      assertTaskEqualTaskTemplate(task);
+
+      goOnline(network);
+
+      // wait for all offline transactions to be executed
+      const replicatedData = await addTaskError.watchOfflineChange();
+      assertTaskEqualTaskTemplate(replicatedData.data.createTask)
+    });
   })
 });
