@@ -1,6 +1,6 @@
 {
   "name": "offix-client",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Offix GraphQL Offline Client",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -49,8 +49,8 @@
     "apollo-upload-client": "11.0.0",
     "debug": "4.1.1",
     "idb-localstorage": "0.2.0",
-    "offix-cache": "0.7.0",
-    "offix-offline": "0.7.0",
+    "offix-cache": "0.7.1",
+    "offix-offline": "0.7.1",
     "subscriptions-transport-ws": "0.9.16"
   },
   "peerDependencies": {
