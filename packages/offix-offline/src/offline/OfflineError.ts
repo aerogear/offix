@@ -21,7 +21,7 @@ export class OfflineError {
     this.offlineMutationPromise = offlineMutationPromise;
   }
 
-  public async watchOfflineChange(): Promise<any> {
-    await this.offlineMutationPromise;
+  public watchOfflineChange(): Promise<any> {
+    return this.offlineMutationPromise;
   }
 }
