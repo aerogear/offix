@@ -114,13 +114,13 @@ Queue will hold requests until application will come back online.
 
 Developers can adjust how queue will process new mutations by supplying custom `NetworkStatus` implementation.
 
-### Online Only Queries
+### Online Only Mutations
 
-To ensure certain queries are not queued and are always delivered to the network layer, you must make use of Graphql directives.
-To do so on your client, ensure the query has the annotation attached like so:
+To ensure certain mutations are not queued and are always delivered to the network layer, you must make use of Graphql directives.
+To do so on your client, ensure the mutation has the annotation attached like so:
 
 ```javascript
-exampleQuery(...) @onlineOnly {
+exampleMutation(...) @onlineOnly {
   ...
 }
 ```
