@@ -65,6 +65,8 @@ export class OfflineLink extends ApolloLink {
         const offlineMutation = handler.mutateOfflineElement(operationEntry);
         logger("Returning offline error to client", operation.variables);
         observer.error(new OfflineError(offlineMutation));
+      }).catch((error) => {
+        logger("Error occurred when persisting item to offline queue", error);
       });
       return () => { return; };
     });
