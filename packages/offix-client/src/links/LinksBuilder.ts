@@ -26,8 +26,8 @@ import { BaseLink } from "offix-offline";
  * - File uploads
  */
 export const createDefaultLink = async (config: OffixClientConfig, offlineLink: ApolloLink,
-                                        conflictLink: ApolloLink, cache: InMemoryCache) => {
-  let link = await defaultHttpLinks(config, offlineLink, conflictLink, cache);
+                                        conflictLink: ApolloLink, cache: InMemoryCache, httpOptions: HttpLink.Options) => {
+  let link = await defaultHttpLinks(config, offlineLink, conflictLink, cache, httpOptions);
   if (config.wsUrl) {
     const wsLink = defaultWebSocketLink(config, { uri: config.wsUrl });
     link = ApolloLink.split(isSubscription, wsLink, link);
@@ -70,7 +70,7 @@ export const createConflictLink = async (config: OffixClientConfig) => {
  * - Audit logging
  */
 export const defaultHttpLinks = async (config: OffixClientConfig, offlineLink: ApolloLink,
-                                       conflictLink: ApolloLink, cache: InMemoryCache): Promise<ApolloLink> => {
+                                       conflictLink: ApolloLink, cache: InMemoryCache, httpOptions: HttpLink.Options): Promise<ApolloLink> => {
 
   // Enable offline link only for mutations and onlineOnly
   const mutationOfflineLink = ApolloLink.split((op: Operation) => {
@@ -81,21 +81,22 @@ export const defaultHttpLinks = async (config: OffixClientConfig, offlineLink: A
   links.push(conflictLink);
   const retryLink = ApolloLink.split(OfflineMutationsHandler.isMarkedOffline, new RetryLink(config.retryOptions));
   links.push(retryLink);
-
+  
   if (config.authContextProvider) {
     links.push(createAuthLink(config));
   }
   const localFilterLink = new LocalDirectiveFilterLink();
   links.push(localFilterLink);
 
+  const httpLinkOptions = {
+    uri: config.httpUrl,
+    ...httpOptions
+  }
+
   if (config.fileUpload) {
-    links.push(createUploadLink({
-      uri: config.httpUrl
-    }));
+    links.push(createUploadLink(httpLinkOptions));
   } else {
-    const httpLink = new HttpLink({
-      uri: config.httpUrl
-    }) as ApolloLink;
+    const httpLink = new HttpLink(httpLinkOptions) as ApolloLink;
     links.push(httpLink);
   }
 
