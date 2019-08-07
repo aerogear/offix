@@ -13,7 +13,7 @@
     "clean": "del coverage src/**/*.js src/**/*.map test/**/*.js test/**/*.map dist types",
     "build": "tsc",
     "watch": "tsc --watch",
-    "test": "mocha",
+    "test": "echo 'no tests for now'",
     "preintegration-test": "cd integration_test && npm install",
     "integration-test": "cd integration_test && npm test"
   },
