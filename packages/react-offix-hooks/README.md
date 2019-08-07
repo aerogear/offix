@@ -21,7 +21,7 @@ const offixClient = new OfflineClient(config)
 
 const App = () => (
   <OffixProvider client={offixClient}>
-    Hello
+    <MyRootComponent/>
   </OffixProvider>
 )
 
@@ -55,7 +55,7 @@ const App = () => {
     return (
       <OffixProvider client={offixClient}>
         <ApolloProvider client={apolloClient}>
-          Hello
+          <MyRootComponent/>
         </ApolloProvider>
       </OffixProvider>
     )
@@ -69,4 +69,31 @@ render(<App />, document.getElementById('root'))
 
 # useOfflineMutation
 
-Todo
+```javascript
+import gql from 'graphql-tag'
+import { useOfflineMutation } from 'react-offix-hooks'
+
+const ADD_MESSAGE_MUTATION = gql`
+  mutation addMessage($chatId: String!, $content: String!) {
+    addMessage(chatId: $chatId, content: $content)
+  }
+`
+
+function addMessageForm({ chatId }) {
+  const inputRef = useRef()
+
+  const [addMessage] = useOfflineMutation(ADD_MESSAGE_MUTATION, {
+    variables: {
+      chatId,
+      content: inputRef.current.value,
+    }
+  })
+
+  return (
+    <form>
+      <input ref={inputRef} />
+      <button onClick={addMessage}>Send Message</button>
+    </form>
+  )
+}
+```
