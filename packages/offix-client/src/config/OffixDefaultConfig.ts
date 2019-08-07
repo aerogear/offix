@@ -7,7 +7,6 @@ import { UseClient } from "offix-offline";
 import { VersionedState } from "offix-offline";
 import { ConflictResolutionStrategy } from "offix-offline";
 import { createDefaultOfflineStorage } from "offix-offline";
-import { AuthContextProvider } from ".";
 import { createDefaultCacheStorage } from "../cache";
 
 /**
@@ -15,11 +14,8 @@ import { createDefaultCacheStorage } from "../cache";
  * Default config is applied on top of user provided configuration
  */
 export class OffixDefaultConfig implements OffixClientConfig {
-  public wsUrl?: string;
   public httpUrl?: string;
   public offlineQueueListener?: OfflineQueueListener;
-  public authContextProvider?: AuthContextProvider;
-  public fileUpload?: boolean;
   public conflictStrategy: ConflictResolutionStrategy;
   public conflictProvider = new VersionedState();
   public networkStatus: NetworkStatus;
@@ -54,17 +50,6 @@ export class OffixDefaultConfig implements OffixClientConfig {
     } else {
       this.conflictStrategy = UseClient;
     }
-    this.init(clientOptions);
-  }
-
-  private init(clientOptions?: OffixClientConfig) {
     Object.assign(this, clientOptions);
-    this.validate();
-  }
-
-  private validate() {
-    if (!this.httpUrl) {
-      throw new ConfigError("Missing server URL", "httpUrl");
-    }
   }
 }

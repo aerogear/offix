@@ -33,11 +33,6 @@ describe("OnOffLink", () => {
     expect(config.retryOptions).eq(userConfig.retryOptions);
   });
 
-  it("validates config", () => {
-    const badConstructor = () => new OffixDefaultConfig({ storage });
-    expect(badConstructor).to.throw();
-  });
-
   it("conflict strategy is a function", () => {
     const mergedConfig = new OffixDefaultConfig(configWithStrategy);
     if (mergedConfig.conflictStrategy && mergedConfig.conflictStrategy) {

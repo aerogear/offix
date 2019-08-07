@@ -12,11 +12,15 @@
 
 # Changed
 
-*
+*  `OfflineClient.init()` accepts now additional `terminatingLink` parameter 
+that can be used to modify the way the network request is made. 
+Parameter is optional - by default we going to use HttpLink implementation.
 
 # Removed
 
-* 
+* Out of the box support for file uploads and subscriptions from the library.
+Please use  `OfflineClient.init(terminatingLink)` where `terminatingLink` 
+can be any ApolloLink implementation that will make request to server.
 
 ### 0.7.1
 

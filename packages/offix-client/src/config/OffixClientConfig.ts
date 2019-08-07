@@ -2,7 +2,6 @@ import { ConflictResolutionStrategy } from "offix-offline";
 import { PersistedData, PersistentStore } from "offix-offline";
 import { NetworkStatus } from "offix-offline";
 import { OfflineQueueListener } from "offix-offline";
-import { AuthContextProvider } from "../auth/AuthContextProvider";
 import { ObjectState } from "offix-offline";
 import { ConflictListener } from "offix-offline";
 import { CacheUpdates } from "offix-cache";
@@ -18,15 +17,12 @@ import { HttpLink } from "apollo-link-http";
  *
  */
 export interface OffixClientConfig {
-  /**
-   * The URL of http server
-   */
-  httpUrl?: string;
 
   /**
-   *  The URL of websocket endpoint
+   * The URL of http server that will be used to initialize default http link
+   * Value is ignored if terminating link is passed to client.init() method
    */
-  wsUrl?: string;
+  httpUrl?: string;
 
   /**
    * [Modifier]
@@ -48,21 +44,6 @@ export interface OffixClientConfig {
    * when operations were added to queue
    */
   offlineQueueListener?: OfflineQueueListener;
-
-  /**
-   * [Modifier]
-   *
-   * An implementation of AuthContextProvider. If none passed, a default one will be used.
-   * The default one doesn't add any headers.
-   */
-  authContextProvider?: AuthContextProvider;
-
-  /**
-   * [Modifier]
-   *
-   * If set to true, GraphGL file uploads will be enabled and supported
-   */
-  fileUpload?: boolean;
 
   /**
    * [Modifier]
@@ -101,12 +82,4 @@ export interface OffixClientConfig {
    *
    */
   retryOptions?: RetryLink.Options;
-
-  /**
-   * [Modifier]
-   *
-   * The options to configure HttpLink and/or the file upload link.
-   *
-   */
-  httpLinkOptions?: HttpLink.Options;
 }
