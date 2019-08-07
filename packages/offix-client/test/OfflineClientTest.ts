@@ -25,6 +25,12 @@ describe("Top level api tests", () => {
     should().exist(client.registerOfflineEventListener);
   });
 
+  it("apolloClient should be available after init", async () => {
+    const client = new OfflineClient({ httpUrl: url, storage, networkStatus });
+    await client.init();
+    should().exist(client.apolloClient);
+  });
+
   it("Apply listener", async () => {
     const client = new OfflineClient({ httpUrl: url, storage, networkStatus });
     const initClient = await client.init();

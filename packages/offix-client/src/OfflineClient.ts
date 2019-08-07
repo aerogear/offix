@@ -47,7 +47,7 @@ export const createClient = async (userConfig: OffixClientConfig):
 export class OfflineClient implements ListenerProvider {
 
   public queueListeners: OfflineQueueListener[] = [];
-  private apolloClient?: ApolloOfflineClient;
+  public apolloClient?: ApolloOfflineClient;
   private store: OfflineStore;
   private config: OffixDefaultConfig;
 
