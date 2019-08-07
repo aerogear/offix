@@ -150,6 +150,8 @@ export function useOfflineMutation<TData, TVariables = OperationVariables>(
         }).catch((err: any) => {
 
           mergeResult({
+            hasError: true,
+            error: err,
             offlineReplicationError: err
           });
 
