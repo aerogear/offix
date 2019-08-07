@@ -50,11 +50,15 @@ export class OfflineMutationsHandler {
     const mutationName = getMutationName(item.operation.query);
     let context;
     let updateFunction;
+    let previousContext: any = {};
 
-    const previousContext = item.operation.getContext();
-    if (previousContext.updateFunction) {
-      updateFunction = previousContext.updateFunction;
+    if (item.operation.getContext) {
+      previousContext = item.operation.getContext();
+      if (previousContext.updateFunction) {
+        updateFunction = previousContext.updateFunction;
+      }
     }
+
     context = { ...previousContext, ...this.getOfflineContext(item) };
 
     if (this.mutationCacheUpdates && mutationName) {
