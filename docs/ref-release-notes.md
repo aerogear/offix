@@ -1,5 +1,23 @@
 ## What is new in Offix
 
+# Unreleased
+
+# Fixed
+
+*
+
+# Added
+
+* `OfflineClient.apolloClient` is now public. This means `apolloClient` is directly accessible after `OfflineClient.init()`.
+
+# Changed
+
+*
+
+# Removed
+
+* 
+
 ### 0.7.1
 
 #### Offline operations persist optimistic response
