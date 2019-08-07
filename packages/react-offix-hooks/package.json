@@ -26,21 +26,21 @@
     "access": "public"
   },
   "devDependencies": {
-    "@types/react": "^16.8.24",
-    "apollo-cache": "^1.3.2",
-    "apollo-client": "^2.6.3",
-    "apollo-link": "^1.2.12",
+    "@types/react": "16.8.25",
+    "apollo-cache": "1.3.2",
+    "apollo-client": "2.6.3",
+    "apollo-link": "1.2.12",
     "graphql": "14.4.2",
-    "react": "^16.8.6",
+    "react": "16.8.6",
     "ts-node": "8.3.0",
     "typescript": "3.5.3"
   },
   "dependencies": {
-    "lodash": "^4.17.15",
+    "lodash": "4.17.15",
     "offix-client": "0.7.1"
   },
   "peerDependencies": {
     "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0",
-    "react": "^16.8.6"
+    "react": "16.8.6"
   }
 }
