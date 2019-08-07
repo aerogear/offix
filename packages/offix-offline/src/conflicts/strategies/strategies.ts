@@ -3,7 +3,7 @@ import { ConflictResolutionStrategy } from "./ConflictResolutionStrategy";
 
 // Used as default strategy for SDK
 export const UseClient: ConflictResolutionStrategy = {
-  resolve: ({server, client, clientDiff}) => {
-    return Object.assign(server, client, clientDiff);
+  resolve: ({server, clientDiff}) => {
+    return Object.assign(server, clientDiff);
   }
 };

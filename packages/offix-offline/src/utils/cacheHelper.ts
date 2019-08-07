@@ -13,7 +13,12 @@ export const getObjectFromCache = (operation: Operation, id: string) => {
     if (context.cache && context.cache.data) {
       const idKey = context.getCacheKey({ __typename: context.returnType, id });
       if (context.cache.optimisticData && context.cache.optimisticData.parent) {
-        const optimisticData = context.cache.optimisticData.parent.data;
+        let optimisticData;
+        if (context.cache.optimisticData.parent.parent) {
+          optimisticData = context.cache.optimisticData.parent.parent.data;
+        } else {
+          optimisticData = context.cache.optimisticData.parent.data;
+        }
         if (idKey && optimisticData[idKey]) {
           return Object.assign({}, optimisticData[idKey]);
         }
