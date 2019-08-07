@@ -2,38 +2,15 @@ import { ApolloLink, Operation } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { RetryLink } from "apollo-link-retry";
 import { ConflictLink, ObjectState } from "offix-offline";
-import { OffixClientConfig } from "../config";
-import { createAuthLink } from "./AuthLink";
+import { OffixClientConfig } from "./config/OffixClientConfig";
 import { LocalDirectiveFilterLink } from "offix-offline";
-import { createUploadLink } from "apollo-upload-client";
 import { isMutation, isOnlineOnly, isSubscription } from "offix-offline";
-import { defaultWebSocketLink } from "./WebsocketLink";
 import { OfflineLink } from "offix-offline";
 import { NetworkStatus, OfflineMutationsHandler, OfflineStore } from "offix-offline";
 import { IDProcessor } from "offix-offline";
 import { IResultProcessor } from "offix-offline";
-import { InMemoryCache } from "apollo-cache-inmemory";
 import { BaseLink } from "offix-offline";
-
-/**
- * Method for creating "uber" composite Apollo Link implementation including:
- *
- * - Http support
- * - Websocket support
- * - Offline handling
- * - Conflict resolution
- * - Audit logging
- * - File uploads
- */
-export const createDefaultLink = async (config: OffixClientConfig, offlineLink: ApolloLink,
-                                        conflictLink: ApolloLink, cache: InMemoryCache) => {
-  let link = await defaultHttpLinks(config, offlineLink, conflictLink, cache);
-  if (config.wsUrl) {
-    const wsLink = defaultWebSocketLink(config, { uri: config.wsUrl });
-    link = ApolloLink.split(isSubscription, wsLink, link);
-  }
-  return link;
-};
+import { ConfigError } from "./config/ConfigError";
 
 /**
  * Create offline link
@@ -46,7 +23,7 @@ export const createOfflineLink = async (config: OffixClientConfig, store: Offlin
     listener: config.offlineQueueListener,
     networkStatus: config.networkStatus as NetworkStatus,
     resultProcessors
-  } );
+  });
 };
 
 /**
@@ -67,10 +44,11 @@ export const createConflictLink = async (config: OffixClientConfig) => {
  * - Offline/Online queue
  * - Conflict resolution
  * - Error handling
- * - Audit logging
  */
-export const defaultHttpLinks = async (config: OffixClientConfig, offlineLink: ApolloLink,
-                                       conflictLink: ApolloLink, cache: InMemoryCache): Promise<ApolloLink> => {
+export const createCompositeLink = async (config: OffixClientConfig,
+  offlineLink: ApolloLink,
+  conflictLink: ApolloLink,
+  terminatingLink?: ApolloLink): Promise<ApolloLink> => {
 
   // Enable offline link only for mutations and onlineOnly
   const mutationOfflineLink = ApolloLink.split((op: Operation) => {
@@ -82,21 +60,16 @@ export const defaultHttpLinks = async (config: OffixClientConfig, offlineLink: A
   const retryLink = ApolloLink.split(OfflineMutationsHandler.isMarkedOffline, new RetryLink(config.retryOptions));
   links.push(retryLink);
 
-  if (config.authContextProvider) {
-    links.push(createAuthLink(config));
-  }
   const localFilterLink = new LocalDirectiveFilterLink();
   links.push(localFilterLink);
 
-  const httpLinkOptions = config.httpLinkOptions ? config.httpLinkOptions : {};
-
-  httpLinkOptions.uri = config.httpUrl;
-
-  if (config.fileUpload) {
-    links.push(createUploadLink(httpLinkOptions));
-  } else {
-    const httpLink = new HttpLink(httpLinkOptions) as ApolloLink;
+  if (terminatingLink) {
+    links.push(terminatingLink);
+  } else if (config.httpUrl) {
+    const httpLink = new HttpLink({ uri: config.httpUrl }) as ApolloLink;
     links.push(httpLink);
+  } else {
+    throw new ConfigError("Missing url", "httpUrl");
   }
 
   return ApolloLink.from(links);
