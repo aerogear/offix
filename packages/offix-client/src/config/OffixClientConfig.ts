@@ -9,6 +9,10 @@ import { CacheUpdates } from "offix-cache";
 import { RetryLink } from "apollo-link-retry";
 import { HttpLink } from "apollo-link-http";
 
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
+export type HttpLinkOptions = Omit<HttpLink.Options, "uri">;
+
 /**
  * Contains all configuration options required to initialize Voyager Client
  * Options marked with [Modifier] flag are used to modify behavior of client.
@@ -108,5 +112,5 @@ export interface OffixClientConfig {
    * The options to configure HttpLink and/or the file upload link.
    *
    */
-  httpLinkOptions?: HttpLink.Options;
+  httpLinkOptions?: HttpLinkOptions;
 }
