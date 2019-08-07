@@ -7,6 +7,7 @@ import { ObjectState } from "offix-offline";
 import { ConflictListener } from "offix-offline";
 import { CacheUpdates } from "offix-cache";
 import { RetryLink } from "apollo-link-retry";
+import { HttpLink } from "apollo-link-http";
 
 /**
  * Contains all configuration options required to initialize Voyager Client
@@ -100,4 +101,12 @@ export interface OffixClientConfig {
    *
    */
   retryOptions?: RetryLink.Options;
+
+  /**
+   * [Modifier]
+   *
+   * The options to configure HttpLink and/or the file upload link.
+   *
+   */
+  httpLinkOptions?: HttpLink.Options;
 }
