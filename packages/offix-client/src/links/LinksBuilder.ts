@@ -26,8 +26,8 @@ import { BaseLink } from "offix-offline";
  * - File uploads
  */
 export const createDefaultLink = async (config: OffixClientConfig, offlineLink: ApolloLink,
-                                        conflictLink: ApolloLink, cache: InMemoryCache, httpOptions: HttpLink.Options) => {
-  let link = await defaultHttpLinks(config, offlineLink, conflictLink, cache, httpOptions);
+                                        conflictLink: ApolloLink, cache: InMemoryCache) => {
+  let link = await defaultHttpLinks(config, offlineLink, conflictLink, cache);
   if (config.wsUrl) {
     const wsLink = defaultWebSocketLink(config, { uri: config.wsUrl });
     link = ApolloLink.split(isSubscription, wsLink, link);
@@ -70,7 +70,7 @@ export const createConflictLink = async (config: OffixClientConfig) => {
  * - Audit logging
  */
 export const defaultHttpLinks = async (config: OffixClientConfig, offlineLink: ApolloLink,
-                                       conflictLink: ApolloLink, cache: InMemoryCache, httpOptions: HttpLink.Options): Promise<ApolloLink> => {
+                                       conflictLink: ApolloLink, cache: InMemoryCache): Promise<ApolloLink> => {
 
   // Enable offline link only for mutations and onlineOnly
   const mutationOfflineLink = ApolloLink.split((op: Operation) => {
@@ -81,7 +81,7 @@ export const defaultHttpLinks = async (config: OffixClientConfig, offlineLink: A
   links.push(conflictLink);
   const retryLink = ApolloLink.split(OfflineMutationsHandler.isMarkedOffline, new RetryLink(config.retryOptions));
   links.push(retryLink);
-  
+
   if (config.authContextProvider) {
     links.push(createAuthLink(config));
   }
@@ -90,8 +90,8 @@ export const defaultHttpLinks = async (config: OffixClientConfig, offlineLink: A
 
   const httpLinkOptions = {
     uri: config.httpUrl,
-    ...httpOptions
-  }
+    ...config.httpLinkOptions
+  };
 
   if (config.fileUpload) {
     links.push(createUploadLink(httpLinkOptions));

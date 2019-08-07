@@ -1,4 +1,4 @@
-import { ApolloClient, MutationOptions, OperationVariables } from "apollo-client";
+import { ApolloClient, OperationVariables } from "apollo-client";
 import { OffixClientConfig } from "./config";
 import { OffixDefaultConfig } from "./config/OffixDefaultConfig";
 import { createDefaultLink, createOfflineLink, createConflictLink } from "./links/LinksBuilder";
@@ -12,9 +12,8 @@ import {
 } from "offix-offline";
 import { ApolloOfflineClient } from "./ApolloOfflineClient";
 import { MutationHelperOptions, createMutationOptions } from "offix-cache";
-import { ApolloLink,FetchResult } from "apollo-link";
+import { FetchResult } from "apollo-link";
 import { buildCachePersistence } from "./cache";
-import { HttpLink } from "apollo-link-http";
 
 /**
 * Factory for creating Apollo Offline Client
@@ -61,12 +60,12 @@ export class OfflineClient implements ListenerProvider {
   /**
   * Initialize client
   */
-  public async init(httpOptions?: HttpLink.Options): Promise<ApolloOfflineClient> {
+  public async init(): Promise<ApolloOfflineClient> {
     await this.store.init();
     const cache = await buildCachePersistence(this.config.cacheStorage);
     const offlineLink = await createOfflineLink(this.config, this.store);
     const conflictLink = await createConflictLink(this.config);
-    const link = await createDefaultLink(this.config, offlineLink, conflictLink, cache, httpOptions);
+    const link = await createDefaultLink(this.config, offlineLink, conflictLink, cache);
     const client = new ApolloClient({
       link,
       cache
