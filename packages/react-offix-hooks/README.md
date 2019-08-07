@@ -45,10 +45,7 @@ const App = () => {
 
   // initialize the offix client and set the apollo client
   useEffect(() => {
-    offixClient.init().then((client) => {
-      console.log('offline client initialized')
-      setApolloClient(client)
-    })
+    offixClient.init().then(setApolloClient)
   }, [])
 
   if (apolloClient) {
