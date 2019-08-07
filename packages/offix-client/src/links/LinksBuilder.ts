@@ -88,10 +88,9 @@ export const defaultHttpLinks = async (config: OffixClientConfig, offlineLink: A
   const localFilterLink = new LocalDirectiveFilterLink();
   links.push(localFilterLink);
 
-  const httpLinkOptions = {
-    uri: config.httpUrl,
-    ...config.httpLinkOptions
-  };
+  const httpLinkOptions = config.httpLinkOptions ? config.httpLinkOptions : {};
+
+  httpLinkOptions.uri = config.httpUrl;
 
   if (config.fileUpload) {
     links.push(createUploadLink(httpLinkOptions));
