@@ -384,7 +384,8 @@ describe("Offline cache and mutations", () => {
 
       goOnline(network);
 
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await addTaskError.watchOfflineChange();
+      await deleteTaskError.watchOfflineChange();
 
       // query tasks again from the cache
       const response3 = await getTasks(client, {fetchPolicy: CACHE_ONLY});
