@@ -59,15 +59,13 @@ export class OfflineClient implements ListenerProvider {
 
   /**
   * Initialize client
-  *
-  * @param terminatingLink optional Apollo link that will be used to make requests
   */
-  public async init(terminatingLink?: ApolloLink): Promise<ApolloOfflineClient> {
+  public async init(): Promise<ApolloOfflineClient> {
     await this.store.init();
     const cache = await buildCachePersistence(this.config.cacheStorage);
     const offlineLink = await createOfflineLink(this.config, this.store);
     const conflictLink = await createConflictLink(this.config);
-    const link = await createCompositeLink(this.config, offlineLink, conflictLink, terminatingLink);
+    const link = await createCompositeLink(this.config, offlineLink, conflictLink);
     const client = new ApolloClient({
       link,
       cache
