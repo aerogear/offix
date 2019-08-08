@@ -28,8 +28,9 @@ describe("Top level api tests", () => {
   });
 
   it("Pass link directly", async () => {
-    const client = new OfflineClient({ storage, networkStatus });
-    const initClient = await client.init(new HttpLink({ uri: url }));
+    const terminatingLink = new HttpLink({ uri: url });
+    const client = new OfflineClient({ terminatingLink, storage, networkStatus });
+    await client.init();
     should().exist(client.apolloClient);
   });
 

@@ -47,8 +47,7 @@ export const createConflictLink = async (config: OffixClientConfig) => {
  */
 export const createCompositeLink = async (config: OffixClientConfig,
   offlineLink: ApolloLink,
-  conflictLink: ApolloLink,
-  terminatingLink?: ApolloLink): Promise<ApolloLink> => {
+  conflictLink: ApolloLink): Promise<ApolloLink> => {
 
   // Enable offline link only for mutations and onlineOnly
   const mutationOfflineLink = ApolloLink.split((op: Operation) => {
@@ -63,8 +62,8 @@ export const createCompositeLink = async (config: OffixClientConfig,
   const localFilterLink = new LocalDirectiveFilterLink();
   links.push(localFilterLink);
 
-  if (terminatingLink) {
-    links.push(terminatingLink);
+  if (config.terminatingLink) {
+    links.push(config.terminatingLink);
   } else if (config.httpUrl) {
     const httpLink = new HttpLink({ uri: config.httpUrl }) as ApolloLink;
     links.push(httpLink);

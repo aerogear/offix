@@ -6,7 +6,7 @@ import { ObjectState } from "offix-offline";
 import { ConflictListener } from "offix-offline";
 import { CacheUpdates } from "offix-cache";
 import { RetryLink } from "apollo-link-retry";
-import { HttpLink } from "apollo-link-http";
+import { ApolloLink } from "apollo-link";
 
 /**
  * Contains all configuration options required to initialize Voyager Client
@@ -20,9 +20,15 @@ export interface OffixClientConfig {
 
   /**
    * The URL of http server that will be used to initialize default http link
-   * Value is ignored if terminating link is passed to client.init() method
+   * Value is ignored if terminating link is passed
    */
   httpUrl?: string;
+
+  /**
+   * [Modifier]
+   * Apollo link that will be passed to created client
+   */
+  terminatingLink?: ApolloLink;
 
   /**
    * [Modifier]
