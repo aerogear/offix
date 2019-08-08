@@ -1,6 +1,5 @@
-import { isMobileCordova} from "../utils/platform";
+import { isMobileCordova } from "../utils/platform";
 import { PersistedData, PersistentStore } from "offix-offline";
-import { ConfigError } from "./ConfigError";
 import { OffixClientConfig } from "./OffixClientConfig";
 import { CordovaNetworkStatus, NetworkStatus, WebNetworkStatus, OfflineQueueListener } from "offix-offline";
 import { UseClient } from "offix-offline";
@@ -8,6 +7,7 @@ import { VersionedState } from "offix-offline";
 import { ConflictResolutionStrategy } from "offix-offline";
 import { createDefaultOfflineStorage } from "offix-offline";
 import { createDefaultCacheStorage } from "../cache";
+import { ApolloLink } from "apollo-link";
 
 /**
  * Class for managing user and default configuration.
@@ -19,7 +19,7 @@ export class OffixDefaultConfig implements OffixClientConfig {
   public conflictStrategy: ConflictResolutionStrategy;
   public conflictProvider = new VersionedState();
   public networkStatus: NetworkStatus;
-
+  public terminatingLink: ApolloLink | undefined;
   public cacheStorage: PersistentStore<PersistedData>;
   public offlineStorage: PersistentStore<PersistedData>;
 
