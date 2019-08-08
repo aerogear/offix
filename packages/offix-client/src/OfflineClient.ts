@@ -48,8 +48,8 @@ export class OfflineClient implements ListenerProvider {
 
   public queueListeners: OfflineQueueListener[] = [];
   public apolloClient?: ApolloOfflineClient;
-  private store: OfflineStore;
-  private config: OffixDefaultConfig;
+  public store: OfflineStore;
+  public config: OffixDefaultConfig;
 
   constructor(userConfig: OffixClientConfig) {
     this.config = new OffixDefaultConfig(userConfig);
