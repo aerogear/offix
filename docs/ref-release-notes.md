@@ -1,27 +1,31 @@
 ## What is new in Offix
 
-# Unreleased
+# 0.8.0 
 
-# Fixed
+## Features
 
-*
+### Offix React Hooks Alpha released
 
-# Added
+Offix React Hooks provides helpers for using offix within React and React Native.
+Please refer to package README for more information
 
-* `OfflineClient.apolloClient` is now public. This means `apolloClient` is directly accessible after `OfflineClient.init()`.
+### Ability to customize Apollo Link chain
 
-# Changed
+`OffixClientConfig.terminatingLink` allows to customize client by adding additional links 
+for handling authentication, network requests etc.
 
-*  `OfflineClient.init()` accepts now additional `terminatingLink` parameter 
-that can be used to modify the way the network request is made. 
-Parameter is optional - by default we going to use HttpLink implementation.
+### New way to access Apollo Client
 
-# Removed
+`OfflineClient.apolloClient` is now public. This means `apolloClient` is directly accessible after `OfflineClient.init()`.
 
-* Out of the box support for file uploads and subscriptions from the library.
-Please use  `OfflineClient.init(terminatingLink)` where `terminatingLink` 
-can be any ApolloLink implementation that will make request to server.
+## Breaking changes
 
+### Changes for Subscriptions and File Uploads 
+
+Subscriptions and file uploads were removed from the main library.
+Developers can still configure Subscription access directly int their application by 
+creating Apollo link acording to documentation and passing `OffixClientConfig.terminatingLink`
+ 
 ### 0.7.1
 
 #### Offline operations persist optimistic response
