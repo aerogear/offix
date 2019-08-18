@@ -16,6 +16,7 @@ const logger = debug.default(MUTATION_QUEUE_LOGGER);
  */
 export class OfflineMutationsHandler {
 
+
   private mutationCacheUpdates?: CacheUpdates;
 
   constructor(private store: OfflineStore,
@@ -93,5 +94,18 @@ export class OfflineMutationsHandler {
   // tslint:disable-next-line:member-ordering
   public static isMarkedOffline(operation: Operation) {
     return !!operation.getContext().isOffline;
+  }
+
+  /**
+   * Check if should save item to queue
+   */
+  // tslint:disable-next-line:member-ordering
+  public static forceSaveOffline(operation: Operation) {
+    const forceSaveOfflineChanges = !!operation.getContext().saveToOffline;
+    if (forceSaveOfflineChanges) {
+      // Make it offline
+      operation.setContext({ isOffline: true });
+    }
+    return forceSaveOfflineChanges;
   }
 }

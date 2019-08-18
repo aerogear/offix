@@ -1,13 +1,9 @@
 import { ApolloLink, NextLink, Operation, Observable, FetchResult } from "apollo-link";
 import { NetworkInfo, NetworkStatus, OfflineMutationsHandler, OfflineStore } from "../index";
-import { OfflineQueueListener } from "./events/OfflineQueueListener";
 import { OfflineQueue } from "./OfflineQueue";
 import * as debug from "debug";
 import { QUEUE_LOGGER } from "../utils/Constants";
 import { OfflineError } from "./OfflineError";
-import { IResultProcessor } from "./processors/IResultProcessor";
-import { CacheUpdates } from "offix-cache";
-import { PersistentStore, PersistedData } from "./storage/PersistentStore";
 import { WebNetworkStatus } from "./network/WebNetworkStatus";
 import { OfflineLinkConfig } from "./OfflineLinkConfig";
 
@@ -43,6 +39,10 @@ export class OfflineLink extends ApolloLink {
   }
 
   public request(operation: Operation, forward: NextLink): Observable<FetchResult> {
+    if (OfflineMutationsHandler.forceSaveOffline(operation)) {
+      this.queue.persistItemWithQueue(operation);
+    }
+
     // Reattempting operation that was marked as offline
     if (OfflineMutationsHandler.isMarkedOffline(operation)) {
       logger("Enqueueing offline mutation", operation.variables);
