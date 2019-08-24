@@ -1,5 +1,12 @@
 ## What is new in Offix
 
+
+# 0.9.0 
+
+Ability to add item to offline queue by bypasing 
+Network interface. `saveToOffline` flag can be added now to the
+context.
+
 # 0.8.0 
 
 ## Features
