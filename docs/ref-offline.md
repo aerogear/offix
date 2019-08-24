@@ -162,3 +162,27 @@ Cache is going to be refueled by subscriptions, pooling or regular queries happe
 When designing your GraphQL schema types `id` field will be always required.
 We also expect that id will be always queried back from server.
 Library will perform business logic assuming that `id` field will be supplied and returned from server. Without this field some offline functionalities will not work properly.
+
+## Working with changes that failed to replicate on the server
+
+Offix will allow developers to manually enqueue changes
+into offline queue in situations when server is not reachable or returned some errors.
+
+To reschedule item to offline queue we need to 
+execute mutation again with `saveToOffline` flag added to 
+the context. For example:
+
+```javascript
+client.mutate(
+  ...
+).catch((error)=> {
+  if(error.networkError.startsWith("net::ERR_CONNECTION_CLOSED")){
+   client.mutate(
+     ...
+     context: { saveToOffline: true }
+   )
+  }
+});
+```
+
+> NOTE: By default change will be replicated only after network state change. 
