@@ -554,6 +554,27 @@ describe('Offline mutations', function () {
     });
   });
 
+
+  describe('Force item on the queue', function () {
+    it('should succeed', async function () {
+      networkStatus.setOnline(true);
+      try {
+        await client.mutate({
+          mutation: ADD_TASK,
+          variables: newTask,
+          context: { saveToOffline: true }
+        }).catch((error) => {
+          expect(error).to.exist;
+        });
+      } catch (ignore) { }
+
+
+      const offlineKeys = await store.getItem(offlineMetaKey);
+      const offlineMutation = await store.getItem("offline:" + offlineKeys[0]);
+      expect(offlineMutation).to.exist;
+    });
+  });
+
 });
 
 
