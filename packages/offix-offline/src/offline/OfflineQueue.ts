@@ -85,8 +85,8 @@ export class OfflineQueue {
   public executeResultProcessors(op: OperationQueueEntry,
     result: FetchResult<any>) {
     if (this.resultProcessors) {
-      for (const resultProcesor of this.resultProcessors) {
-        resultProcesor.execute(this.queue, op, result);
+      for (const resultProcessor of this.resultProcessors) {
+        resultProcessor.execute(this.queue, op, result);
       }
     }
   }
