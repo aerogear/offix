@@ -44,7 +44,7 @@ export class OfflineLink extends ApolloLink {
 
   public request(operation: Operation, forward: NextLink): Observable<FetchResult> {
 
-    if (this.online) {
+    if (this.online || !OfflineMutationsHandler.isMarkedOffline(operation)) {
       logger("Online: Forwarding mutation", operation.variables);
       // We are online and can skip this link
       return forward(operation);
