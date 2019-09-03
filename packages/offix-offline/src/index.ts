@@ -29,3 +29,5 @@ export * from "./conflicts/strategies/ConflictMetaData";
 export * from "./conflicts/state/VersionedState";
 export * from "./conflicts/BaseLink";
 export * from "./conflicts/strategies/ConflictResolutionData";
+export * from "./offline/OfflineProcessor";
+export * from "./offline/OfflineError";

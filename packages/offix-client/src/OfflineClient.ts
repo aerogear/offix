@@ -1,4 +1,5 @@
-import { ApolloClient, OperationVariables } from "apollo-client";
+import { OfflineError } from '../../offix-offline/src/offline/OfflineError';
+import { ApolloClient, OperationVariables, NetworkStatus } from "apollo-client";
 import { OffixClientConfig } from "./config/OffixClientConfig";
 import { OffixDefaultConfig } from "./config/OffixDefaultConfig";
 import { createCompositeLink, createOfflineLink, createConflictLink } from "./LinksBuilder";
@@ -8,7 +9,10 @@ import {
   OfflineLink,
   OfflineMutationsHandler,
   CompositeQueueListener,
-  ListenerProvider
+  ListenerProvider,
+  OfflineProcessor,
+  IDProcessor,
+  IResultProcessor
 } from "offix-offline";
 import { ApolloOfflineClient } from "./ApolloOfflineClient";
 import { MutationHelperOptions, createMutationOptions } from "offix-cache";
@@ -50,11 +54,20 @@ export class OfflineClient implements ListenerProvider {
   public apolloClient?: ApolloOfflineClient;
   public store: OfflineStore;
   public config: OffixDefaultConfig;
+  public offlineProcessor: OfflineProcessor;
 
   constructor(userConfig: OffixClientConfig) {
     this.config = new OffixDefaultConfig(userConfig);
     this.store = new OfflineStore(this.config.offlineStorage);
     this.setupEventListeners();
+    const resultProcessors: IResultProcessor[] = [
+      new IDProcessor()
+    ];
+    this.offlineProcessor = new OfflineProcessor(this.store, {
+      listener: this.config.offlineQueueListener,
+      networkStatus: this.config.networkStatus,
+      resultProcessors
+    });
   }
 
   /**
@@ -99,16 +112,30 @@ export class OfflineClient implements ListenerProvider {
    *
    * @param options the MutationHelperOptions to create the mutation
    */
-  public offlineMutation<T = any, TVariables = OperationVariables>(
+  public async offlineMutation<T = any, TVariables = OperationVariables>(
     options: MutationHelperOptions<T, TVariables>): Promise<FetchResult<T>> {
     if (!this.apolloClient) {
       throw new Error("Apollo offline client not initialised before mutation called.");
     } else {
       const mutationOptions = createMutationOptions<T, TVariables>(options);
-      mutationOptions.context.updateFunction = mutationOptions.update;
-      return this.apolloClient.mutate<T, TVariables>(
-        mutationOptions
-      );
+      if (this.offlineProcessor.online) {
+        return this.apolloClient.mutate<T, TVariables>(
+          mutationOptions
+        );
+      } else {
+        // TODO This needs to be refactored
+        // Storage should not rely on operation
+        const operation: any = {
+          query: mutationOptions.mutation,
+          variables: mutationOptions.variables,
+          operationName: "TODO"
+        };
+        await this.offlineProcessor.queue.persistItemWithQueue(operation);
+        const mutationPromise = this.apolloClient.mutate<T, TVariables>(
+          mutationOptions
+        );
+        throw new OfflineError(mutationPromise);
+      }
     }
   }
 

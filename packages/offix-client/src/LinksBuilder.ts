@@ -53,6 +53,7 @@ export const createCompositeLink = async (config: OffixClientConfig,
   const mutationOfflineLink = ApolloLink.split((op: Operation) => {
     return isMutation(op) && !isOnlineOnly(op);
   }, offlineLink);
+  // TODO persist baselink
   const baseLink = new BaseLink(config.conflictProvider as ObjectState);
   const links: ApolloLink[] = [baseLink, mutationOfflineLink];
   links.push(conflictLink);
