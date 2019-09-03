@@ -25,6 +25,7 @@ describe("IdProcessor", () => {
     it("Process without change", () => {
         const finalId = `client:`;
         const exampleOperation = {
+            query: "test",
             operationName: "test", variables: { id: finalId },
             getContext: () => {
                 return {

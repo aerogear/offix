@@ -6,7 +6,6 @@ import * as debug from "debug";
 import { CacheUpdates, getMutationName } from "offix-cache";
 import { Operation } from "apollo-link";
 import { OfflineStore } from "./storage/OfflineStore";
-import { OfflineLinkConfig } from "./OfflineLinkConfig";
 
 const logger = debug.default(MUTATION_QUEUE_LOGGER);
 
@@ -16,13 +15,10 @@ const logger = debug.default(MUTATION_QUEUE_LOGGER);
  */
 export class OfflineMutationsHandler {
 
-  private mutationCacheUpdates?: CacheUpdates;
-
-  constructor(private store: OfflineStore,
+  constructor(
+    private store: OfflineStore,
     private apolloClient: ApolloClient<NormalizedCacheObject>,
-    clientConfig: OfflineLinkConfig) {
-    this.mutationCacheUpdates = clientConfig.mutationCacheUpdates;
-  }
+    private mutationCacheUpdates?: CacheUpdates) {}
 
   /**
    * Replay mutations to client.
@@ -47,17 +43,10 @@ export class OfflineMutationsHandler {
    */
   public mutateOfflineElement(item: OfflineItem) {
     const optimisticResponse = item.optimisticResponse;
-    const mutationName = getMutationName(item.operation.query);
+    const mutationName = getMutationName(item.query);
     let context;
     let updateFunction;
-    let previousContext: any = {};
-
-    if (item.operation.getContext) {
-      previousContext = item.operation.getContext();
-      if (previousContext.updateFunction) {
-        updateFunction = previousContext.updateFunction;
-      }
-    }
+    const previousContext: any = {};
 
     context = { ...previousContext, ...this.getOfflineContext(item) };
 
@@ -66,8 +55,8 @@ export class OfflineMutationsHandler {
     }
 
     const mutationOptions: MutationOptions = {
-      variables: item.operation.variables,
-      mutation: item.operation.query,
+      variables: item.variables,
+      mutation: item.query,
       // Restore optimistic response from operation in order to see it
       optimisticResponse,
       // Pass client update functions

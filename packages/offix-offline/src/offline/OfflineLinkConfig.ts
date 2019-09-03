@@ -5,7 +5,7 @@ import { CacheUpdates } from "offix-cache";
  * Conguration required for OfflineLink
  */
 export interface OfflineLinkConfig {
-    networkStatus?: NetworkStatus;
+    networkStatus: NetworkStatus;
     listener?: OfflineQueueListener;
     resultProcessors?: IResultProcessor[];
     mutationCacheUpdates?: CacheUpdates;

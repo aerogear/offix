@@ -1,11 +1,13 @@
-import { FetchResult, NextLink, Operation } from "apollo-link";
+import { FetchResult, NextLink, Operation, DocumentNode } from "apollo-link";
 import { isClientGeneratedId, generateClientId } from "offix-cache";
 
 /**
- * Represents data that is being saved to the offlien store
+ * Represents data that is being saved to the offline store
  */
 export interface OfflineItem {
-  operation: Operation;
+  query: DocumentNode;
+  variables: Record<string, any>;
+  operationName: string;
   id: string;
   conflictBase?: any;
   returnType?: string;
@@ -20,7 +22,9 @@ export interface OfflineItem {
  * It exposes method for forwarding the operation.
  */
 export class OperationQueueEntry implements OfflineItem {
-  public readonly operation: Operation;
+  public readonly query: DocumentNode;
+  public readonly variables: Record<string, any>;
+  public readonly operationName: string;
   public readonly optimisticResponse?: any;
   public readonly id: string;
   public readonly idField?: string = "id";
@@ -34,7 +38,9 @@ export class OperationQueueEntry implements OfflineItem {
   public observer?: ZenObservable.SubscriptionObserver<FetchResult>;
 
   constructor(operation: Operation, offlineId?: number, forward?: NextLink) {
-    this.operation = operation;
+    this.query = operation.query;
+    this.variables = operation.variables;
+    this.operationName = operation.operationName;
     this.forward = forward;
     if (offlineId) {
       this.id = offlineId.toString();
@@ -58,7 +64,7 @@ export class OperationQueueEntry implements OfflineItem {
    * For new items made when offline changes will always have client side id.
    */
   public hasClientId() {
-    return isClientGeneratedId(this.operation.variables[this.idField as string]);
+    return isClientGeneratedId(this.variables[this.idField as string]);
   }
 
   /**
@@ -66,7 +72,9 @@ export class OperationQueueEntry implements OfflineItem {
    */
   public toOfflineItem(): OfflineItem {
     return {
-      operation: this.operation,
+      query: this.query,
+      variables: this.variables,
+      operationName: this.operationName,
       optimisticResponse: this.optimisticResponse,
       id: this.id,
       idField: this.idField,

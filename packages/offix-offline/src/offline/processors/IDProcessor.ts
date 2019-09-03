@@ -13,10 +13,10 @@ import { isClientGeneratedId } from "offix-cache";
 export class IDProcessor implements IResultProcessor {
 
   public execute(queue: OperationQueueEntry[], entry: OperationQueueEntry, result: FetchResult) {
-    if (!entry || !entry.operation) {
+    if (!entry || !entry.query) {
       return;
     }
-    const { operation: { operationName }, optimisticResponse } = entry;
+    const { operationName, optimisticResponse } = entry;
     const idField = entry.idField || "id";
 
     if (!result ||
@@ -32,7 +32,7 @@ export class IDProcessor implements IResultProcessor {
     // Ensure we dealing with string
     clientId = clientId.toString();
     if (isClientGeneratedId(optimisticResponse[operationName][idField])) {
-      queue.forEach(({ operation: op }) => {
+      queue.forEach((op) => {
         if (op.variables[idField] === clientId) {
           op.variables[idField] = result.data && result.data[operationName][idField];
         }
