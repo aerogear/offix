@@ -1,22 +1,32 @@
-import { ApolloClient, OperationVariables } from "apollo-client";
+import { ApolloClient, OperationVariables, MutationOptions } from "apollo-client";
 import { OffixClientConfig } from "./config/OffixClientConfig";
 import { OffixDefaultConfig } from "./config/OffixDefaultConfig";
-import { createCompositeLink, createOfflineLink, createConflictLink } from "./LinksBuilder";
+import { createCompositeLink } from "./LinksBuilder";
+import { createOperation } from "apollo-link";
 import {
   OfflineStore,
+  OfflineQueue,
   OfflineQueueListener,
   OfflineLink,
   OfflineMutationsHandler,
   CompositeQueueListener,
   ListenerProvider,
-  PersistentStore,
-  PersistedData
+  IDProcessor,
+  IResultProcessor,
+  OfflineError,
+  BaseProcessor,
+  WebNetworkStatus,
+  NetworkStatus,
+  ConflictLink,
+  ObjectState,
+  NetworkInfo
 } from "offix-offline";
+import { FetchResult } from "apollo-link";
 import { ApolloOfflineClient } from "./ApolloOfflineClient";
 import { MutationHelperOptions, createMutationOptions } from "offix-cache";
-import { FetchResult } from "apollo-link";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import { CachePersistor } from "apollo-cache-persist";
+import { FetchResult, ApolloLink } from "apollo-link";
+import { buildCachePersistence } from "./cache";
+import { NormalizedCacheObject } from "apollo-cache-inmemory";
 
 /**
 * Factory for creating Apollo Offline Client
@@ -48,17 +58,37 @@ export const createClient = async (userConfig: OffixClientConfig):
  *  ```
  */
 export class OfflineClient implements ListenerProvider {
-
-  public queueListeners: OfflineQueueListener[] = [];
-  public apolloClient?: ApolloOfflineClient;
-  public store: OfflineStore;
+  // the offix client global config
   public config: OffixDefaultConfig;
+  // the network status interface that determines online/offline state
+  public networkStatus: NetworkStatus;
+  // the offline storage interface that persists offline data across restarts
+  public store: OfflineStore;
+  // the in memory queue that holds offline data
+  public queue: OfflineQueue;
+  // listeners that can be added by the user to handle various events coming from the offline queue
+  public queueListeners: OfflineQueueListener[] = [];
+  // The apollo cache that holds application state
   public cache: InMemoryCache;
+  // wrapper around the apollo cache for persisting it across restarts
   public persistor: CachePersistor<object>;
+  // captures the 'base' object a mutation is performed on. Used for conflict resolution
+  public baseProcessor: BaseProcessor;
+  // The apollo client!
+  public apolloClient?: ApolloOfflineClient;
+  // determines whether we're offline or not
+  private online: boolean = false;
 
   constructor(userConfig: OffixClientConfig) {
     this.config = new OffixDefaultConfig(userConfig);
+    this.networkStatus = this.config.networkStatus || new WebNetworkStatus();
     this.store = new OfflineStore(this.config.offlineStorage);
+    const resultProcessors: IResultProcessor[] = [new IDProcessor()];
+    this.queue = new OfflineQueue(this.store, {
+      listener: this.config.offlineQueueListener,
+      networkStatus: this.networkStatus,
+      resultProcessors
+    });
     this.setupEventListeners();
     this.cache = new InMemoryCache();
     this.persistor = new CachePersistor({
@@ -68,6 +98,10 @@ export class OfflineClient implements ListenerProvider {
       maxSize: false,
       debug: false
     });
+    this.baseProcessor = new BaseProcessor({
+      stater: this.config.conflictProvider,
+      cache: this.cache
+    });
   }
 
   /**
@@ -76,13 +110,22 @@ export class OfflineClient implements ListenerProvider {
   public async init(): Promise<ApolloOfflineClient> {
     await this.store.init();
     await this.persistor.restore();
-    const offlineLink = await createOfflineLink(this.config, this.store);
-    const conflictLink = await createConflictLink(this.config);
+
+    const offlineLink = new OfflineLink(this.queue, this.networkStatus);
+
+    const conflictLink = new ConflictLink({
+      conflictProvider: this.config.conflictProvider as ObjectState,
+      conflictListener: this.config.conflictListener,
+      conflictStrategy: this.config.conflictStrategy
+    });
+
     const link = await createCompositeLink(this.config, offlineLink, conflictLink);
+
     const client = new ApolloClient({
       link,
       cache: this.cache
-    }) as any;
+    });
+
     this.apolloClient = this.decorateApolloClient(client);
     await this.restoreOfflineOperations(offlineLink);
     return this.apolloClient;
@@ -111,16 +154,35 @@ export class OfflineClient implements ListenerProvider {
    *
    * @param options the MutationHelperOptions to create the mutation
    */
-  public offlineMutation<T = any, TVariables = OperationVariables>(
+  public async offlineMutation<T = any, TVariables = OperationVariables>(
     options: MutationHelperOptions<T, TVariables>): Promise<FetchResult<T>> {
     if (!this.apolloClient) {
       throw new Error("Apollo offline client not initialised before mutation called.");
     } else {
       const mutationOptions = createMutationOptions<T, TVariables>(options);
-      mutationOptions.context.updateFunction = mutationOptions.update;
-      return this.apolloClient.mutate<T, TVariables>(
-        mutationOptions
-      );
+      mutationOptions.context.cache = this.apolloClient.cache;
+
+      // TODO This needs to be refactored
+      // Storage should not rely on operation
+      // Base Processor relies on operation because it uses getObjectFromCache
+      // getObjectFromCache gets the cache instance from operation
+      const operation = createOperation(mutationOptions.context, {
+        query: mutationOptions.mutation,
+        variables: mutationOptions.variables
+      });
+
+      mutationOptions.context.conflictBase = this.baseProcessor &&
+        this.baseProcessor.getBaseState(mutationOptions as unknown as MutationOptions);
+
+      if (this.online) {
+        return this.apolloClient.mutate(mutationOptions);
+      } else {
+        await this.queue.persistItemWithQueue(operation);
+        const mutationPromise = this.apolloClient.mutate<T, TVariables>(
+          mutationOptions
+        );
+        throw new OfflineError(mutationPromise);
+      }
     }
   }
 
@@ -135,14 +197,17 @@ export class OfflineClient implements ListenerProvider {
    * Restore offline operations into the queue
    */
   protected async restoreOfflineOperations(offlineLink: OfflineLink) {
+
     const offlineMutationHandler = new OfflineMutationsHandler(this.store,
       this.apolloClient as ApolloOfflineClient,
-      this.config);
-    offlineLink.setup(offlineMutationHandler);
+      this.config.mutationCacheUpdates);
+
     // Reschedule offline mutations for new client instance
     await offlineMutationHandler.replayOfflineMutations();
+
     // After pushing all online changes check and set network status
-    await offlineLink.initOnlineState();
+    await this.initOnlineState();
+    await offlineLink.initOnlineState(); // TODO this needs to go away
   }
 
   protected setupEventListeners() {
@@ -153,4 +218,20 @@ export class OfflineClient implements ListenerProvider {
     }
   }
 
+  protected async initOnlineState() {
+    const queue = this.queue;
+    const self = this;
+    this.online = !(await this.networkStatus.isOffline());
+    if (this.online) {
+      queue.forwardOperations();
+    }
+    this.networkStatus.onStatusChangeListener({
+      onStatusChange(networkInfo: NetworkInfo) {
+        self.online = networkInfo.online;
+        if (self.online) {
+          queue.forwardOperations();
+        }
+      }
+    });
+  }
 }

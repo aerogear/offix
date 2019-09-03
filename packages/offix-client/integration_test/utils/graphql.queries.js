@@ -76,14 +76,6 @@ export const UPDATE_TASK_CLIENT_RESOLUTION = gql`
   }
 `;
 
-export const ONLINE_ONLY = gql`
-  mutation onlineOnly($id: ID!) {
-    onlineOnly(id: $id) @onlineOnly {
-      title
-    }
-  }
-`;
-
 export const TASK_CREATED = gql`
   subscription taskCreated {
     taskCreated {
