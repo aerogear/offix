@@ -81,6 +81,7 @@ export class OfflineProcessor {
   }
 
   public async initOnlineState() {
+    debugger
     const queue = this.queue;
     const self = this;
     this.online = !(await this.networkStatus.isOffline());

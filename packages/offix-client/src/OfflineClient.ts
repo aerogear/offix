@@ -13,7 +13,9 @@ import {
   OfflineProcessor,
   IDProcessor,
   IResultProcessor,
-  OfflineError
+  OfflineError,
+  BaseProcessor,
+  ObjectState
 } from "offix-offline";
 import { ApolloOfflineClient } from "./ApolloOfflineClient";
 import { MutationHelperOptions, createMutationOptions } from "offix-cache";
@@ -56,10 +58,12 @@ export class OfflineClient implements ListenerProvider {
   public store: OfflineStore;
   public config: OffixDefaultConfig;
   public offlineProcessor?: OfflineProcessor;
+  public baseProcessor: BaseProcessor
 
   constructor(userConfig: OffixClientConfig) {
     this.config = new OffixDefaultConfig(userConfig);
     this.store = new OfflineStore(this.config.offlineStorage);
+    this.baseProcessor = new BaseProcessor(this.config.conflictProvider as ObjectState);
     this.setupEventListeners();
   }
 
@@ -118,19 +122,26 @@ export class OfflineClient implements ListenerProvider {
     if (!this.apolloClient) {
       throw new Error("Apollo offline client not initialised before mutation called.");
     } else {
+      debugger
       const mutationOptions = createMutationOptions<T, TVariables>(options);
+      mutationOptions.context.cache = this.apolloClient.cache
+      
+      // TODO This needs to be refactored
+      // Storage should not rely on operation
+      // Base Processor relies on operation because it uses getObjectFromCache
+      // getObjectFromCache gets the cache instance from operation
+      const operation = createOperation(mutationOptions.context, {
+        query: mutationOptions.mutation,
+        variables: mutationOptions.variables
+      })
+
+      mutationOptions.context.conflictBase = this.baseProcessor.getBaseState(operation)
+
       if (this.offlineProcessor && this.offlineProcessor.online) {
-        return this.apolloClient.mutate<T, TVariables>(
-          mutationOptions
-        );
+        debugger
+        return this.apolloClient.mutate(mutationOptions);
       } else {
-        // TODO This needs to be refactored
-        // Storage should not rely on operation
-        const operation = createOperation({}, {
-          query: mutationOptions.mutation,
-          variables: mutationOptions.variables
-        })
-        console.log(operation)
+        debugger
         this.offlineProcessor && await this.offlineProcessor.queue.persistItemWithQueue(operation);
         const mutationPromise = this.apolloClient.mutate<T, TVariables>(
           mutationOptions
