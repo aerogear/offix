@@ -1,8 +1,8 @@
-import { OfflineError } from '../../offix-offline/src/offline/OfflineError';
 import { ApolloClient, OperationVariables, NetworkStatus } from "apollo-client";
 import { OffixClientConfig } from "./config/OffixClientConfig";
 import { OffixDefaultConfig } from "./config/OffixDefaultConfig";
 import { createCompositeLink, createOfflineLink, createConflictLink } from "./LinksBuilder";
+import { createOperation } from 'apollo-link';
 import {
   OfflineStore,
   OfflineQueueListener,
@@ -12,7 +12,8 @@ import {
   ListenerProvider,
   OfflineProcessor,
   IDProcessor,
-  IResultProcessor
+  IResultProcessor,
+  OfflineError
 } from "offix-offline";
 import { ApolloOfflineClient } from "./ApolloOfflineClient";
 import { MutationHelperOptions, createMutationOptions } from "offix-cache";
@@ -54,20 +55,12 @@ export class OfflineClient implements ListenerProvider {
   public apolloClient?: ApolloOfflineClient;
   public store: OfflineStore;
   public config: OffixDefaultConfig;
-  public offlineProcessor: OfflineProcessor;
+  public offlineProcessor?: OfflineProcessor;
 
   constructor(userConfig: OffixClientConfig) {
     this.config = new OffixDefaultConfig(userConfig);
     this.store = new OfflineStore(this.config.offlineStorage);
     this.setupEventListeners();
-    const resultProcessors: IResultProcessor[] = [
-      new IDProcessor()
-    ];
-    this.offlineProcessor = new OfflineProcessor(this.store, {
-      listener: this.config.offlineQueueListener,
-      networkStatus: this.config.networkStatus,
-      resultProcessors
-    });
   }
 
   /**
@@ -78,6 +71,14 @@ export class OfflineClient implements ListenerProvider {
     const cache = await buildCachePersistence(this.config.cacheStorage);
     const offlineLink = await createOfflineLink(this.config, this.store);
     const conflictLink = await createConflictLink(this.config);
+    const resultProcessors: IResultProcessor[] = [
+      new IDProcessor()
+    ];
+    this.offlineProcessor = new OfflineProcessor(this.store, {
+      listener: this.config.offlineQueueListener,
+      networkStatus: this.config.networkStatus,
+      resultProcessors
+    });
     const link = await createCompositeLink(this.config, offlineLink, conflictLink);
     const client = new ApolloClient({
       link,
@@ -118,19 +119,19 @@ export class OfflineClient implements ListenerProvider {
       throw new Error("Apollo offline client not initialised before mutation called.");
     } else {
       const mutationOptions = createMutationOptions<T, TVariables>(options);
-      if (this.offlineProcessor.online) {
+      if (this.offlineProcessor && this.offlineProcessor.online) {
         return this.apolloClient.mutate<T, TVariables>(
           mutationOptions
         );
       } else {
         // TODO This needs to be refactored
         // Storage should not rely on operation
-        const operation: any = {
+        const operation = createOperation({}, {
           query: mutationOptions.mutation,
-          variables: mutationOptions.variables,
-          operationName: "TODO"
-        };
-        await this.offlineProcessor.queue.persistItemWithQueue(operation);
+          variables: mutationOptions.variables
+        })
+        console.log(operation)
+        this.offlineProcessor && await this.offlineProcessor.queue.persistItemWithQueue(operation);
         const mutationPromise = this.apolloClient.mutate<T, TVariables>(
           mutationOptions
         );
