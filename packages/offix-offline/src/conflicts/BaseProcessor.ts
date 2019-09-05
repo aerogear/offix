@@ -20,7 +20,6 @@ export class BaseProcessor {
   constructor(private stater: ObjectState) { }
 
   public getBaseState(operation: Operation): ConflictResolutionData {
-    if (isMutation(operation)) {
       const idField = operation.getContext().idField || "id";
       const conflictBase = getObjectFromCache(operation, operation.variables[idField]);
       if (conflictBase && Object.keys(conflictBase).length !== 0) {
@@ -31,7 +30,6 @@ export class BaseProcessor {
         return conflictBase
       }
     }
-  }
 }
 
 /**
