@@ -8,12 +8,15 @@ import {
   OfflineLink,
   OfflineMutationsHandler,
   CompositeQueueListener,
-  ListenerProvider
+  ListenerProvider,
+  PersistentStore,
+  PersistedData
 } from "offix-offline";
 import { ApolloOfflineClient } from "./ApolloOfflineClient";
 import { MutationHelperOptions, createMutationOptions } from "offix-cache";
-import { FetchResult, ApolloLink } from "apollo-link";
-import { buildCachePersistence } from "./cache";
+import { FetchResult } from "apollo-link";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { CachePersistor } from "apollo-cache-persist";
 
 /**
 * Factory for creating Apollo Offline Client
@@ -50,11 +53,21 @@ export class OfflineClient implements ListenerProvider {
   public apolloClient?: ApolloOfflineClient;
   public store: OfflineStore;
   public config: OffixDefaultConfig;
+  public cache: InMemoryCache;
+  public persistor: CachePersistor<object>;
 
   constructor(userConfig: OffixClientConfig) {
     this.config = new OffixDefaultConfig(userConfig);
     this.store = new OfflineStore(this.config.offlineStorage);
     this.setupEventListeners();
+    this.cache = new InMemoryCache();
+    this.persistor = new CachePersistor({
+      cache: this.cache,
+      serialize: false,
+      storage: this.config.cacheStorage,
+      maxSize: false,
+      debug: false
+    });
   }
 
   /**
@@ -62,14 +75,13 @@ export class OfflineClient implements ListenerProvider {
   */
   public async init(): Promise<ApolloOfflineClient> {
     await this.store.init();
-    const cache = await buildCachePersistence(this.config.cacheStorage);
+    await this.persistor.restore();
     const offlineLink = await createOfflineLink(this.config, this.store);
     const conflictLink = await createConflictLink(this.config);
     const link = await createCompositeLink(this.config, offlineLink, conflictLink);
     const client = new ApolloClient({
       link,
-      cache
-
+      cache: this.cache
     }) as any;
     this.apolloClient = this.decorateApolloClient(client);
     await this.restoreOfflineOperations(offlineLink);
@@ -133,11 +145,12 @@ export class OfflineClient implements ListenerProvider {
     await offlineLink.initOnlineState();
   }
 
-  private setupEventListeners() {
+  protected setupEventListeners() {
     // Check if user provided legacy listener
     // To provide backwards compatibility we ignore this case
     if (!this.config.offlineQueueListener) {
       this.config.offlineQueueListener = new CompositeQueueListener(this);
     }
   }
+
 }
