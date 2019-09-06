@@ -1,5 +1,15 @@
 ## What is new in Offix
 
+# Next
+
+## Features
+
+### Offline client enables wiping out cache using persistor interface
+
+`offlineClient.persitor.purge()` method will wipe entire persistence layer for Apollo cache
+
+> NOTE: InMemoryCache needs to be wiped out as well along with the client. Please execute `offlineClient.cache.rest()`
+
 # 0.8.0 
 
 ## Features
