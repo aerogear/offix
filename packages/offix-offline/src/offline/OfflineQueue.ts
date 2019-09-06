@@ -4,7 +4,8 @@ import { Operation, NextLink, Observable, FetchResult } from "apollo-link";
 import { OfflineStore } from "./storage/OfflineStore";
 import { IResultProcessor } from "./processors";
 import { OfflineLinkConfig } from "./OfflineLinkConfig";
-
+import { createOperation } from "apollo-link";
+import { createMutationOptions } from "offix-cache";
 export type OperationQueueChangeHandler = (entry: OperationQueueEntry) => void;
 
 /**
@@ -64,12 +65,18 @@ export class OfflineQueue {
         if (!op.forward) {
           return;
         }
-        op.forward(op.operation).subscribe({
+        // TODO remove createOperation. Probably a bigger discussion around how we fire mutations from here.
+        const mutationOptions = createMutationOptions({mutation: op.query, variables: op.variables})
+        const operation = createOperation(mutationOptions.context, {
+          query: mutationOptions.mutation,
+          variables: mutationOptions.variables
+        })
+        op.forward(operation).subscribe({
           next: (result: FetchResult) => {
-            this.onForwardNext(op, result);
+            this.onForwardNext(operation, op, result);
           },
           error: (error: any) => {
-            this.onForwardError(op, error);
+            this.onForwardError(operation, op, error);
             return resolve();
           },
           complete: () => {
@@ -92,26 +99,26 @@ export class OfflineQueue {
     }
   }
 
-  private onForwardError(op: OperationQueueEntry, error: any) {
+  private onForwardError(operation: Operation, op: OperationQueueEntry, error: any) {
     if (this.listener && this.listener.onOperationFailure) {
-      this.listener.onOperationFailure(op.operation, undefined, op.networkError);
+      this.listener.onOperationFailure(operation, undefined, op.networkError);
     }
     if (op.observer) {
       op.observer.error(error);
     }
   }
 
-  private onForwardNext(op: OperationQueueEntry, result: FetchResult<any>) {
+  private onForwardNext(operation: Operation, op: OperationQueueEntry, result: FetchResult<any>) {
     const entry = this.queue.find(e => e === op);
     this.queue = this.queue.filter(e => e !== op);
     if (result.errors) {
       if (this.listener && this.listener.onOperationFailure) {
-        this.listener.onOperationFailure(op.operation, result.errors);
+        this.listener.onOperationFailure(operation, result.errors);
       }
       // Notify for success otherwise
     } else if (result.data) {
       if (this.listener && this.listener.onOperationSuccess) {
-        this.listener.onOperationSuccess(op.operation, result.data);
+        this.listener.onOperationSuccess(operation, result.data);
       }
       this.executeResultProcessors(op, result);
     }
