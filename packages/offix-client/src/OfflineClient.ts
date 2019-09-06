@@ -122,7 +122,6 @@ export class OfflineClient implements ListenerProvider {
     if (!this.apolloClient) {
       throw new Error("Apollo offline client not initialised before mutation called.");
     } else {
-      debugger
       const mutationOptions = createMutationOptions<T, TVariables>(options);
       mutationOptions.context.cache = this.apolloClient.cache
       
@@ -135,13 +134,13 @@ export class OfflineClient implements ListenerProvider {
         variables: mutationOptions.variables
       })
 
+      // TODO we could probably move the conflictBase directly on to the mutationOptions.
+      // does createMutationOptions living in offix-cache make sense then though?
       mutationOptions.context.conflictBase = this.baseProcessor.getBaseState(operation)
 
       if (this.offlineProcessor && this.offlineProcessor.online) {
-        debugger
         return this.apolloClient.mutate(mutationOptions);
       } else {
-        debugger
         this.offlineProcessor && await this.offlineProcessor.queue.persistItemWithQueue(operation);
         const mutationPromise = this.apolloClient.mutate<T, TVariables>(
           mutationOptions

@@ -47,17 +47,10 @@ export class OfflineMutationsHandler {
    */
   public mutateOfflineElement(item: OfflineItem) {
     const optimisticResponse = item.optimisticResponse;
-    const mutationName = getMutationName(item.operation.query);
+    const mutationName = getMutationName(item.query);
     let context;
     let updateFunction;
     let previousContext: any = {};
-
-    if (item.operation.getContext) {
-      previousContext = item.operation.getContext();
-      if (previousContext.updateFunction) {
-        updateFunction = previousContext.updateFunction;
-      }
-    }
 
     context = { ...previousContext, ...this.getOfflineContext(item) };
 
@@ -66,8 +59,8 @@ export class OfflineMutationsHandler {
     }
 
     const mutationOptions: MutationOptions = {
-      variables: item.operation.variables,
-      mutation: item.operation.query,
+      variables: item.variables,
+      mutation: item.query,
       // Restore optimistic response from operation in order to see it
       optimisticResponse,
       // Pass client update functions
