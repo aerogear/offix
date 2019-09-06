@@ -35,6 +35,7 @@ export class OfflineProcessor {
   private offlineMutationHandler?: OfflineMutationsHandler;
 
   constructor(store: OfflineStore, options: OfflineLinkConfig) {
+    debugger
     if (options.networkStatus) {
       this.networkStatus = options.networkStatus;
     } else {

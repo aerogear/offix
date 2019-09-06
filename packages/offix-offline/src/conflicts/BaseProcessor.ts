@@ -1,8 +1,14 @@
-import { Operation } from "apollo-link";
-import { isMutation } from "../utils/helpers";
-import { getObjectFromCache } from "../utils/cacheHelper";
+import { MutationOptions } from "apollo-client";
+import { ApolloCache } from "apollo-cache";
+import { CacheHelper } from "../utils/CacheHelper";
 import { ObjectState } from "../conflicts/state/ObjectState";
 import { ConflictResolutionData } from "./strategies/ConflictResolutionData";
+import { NormalizedCacheObject } from "apollo-cache-inmemory";
+
+export interface BaseProcessorOptions {
+  stater: ObjectState, 
+  cache: ApolloCache<NormalizedCacheObject>
+}
 
 /**
  * BaseProcessor takes an outgoing GraphQL operation and it checks if it
@@ -17,19 +23,31 @@ import { ConflictResolutionData } from "./strategies/ConflictResolutionData";
  * which can then be used for conflict resolution later on.
  */
 export class BaseProcessor {
-  constructor(private stater: ObjectState) { }
+  private cacheHelper: CacheHelper
+  private stater: ObjectState
 
-  public getBaseState(operation: Operation): ConflictResolutionData {
-      const idField = operation.getContext().idField || "id";
-      const conflictBase = getObjectFromCache(operation, operation.variables[idField]);
+  constructor(options: BaseProcessorOptions) {
+    this.stater = options.stater
+    this.cacheHelper = new CacheHelper(options.cache)
+  }
+
+  public getBaseState(mutationOptions: MutationOptions): ConflictResolutionData {
+    const context = mutationOptions.context
+    const idField: string = context.idField || "id";
+    const id: string = mutationOptions.variables && mutationOptions.variables[idField]
+
+    if (!context.isOffline && !context.conflictBase) {
+      // do nothing
+      const conflictBase = this.cacheHelper.getObjectFromCache(context.returnType, id);
       if (conflictBase && Object.keys(conflictBase).length !== 0) {
-        if (this.stater.hasConflict(operation.variables, conflictBase)) {
+        if (this.stater.hasConflict(mutationOptions.variables, conflictBase)) {
           // 🙊 Input data is conflicted with the latest server projection
-          throw new LocalConflictError(conflictBase, operation.variables)
+          throw new LocalConflictError(conflictBase, mutationOptions.variables)
         }
         return conflictBase
       }
     }
+  }
 }
 
 /**

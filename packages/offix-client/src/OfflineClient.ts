@@ -1,4 +1,4 @@
-import { ApolloClient, OperationVariables, NetworkStatus } from "apollo-client";
+import { ApolloClient, OperationVariables, NetworkStatus, MutationOptions } from "apollo-client";
 import { OffixClientConfig } from "./config/OffixClientConfig";
 import { OffixDefaultConfig } from "./config/OffixDefaultConfig";
 import { createCompositeLink, createOfflineLink, createConflictLink } from "./LinksBuilder";
@@ -21,6 +21,7 @@ import { ApolloOfflineClient } from "./ApolloOfflineClient";
 import { MutationHelperOptions, createMutationOptions } from "offix-cache";
 import { FetchResult, ApolloLink } from "apollo-link";
 import { buildCachePersistence } from "./cache";
+import { NormalizedCacheObject } from "apollo-cache-inmemory";
 
 /**
 * Factory for creating Apollo Offline Client
@@ -58,12 +59,11 @@ export class OfflineClient implements ListenerProvider {
   public store: OfflineStore;
   public config: OffixDefaultConfig;
   public offlineProcessor?: OfflineProcessor;
-  public baseProcessor: BaseProcessor
+  public baseProcessor?: BaseProcessor
 
   constructor(userConfig: OffixClientConfig) {
     this.config = new OffixDefaultConfig(userConfig);
     this.store = new OfflineStore(this.config.offlineStorage);
-    this.baseProcessor = new BaseProcessor(this.config.conflictProvider as ObjectState);
     this.setupEventListeners();
   }
 
@@ -78,6 +78,7 @@ export class OfflineClient implements ListenerProvider {
     const resultProcessors: IResultProcessor[] = [
       new IDProcessor()
     ];
+    debugger
     this.offlineProcessor = new OfflineProcessor(this.store, {
       listener: this.config.offlineQueueListener,
       networkStatus: this.config.networkStatus,
@@ -87,9 +88,13 @@ export class OfflineClient implements ListenerProvider {
     const client = new ApolloClient({
       link,
       cache
-
     }) as any;
     this.apolloClient = this.decorateApolloClient(client);
+    this.baseProcessor = new BaseProcessor({
+      stater: this.config.conflictProvider,
+      cache: this.apolloClient.cache
+    });
+    debugger
     await this.restoreOfflineOperations(offlineLink);
     return this.apolloClient;
   }
@@ -135,7 +140,7 @@ export class OfflineClient implements ListenerProvider {
         variables: mutationOptions.variables
       })
 
-      mutationOptions.context.conflictBase = this.baseProcessor.getBaseState(operation)
+      mutationOptions.context.conflictBase = this.baseProcessor && this.baseProcessor.getBaseState(mutationOptions as unknown as MutationOptions)
 
       if (this.offlineProcessor && this.offlineProcessor.online) {
         debugger
@@ -162,14 +167,19 @@ export class OfflineClient implements ListenerProvider {
    * Restore offline operations into the queue
    */
   protected async restoreOfflineOperations(offlineLink: OfflineLink) {
+    // TODO This is a total mess - needs refactoring
     const offlineMutationHandler = new OfflineMutationsHandler(this.store,
       this.apolloClient as ApolloOfflineClient,
       this.config);
     offlineLink.setup(offlineMutationHandler);
     // Reschedule offline mutations for new client instance
     await offlineMutationHandler.replayOfflineMutations();
+    
     // After pushing all online changes check and set network status
-    await offlineLink.initOnlineState();
+    
+    //^^ But why do we wait until now to check and set network status?
+    await offlineLink.initOnlineState(); // TODO this needs to go away
+    this.offlineProcessor && await this.offlineProcessor.initOnlineState(); 
   }
 
   private setupEventListeners() {

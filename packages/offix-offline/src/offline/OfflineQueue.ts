@@ -23,6 +23,7 @@ export class OfflineQueue {
   private resultProcessors: IResultProcessor[] | undefined;
 
   constructor(store: OfflineStore, options: OfflineLinkConfig) {
+    debugger
     this.store = store;
     this.listener = options.listener;
     this.resultProcessors = options.resultProcessors;
