@@ -2,24 +2,25 @@ import debug from "debug";
 import { ApolloCache } from "apollo-cache";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
 
+// WTF do we name this
 interface SpecialApolloCache extends ApolloCache<NormalizedCacheObject> {
-  config: any
-  data: any
-  optimisticData: any
+  config: any;
+  data: any;
+  optimisticData: any;
 }
 
-export class CacheHelper{
-  public cache?: SpecialApolloCache
-  public logger: any
+export class CacheHelper {
+  public cache?: SpecialApolloCache;
+  public logger: any;
 
   public constructor(cache: ApolloCache<NormalizedCacheObject>, logger?: any) {
     this.cache = cache as SpecialApolloCache;
-    this.logger = logger ? logger: debug.default("Offix:Helpers");
+    this.logger = logger ? logger : debug.default("Offix:Helpers");
   }
 
-  getObjectFromCache(typename: string, id: string) {
+  public getObjectFromCache(typename: string, id: string) {
     if (this.cache && this.cache.data) {
-      const idKey = this.cache.config.dataIdFromObject({ __typename: typename, id })
+      const idKey = this.cache.config.dataIdFromObject({ __typename: typename, id });
 
       if (this.cache.optimisticData && this.cache.optimisticData.parent) {
         const optimisticData = this.cache.optimisticData.parent.data;

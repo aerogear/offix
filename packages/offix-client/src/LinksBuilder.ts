@@ -53,7 +53,7 @@ export const createCompositeLink = async (config: OffixClientConfig,
   const mutationOfflineLink = ApolloLink.split((op: Operation) => {
     return isMutation(op) && !isOnlineOnly(op);
   }, offlineLink);
-  const baseLink = new BaseLink()
+  const baseLink = new BaseLink();
   const links: ApolloLink[] = [baseLink, mutationOfflineLink];
   links.push(conflictLink);
   const retryLink = ApolloLink.split(OfflineMutationsHandler.isMarkedOffline, new RetryLink(config.retryOptions));

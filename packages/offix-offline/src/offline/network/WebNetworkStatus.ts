@@ -9,6 +9,7 @@ declare var window: any;
 export class WebNetworkStatus implements NetworkStatus {
   public onStatusChangeListener(callback: NetworkStatusChangeCallback): void {
     if (window) {
+      debugger;
       window.addEventListener("online", () => callback.onStatusChange({online: true}), false);
       window.addEventListener("offline", () => callback.onStatusChange({online: false}), false);
     }

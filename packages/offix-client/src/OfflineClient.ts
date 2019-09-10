@@ -2,7 +2,7 @@ import { ApolloClient, OperationVariables, NetworkStatus, MutationOptions } from
 import { OffixClientConfig } from "./config/OffixClientConfig";
 import { OffixDefaultConfig } from "./config/OffixDefaultConfig";
 import { createCompositeLink, createOfflineLink, createConflictLink } from "./LinksBuilder";
-import { createOperation } from 'apollo-link';
+import { createOperation } from "apollo-link";
 import {
   OfflineStore,
   OfflineQueueListener,
@@ -59,7 +59,7 @@ export class OfflineClient implements ListenerProvider {
   public store: OfflineStore;
   public config: OffixDefaultConfig;
   public offlineProcessor?: OfflineProcessor;
-  public baseProcessor?: BaseProcessor
+  public baseProcessor?: BaseProcessor;
 
   constructor(userConfig: OffixClientConfig) {
     this.config = new OffixDefaultConfig(userConfig);
@@ -78,7 +78,6 @@ export class OfflineClient implements ListenerProvider {
     const resultProcessors: IResultProcessor[] = [
       new IDProcessor()
     ];
-    debugger
     this.offlineProcessor = new OfflineProcessor(this.store, {
       listener: this.config.offlineQueueListener,
       networkStatus: this.config.networkStatus,
@@ -94,7 +93,6 @@ export class OfflineClient implements ListenerProvider {
       stater: this.config.conflictProvider,
       cache: this.apolloClient.cache
     });
-    debugger
     await this.restoreOfflineOperations(offlineLink);
     return this.apolloClient;
   }
@@ -127,10 +125,9 @@ export class OfflineClient implements ListenerProvider {
     if (!this.apolloClient) {
       throw new Error("Apollo offline client not initialised before mutation called.");
     } else {
-      debugger
       const mutationOptions = createMutationOptions<T, TVariables>(options);
-      mutationOptions.context.cache = this.apolloClient.cache
-      
+      mutationOptions.context.cache = this.apolloClient.cache;
+
       // TODO This needs to be refactored
       // Storage should not rely on operation
       // Base Processor relies on operation because it uses getObjectFromCache
@@ -138,15 +135,14 @@ export class OfflineClient implements ListenerProvider {
       const operation = createOperation(mutationOptions.context, {
         query: mutationOptions.mutation,
         variables: mutationOptions.variables
-      })
+      });
 
-      mutationOptions.context.conflictBase = this.baseProcessor && this.baseProcessor.getBaseState(mutationOptions as unknown as MutationOptions)
+      mutationOptions.context.conflictBase = this.baseProcessor &&
+      this.baseProcessor.getBaseState(mutationOptions as unknown as  MutationOptions);
 
       if (this.offlineProcessor && this.offlineProcessor.online) {
-        debugger
         return this.apolloClient.mutate(mutationOptions);
       } else {
-        debugger
         this.offlineProcessor && await this.offlineProcessor.queue.persistItemWithQueue(operation);
         const mutationPromise = this.apolloClient.mutate<T, TVariables>(
           mutationOptions
@@ -174,12 +170,12 @@ export class OfflineClient implements ListenerProvider {
     offlineLink.setup(offlineMutationHandler);
     // Reschedule offline mutations for new client instance
     await offlineMutationHandler.replayOfflineMutations();
-    
+
     // After pushing all online changes check and set network status
-    
-    //^^ But why do we wait until now to check and set network status?
+
+    // ^^ But why do we wait until now to check and set network status?
     await offlineLink.initOnlineState(); // TODO this needs to go away
-    this.offlineProcessor && await this.offlineProcessor.initOnlineState(); 
+    this.offlineProcessor && await this.offlineProcessor.initOnlineState();
   }
 
   private setupEventListeners() {
