@@ -1,6 +1,6 @@
 import { MutationOptions } from "apollo-client";
 import { ApolloCache } from "apollo-cache";
-import { CacheHelper } from "../utils/CacheHelper";
+import { ApolloCacheHelper } from "../utils/ApolloCacheHelper";
 import { ObjectState } from "../conflicts/state/ObjectState";
 import { ConflictResolutionData } from "./strategies/ConflictResolutionData";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
@@ -23,12 +23,12 @@ export interface BaseProcessorOptions {
  * which can then be used for conflict resolution later on.
  */
 export class BaseProcessor {
-  private cacheHelper: CacheHelper;
+  private cacheHelper: ApolloCacheHelper;
   private stater: ObjectState;
 
   constructor(options: BaseProcessorOptions) {
     this.stater = options.stater;
-    this.cacheHelper = new CacheHelper(options.cache);
+    this.cacheHelper = new ApolloCacheHelper(options.cache);
   }
 
   public getBaseState(mutationOptions: MutationOptions): ConflictResolutionData {

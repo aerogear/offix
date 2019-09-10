@@ -9,7 +9,7 @@ interface SpecialApolloCache extends ApolloCache<NormalizedCacheObject> {
   optimisticData: any;
 }
 
-export class CacheHelper {
+export class ApolloCacheHelper {
   public cache?: SpecialApolloCache;
   public logger: any;
 
