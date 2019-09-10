@@ -7,8 +7,6 @@ export class BaseLink extends ApolloLink {
   }
 
   public request(operation: Operation, forward: NextLink): Observable<FetchResult> {
-    console.log(JSON.stringify(operation, null, 2));
-    debugger;
     return forward(operation);
   }
 }

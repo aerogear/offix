@@ -50,7 +50,7 @@ export class OfflineMutationsHandler {
     const mutationName = getMutationName(item.query);
     let context;
     let updateFunction;
-    let previousContext: any = {};
+    const previousContext: any = {};
 
     context = { ...previousContext, ...this.getOfflineContext(item) };
 

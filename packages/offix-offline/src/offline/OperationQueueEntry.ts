@@ -23,7 +23,7 @@ export interface OfflineItem {
  */
 export class OperationQueueEntry implements OfflineItem {
   public readonly query: DocumentNode;
-  public readonly variables: Record<string,any>;
+  public readonly variables: Record<string, any>;
   public readonly operationName: string;
   public readonly optimisticResponse?: any;
   public readonly id: string;

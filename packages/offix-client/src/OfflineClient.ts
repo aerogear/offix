@@ -140,14 +140,16 @@ export class OfflineClient implements ListenerProvider {
       mutationOptions.context.conflictBase = this.baseProcessor &&
       this.baseProcessor.getBaseState(mutationOptions as unknown as  MutationOptions);
 
-      if (this.offlineProcessor && this.offlineProcessor.online) {
-        return this.apolloClient.mutate(mutationOptions);
-      } else {
-        this.offlineProcessor && await this.offlineProcessor.queue.persistItemWithQueue(operation);
-        const mutationPromise = this.apolloClient.mutate<T, TVariables>(
-          mutationOptions
-        );
-        throw new OfflineError(mutationPromise);
+      if (this.offlineProcessor) {
+        if (this.offlineProcessor.online) {
+          return this.apolloClient.mutate(mutationOptions);
+        } else {
+          await this.offlineProcessor.queue.persistItemWithQueue(operation);
+          const mutationPromise = this.apolloClient.mutate<T, TVariables>(
+            mutationOptions
+          );
+          throw new OfflineError(mutationPromise);
+        }
       }
     }
   }
@@ -175,7 +177,10 @@ export class OfflineClient implements ListenerProvider {
 
     // ^^ But why do we wait until now to check and set network status?
     await offlineLink.initOnlineState(); // TODO this needs to go away
-    this.offlineProcessor && await this.offlineProcessor.initOnlineState();
+
+    if (this.offlineProcessor) {
+      await  this.offlineProcessor.initOnlineState();
+    }
   }
 
   private setupEventListeners() {

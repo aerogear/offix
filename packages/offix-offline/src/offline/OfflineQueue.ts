@@ -24,7 +24,6 @@ export class OfflineQueue {
   private resultProcessors: IResultProcessor[] | undefined;
 
   constructor(store: OfflineStore, options: OfflineLinkConfig) {
-    debugger;
     this.store = store;
     this.listener = options.listener;
     this.resultProcessors = options.resultProcessors;
@@ -66,11 +65,11 @@ export class OfflineQueue {
           return;
         }
         // TODO remove createOperation. Probably a bigger discussion around how we fire mutations from here.
-        const mutationOptions = createMutationOptions({mutation: op.query, variables: op.variables})
+        const mutationOptions = createMutationOptions({mutation: op.query, variables: op.variables});
         const operation = createOperation(mutationOptions.context, {
           query: mutationOptions.mutation,
           variables: mutationOptions.variables
-        })
+        });
         op.forward(operation).subscribe({
           next: (result: FetchResult) => {
             this.onForwardNext(operation, op, result);
