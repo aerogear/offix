@@ -151,6 +151,7 @@ export class OfflineClient implements ListenerProvider {
           throw new OfflineError(mutationPromise);
         }
       }
+      throw new Error('Offix Client not initialized properly')
     }
   }
 
