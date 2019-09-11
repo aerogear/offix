@@ -25,7 +25,6 @@ type Mutation {
   createTask(title: String!, description: String!, author: String): Task
   updateTask(id: ID!, title: String, description: String, version: Int!, author: String): Task
   deleteTask(id: ID!): ID
-  onlineOnly(id: ID!): ID
   singleUpload(file: Upload!): File!
 }
 
@@ -92,10 +91,6 @@ const resolvers = {
       console.log('delete: ', args);
       const index = data.findIndex(item => item.id === args.id);
       data.splice(index, 1);
-      return args.id;
-    },
-    onlineOnly: (_, args) => {
-      console.log('onlineOnly: ', args);
       return args.id;
     },
     singleUpload: async (_, { file }) => {

@@ -2,8 +2,7 @@ import { ApolloLink, Operation } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { RetryLink } from "apollo-link-retry";
 import { OffixClientConfig } from "./config/OffixClientConfig";
-import { LocalDirectiveFilterLink } from "offix-offline";
-import { isMutation, isOnlineOnly } from "offix-offline";
+import { isMutation } from "offix-offline";
 import { OfflineMutationsHandler } from "offix-offline";
 import { ConfigError } from "./config/ConfigError";
 
@@ -19,17 +18,14 @@ export const createCompositeLink = async (config: OffixClientConfig,
   offlineLink: ApolloLink,
   conflictLink: ApolloLink): Promise<ApolloLink> => {
 
-  // Enable offline link only for mutations and onlineOnly
+  // Enable offline link only for mutations
   const mutationOfflineLink = ApolloLink.split((op: Operation) => {
-    return isMutation(op) && !isOnlineOnly(op);
+    return isMutation(op)
   }, offlineLink);
   const links: ApolloLink[] = [mutationOfflineLink];
   links.push(conflictLink);
   const retryLink = ApolloLink.split(OfflineMutationsHandler.isMarkedOffline, new RetryLink(config.retryOptions));
   links.push(retryLink);
-
-  const localFilterLink = new LocalDirectiveFilterLink();
-  links.push(localFilterLink);
 
   if (config.terminatingLink) {
     links.push(config.terminatingLink);

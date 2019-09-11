@@ -13,7 +13,6 @@ export * from "./offline/storage/OfflineStore";
 export * from "./offline/events/CompositeQueueListener";
 export * from "./offline/events/ListenerProvider";
 export * from "./offline/events/OfflineQueueListener";
-export * from "./offline/LocalDirectiveFilterLink";
 export * from "./offline/storage/PersistentStore";
 export * from "./offline/storage/OfflineStore";
 export * from "./offline/storage/defaultStorage";

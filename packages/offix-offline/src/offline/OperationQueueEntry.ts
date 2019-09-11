@@ -2,7 +2,7 @@ import { FetchResult, NextLink, Operation, DocumentNode } from "apollo-link";
 import { isClientGeneratedId, generateClientId } from "offix-cache";
 
 /**
- * Represents data that is being saved to the offlien store
+ * Represents data that is being saved to the offline store
  */
 export interface OfflineItem {
   query: DocumentNode;

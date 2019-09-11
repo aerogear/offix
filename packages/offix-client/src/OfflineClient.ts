@@ -85,7 +85,7 @@ export class OfflineClient implements ListenerProvider {
     const resultProcessors: IResultProcessor[] = [new IDProcessor()];
     this.queue = new OfflineQueue(this.store, {
       listener: this.config.offlineQueueListener,
-      networkStatus: this.config.networkStatus,
+      networkStatus: this.networkStatus,
       resultProcessors
     });
     this.setupEventListeners();
