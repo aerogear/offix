@@ -1,6 +1,7 @@
 // Top level api
 export * from "./offline/OfflineLink";
 export * from "./conflicts/ConflictLink";
+export * from "./offline/OfflineQueue";
 
 export * from "./utils/helpers";
 export * from "./offline/network/NetworkStatus";
@@ -30,5 +31,4 @@ export * from "./conflicts/state/VersionedState";
 export * from "./conflicts/BaseLink";
 export * from "./conflicts/BaseProcessor";
 export * from "./conflicts/strategies/ConflictResolutionData";
-export * from "./offline/OfflineProcessor";
 export * from "./offline/OfflineError";

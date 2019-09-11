@@ -16,13 +16,10 @@ const logger = debug.default(MUTATION_QUEUE_LOGGER);
  */
 export class OfflineMutationsHandler {
 
-  private mutationCacheUpdates?: CacheUpdates;
-
-  constructor(private store: OfflineStore,
+  constructor(
+    private store: OfflineStore,
     private apolloClient: ApolloClient<NormalizedCacheObject>,
-    clientConfig: OfflineLinkConfig) {
-    this.mutationCacheUpdates = clientConfig.mutationCacheUpdates;
-  }
+    private mutationCacheUpdates?: CacheUpdates) {}
 
   /**
    * Replay mutations to client.

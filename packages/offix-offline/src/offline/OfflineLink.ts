@@ -30,16 +30,11 @@ export class OfflineLink extends ApolloLink {
   private online: boolean = false;
   private queue: OfflineQueue;
   private readonly networkStatus: NetworkStatus;
-  private offlineMutationHandler?: OfflineMutationsHandler;
 
-  constructor(store: OfflineStore, options: OfflineLinkConfig) {
+  constructor(queue: OfflineQueue, networkStatus: NetworkStatus) {
     super();
-    if (options.networkStatus) {
-      this.networkStatus = options.networkStatus;
-    } else {
-      this.networkStatus = new WebNetworkStatus();
-    }
-    this.queue = new OfflineQueue(store, options);
+    this.queue = queue;
+    this.networkStatus = networkStatus;
   }
 
   public request(operation: Operation, forward: NextLink): Observable<FetchResult> {
@@ -49,31 +44,13 @@ export class OfflineLink extends ApolloLink {
     return forward(operation);
   }
 
-  /**
-   * Force forward offline operations
-   */
-  public async forwardOfflineOperations() {
-    await this.queue.forwardOperations();
-  }
-
   public async initOnlineState() {
-    const queue = this.queue;
     const self = this;
     this.online = !(await this.networkStatus.isOffline());
-    if (this.online) {
-      queue.forwardOperations();
-    }
     this.networkStatus.onStatusChangeListener({
       onStatusChange(networkInfo: NetworkInfo) {
         self.online = networkInfo.online;
-        if (self.online) {
-          queue.forwardOperations();
-        }
       }
     });
-  }
-
-  public setup(handler: OfflineMutationsHandler) {
-    this.offlineMutationHandler = handler;
   }
 }

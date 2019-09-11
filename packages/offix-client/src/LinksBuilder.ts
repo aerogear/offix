@@ -1,41 +1,12 @@
 import { ApolloLink, Operation } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { RetryLink } from "apollo-link-retry";
-import { ConflictLink, ObjectState } from "offix-offline";
 import { OffixClientConfig } from "./config/OffixClientConfig";
 import { LocalDirectiveFilterLink } from "offix-offline";
-import { isMutation, isOnlineOnly, isSubscription } from "offix-offline";
-import { OfflineLink } from "offix-offline";
-import { NetworkStatus, OfflineMutationsHandler, OfflineStore } from "offix-offline";
-import { IDProcessor } from "offix-offline";
-import { IResultProcessor } from "offix-offline";
+import { isMutation, isOnlineOnly } from "offix-offline";
+import { OfflineMutationsHandler } from "offix-offline";
 import { BaseLink } from "offix-offline";
 import { ConfigError } from "./config/ConfigError";
-
-/**
- * Create offline link
- */
-export const createOfflineLink = async (config: OffixClientConfig, store: OfflineStore) => {
-  const resultProcessors: IResultProcessor[] = [
-    new IDProcessor()
-  ];
-  return new OfflineLink(store, {
-    listener: config.offlineQueueListener,
-    networkStatus: config.networkStatus as NetworkStatus,
-    resultProcessors
-  });
-};
-
-/**
- * Create conflict link
- */
-export const createConflictLink = async (config: OffixClientConfig) => {
-  return new ConflictLink({
-    conflictProvider: config.conflictProvider as ObjectState,
-    conflictListener: config.conflictListener,
-    conflictStrategy: config.conflictStrategy
-  });
-};
 
 /**
  * Default HTTP Apollo Links
