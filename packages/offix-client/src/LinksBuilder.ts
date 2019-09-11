@@ -20,7 +20,7 @@ export const createCompositeLink = async (config: OffixClientConfig,
 
   // Enable offline link only for mutations
   const mutationOfflineLink = ApolloLink.split((op: Operation) => {
-    return isMutation(op)
+    return isMutation(op);
   }, offlineLink);
   const links: ApolloLink[] = [mutationOfflineLink];
   links.push(conflictLink);
