@@ -1,5 +1,4 @@
-import { FetchResult, Operation } from "apollo-link";
-import { OperationQueueEntry } from "../OperationQueueEntry";
+import { QueueEntryOperation } from "../OfflineQueue";
 
 /**
  * Interface for creating listeners for offline queue.
@@ -11,12 +10,12 @@ export interface OfflineQueueListener {
   /**
    * Called when new operation is being added to offline queue
    */
-  onOperationEnqueued?: (operation: OperationQueueEntry) => void;
+  onOperationEnqueued?: (op: QueueEntryOperation) => void;
 
   /**
    * Called when back online and operation succeeds
    */
-  onOperationSuccess?: (operation: Operation, result: FetchResult) => void;
+  onOperationSuccess?: (op: QueueEntryOperation, result: any) => void;
 
   /**
    * Called when back online and operation fails with GraphQL error
@@ -24,7 +23,10 @@ export interface OfflineQueueListener {
    * graphQLError - application error (it means that user need to react to error and sent this operation again)
    * networkError - operation was retried but it did not reached server (it will be reatempted again)
    */
-  onOperationFailure?: (operation: Operation, graphQLError?: any, networkError?: any) => void;
+  // onOperationFailure?: (op: MutationOptions, graphQLError?: any, networkError?: any) => void;v
+
+  // TODO - Support both error types described above but in a more generic way
+  onOperationFailure?: (op: QueueEntryOperation, error: Error) => void;
 
   /**
    * Called when offline operation queue is cleared

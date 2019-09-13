@@ -32,16 +32,17 @@ export class OperationQueueEntry implements OfflineItem {
   public readonly conflictBase: any;
   public conflictStrategy?: string;
 
-  public forward?: NextLink;
+  public onComplete?: Function
+  public onError?: Function
+
   public result?: FetchResult;
   public networkError: any;
   public observer?: ZenObservable.SubscriptionObserver<FetchResult>;
 
-  constructor(operation: Operation, offlineId?: number, forward?: NextLink) {
+  constructor(operation: Operation, offlineId?: number) {
     this.query = operation.query;
     this.variables = operation.variables;
     this.operationName = operation.operationName;
-    this.forward = forward;
     if (offlineId) {
       this.id = offlineId.toString();
     } else {
