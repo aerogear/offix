@@ -1,12 +1,26 @@
 import { OperationQueueEntry } from "./OperationQueueEntry";
 import { OfflineQueueListener } from "./events/OfflineQueueListener";
-import { Operation, NextLink, Observable, FetchResult } from "apollo-link";
+import { FetchResult } from "apollo-link";
 import { OfflineStore } from "./storage/OfflineStore";
 import { IResultProcessor } from "./processors";
-import { OfflineLinkConfig } from "./OfflineLinkConfig";
-import { createOperation } from "apollo-link";
-import { createMutationOptions } from "offix-cache";
+import { OfflineQueueConfig } from "./OfflineLinkConfig";
+import { MutationOptions } from "offix-cache/node_modules/apollo-client";
 export type OperationQueueChangeHandler = (entry: OperationQueueEntry) => void;
+
+export interface QueueEntry {
+  operation: QueueEntryOperation
+  handlers?: QueueEntryHandlers
+}
+
+export interface QueueEntryOperation {
+  qid: string
+  op: any
+}
+
+export interface QueueEntryHandlers {
+  resolve: Function
+  reject: Function
+}
 
 /**
  * Class implementing persistent operation queue.
@@ -18,118 +32,148 @@ export type OperationQueueChangeHandler = (entry: OperationQueueEntry) => void;
  * - updating client IDs with server IDs (explained below)
  */
 export class OfflineQueue {
-  public queue: OperationQueueEntry[] = [];
-  private readonly listener?: OfflineQueueListener;
+  public queue: QueueEntry[] = [];
+
+  // listeners that can be added by the user to handle various events coming from the offline queue
+  public listeners: OfflineQueueListener[] = [];
+
   private store: OfflineStore;
+
+  private execute: Function
+
+  private idCounter = 0
+
   private resultProcessors: IResultProcessor[] | undefined;
 
-  constructor(store: OfflineStore, options: OfflineLinkConfig) {
+  constructor(store: OfflineStore, options: OfflineQueueConfig) {
     this.store = store;
-    this.listener = options.listener;
     this.resultProcessors = options.resultProcessors;
-  }
+    this.execute = options.execute
 
-  /**
-   * Persist entire queue with the new item to make sure that change
-   * is going to be working across restarts
-   */
-  public async persistItemWithQueue(operation: Operation) {
-    const operationEntry = new OperationQueueEntry(operation);
-    await this.store.saveEntry(operationEntry);
-    return operationEntry;
+    if (options.listeners) {
+      this.listeners = options.listeners;
+    }
   }
 
   /**
    * Enqueue offline change and wait for it to be sent to server when online.
    * Every offline change is added to queue.
    */
-  public enqueueOfflineChange(operation: Operation, forward: NextLink): Observable<FetchResult> {
-    const offlineId = operation.getContext().offlineId;
-    const operationEntry = new OperationQueueEntry(operation, offlineId, forward);
-    this.queue.push(operationEntry);
-    if (this.listener && this.listener.onOperationEnqueued) {
-      this.listener.onOperationEnqueued(operationEntry);
+  public async enqueueOfflineChange(op: MutationOptions, resolve: Function, reject: Function): Promise<any> {
+
+    const entry: QueueEntry = {
+      operation: {
+        qid: this.generateId(),
+        op,
+      },
+      handlers: {
+        resolve,
+        reject
+      }
     }
-    return new Observable<FetchResult>((observer) => {
-      operationEntry.observer = observer;
-      return () => {
-        return;
-      };
-    });
+    
+    // enqueue and persist
+    this.queue.push(entry);
+
+    try {
+      await this.store.saveEntry(entry.operation);
+    } catch(err) {
+      console.log(err)
+    }
+
+    // notify listeners
+    this.onOperationEnqueued(entry.operation);
   }
 
   public async forwardOperations() {
-    for (const op of this.queue) {
-      await new Promise((resolve, reject) => {
-        if (!op.forward) {
-          return;
-        }
-        // TODO remove createOperation. Probably a bigger discussion around how we fire mutations from here.
-        const mutationOptions = createMutationOptions({mutation: op.query, variables: op.variables});
-        const operation = createOperation(mutationOptions.context, {
-          query: mutationOptions.mutation,
-          variables: mutationOptions.variables
-        });
-        op.forward(operation).subscribe({
-          next: (result: FetchResult) => {
-            this.onForwardNext(operation, op, result);
-          },
-          error: (error: any) => {
-            this.onForwardError(operation, op, error);
-            return resolve();
-          },
-          complete: () => {
-            if (op.observer) {
-              op.observer.complete();
-            }
-            return resolve();
-          }
-        });
-      });
+    for (const entry of this.queue) {
+      console.log('forwarding operation', entry)
+      await this.forwardOperation(entry)
+    }
+    console.log('operations forwarded', this.queue)
+  }
+
+  async forwardOperation(entry: QueueEntry) {
+    try {
+      const result = await this.execute(entry.operation)
+      this.onForwardNext(entry, result);
+      if (entry.handlers) {
+        entry.handlers.resolve(result)
+      }
+      // this.onForwardNext(operation, op, result)
+    } catch (error) {
+      console.log('error forwarding operation', error)
+      if (entry.handlers) {
+        entry.handlers.reject(error)
+      }
+      this.onOperationFailure(entry.operation, error)
     }
   }
 
-  public executeResultProcessors(op: OperationQueueEntry,
-    result: FetchResult<any>) {
+  public executeResultProcessors(entry: QueueEntry, result: FetchResult<any>) {
     if (this.resultProcessors) {
       for (const resultProcessor of this.resultProcessors) {
-        resultProcessor.execute(this.queue, op, result);
+        resultProcessor.execute(this.queue, entry, result);
       }
     }
   }
 
-  private onForwardError(operation: Operation, op: OperationQueueEntry, error: any) {
-    if (this.listener && this.listener.onOperationFailure) {
-      this.listener.onOperationFailure(operation, undefined, op.networkError);
-    }
-    if (op.observer) {
-      op.observer.error(error);
-    }
-  }
-
-  private onForwardNext(operation: Operation, op: OperationQueueEntry, result: FetchResult<any>) {
-    const entry = this.queue.find(e => e === op);
-    this.queue = this.queue.filter(e => e !== op);
+  private onForwardNext(entry: QueueEntry, result: any) {
+    this.queue = this.queue.filter(e => e !== entry)
+    console.log('forward result', JSON.stringify(result, null, 2))
+    
     if (result.errors) {
-      if (this.listener && this.listener.onOperationFailure) {
-        this.listener.onOperationFailure(operation, result.errors);
-      }
+      // TODO distiguish between application errors that happen here
+      // And other errors that may happen in forwardOperation
+      this.onOperationFailure(entry.operation, result.errors)
       // Notify for success otherwise
     } else if (result.data) {
-      if (this.listener && this.listener.onOperationSuccess) {
-        this.listener.onOperationSuccess(operation, result.data);
-      }
-      this.executeResultProcessors(op, result);
+      this.onOperationSuccess(entry.operation, result)
+      // this.executeResultProcessors(op, result);
     }
-    if (entry) {
-      this.store.removeEntry(entry);
-    }
-    if (this.queue.length === 0 && this.listener && this.listener.queueCleared) {
-      this.listener.queueCleared();
-    }
-    if (op.observer) {
-      op.observer.next(result);
+    // this.store.removeEntry(entry)
+    if (this.queue.length === 0) {
+      this.queueCleared();
     }
   }
 
+  registerOfflineQueueListener(listener: OfflineQueueListener) {
+    this.listeners.push(listener)
+  }
+
+  onOperationEnqueued(op: QueueEntryOperation) {
+    for (const listener of this.listeners) {
+      if (listener.onOperationEnqueued) {
+        listener.onOperationEnqueued(op)
+      } 
+    }
+  }
+
+  onOperationSuccess(op: QueueEntryOperation, result: any) {
+    for (const listener of this.listeners) {
+      if (listener.onOperationSuccess) {
+        listener.onOperationSuccess(op, result)
+      } 
+    }
+  }
+
+  onOperationFailure(op: QueueEntryOperation, error: Error) {
+    for (const listener of this.listeners) {
+      if (listener.onOperationFailure) {
+        listener.onOperationFailure(op, error)
+      } 
+    }
+  }
+
+  queueCleared() {
+    for (const listener of this.listeners) {
+      if (listener.queueCleared) {
+        listener.queueCleared()
+      } 
+    }
+  }
+
+  generateId(): string {
+    return String(this.idCounter++);
+  }
 }

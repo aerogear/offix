@@ -31,7 +31,7 @@ export class OfflineStore {
   public async saveEntry(entry: OperationQueueEntry) {
     this.arrayOfKeys.push(entry.id);
     await this.storage.setItem(this.offlineMetaKey, this.arrayOfKeys);
-    await this.storage.setItem(this.getOfflineKey(entry.id), entry.toOfflineItem());
+    await this.storage.setItem(this.getOfflineKey(entry.id), entry);
   }
 
   /**

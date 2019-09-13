@@ -2,12 +2,13 @@ import { NetworkStatus, OfflineQueueListener, IResultProcessor, PersistentStore,
 import { CacheUpdates } from "offix-cache";
 
 /**
- * Conguration required for OfflineLink
+ * Conguration required for OfflineQueue
  */
-export interface OfflineLinkConfig {
+export interface OfflineQueueConfig {
     networkStatus: NetworkStatus;
-    listener?: OfflineQueueListener;
+    listeners?: OfflineQueueListener[];
     resultProcessors?: IResultProcessor[];
     mutationCacheUpdates?: CacheUpdates;
     offlineStorage?: PersistentStore<PersistedData>;
+    execute: Function
   }

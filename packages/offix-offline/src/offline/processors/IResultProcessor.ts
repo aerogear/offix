@@ -1,5 +1,5 @@
 import { FetchResult } from "apollo-link";
-import { OperationQueueEntry } from "../OperationQueueEntry";
+import { QueueEntry } from "../OfflineQueue";
 
 /**
  * Interface that can be used to perform operation on result data for offline queue.
@@ -15,5 +15,5 @@ export interface IResultProcessor {
      * @param op
      * @param result
      */
-    execute(queue: OperationQueueEntry[], op: OperationQueueEntry, result: FetchResult<any>): void;
+    execute(queue: QueueEntry[], op: QueueEntry, result: FetchResult<any>): void;
 }
