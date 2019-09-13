@@ -27,9 +27,12 @@ export class OfflineLink extends ApolloLink {
   }
 
   public request(operation: Operation, forward: NextLink): Observable<FetchResult> {
-    if (!this.online || OfflineMutationsHandler.isMarkedOffline(operation)) {
-      return this.queue.enqueueOfflineChange(operation, forward);
-    }
+    // if (!this.online) {
+    //   if (OfflineMutationsHandler.isMarkedOffline(operation))
+    //   console.log('enqueueing offline change', operation)
+    //   // return this.queue.enqueueOfflineChange(operation, forward);
+    // }
+    // console.log('were online, forwarding change', operation)
     return forward(operation);
   }
 

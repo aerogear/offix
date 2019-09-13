@@ -11,10 +11,11 @@ export const goOnLine = () => {
 export class ToggleableNetworkStatus {
   constructor() {
     this.online = true;
+    this.callbacks = []
   }
 
   onStatusChangeListener(callback) {
-    this.callback = callback;
+    this.callbacks.push(callback)
   }
 
   isOffline() {
@@ -24,6 +25,8 @@ export class ToggleableNetworkStatus {
 
   setOnline(online) {
     this.online = online;
-    this.callback && this.callback.onStatusChange({ online });
+    for (const callback of this.callbacks) {
+      callback.onStatusChange({ online })
+    }
   }
 };

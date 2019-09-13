@@ -1,7 +1,7 @@
 import { IResultProcessor } from "./IResultProcessor";
-import { OperationQueueEntry } from "../../offline/OperationQueueEntry";
 import { FetchResult } from "apollo-link";
 import { isClientGeneratedId } from "offix-cache";
+import { QueueEntry } from "../OfflineQueue";
 
 /**
  * Allow updates on items created while offline.
@@ -12,31 +12,33 @@ import { isClientGeneratedId } from "offix-cache";
  */
 export class IDProcessor implements IResultProcessor {
 
-  public execute(queue: OperationQueueEntry[], entry: OperationQueueEntry, result: FetchResult) {
-    if (!entry || !entry.query) {
-      return;
-    }
-    const { operationName, optimisticResponse } = entry;
-    const idField = entry.idField || "id";
+  public execute(queue: QueueEntry[], entry: QueueEntry, result: FetchResult) {
+    const op = entry.operation.op
 
-    if (!result ||
-      !optimisticResponse ||
-      !optimisticResponse[operationName]) {
-      return;
-    }
+    // if (!entry || !entry.query) {
+    //   return;
+    // }
+    // const { operationName, optimisticResponse } = entry;
+    // const idField = entry.idField || "id";
 
-    let clientId = optimisticResponse[operationName][idField];
-    if (!clientId) {
-      return;
-    }
-    // Ensure we dealing with string
-    clientId = clientId.toString();
-    if (isClientGeneratedId(optimisticResponse[operationName][idField])) {
-      queue.forEach((op) => {
-        if (op.variables[idField] === clientId) {
-          op.variables[idField] = result.data && result.data[operationName][idField];
-        }
-      });
-    }
+    // if (!result ||
+    //   !optimisticResponse ||
+    //   !optimisticResponse[operationName]) {
+    //   return;
+    // }
+
+    // let clientId = optimisticResponse[operationName][idField];
+    // if (!clientId) {
+    //   return;
+    // }
+    // // Ensure we dealing with string
+    // clientId = clientId.toString();
+    // if (isClientGeneratedId(optimisticResponse[operationName][idField])) {
+    //   queue.forEach((op) => {
+    //     if (op.variables[idField] === clientId) {
+    //       op.variables[idField] = result.data && result.data[operationName][idField];
+    //     }
+    //   });
+    // }
   }
 }

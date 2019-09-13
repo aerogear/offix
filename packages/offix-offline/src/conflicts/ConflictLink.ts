@@ -75,6 +75,7 @@ export class ConflictLink extends ApolloLink {
   // this is a custom onError ErrorHandler. It determines executes the conflictHandler and provides a new operation
   // to work with if necessary.
   private conflictHandler(errorResponse: ErrorResponse): Observable<FetchResult> {
+    debugger
     const { response, operation, forward, graphQLErrors } = errorResponse;
     const data = this.getConflictData(graphQLErrors);
     const individualStrategy = this.strategy || UseClient;

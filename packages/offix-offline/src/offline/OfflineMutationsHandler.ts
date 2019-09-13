@@ -26,7 +26,9 @@ export class OfflineMutationsHandler {
    * after page refresh/app restart
    */
   public replayOfflineMutations = async () => {
+    console.log('replayOfflineMutations called')
     const offlineData = await this.store.getOfflineData();
+    console.log('offlineData', offlineData)
     // if there is no offline data  then just exit
     if (offlineData && offlineData.length === 0) { return; }
 
@@ -64,6 +66,7 @@ export class OfflineMutationsHandler {
       // Pass extensions as part of the context
       context
     };
+    console.log('replaying mutation', mutationOptions)
     return this.apolloClient.mutate(mutationOptions);
   }
 
