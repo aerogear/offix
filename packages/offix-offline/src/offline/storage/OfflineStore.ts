@@ -1,5 +1,7 @@
 import { PersistentStore, PersistedData } from "./PersistentStore";
 import { OperationQueueEntry, OfflineItem } from "../OperationQueueEntry";
+import { QueueEntryOperation } from "../OfflineQueue";
+import { Serializer, ApolloOperationSerializer } from "./Serializer";
 
 /**
  * Abstract Offline storage
@@ -9,10 +11,12 @@ export class OfflineStore {
   private storage: PersistentStore<PersistedData>;
   private offlineMetaKey: string = "offline-meta-data";
   private arrayOfKeys: string[];
+  private serializer: Serializer
 
   constructor(storage: PersistentStore<PersistedData>) {
     this.storage = storage;
     this.arrayOfKeys = [];
+    this.serializer = ApolloOperationSerializer;
   }
 
   /**
@@ -28,10 +32,10 @@ export class OfflineStore {
    *
    * @param entry - the entry to be saved
    */
-  public async saveEntry(entry: OperationQueueEntry) {
-    this.arrayOfKeys.push(entry.id);
+  public async saveEntry(entry: QueueEntryOperation) {
+    this.arrayOfKeys.push(entry.qid);
     await this.storage.setItem(this.offlineMetaKey, this.arrayOfKeys);
-    await this.storage.setItem(this.getOfflineKey(entry.id), entry);
+    await this.storage.setItem(this.getOfflineKey(entry.qid), this.serializer.serializeForStorage(entry));
   }
 
   /**
@@ -39,10 +43,10 @@ export class OfflineStore {
    *
    * @param queue - the entry to be removed
    */
-  public async removeEntry(entry: OperationQueueEntry) {
-    this.arrayOfKeys.splice(this.arrayOfKeys.indexOf(entry.id), 1);
+  public async removeEntry(entry: QueueEntryOperation) {
+    this.arrayOfKeys.splice(this.arrayOfKeys.indexOf(entry.qid), 1);
     this.storage.setItem(this.offlineMetaKey, this.arrayOfKeys);
-    const offlineKey = this.getOfflineKey(entry.id);
+    const offlineKey = this.getOfflineKey(entry.qid);
     await this.storage.removeItem(offlineKey);
   }
 
