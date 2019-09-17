@@ -1,6 +1,5 @@
 import { PersistentStore, PersistedData } from "./PersistentStore";
-import { OperationQueueEntry, OfflineItem } from "../OperationQueueEntry";
-import { QueueEntryOperation } from "../OfflineQueue";
+import { QueueEntryOperation, QueueEntry } from "../OfflineQueue";
 import { Serializer, ApolloOperationSerializer } from "./Serializer";
 
 /**
@@ -53,15 +52,19 @@ export class OfflineStore {
   /**
    * Fetch data from the offline store
    */
-  public async getOfflineData(): Promise<OfflineItem[]> {
-    const offlineItems: OfflineItem[] = [];
+  public async getOfflineData(): Promise<QueueEntry[]> {
+    const offlineItems: QueueEntry[] = [];
     for (const key of this.arrayOfKeys) {
-      const item = await this.storage.getItem(this.getOfflineKey(key));
+      let item = await this.storage.getItem(this.getOfflineKey(key));
       if (typeof item === "string") {
-        offlineItems.push(JSON.parse(item));
-      } else if (item) {
-        offlineItems.push(item as OfflineItem);
+        item = JSON.parse(item)
       }
+      offlineItems.push({
+        operation: {
+          op: item,
+          qid: key
+        }
+      })
     }
     return offlineItems;
   }
