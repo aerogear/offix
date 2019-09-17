@@ -137,6 +137,15 @@ export class OfflineQueue {
     }
   }
 
+  async restoreOfflineOperations() {
+    console.log('restoring operations')
+    try {
+      this.queue = await this.store.getOfflineData()
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   registerOfflineQueueListener(listener: OfflineQueueListener) {
     this.listeners.push(listener)
   }

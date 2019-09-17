@@ -1,5 +1,4 @@
 import { QueueEntryOperation } from "../OfflineQueue";
-import { OperationQueueEntry } from "../OperationQueueEntry";
 
 export interface Serializer {
   serializeForStorage(entry: QueueEntryOperation): any
