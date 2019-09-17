@@ -5,6 +5,8 @@ import { OfflineStore } from "./storage/OfflineStore";
 import { IResultProcessor } from "./processors";
 import { OfflineQueueConfig } from "./OfflineLinkConfig";
 import { MutationOptions } from "offix-cache/node_modules/apollo-client";
+import { generateClientId } from "offix-cache";
+
 export type OperationQueueChangeHandler = (entry: OperationQueueEntry) => void;
 
 export interface QueueEntry {
@@ -41,8 +43,6 @@ export class OfflineQueue {
 
   private execute: Function
 
-  private idCounter = 0
-
   private resultProcessors: IResultProcessor[] | undefined;
 
   constructor(store: OfflineStore, options: OfflineQueueConfig) {
@@ -63,7 +63,7 @@ export class OfflineQueue {
 
     const entry: QueueEntry = {
       operation: {
-        qid: this.generateId(),
+        qid: generateClientId(),
         op,
       },
       handlers: {
@@ -131,7 +131,7 @@ export class OfflineQueue {
       this.onOperationSuccess(entry.operation, result)
       // this.executeResultProcessors(op, result);
     }
-    // this.store.removeEntry(entry)
+    this.store.removeEntry(entry.operation)
     if (this.queue.length === 0) {
       this.queueCleared();
     }
@@ -171,9 +171,5 @@ export class OfflineQueue {
         listener.queueCleared()
       } 
     }
-  }
-
-  generateId(): string {
-    return String(this.idCounter++);
   }
 }

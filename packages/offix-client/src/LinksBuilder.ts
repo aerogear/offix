@@ -14,16 +14,10 @@ import { ConfigError } from "./config/ConfigError";
  * - Conflict resolution
  * - Error handling
  */
-export const createCompositeLink = async (config: OffixClientConfig,
-  offlineLink: ApolloLink,
-  conflictLink: ApolloLink): Promise<ApolloLink> => {
+async function createCompositeLink (config: OffixClientConfig,
+  conflictLink: ApolloLink): Promise<ApolloLink> {
 
-  // Enable offline link only for mutations
-  const mutationOfflineLink = ApolloLink.split((op: Operation) => {
-    return isMutation(op);
-  }, offlineLink);
-  const links: ApolloLink[] = [mutationOfflineLink];
-  links.push(conflictLink);
+  const links: ApolloLink[] = [conflictLink];
   const retryLink = ApolloLink.split(OfflineMutationsHandler.isMarkedOffline, new RetryLink(config.retryOptions));
   links.push(retryLink);
 
@@ -38,3 +32,5 @@ export const createCompositeLink = async (config: OffixClientConfig,
 
   return ApolloLink.from(links);
 };
+
+export { createCompositeLink }
