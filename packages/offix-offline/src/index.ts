@@ -1,5 +1,4 @@
 // Top level api
-export * from "./offline/OfflineLink";
 export * from "./conflicts/ConflictLink";
 export * from "./offline/OfflineQueue";
 

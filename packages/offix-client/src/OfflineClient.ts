@@ -6,7 +6,6 @@ import {
   OfflineStore,
   OfflineQueue,
   OfflineQueueListener,
-  OfflineLink,
   OfflineMutationsHandler,
   ListenerProvider,
   IDProcessor,
@@ -114,15 +113,13 @@ export class OfflineClient implements ListenerProvider {
     await this.store.init();
     await this.persistor.restore();
 
-    const offlineLink = new OfflineLink(this.queue, this.networkStatus);
-
     const conflictLink = new ConflictLink({
       conflictProvider: this.config.conflictProvider as ObjectState,
       conflictListener: this.config.conflictListener,
       conflictStrategy: this.config.conflictStrategy
     });
 
-    const link = await createCompositeLink(this.config, offlineLink, conflictLink);
+    const link = await createCompositeLink(this.config, conflictLink);
 
     const client = new ApolloClient({
       link,
@@ -163,7 +160,7 @@ export class OfflineClient implements ListenerProvider {
       this.apolloClient as ApolloOfflineClient,
       this.config.mutationCacheUpdates);
 
-    await this.restoreOfflineOperations(offlineLink);
+    await this.restoreOfflineOperations();
     return this.apolloClient;
   }
 
@@ -232,14 +229,13 @@ export class OfflineClient implements ListenerProvider {
   /**
    * Restore offline operations into the queue
    */
-  protected async restoreOfflineOperations(offlineLink: OfflineLink) {
+  protected async restoreOfflineOperations() {
 
     // Reschedule offline mutations for new client instance
-    this.offlineMutationHandler && await this.offlineMutationHandler.replayOfflineMutations();
+    // this.offlineMutationHandler && await this.offlineMutationHandler.replayOfflineMutations();
 
     // After pushing all online changes check and set network status
     await this.initOnlineState();
-    await offlineLink.initOnlineState(); // TODO this needs to go away
   }
 
   protected buildEventListeners(): OfflineQueueListener[] {
