@@ -1,4 +1,5 @@
-import { QueueEntry, QueueEntryOperation } from "../OfflineQueue";
+import { QueueEntryOperation } from "../OfflineQueue";
+import { OperationQueueEntry } from "../OperationQueueEntry";
 
 export interface Serializer {
   serializeForStorage(entry: QueueEntryOperation): any
@@ -6,8 +7,12 @@ export interface Serializer {
 
 export const ApolloOperationSerializer = {
   serializeForStorage: ({ op, qid }: QueueEntryOperation) => {
-    const { update, updateQuery, ...serialized} = op
-    serialized.context.cache = null // TODO Fix me
-    return serialized
+    return { 
+      mutation: op.mutation,
+      variables: op.variables,
+      optimisticResponse: op.optimisticResponse,
+      context: op.context,
+      returnType: op.returnType
+    }
   }
 }
