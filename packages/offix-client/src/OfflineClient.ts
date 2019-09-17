@@ -127,6 +127,8 @@ export class OfflineClient implements ListenerProvider {
 
     this.apolloClient = this.decorateApolloClient(client);
 
+    // Optimistic Responses
+    // TODO move this somewhere that makes sense, also handle error cases
     this.queue.registerOfflineQueueListener({
       onOperationEnqueued: ({ op, qid }) => {
         console.log('my operation was enqueued, lets add an optimistic response!', op)
@@ -192,7 +194,6 @@ export class OfflineClient implements ListenerProvider {
     } else {
       
       const mutationOptions = createMutationOptions<T, TVariables>(options);
-      mutationOptions.context.cache = this.apolloClient.cache;
       mutationOptions.context.optimisticResponse = mutationOptions.optimisticResponse
       mutationOptions.context.conflictBase = this.baseProcessor.getBaseState(mutationOptions as unknown as MutationOptions);
 
@@ -231,7 +232,7 @@ export class OfflineClient implements ListenerProvider {
 
     // Reschedule offline mutations for new client instance
     // this.offlineMutationHandler && await this.offlineMutationHandler.replayOfflineMutations();
-
+    await this.queue.restoreOfflineOperations()
     // After pushing all online changes check and set network status
     await this.initOnlineState();
   }

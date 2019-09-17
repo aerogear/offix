@@ -25,18 +25,18 @@ export class OfflineMutationsHandler {
    * This operation will help to rebuild Apollo Link observer chain
    * after page refresh/app restart
    */
-  public replayOfflineMutations = async () => {
-    console.log('replayOfflineMutations called')
-    const offlineData = await this.store.getOfflineData();
-    console.log('offlineData', offlineData)
-    // if there is no offline data  then just exit
-    if (offlineData && offlineData.length === 0) { return; }
+  // public replayOfflineMutations = async () => {
+  //   console.log('replayOfflineMutations called')
+  //   const offlineData = await this.store.getOfflineData();
+  //   console.log('offlineData', offlineData)
+  //   // if there is no offline data  then just exit
+  //   if (offlineData && offlineData.length === 0) { return; }
 
-    logger("Replying offline mutations after application restart");
-    for (const item of offlineData) {
-      this.mutateOfflineElement(item);
-    }
-  }
+  //   logger("Replying offline mutations after application restart");
+  //   for (const item of offlineData) {
+  //     this.mutateOfflineElement(item);
+  //   }
+  // }
 
   /**
    * Perform mutation using client replicating parameters that user provided into
