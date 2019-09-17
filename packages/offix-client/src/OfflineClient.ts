@@ -89,7 +89,7 @@ export class OfflineClient implements ListenerProvider {
       listeners: this.buildEventListeners(),
       networkStatus: this.networkStatus,
       resultProcessors,
-      execute: this.executeOfflineItem.bind(this)
+      execute: this.executeOfflineItem.bind(this) 
     });
     this.cache = new InMemoryCache();
     this.persistor = new CachePersistor({
@@ -135,8 +135,7 @@ export class OfflineClient implements ListenerProvider {
             mutationId: qid,
             document: op.mutation,
             variables: op.variables,
-            updateQueries: {}, // TODO - fix me
-            // updateQueries: generateUpdateQueriesInfo(),
+            updateQueries: {},
             update: op.update,
             optimisticResponse: op.optimisticResponse,
           });
