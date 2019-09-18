@@ -7,7 +7,6 @@ export * from "./offline/network/NetworkStatus";
 export * from "./offline/network/WebNetworkStatus";
 export * from "./offline/network/CordovaNetworkStatus";
 export * from "./offline/events/OfflineQueueListener";
-export * from "./offline/OfflineMutationsHandler";
 export * from "./offline/storage/OfflineStore";
 export * from "./offline/events/ListenerProvider";
 export * from "./offline/events/OfflineQueueListener";

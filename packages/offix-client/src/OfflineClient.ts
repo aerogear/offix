@@ -6,7 +6,6 @@ import {
   OfflineStore,
   OfflineQueue,
   OfflineQueueListener,
-  OfflineMutationsHandler,
   ListenerProvider,
   IDProcessor,
   IResultProcessor,
@@ -83,7 +82,6 @@ export class OfflineClient implements ListenerProvider {
   // The apollo client!
   public apolloClient?: ApolloOfflineClient;
 
-  public offlineMutationHandler?: OfflineMutationsHandler;
   // determines whether we're offline or not
   private online: boolean = false;
 
@@ -164,10 +162,6 @@ export class OfflineClient implements ListenerProvider {
         }
       }
     });
-
-    this.offlineMutationHandler = new OfflineMutationsHandler(this.store,
-      this.apolloClient as ApolloOfflineClient,
-      this.config.mutationCacheUpdates);
 
     await this.restoreOfflineOperations();
     return this.apolloClient;

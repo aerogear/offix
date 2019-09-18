@@ -2,8 +2,7 @@ import { ApolloLink, Operation } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { RetryLink } from "apollo-link-retry";
 import { OffixClientConfig } from "./config/OffixClientConfig";
-import { isMutation } from "offix-offline";
-import { OfflineMutationsHandler } from "offix-offline";
+import { isMarkedOffline } from "offix-offline";
 import { ConfigError } from "./config/ConfigError";
 
 /**
@@ -18,7 +17,7 @@ async function createCompositeLink(config: OffixClientConfig,
   conflictLink: ApolloLink): Promise<ApolloLink> {
 
   const links: ApolloLink[] = [conflictLink];
-  const retryLink = ApolloLink.split(OfflineMutationsHandler.isMarkedOffline, new RetryLink(config.retryOptions));
+  const retryLink = ApolloLink.split(isMarkedOffline, new RetryLink(config.retryOptions));
   links.push(retryLink);
 
   if (config.terminatingLink) {

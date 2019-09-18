@@ -14,3 +14,7 @@ export const isMutation = (op: Operation) => {
 export const isNetworkError = (error: any) => {
   return !error.result;
 };
+
+export const isMarkedOffline = (operation: Operation) => {
+  return !!operation.getContext().isOffline;
+}
