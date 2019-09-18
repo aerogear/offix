@@ -1,4 +1,3 @@
-import { OperationQueueEntry } from "./OperationQueueEntry";
 import { OfflineQueueListener } from "./events/OfflineQueueListener";
 import { FetchResult } from "apollo-link";
 import { OfflineStore } from "./storage/OfflineStore";
@@ -6,8 +5,6 @@ import { IResultProcessor } from "./processors";
 import { OfflineQueueConfig } from "./OfflineLinkConfig";
 import { MutationOptions } from "offix-cache/node_modules/apollo-client";
 import { generateClientId } from "offix-cache";
-
-export type OperationQueueChangeHandler = (entry: OperationQueueEntry) => void;
 
 export interface QueueEntry {
   operation: QueueEntryOperation;
