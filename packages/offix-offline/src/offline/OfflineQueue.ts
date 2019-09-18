@@ -110,14 +110,6 @@ export class OfflineQueue {
     }
   }
 
-  public executeResultProcessors(entry: QueueEntry, result: FetchResult<any>) {
-    if (this.resultProcessors) {
-      for (const resultProcessor of this.resultProcessors) {
-        resultProcessor.execute(this.queue, entry, result);
-      }
-    }
-  }
-
   private onForwardNext(entry: QueueEntry, result: any) {
     this.queue = this.queue.filter(e => e !== entry)
     console.log('forward result', JSON.stringify(result, null, 2))
@@ -128,12 +120,20 @@ export class OfflineQueue {
       this.onOperationFailure(entry.operation, result.errors)
       // Notify for success otherwise
     } else if (result.data) {
+      this.executeResultProcessors(entry, result);
       this.onOperationSuccess(entry.operation, result)
-      // this.executeResultProcessors(op, result);
     }
     this.store.removeEntry(entry.operation)
     if (this.queue.length === 0) {
       this.queueCleared();
+    }
+  }
+
+  public executeResultProcessors(entry: QueueEntry, result: FetchResult<any>) {
+    if (this.resultProcessors) {
+      for (const resultProcessor of this.resultProcessors) {
+        resultProcessor.execute(this.queue, entry, result);
+      }
     }
   }
 

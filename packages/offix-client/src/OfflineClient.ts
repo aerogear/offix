@@ -24,6 +24,7 @@ import { ApolloOfflineClient } from "./ApolloOfflineClient";
 import { MutationHelperOptions, createMutationOptions } from "offix-cache";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { CachePersistor } from "apollo-cache-persist";
+import { getOperationName } from 'apollo-utilities';
 
 /**
 * Factory for creating Apollo Offline Client
@@ -195,6 +196,7 @@ export class OfflineClient implements ListenerProvider {
       
       const mutationOptions = createMutationOptions<T, TVariables>(options);
       mutationOptions.context.optimisticResponse = mutationOptions.optimisticResponse
+      mutationOptions.context.operationName = getOperationName(mutationOptions.mutation)
       mutationOptions.context.conflictBase = this.baseProcessor.getBaseState(mutationOptions as unknown as MutationOptions);
 
       if (this.online) {

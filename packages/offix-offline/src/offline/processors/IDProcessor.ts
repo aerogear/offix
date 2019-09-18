@@ -13,32 +13,33 @@ import { QueueEntry } from "../OfflineQueue";
 export class IDProcessor implements IResultProcessor {
 
   public execute(queue: QueueEntry[], entry: QueueEntry, result: FetchResult) {
+    if (!entry || !entry.operation || !entry.operation.op) {
+      return;
+    }
     const op = entry.operation.op
+    const operationName = op.context.operationName
+    const optimisticResponse = op.optimisticResponse;
+    const idField = op.context.idField || "id";
 
-    // if (!entry || !entry.query) {
-    //   return;
-    // }
-    // const { operationName, optimisticResponse } = entry;
-    // const idField = entry.idField || "id";
+    if (!result ||
+      !optimisticResponse ||
+      !optimisticResponse[operationName]) {
+      return;
+    }
 
-    // if (!result ||
-    //   !optimisticResponse ||
-    //   !optimisticResponse[operationName]) {
-    //   return;
-    // }
-
-    // let clientId = optimisticResponse[operationName][idField];
-    // if (!clientId) {
-    //   return;
-    // }
-    // // Ensure we dealing with string
-    // clientId = clientId.toString();
-    // if (isClientGeneratedId(optimisticResponse[operationName][idField])) {
-    //   queue.forEach((op) => {
-    //     if (op.variables[idField] === clientId) {
-    //       op.variables[idField] = result.data && result.data[operationName][idField];
-    //     }
-    //   });
-    // }
+    let clientId = optimisticResponse[operationName][idField];
+    if (!clientId) {
+      return;
+    }
+    // Ensure we dealing with string
+    clientId = clientId.toString();
+    if (isClientGeneratedId(optimisticResponse[operationName][idField])) {
+      queue.forEach((entry) => {
+        const op = entry.operation.op
+        if (op.variables[idField] === clientId) {
+          op.variables[idField] = result.data && result.data[operationName][idField];
+        }
+      });
+    }
   }
 }
