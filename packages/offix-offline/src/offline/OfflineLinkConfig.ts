@@ -10,5 +10,5 @@ export interface OfflineQueueConfig {
     resultProcessors?: IResultProcessor[];
     mutationCacheUpdates?: CacheUpdates;
     offlineStorage?: PersistentStore<PersistedData>;
-    execute: Function
+    execute: Function;
   }

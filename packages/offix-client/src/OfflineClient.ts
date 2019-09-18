@@ -22,9 +22,9 @@ import {
 import { FetchResult } from "apollo-link";
 import { ApolloOfflineClient } from "./ApolloOfflineClient";
 import { MutationHelperOptions, createMutationOptions } from "offix-cache";
-import { FetchResult, ApolloLink } from "apollo-link";
-import { buildCachePersistence } from "./cache";
-import { NormalizedCacheObject } from "apollo-cache-inmemory";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { CachePersistor } from "apollo-cache-persist";
+import { getOperationName } from "apollo-utilities";
 
 /**
 * Factory for creating Apollo Offline Client
@@ -56,6 +56,14 @@ export const createClient = async (userConfig: OffixClientConfig):
  *  ```
  */
 export class OfflineClient implements ListenerProvider {
+
+  /**
+   * Get access to offline store that can be used to
+   * visualize  offline  operations that are currently pending
+   */
+  public get offlineStore(): OfflineStore {
+    return this.store;
+  }
   // the offix client global config
   public config: OffixDefaultConfig;
   // the network status interface that determines online/offline state
@@ -75,7 +83,7 @@ export class OfflineClient implements ListenerProvider {
   // The apollo client!
   public apolloClient?: ApolloOfflineClient;
 
-  public offlineMutationHandler?: OfflineMutationsHandler
+  public offlineMutationHandler?: OfflineMutationsHandler;
   // determines whether we're offline or not
   private online: boolean = false;
 
@@ -83,14 +91,14 @@ export class OfflineClient implements ListenerProvider {
     this.config = new OffixDefaultConfig(userConfig);
     this.networkStatus = this.config.networkStatus || new WebNetworkStatus();
     this.store = new OfflineStore(this.config.offlineStorage);
-    
+
     const resultProcessors: IResultProcessor[] = [new IDProcessor()];
-    
+
     this.queue = new OfflineQueue(this.store, {
       listeners: this.buildEventListeners(),
       networkStatus: this.networkStatus,
       resultProcessors,
-      execute: this.executeOfflineItem.bind(this) 
+      execute: this.executeOfflineItem.bind(this)
     });
     this.cache = new InMemoryCache();
     this.persistor = new CachePersistor({
@@ -132,7 +140,7 @@ export class OfflineClient implements ListenerProvider {
     // TODO move this somewhere that makes sense, also handle error cases
     this.queue.registerOfflineQueueListener({
       onOperationEnqueued: ({ op, qid }) => {
-        console.log('my operation was enqueued, lets add an optimistic response!', op)
+        console.log("my operation was enqueued, lets add an optimistic response!", op);
         if (this.apolloClient) {
           this.apolloClient.store.markMutationInit({
             mutationId: qid,
@@ -140,22 +148,22 @@ export class OfflineClient implements ListenerProvider {
             variables: op.variables,
             updateQueries: {},
             update: op.update,
-            optimisticResponse: op.optimisticResponse,
+            optimisticResponse: op.optimisticResponse
           });
-          this.apolloClient.queryManager.broadcastQueries()
+          this.apolloClient.queryManager.broadcastQueries();
         }
       },
       onOperationSuccess: ({ op, qid }) => {
-        console.log('Operation was successful, removing optimistic response')
+        console.log("Operation was successful, removing optimistic response");
         if (this.apolloClient) {
           this.apolloClient.store.markMutationComplete({
             mutationId: qid,
             optimisticResponse: op.optimisticResponse
-          })
-          this.apolloClient.queryManager.broadcastQueries()
+          });
+          this.apolloClient.queryManager.broadcastQueries();
         }
       }
-    })
+    });
 
     this.offlineMutationHandler = new OfflineMutationsHandler(this.store,
       this.apolloClient as ApolloOfflineClient,
@@ -163,14 +171,6 @@ export class OfflineClient implements ListenerProvider {
 
     await this.restoreOfflineOperations();
     return this.apolloClient;
-  }
-
-  /**
-   * Get access to offline store that can be used to
-   * visualize  offline  operations that are currently pending
-   */
-  public get offlineStore(): OfflineStore {
-    return this.store;
   }
 
   /**
@@ -193,9 +193,10 @@ export class OfflineClient implements ListenerProvider {
     if (!this.apolloClient) {
       throw new Error("Apollo offline client not initialised before mutation called.");
     } else {
-      
+
       const mutationOptions = createMutationOptions<T, TVariables>(options);
-      mutationOptions.context.optimisticResponse = mutationOptions.optimisticResponse
+      mutationOptions.context.optimisticResponse = mutationOptions.optimisticResponse;
+      mutationOptions.context.operationName = getOperationName(mutationOptions.mutation);
       mutationOptions.context.conflictBase = this.baseProcessor.getBaseState(mutationOptions as unknown as MutationOptions);
 
       if (this.online) {
@@ -204,17 +205,10 @@ export class OfflineClient implements ListenerProvider {
 
         const mutationPromise = new Promise(async (resolve, reject) => {
           await this.queue.enqueueOfflineChange(mutationOptions as unknown as MutationOptions, resolve, reject);
-        })
-        
+        });
+
         throw new OfflineError(mutationPromise as any);
       }
-    }
-  }
-
-  private async executeOfflineItem({ op, qid }: QueueEntryOperation) {
-    if (this.apolloClient) {
-      console.log('executing offline item', op)
-      return await this.apolloClient.mutate(op)
     }
   }
 
@@ -222,7 +216,7 @@ export class OfflineClient implements ListenerProvider {
     apolloClient.offlineStore = this.offlineStore;
     apolloClient.registerOfflineEventListener = this.registerOfflineEventListener.bind(this);
     apolloClient.offlineMutation = this.offlineMutation.bind(this);
-    apolloClient.queue = this.queue
+    apolloClient.queue = this.queue;
     return apolloClient;
   }
 
@@ -233,24 +227,24 @@ export class OfflineClient implements ListenerProvider {
 
     // Reschedule offline mutations for new client instance
     // this.offlineMutationHandler && await this.offlineMutationHandler.replayOfflineMutations();
-    await this.queue.restoreOfflineOperations()
+    await this.queue.restoreOfflineOperations();
     // After pushing all online changes check and set network status
     await this.initOnlineState();
   }
 
   protected buildEventListeners(): OfflineQueueListener[] {
-    const listeners: OfflineQueueListener[] = []
-    
+    const listeners: OfflineQueueListener[] = [];
+
     // Check if user provided legacy listener
     // To provide backwards compatibility we ignore this case
     if (this.config.offlineQueueListener) {
       console.warn(
-        'config.offlineQueueListener is deprecated and will ' +
-        'be removed in the next release. please use registerOfflineEventListener.')
-      listeners.push(this.config.offlineQueueListener)
+        "config.offlineQueueListener is deprecated and will " +
+        "be removed in the next release. please use registerOfflineEventListener.");
+      listeners.push(this.config.offlineQueueListener);
     }
 
-    return listeners
+    return listeners;
   }
 
   protected async initOnlineState() {
@@ -268,5 +262,12 @@ export class OfflineClient implements ListenerProvider {
         }
       }
     });
+  }
+
+  private async executeOfflineItem({ op, qid }: QueueEntryOperation) {
+    if (this.apolloClient) {
+      console.log("executing offline item", op);
+      return await this.apolloClient.mutate(op);
+    }
   }
 }

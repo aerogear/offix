@@ -10,7 +10,7 @@ export class OfflineStore {
   private storage: PersistentStore<PersistedData>;
   private offlineMetaKey: string = "offline-meta-data";
   private arrayOfKeys: string[];
-  private serializer: Serializer
+  private serializer: Serializer;
 
   constructor(storage: PersistentStore<PersistedData>) {
     this.storage = storage;
@@ -57,14 +57,14 @@ export class OfflineStore {
     for (const key of this.arrayOfKeys) {
       let item = await this.storage.getItem(this.getOfflineKey(key));
       if (typeof item === "string") {
-        item = JSON.parse(item)
+        item = JSON.parse(item);
       }
       offlineItems.push({
         operation: {
           op: item,
           qid: key
         }
-      })
+      });
     }
     return offlineItems;
   }
