@@ -10,18 +10,18 @@ import { generateClientId } from "offix-cache";
 export type OperationQueueChangeHandler = (entry: OperationQueueEntry) => void;
 
 export interface QueueEntry {
-  operation: QueueEntryOperation
-  handlers?: QueueEntryHandlers
+  operation: QueueEntryOperation;
+  handlers?: QueueEntryHandlers;
 }
 
 export interface QueueEntryOperation {
-  qid: string
-  op: any
+  qid: string;
+  op: any;
 }
 
 export interface QueueEntryHandlers {
-  resolve: Function
-  reject: Function
+  resolve: Function;
+  reject: Function;
 }
 
 /**
@@ -41,14 +41,14 @@ export class OfflineQueue {
 
   private store: OfflineStore;
 
-  private execute: Function
+  private execute: Function;
 
   private resultProcessors: IResultProcessor[] | undefined;
 
   constructor(store: OfflineStore, options: OfflineQueueConfig) {
     this.store = store;
     this.resultProcessors = options.resultProcessors;
-    this.execute = options.execute
+    this.execute = options.execute;
 
     if (options.listeners) {
       this.listeners = options.listeners;
@@ -64,21 +64,21 @@ export class OfflineQueue {
     const entry: QueueEntry = {
       operation: {
         qid: generateClientId(),
-        op,
+        op
       },
       handlers: {
         resolve,
         reject
       }
-    }
-    
+    };
+
     // enqueue and persist
     this.queue.push(entry);
 
     try {
       await this.store.saveEntry(entry.operation);
-    } catch(err) {
-      console.log(err)
+    } catch (err) {
+      console.log(err);
     }
 
     // notify listeners
@@ -87,26 +87,26 @@ export class OfflineQueue {
 
   public async forwardOperations() {
     for (const entry of this.queue) {
-      console.log('forwarding operation', entry)
-      await this.forwardOperation(entry)
+      console.log("forwarding operation", entry);
+      await this.forwardOperation(entry);
     }
-    console.log('operations forwarded', this.queue)
+    console.log("operations forwarded", this.queue);
   }
 
-  async forwardOperation(entry: QueueEntry) {
+  public async forwardOperation(entry: QueueEntry) {
     try {
-      const result = await this.execute(entry.operation)
+      const result = await this.execute(entry.operation);
       this.onForwardNext(entry, result);
       if (entry.handlers) {
-        entry.handlers.resolve(result)
+        entry.handlers.resolve(result);
       }
       // this.onForwardNext(operation, op, result)
     } catch (error) {
-      console.log('error forwarding operation', error)
+      console.log("error forwarding operation", error);
       if (entry.handlers) {
-        entry.handlers.reject(error)
+        entry.handlers.reject(error);
       }
-      this.onOperationFailure(entry.operation, error)
+      this.onOperationFailure(entry.operation, error);
     }
   }
 
@@ -118,67 +118,67 @@ export class OfflineQueue {
     }
   }
 
+  public async restoreOfflineOperations() {
+    console.log("restoring operations");
+    try {
+      this.queue = await this.store.getOfflineData();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public registerOfflineQueueListener(listener: OfflineQueueListener) {
+    this.listeners.push(listener);
+  }
+
+  public onOperationEnqueued(op: QueueEntryOperation) {
+    for (const listener of this.listeners) {
+      if (listener.onOperationEnqueued) {
+        listener.onOperationEnqueued(op);
+      }
+    }
+  }
+
+  public onOperationSuccess(op: QueueEntryOperation, result: any) {
+    for (const listener of this.listeners) {
+      if (listener.onOperationSuccess) {
+        listener.onOperationSuccess(op, result);
+      }
+    }
+  }
+
+  public onOperationFailure(op: QueueEntryOperation, error: Error) {
+    for (const listener of this.listeners) {
+      if (listener.onOperationFailure) {
+        listener.onOperationFailure(op, error);
+      }
+    }
+  }
+
+  public queueCleared() {
+    for (const listener of this.listeners) {
+      if (listener.queueCleared) {
+        listener.queueCleared();
+      }
+    }
+  }
+
   private onForwardNext(entry: QueueEntry, result: any) {
-    this.queue = this.queue.filter(e => e !== entry)
-    console.log('forward result', JSON.stringify(result, null, 2))
-    
+    this.queue = this.queue.filter(e => e !== entry);
+    console.log("forward result", JSON.stringify(result, null, 2));
+
     if (result.errors) {
       // TODO distiguish between application errors that happen here
       // And other errors that may happen in forwardOperation
-      this.onOperationFailure(entry.operation, result.errors)
+      this.onOperationFailure(entry.operation, result.errors);
       // Notify for success otherwise
     } else if (result.data) {
-      this.onOperationSuccess(entry.operation, result)
-      // this.executeResultProcessors(op, result);
+      this.executeResultProcessors(entry, result);
+      this.onOperationSuccess(entry.operation, result);
     }
-    this.store.removeEntry(entry.operation)
+    this.store.removeEntry(entry.operation);
     if (this.queue.length === 0) {
       this.queueCleared();
-    }
-  }
-
-  async restoreOfflineOperations() {
-    console.log('restoring operations')
-    try {
-      this.queue = await this.store.getOfflineData()
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  registerOfflineQueueListener(listener: OfflineQueueListener) {
-    this.listeners.push(listener)
-  }
-
-  onOperationEnqueued(op: QueueEntryOperation) {
-    for (const listener of this.listeners) {
-      if (listener.onOperationEnqueued) {
-        listener.onOperationEnqueued(op)
-      } 
-    }
-  }
-
-  onOperationSuccess(op: QueueEntryOperation, result: any) {
-    for (const listener of this.listeners) {
-      if (listener.onOperationSuccess) {
-        listener.onOperationSuccess(op, result)
-      } 
-    }
-  }
-
-  onOperationFailure(op: QueueEntryOperation, error: Error) {
-    for (const listener of this.listeners) {
-      if (listener.onOperationFailure) {
-        listener.onOperationFailure(op, error)
-      } 
-    }
-  }
-
-  queueCleared() {
-    for (const listener of this.listeners) {
-      if (listener.queueCleared) {
-        listener.queueCleared()
-      } 
     }
   }
 }

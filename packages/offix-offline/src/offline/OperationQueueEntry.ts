@@ -32,8 +32,8 @@ export class OperationQueueEntry implements OfflineItem {
   public readonly conflictBase: any;
   public conflictStrategy?: string;
 
-  public onComplete?: Function
-  public onError?: Function
+  public onComplete?: Function;
+  public onError?: Function;
 
   public result?: FetchResult;
   public networkError: any;

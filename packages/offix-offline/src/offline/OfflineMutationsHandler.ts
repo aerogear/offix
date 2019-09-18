@@ -66,7 +66,7 @@ export class OfflineMutationsHandler {
       // Pass extensions as part of the context
       context
     };
-    console.log('replaying mutation', mutationOptions)
+    console.log("replaying mutation", mutationOptions);
     return this.apolloClient.mutate(mutationOptions);
   }
 

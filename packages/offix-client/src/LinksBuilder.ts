@@ -14,7 +14,7 @@ import { ConfigError } from "./config/ConfigError";
  * - Conflict resolution
  * - Error handling
  */
-async function createCompositeLink (config: OffixClientConfig,
+async function createCompositeLink(config: OffixClientConfig,
   conflictLink: ApolloLink): Promise<ApolloLink> {
 
   const links: ApolloLink[] = [conflictLink];
@@ -31,6 +31,6 @@ async function createCompositeLink (config: OffixClientConfig,
   }
 
   return ApolloLink.from(links);
-};
+}
 
-export { createCompositeLink }
+export { createCompositeLink };
