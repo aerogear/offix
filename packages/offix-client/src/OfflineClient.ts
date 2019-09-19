@@ -62,7 +62,7 @@ export class OfflineClient implements ListenerProvider {
    * Get access to offline store that can be used to
    * visualize  offline  operations that are currently pending
    */
-  public get offlineStore(): OfflineStore {
+  public get offlineStore(): OfflineStore | undefined {
     return this.store;
   }
   // the offix client global config
@@ -70,7 +70,7 @@ export class OfflineClient implements ListenerProvider {
   // the network status interface that determines online/offline state
   public networkStatus: NetworkStatus;
   // the offline storage interface that persists offline data across restarts
-  public store: OfflineStore;
+  public store?: OfflineStore;
   // the in memory queue that holds offline data
   public queue: OfflineQueue;
   // listeners that can be added by the user to handle various events coming from the offline queue
@@ -78,7 +78,7 @@ export class OfflineClient implements ListenerProvider {
   // The apollo cache that holds application state
   public cache: InMemoryCache;
   // wrapper around the apollo cache for persisting it across restarts
-  public persistor: CachePersistor<object>;
+  public persistor?: CachePersistor<object>;
   // captures the 'base' object a mutation is performed on. Used for conflict resolution
   public baseProcessor: BaseProcessor;
   // The apollo client!
@@ -90,7 +90,11 @@ export class OfflineClient implements ListenerProvider {
   constructor(userConfig: OffixClientConfig) {
     this.config = new OffixDefaultConfig(userConfig);
     this.networkStatus = this.config.networkStatus || new WebNetworkStatus();
-    this.store = new OfflineStore(this.config.offlineStorage, ApolloOperationSerializer);
+
+    // its possible that no storage is available
+    if (this.config.offlineStorage) {
+      this.store = new OfflineStore(this.config.offlineStorage, ApolloOperationSerializer);
+    }
 
     const resultProcessors: IResultProcessor[] = [new IDProcessor()];
 
@@ -100,14 +104,19 @@ export class OfflineClient implements ListenerProvider {
       resultProcessors,
       execute: this.executeOfflineItem.bind(this)
     });
+
     this.cache = new InMemoryCache();
-    this.persistor = new CachePersistor({
-      cache: this.cache,
-      serialize: false,
-      storage: this.config.cacheStorage,
-      maxSize: false,
-      debug: false
-    });
+
+    if (this.config.cacheStorage) {
+      this.persistor = new CachePersistor({
+        cache: this.cache,
+        serialize: false,
+        storage: this.config.cacheStorage,
+        maxSize: false,
+        debug: false
+      });
+    }
+
     this.baseProcessor = new BaseProcessor({
       stater: this.config.conflictProvider,
       cache: this.cache
@@ -118,8 +127,12 @@ export class OfflineClient implements ListenerProvider {
   * Initialize client
   */
   public async init(): Promise<ApolloOfflineClient> {
-    await this.store.init();
-    await this.persistor.restore();
+    if (this.store) {
+      await this.store.init();
+    }
+    if (this.persistor) {
+      await this.persistor.restore();
+    }
 
     const conflictLink = new ConflictLink({
       conflictProvider: this.config.conflictProvider as ObjectState,

@@ -36,13 +36,13 @@ export class OfflineQueue {
   // listeners that can be added by the user to handle various events coming from the offline queue
   public listeners: OfflineQueueListener[] = [];
 
-  private store: OfflineStore;
+  private store?: OfflineStore;
 
   private execute: Function;
 
   private resultProcessors: IResultProcessor[] | undefined;
 
-  constructor(store: OfflineStore, options: OfflineQueueConfig) {
+  constructor(store: OfflineStore | undefined, options: OfflineQueueConfig) {
     this.store = store;
     this.resultProcessors = options.resultProcessors;
     this.execute = options.execute;
@@ -72,10 +72,12 @@ export class OfflineQueue {
     // enqueue and persist
     this.queue.push(entry);
 
-    try {
-      await this.store.saveEntry(entry.operation);
-    } catch (err) {
-      console.log(err);
+    if (this.store) {
+      try {
+        await this.store.saveEntry(entry.operation);
+      } catch (err) {
+        console.log(err);
+      }
     }
 
     // notify listeners
@@ -116,11 +118,13 @@ export class OfflineQueue {
   }
 
   public async restoreOfflineOperations() {
-    console.log("restoring operations");
-    try {
-      this.queue = await this.store.getOfflineData();
-    } catch (error) {
-      console.error(error);
+    if (this.store) {
+      console.log("restoring operations");
+      try {
+        this.queue = await this.store.getOfflineData();
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 
@@ -173,7 +177,9 @@ export class OfflineQueue {
       this.executeResultProcessors(entry, result);
       this.onOperationSuccess(entry.operation, result);
     }
-    this.store.removeEntry(entry.operation);
+    if (this.store) {
+      this.store.removeEntry(entry.operation);
+    }
     if (this.queue.length === 0) {
       this.queueCleared();
     }
