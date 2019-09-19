@@ -122,7 +122,7 @@ export const createMutationOptions = <T = {
     options.update = update;
   }
 
-  options.context = { ...context, returnType, idField };
+  options.context = { ...context, returnType, idField, operationName: mutationName };
   return options;
 };
 

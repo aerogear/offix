@@ -196,8 +196,6 @@ export class OfflineClient implements ListenerProvider {
     } else {
 
       const mutationOptions = createMutationOptions<T, TVariables>(options);
-      mutationOptions.context.optimisticResponse = mutationOptions.optimisticResponse;
-      mutationOptions.context.operationName = getOperationName(mutationOptions.mutation);
       mutationOptions.context.conflictBase = this.baseProcessor.getBaseState(mutationOptions as unknown as MutationOptions);
 
       if (this.online) {
