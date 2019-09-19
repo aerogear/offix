@@ -2,6 +2,7 @@ import { ApolloClient, OperationVariables, MutationOptions } from "apollo-client
 import { OffixClientConfig } from "./config/OffixClientConfig";
 import { OffixDefaultConfig } from "./config/OffixDefaultConfig";
 import { createCompositeLink } from "./LinksBuilder";
+import { addOptimisticResponse, removeOptimisticResponse } from "./optimisticResponseHelpers"
 import {
   OfflineStore,
   OfflineQueue,
@@ -137,28 +138,20 @@ export class OfflineClient implements ListenerProvider {
     // Optimistic Responses
     // TODO move this somewhere that makes sense, also handle error cases
     this.queue.registerOfflineQueueListener({
-      onOperationEnqueued: ({ op, qid }) => {
-        console.log("my operation was enqueued, lets add an optimistic response!", op);
+      onOperationEnqueued: (operation: QueueEntryOperation) => {
         if (this.apolloClient) {
-          this.apolloClient.store.markMutationInit({
-            mutationId: qid,
-            document: op.mutation,
-            variables: op.variables,
-            updateQueries: {},
-            update: op.update,
-            optimisticResponse: op.optimisticResponse
-          });
-          this.apolloClient.queryManager.broadcastQueries();
+          addOptimisticResponse(this.apolloClient, operation)
         }
       },
-      onOperationSuccess: ({ op, qid }) => {
-        console.log("Operation was successful, removing optimistic response");
+      onOperationSuccess: (operation: QueueEntryOperation) => {
         if (this.apolloClient) {
-          this.apolloClient.store.markMutationComplete({
-            mutationId: qid,
-            optimisticResponse: op.optimisticResponse
-          });
-          this.apolloClient.queryManager.broadcastQueries();
+          removeOptimisticResponse(this.apolloClient, operation)
+        }
+      },
+      onOperationFailure: (operation: QueueEntryOperation, error) => {
+        console.log("Operation failed", error)
+        if (this.apolloClient) {
+          removeOptimisticResponse(this.apolloClient, operation)
         }
       }
     });
