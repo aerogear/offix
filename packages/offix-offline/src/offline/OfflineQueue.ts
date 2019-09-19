@@ -2,18 +2,17 @@ import { OfflineQueueListener } from "./events/OfflineQueueListener";
 import { FetchResult } from "apollo-link";
 import { OfflineStore } from "./storage/OfflineStore";
 import { IResultProcessor } from "./processors";
-import { OfflineQueueConfig } from "./OfflineLinkConfig";
-import { MutationOptions } from "offix-cache/node_modules/apollo-client";
+import { OfflineQueueConfig } from "./OfflineQueueConfig";
 import { generateClientId } from "offix-cache";
 
-export interface QueueEntry {
-  operation: QueueEntryOperation;
+export interface QueueEntry<T> {
+  operation: QueueEntryOperation<T>;
   handlers?: QueueEntryHandlers;
 }
 
-export interface QueueEntryOperation {
+export interface QueueEntryOperation<T> {
   qid: string;
-  op: any;
+  op: T;
 }
 
 export interface QueueEntryHandlers {
@@ -30,19 +29,19 @@ export interface QueueEntryHandlers {
  * - persisting operation queue in provided storage
  * - updating client IDs with server IDs (explained below)
  */
-export class OfflineQueue {
-  public queue: QueueEntry[] = [];
+export class OfflineQueue<T> {
+  public queue: QueueEntry<T>[] = [];
 
   // listeners that can be added by the user to handle various events coming from the offline queue
-  public listeners: OfflineQueueListener[] = [];
+  public listeners: OfflineQueueListener<T>[] = [];
 
-  private store?: OfflineStore;
+  private store?: OfflineStore<T>;
 
   private execute: Function;
 
-  private resultProcessors: IResultProcessor[] | undefined;
+  private resultProcessors: IResultProcessor<T>[] | undefined;
 
-  constructor(store: OfflineStore | undefined, options: OfflineQueueConfig) {
+  constructor(store: OfflineStore<T> | undefined, options: OfflineQueueConfig<T>) {
     this.store = store;
     this.resultProcessors = options.resultProcessors;
     this.execute = options.execute;
@@ -56,9 +55,9 @@ export class OfflineQueue {
    * Enqueue offline change and wait for it to be sent to server when online.
    * Every offline change is added to queue.
    */
-  public async enqueueOperation(op: MutationOptions, resolve: Function, reject: Function): Promise<any> {
+  public async enqueueOperation(op: T, resolve: Function, reject: Function): Promise<any> {
 
-    const entry: QueueEntry = {
+    const entry: QueueEntry<T> = {
       operation: {
         qid: generateClientId(),
         op
@@ -84,7 +83,7 @@ export class OfflineQueue {
     this.onOperationEnqueued(entry.operation);
   }
 
-  public async dequeueOperation(entry: QueueEntry) {
+  public async dequeueOperation(entry: QueueEntry<T>) {
     this.queue = this.queue.filter(e => e !== entry);
     if (this.store) {
       try {
@@ -103,7 +102,7 @@ export class OfflineQueue {
     console.log("operations forwarded", this.queue);
   }
 
-  public async forwardOperation(entry: QueueEntry) {
+  public async forwardOperation(entry: QueueEntry<T>) {
     try {
       const result = await this.execute(entry.operation);
       this.onForwardNext(entry, result);
@@ -120,7 +119,7 @@ export class OfflineQueue {
     }
   }
 
-  public executeResultProcessors(entry: QueueEntry, result: FetchResult<any>) {
+  public executeResultProcessors(entry: QueueEntry<T>, result: FetchResult<any>) {
     if (this.resultProcessors) {
       for (const resultProcessor of this.resultProcessors) {
         resultProcessor.execute(this.queue, entry, result);
@@ -139,11 +138,11 @@ export class OfflineQueue {
     }
   }
 
-  public registerOfflineQueueListener(listener: OfflineQueueListener) {
+  public registerOfflineQueueListener(listener: OfflineQueueListener<T>) {
     this.listeners.push(listener);
   }
 
-  public onOperationEnqueued(op: QueueEntryOperation) {
+  public onOperationEnqueued(op: QueueEntryOperation<T>) {
     for (const listener of this.listeners) {
       if (listener.onOperationEnqueued) {
         listener.onOperationEnqueued(op);
@@ -151,7 +150,7 @@ export class OfflineQueue {
     }
   }
 
-  public onOperationSuccess(op: QueueEntryOperation, result: any) {
+  public onOperationSuccess(op: QueueEntryOperation<T>, result: any) {
     for (const listener of this.listeners) {
       if (listener.onOperationSuccess) {
         listener.onOperationSuccess(op, result);
@@ -159,7 +158,7 @@ export class OfflineQueue {
     }
   }
 
-  public onOperationFailure(op: QueueEntryOperation, error: Error) {
+  public onOperationFailure(op: QueueEntryOperation<T>, error: Error) {
     for (const listener of this.listeners) {
       if (listener.onOperationFailure) {
         listener.onOperationFailure(op, error);
@@ -175,7 +174,7 @@ export class OfflineQueue {
     }
   }
 
-  private onForwardNext(entry: QueueEntry, result: any) {
+  private onForwardNext(entry: QueueEntry<T>, result: any) {
     if (result.errors) {
       // TODO distiguish between application errors that happen here
       // And other errors that may happen in forwardOperation

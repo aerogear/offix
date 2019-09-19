@@ -1,5 +1,5 @@
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
-import { ApolloClient, OperationVariables } from "apollo-client";
+import { ApolloClient, OperationVariables, MutationOptions } from "apollo-client";
 import { OfflineStore, OfflineQueueListener, OfflineQueue } from "offix-offline";
 import { MutationHelperOptions } from "offix-cache";
 import { FetchResult } from "apollo-link";
@@ -14,12 +14,12 @@ export interface ApolloOfflineClient extends ApolloClient<NormalizedCacheObject>
    * Store that can be used to retrieve offline changes
    * Developers can use it to visualize offline changes in their application
    */
-  offlineStore: OfflineStore;
+  offlineStore: OfflineStore<MutationOptions>;
 
   /**
    * In Memory Queue that holds all pending offline operations
    */
-  queue: OfflineQueue;
+  queue: OfflineQueue<MutationOptions>;
 
   /**
    * Allows to register offline queue listener
@@ -27,7 +27,7 @@ export interface ApolloOfflineClient extends ApolloClient<NormalizedCacheObject>
    *
    * @param listener
    */
-  registerOfflineEventListener(listener: OfflineQueueListener): void;
+  registerOfflineEventListener(listener: OfflineQueueListener<MutationOptions>): void;
 
   /**
    * Allows the client to perform an offline mutation

@@ -1,5 +1,5 @@
 import { QueueEntryOperation } from "../OfflineQueue";
 
-export interface Serializer {
-  serializeForStorage(entry: QueueEntryOperation): any;
+export interface Serializer<T> {
+  serializeForStorage(entry: QueueEntryOperation<T>): any;
 }

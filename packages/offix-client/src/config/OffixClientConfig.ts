@@ -7,6 +7,7 @@ import { ConflictListener } from "offix-offline";
 import { CacheUpdates } from "offix-cache";
 import { RetryLink } from "apollo-link-retry";
 import { ApolloLink } from "apollo-link";
+import { MutationOptions } from "apollo-client";
 
 /**
  * Contains all configuration options required to initialize Voyager Client
@@ -49,7 +50,7 @@ export interface OffixClientConfig {
    * User provided listener that contains set of methods that can be used to detect
    * when operations were added to queue
    */
-  offlineQueueListener?: OfflineQueueListener;
+  offlineQueueListener?: OfflineQueueListener<MutationOptions>;
 
   /**
    * [Modifier]

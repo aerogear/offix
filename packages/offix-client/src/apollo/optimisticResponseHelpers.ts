@@ -1,7 +1,8 @@
 import { ApolloOfflineClient } from "./ApolloOfflineClient";
 import { QueueEntryOperation } from "offix-offline";
+import { MutationOptions } from "apollo-client";
 
-export function addOptimisticResponse(apolloClient: ApolloOfflineClient, { op, qid }: QueueEntryOperation) {
+export function addOptimisticResponse(apolloClient: ApolloOfflineClient, { op, qid }: QueueEntryOperation<MutationOptions>) {
   apolloClient.store.markMutationInit({
     mutationId: qid,
     document: op.mutation,
@@ -13,7 +14,7 @@ export function addOptimisticResponse(apolloClient: ApolloOfflineClient, { op, q
   apolloClient.queryManager.broadcastQueries();
 }
 
-export function removeOptimisticResponse(apolloClient: ApolloOfflineClient, { op, qid }: QueueEntryOperation) {
+export function removeOptimisticResponse(apolloClient: ApolloOfflineClient, { op, qid }: QueueEntryOperation<MutationOptions>) {
   apolloClient.store.markMutationComplete({
     mutationId: qid,
     optimisticResponse: op.optimisticResponse
