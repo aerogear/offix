@@ -21,8 +21,8 @@ export class OffixDefaultConfig implements OffixClientConfig {
   public conflictProvider = new VersionedState();
   public networkStatus: NetworkStatus;
   public terminatingLink: ApolloLink | undefined;
-  public cacheStorage: PersistentStore<PersistedData>;
-  public offlineStorage: PersistentStore<PersistedData>;
+  public cacheStorage?: PersistentStore<PersistedData>;
+  public offlineStorage?: PersistentStore<PersistedData>;
   public conflictListener?: ConflictListener;
   public mutationCacheUpdates?: CacheUpdates;
 
