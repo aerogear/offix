@@ -1,4 +1,4 @@
-import { ApolloOfflineClient } from ".";
+import { ApolloOfflineClient } from "./ApolloOfflineClient";
 import { QueueEntryOperation } from "offix-offline";
 
 export function addOptimisticResponse(apolloClient: ApolloOfflineClient, { op, qid }: QueueEntryOperation) {

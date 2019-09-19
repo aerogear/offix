@@ -1,8 +1,10 @@
 import { ApolloClient, OperationVariables, MutationOptions } from "apollo-client";
 import { OffixClientConfig } from "./config/OffixClientConfig";
 import { OffixDefaultConfig } from "./config/OffixDefaultConfig";
-import { createCompositeLink } from "./LinksBuilder";
-import { addOptimisticResponse, removeOptimisticResponse } from "./optimisticResponseHelpers"
+import { ApolloOperationSerializer } from "./apollo/ApolloOperationSerializer";
+import { createCompositeLink } from "./apollo/LinksBuilder";
+import { ApolloOfflineClient } from "./apollo/ApolloOfflineClient";
+import { addOptimisticResponse, removeOptimisticResponse } from "./apollo/optimisticResponseHelpers"
 import {
   OfflineStore,
   OfflineQueue,
@@ -20,7 +22,6 @@ import {
   QueueEntryOperation
 } from "offix-offline";
 import { FetchResult } from "apollo-link";
-import { ApolloOfflineClient } from "./ApolloOfflineClient";
 import { MutationHelperOptions, createMutationOptions } from "offix-cache";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { CachePersistor } from "apollo-cache-persist";
@@ -89,7 +90,7 @@ export class OfflineClient implements ListenerProvider {
   constructor(userConfig: OffixClientConfig) {
     this.config = new OffixDefaultConfig(userConfig);
     this.networkStatus = this.config.networkStatus || new WebNetworkStatus();
-    this.store = new OfflineStore(this.config.offlineStorage);
+    this.store = new OfflineStore(this.config.offlineStorage, ApolloOperationSerializer);
 
     const resultProcessors: IResultProcessor[] = [new IDProcessor()];
 

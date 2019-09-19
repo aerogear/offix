@@ -1,5 +1,5 @@
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
-import { ApolloClient, MutationOptions, OperationVariables } from "apollo-client";
+import { ApolloClient, OperationVariables } from "apollo-client";
 import { OfflineStore, OfflineQueueListener, OfflineQueue } from "offix-offline";
 import { MutationHelperOptions } from "offix-cache";
 import { FetchResult } from "apollo-link";
