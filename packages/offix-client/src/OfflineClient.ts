@@ -205,7 +205,7 @@ export class OfflineClient implements ListenerProvider {
       } else {
 
         const mutationPromise = new Promise(async (resolve, reject) => {
-          await this.queue.enqueueOfflineChange(mutationOptions as unknown as MutationOptions, resolve, reject);
+          await this.queue.enqueueOperation(mutationOptions as unknown as MutationOptions, resolve, reject);
         });
 
         throw new OfflineError(mutationPromise as any);
