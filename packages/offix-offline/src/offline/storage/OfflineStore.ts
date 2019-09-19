@@ -33,8 +33,8 @@ export class OfflineStore {
    */
   public async saveEntry(entry: QueueEntryOperation) {
     this.arrayOfKeys.push(entry.qid);
+    await this.storage.setItem(getOfflineKey(entry.qid), this.serializer.serializeForStorage(entry));
     await this.storage.setItem(this.offlineMetaKey, this.arrayOfKeys);
-    await this.storage.setItem(this.getOfflineKey(entry.qid), this.serializer.serializeForStorage(entry));
   }
 
   /**
@@ -45,7 +45,7 @@ export class OfflineStore {
   public async removeEntry(entry: QueueEntryOperation) {
     this.arrayOfKeys.splice(this.arrayOfKeys.indexOf(entry.qid), 1);
     this.storage.setItem(this.offlineMetaKey, this.arrayOfKeys);
-    const offlineKey = this.getOfflineKey(entry.qid);
+    const offlineKey = getOfflineKey(entry.qid);
     await this.storage.removeItem(offlineKey);
   }
 
@@ -55,7 +55,7 @@ export class OfflineStore {
   public async getOfflineData(): Promise<QueueEntry[]> {
     const offlineItems: QueueEntry[] = [];
     for (const key of this.arrayOfKeys) {
-      let item = await this.storage.getItem(this.getOfflineKey(key));
+      let item = await this.storage.getItem(getOfflineKey(key));
       if (typeof item === "string") {
         item = JSON.parse(item);
       }
@@ -68,8 +68,8 @@ export class OfflineStore {
     }
     return offlineItems;
   }
+}
 
-  private getOfflineKey(id: string): string {
-    return "offline:" + id;
-  }
+function getOfflineKey(id: string): string {
+  return "offline:" + id;
 }
