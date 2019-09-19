@@ -56,7 +56,7 @@ export class OfflineQueue {
    * Enqueue offline change and wait for it to be sent to server when online.
    * Every offline change is added to queue.
    */
-  public async enqueueOfflineChange(op: MutationOptions, resolve: Function, reject: Function): Promise<any> {
+  public async enqueueOperation(op: MutationOptions, resolve: Function, reject: Function): Promise<any> {
 
     const entry: QueueEntry = {
       operation: {
@@ -82,6 +82,17 @@ export class OfflineQueue {
 
     // notify listeners
     this.onOperationEnqueued(entry.operation);
+  }
+
+  public async dequeueOperation(entry: QueueEntry) {
+    this.queue = this.queue.filter(e => e !== entry);
+    if (this.store) {
+      try {
+        await this.store.removeEntry(entry.operation);
+      } catch (err) {
+        console.log(err);
+      }
+    }
   }
 
   public async forwardOperations() {
@@ -165,9 +176,6 @@ export class OfflineQueue {
   }
 
   private onForwardNext(entry: QueueEntry, result: any) {
-    this.queue = this.queue.filter(e => e !== entry);
-    console.log("forward result", JSON.stringify(result, null, 2));
-
     if (result.errors) {
       // TODO distiguish between application errors that happen here
       // And other errors that may happen in forwardOperation
@@ -177,9 +185,7 @@ export class OfflineQueue {
       this.executeResultProcessors(entry, result);
       this.onOperationSuccess(entry.operation, result);
     }
-    if (this.store) {
-      this.store.removeEntry(entry.operation);
-    }
+    this.dequeueOperation(entry);
     if (this.queue.length === 0) {
       this.queueCleared();
     }
