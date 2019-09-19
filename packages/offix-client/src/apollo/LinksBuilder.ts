@@ -1,9 +1,9 @@
-import { ApolloLink, Operation } from "apollo-link";
+import { ApolloLink } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { RetryLink } from "apollo-link-retry";
-import { OffixClientConfig } from "./config/OffixClientConfig";
+import { OffixClientConfig } from "../config/OffixClientConfig";
 import { isMarkedOffline } from "offix-offline";
-import { ConfigError } from "./config/ConfigError";
+import { ConfigError } from "../config/ConfigError";
 
 /**
  * Default HTTP Apollo Links
