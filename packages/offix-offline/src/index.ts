@@ -8,14 +8,13 @@ export * from "./offline/network/WebNetworkStatus";
 export * from "./offline/network/CordovaNetworkStatus";
 export * from "./offline/events/OfflineQueueListener";
 export * from "./offline/storage/OfflineStore";
-export * from "./offline/events/ListenerProvider";
 export * from "./offline/events/OfflineQueueListener";
 export * from "./offline/storage/PersistentStore";
 export * from "./offline/storage/OfflineStore";
 export * from "./offline/storage/defaultStorage";
 export * from "./offline/processors/IDProcessor";
 export * from "./offline/processors/IResultProcessor";
-export * from "./offline/OfflineLinkConfig";
+export * from "./offline/OfflineQueueConfig";
 
 export * from "./conflicts/strategies/strategies";
 export * from "./conflicts/ConflictLink";

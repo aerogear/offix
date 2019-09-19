@@ -5,17 +5,17 @@ import { QueueEntryOperation } from "../OfflineQueue";
  * Offline queue will add elements to queue when it's closed.
  * This listener can be supplied to detect this events.
  */
-export interface OfflineQueueListener {
+export interface OfflineQueueListener<T> {
 
   /**
    * Called when new operation is being added to offline queue
    */
-  onOperationEnqueued?: (op: QueueEntryOperation) => void;
+  onOperationEnqueued?: (op: QueueEntryOperation<T>) => void;
 
   /**
    * Called when back online and operation succeeds
    */
-  onOperationSuccess?: (op: QueueEntryOperation, result: any) => void;
+  onOperationSuccess?: (op: QueueEntryOperation<T>, result: any) => void;
 
   /**
    * Called when back online and operation fails with GraphQL error
@@ -26,7 +26,7 @@ export interface OfflineQueueListener {
   // onOperationFailure?: (op: MutationOptions, graphQLError?: any, networkError?: any) => void;v
 
   // TODO - Support both error types described above but in a more generic way
-  onOperationFailure?: (op: QueueEntryOperation, error: Error) => void;
+  onOperationFailure?: (op: QueueEntryOperation<T>, error: Error) => void;
 
   /**
    * Called when offline operation queue is cleared

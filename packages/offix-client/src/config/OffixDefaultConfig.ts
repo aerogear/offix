@@ -9,6 +9,7 @@ import { createDefaultOfflineStorage } from "offix-offline";
 import { createDefaultCacheStorage } from "../cache";
 import { ApolloLink } from "apollo-link";
 import { CacheUpdates } from "offix-cache";
+import { MutationOptions } from "apollo-client";
 
 /**
  * Class for managing user and default configuration.
@@ -16,7 +17,7 @@ import { CacheUpdates } from "offix-cache";
  */
 export class OffixDefaultConfig implements OffixClientConfig {
   public httpUrl?: string;
-  public offlineQueueListener?: OfflineQueueListener;
+  public offlineQueueListener?: OfflineQueueListener<MutationOptions>;
   public conflictStrategy: ConflictResolutionStrategy;
   public conflictProvider = new VersionedState();
   public networkStatus: NetworkStatus;

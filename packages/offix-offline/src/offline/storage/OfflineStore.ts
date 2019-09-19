@@ -5,14 +5,14 @@ import { Serializer } from "./Serializer";
 /**
  * Abstract Offline storage
  */
-export class OfflineStore {
+export class OfflineStore<T> {
 
   private storage: PersistentStore<PersistedData>;
   private offlineMetaKey: string = "offline-meta-data";
   private arrayOfKeys: string[];
-  private serializer: Serializer;
+  private serializer: Serializer<T>;
 
-  constructor(storage: PersistentStore<PersistedData>, serializer: Serializer) {
+  constructor(storage: PersistentStore<PersistedData>, serializer: Serializer<T>) {
     this.arrayOfKeys = [];
     this.storage = storage;
     this.serializer = serializer
@@ -31,7 +31,7 @@ export class OfflineStore {
    *
    * @param entry - the entry to be saved
    */
-  public async saveEntry(entry: QueueEntryOperation) {
+  public async saveEntry(entry: QueueEntryOperation<T>) {
     this.arrayOfKeys.push(entry.qid);
     await this.storage.setItem(getOfflineKey(entry.qid), this.serializer.serializeForStorage(entry));
     await this.storage.setItem(this.offlineMetaKey, this.arrayOfKeys);
@@ -42,7 +42,7 @@ export class OfflineStore {
    *
    * @param queue - the entry to be removed
    */
-  public async removeEntry(entry: QueueEntryOperation) {
+  public async removeEntry(entry: QueueEntryOperation<T>) {
     this.arrayOfKeys.splice(this.arrayOfKeys.indexOf(entry.qid), 1);
     this.storage.setItem(this.offlineMetaKey, this.arrayOfKeys);
     const offlineKey = getOfflineKey(entry.qid);
@@ -52,8 +52,8 @@ export class OfflineStore {
   /**
    * Fetch data from the offline store
    */
-  public async getOfflineData(): Promise<QueueEntry[]> {
-    const offlineItems: QueueEntry[] = [];
+  public async getOfflineData(): Promise<QueueEntry<T>[]> {
+    const offlineItems: QueueEntry<T>[] = [];
     for (const key of this.arrayOfKeys) {
       let item = await this.storage.getItem(getOfflineKey(key));
       if (typeof item === "string") {
@@ -61,7 +61,7 @@ export class OfflineStore {
       }
       offlineItems.push({
         operation: {
-          op: item,
+          op: item as unknown as T,
           qid: key
         }
       });

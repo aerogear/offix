@@ -6,7 +6,7 @@ import { QueueEntry } from "../OfflineQueue";
  *
  * @see IDProcessor
  */
-export interface IResultProcessor {
+export interface IResultProcessor<T> {
 
     /**
      * Process operation and queue
@@ -15,5 +15,5 @@ export interface IResultProcessor {
      * @param op
      * @param result
      */
-    execute(queue: QueueEntry[], op: QueueEntry, result: FetchResult<any>): void;
+    execute(queue: QueueEntry<T>[], op: QueueEntry<T>, result: FetchResult<any>): void;
 }
