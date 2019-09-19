@@ -1,6 +1,5 @@
 import { MutationOptions } from "apollo-client";
 import { ApolloCache } from "apollo-cache";
-import { ApolloCacheHelper } from "../utils/ApolloCacheHelper";
 import { ObjectState } from "../conflicts/state/ObjectState";
 import { ConflictResolutionData } from "./strategies/ConflictResolutionData";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
@@ -8,6 +7,12 @@ import { NormalizedCacheObject } from "apollo-cache-inmemory";
 export interface BaseProcessorOptions {
   stater: ObjectState;
   cache: ApolloCache<NormalizedCacheObject>;
+}
+
+interface ApolloCacheWithData extends ApolloCache<NormalizedCacheObject> {
+  config: any;
+  data: any;
+  optimisticData: any;
 }
 
 /**
@@ -23,12 +28,12 @@ export interface BaseProcessorOptions {
  * which can then be used for conflict resolution later on.
  */
 export class BaseProcessor {
-  private cacheHelper: ApolloCacheHelper;
+  private cache: ApolloCacheWithData;
   private stater: ObjectState;
 
   constructor(options: BaseProcessorOptions) {
     this.stater = options.stater;
-    this.cacheHelper = new ApolloCacheHelper(options.cache);
+    this.cache = options.cache as ApolloCacheWithData;
   }
 
   public getBaseState(mutationOptions: MutationOptions): ConflictResolutionData {
@@ -36,9 +41,9 @@ export class BaseProcessor {
     const idField: string = context.idField || "id";
     const id: string = mutationOptions.variables && mutationOptions.variables[idField];
 
-    if (!context.isOffline && !context.conflictBase) {
+    if (!context.conflictBase) {
       // do nothing
-      const conflictBase = this.cacheHelper.getObjectFromCache(context.returnType, id);
+      const conflictBase = this.getObjectFromCache(context.returnType, id);
       if (conflictBase && Object.keys(conflictBase).length !== 0) {
         if (this.stater.hasConflict(mutationOptions.variables, conflictBase)) {
           // 🙊 Input data is conflicted with the latest server projection
@@ -47,6 +52,28 @@ export class BaseProcessor {
         return conflictBase;
       }
     }
+  }
+
+  private getObjectFromCache(typename: string, id: string) {
+    if (this.cache && this.cache.data) {
+      const idKey = this.cache.config.dataIdFromObject({ __typename: typename, id });
+
+      if (this.cache.optimisticData && this.cache.optimisticData.parent) {
+        const optimisticData = this.cache.optimisticData.parent.data;
+        if (idKey && optimisticData[idKey]) {
+          // return copy of original object
+          return Object.assign({}, optimisticData[idKey]);
+        }
+      }
+      const cacheData = this.cache.data.data;
+      if (idKey && cacheData[idKey]) {
+        // return copy of original object
+        return Object.assign({}, cacheData[idKey]);
+      }
+    } else {
+      console.warn("Client is missing cache implementation. Conflict features will not work properly");
+    }
+    return {};
   }
 }
 
