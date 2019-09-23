@@ -15,7 +15,7 @@ export class OfflineStore<T> {
   constructor(storage: PersistentStore<PersistedData>, serializer: Serializer<T>) {
     this.arrayOfKeys = [];
     this.storage = storage;
-    this.serializer = serializer
+    this.serializer = serializer;
   }
 
   /**
@@ -52,8 +52,8 @@ export class OfflineStore<T> {
   /**
    * Fetch data from the offline store
    */
-  public async getOfflineData(): Promise<QueueEntry<T>[]> {
-    const offlineItems: QueueEntry<T>[] = [];
+  public async getOfflineData(): Promise<Array<QueueEntry<T>>> {
+    const offlineItems: Array<QueueEntry<T>> = [];
     for (const key of this.arrayOfKeys) {
       let item = await this.storage.getItem(getOfflineKey(key));
       if (typeof item === "string") {

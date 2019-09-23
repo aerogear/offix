@@ -17,4 +17,4 @@ export const isNetworkError = (error: any) => {
 
 export const isMarkedOffline = (operation: Operation) => {
   return !!operation.getContext().isOffline;
-}
+};
