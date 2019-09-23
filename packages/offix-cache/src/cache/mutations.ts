@@ -122,7 +122,7 @@ export const createMutationOptions = <T = {
     options.update = update;
   }
 
-  options.context = { ...context, returnType, idField, operationName: mutationName };
+  options.context = { ...context, returnType, idField, operationName: mutationName, isOffline: true };
   return options;
 };
 

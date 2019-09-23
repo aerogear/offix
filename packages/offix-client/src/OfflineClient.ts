@@ -4,7 +4,7 @@ import { OffixDefaultConfig } from "./config/OffixDefaultConfig";
 import { ApolloOperationSerializer } from "./apollo/ApolloOperationSerializer";
 import { createCompositeLink } from "./apollo/LinksBuilder";
 import { ApolloOfflineClient } from "./apollo/ApolloOfflineClient";
-import { addOptimisticResponse, removeOptimisticResponse } from "./apollo/optimisticResponseHelpers"
+import { addOptimisticResponse, removeOptimisticResponse, restoreOptimisticResponse } from "./apollo/optimisticResponseHelpers"
 import {
   OfflineStore,
   OfflineQueue,
@@ -21,10 +21,9 @@ import {
   QueueEntryOperation
 } from "offix-offline";
 import { FetchResult } from "apollo-link";
-import { MutationHelperOptions, createMutationOptions } from "offix-cache";
+import { MutationHelperOptions, createMutationOptions, CacheUpdates } from "offix-cache";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { CachePersistor } from "apollo-cache-persist";
-import { getOperationName } from "apollo-utilities";
 
 /**
 * Factory for creating Apollo Offline Client
@@ -162,9 +161,13 @@ export class OfflineClient {
         }
       },
       onOperationFailure: (operation: QueueEntryOperation<MutationOptions>, error) => {
-        console.log("Operation failed", error)
         if (this.apolloClient) {
           removeOptimisticResponse(this.apolloClient, operation)
+        }
+      },
+      onOperationRequeued: (operation: QueueEntryOperation<MutationOptions>) => {
+        if (this.config.mutationCacheUpdates && this.apolloClient) {
+          restoreOptimisticResponse(this.apolloClient, this.config.mutationCacheUpdates, operation)
         }
       }
     });
