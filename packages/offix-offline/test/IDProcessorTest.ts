@@ -1,6 +1,6 @@
 import { IDProcessor } from "../src/offline/processors/IDProcessor";
-import { OperationQueueEntry } from "../src/offline/OperationQueueEntry";
 import { expect } from "chai";
+import { DocumentNode } from "graphql";
 
 describe("IdProcessor", () => {
     const idProcessor = new IDProcessor();
@@ -8,34 +8,46 @@ describe("IdProcessor", () => {
     it("Process id without change", () => {
         const finalId = "test:1";
         const exampleOperation = {
-            operationName: "test", variables: { id: finalId },
-            getContext: () => {
-                return {
-                    optimisticResponse: { test: { id: finalId } }
-                };
+            mutation: {} as DocumentNode,
+            variables: {
+                id: finalId
+            },
+            optimisticResponse: { test: { id: finalId } },
+            context: {
+                operationName: "test"
             }
         };
-        const entry = new OperationQueueEntry(exampleOperation as any, 1);
-        const queued = new OperationQueueEntry(exampleOperation as any, 2);
-        idProcessor.execute([queued], entry, { data: { test: { id: "notApplied:1" } } });
+        const entry = {
+            operation: {
+                op: exampleOperation,
+                qid: "someId"
+            }
+        };
+        const queue = [entry];
+        idProcessor.execute(queue, entry, { data: { test: { id: "notApplied:1" } } });
         expect(exampleOperation.variables.id).equal(finalId);
-
     });
 
-    it("Process without change", () => {
+    it("Process with change", () => {
         const finalId = `client:`;
         const exampleOperation = {
-            query: "test",
-            operationName: "test", variables: { id: finalId },
-            getContext: () => {
-                return {
-                    optimisticResponse: { test: { id: finalId } }
-                };
+            mutation: {} as DocumentNode,
+            variables: {
+                id: finalId
+            },
+            optimisticResponse: { test: { id: finalId } },
+            context: {
+                operationName: "test"
             }
         };
-        const entry = new OperationQueueEntry(exampleOperation as any, 1);
-        const queued = new OperationQueueEntry(exampleOperation as any, 2);
-        idProcessor.execute([queued], entry, { data: { test: { id: "applied:1" } } });
+        const entry = {
+            operation: {
+                op: exampleOperation,
+                qid: "someId"
+            }
+        };
+        const queue = [entry];
+        idProcessor.execute(queue, entry, { data: { test: { id: "applied:1" } } });
         expect(exampleOperation.variables.id).equal("applied:1");
     });
 
