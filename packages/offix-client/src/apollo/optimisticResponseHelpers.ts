@@ -23,9 +23,12 @@ export function removeOptimisticResponse(apolloClient: ApolloOfflineClient, { op
   apolloClient.queryManager.broadcastQueries();
 }
 
-export function restoreOptimisticResponse(apolloClient: ApolloOfflineClient, mutationCacheUpdates: CacheUpdates, { op, qid }: QueueEntryOperation<MutationOptions>) {
+export function restoreOptimisticResponse(
+  apolloClient: ApolloOfflineClient,
+  mutationCacheUpdates: CacheUpdates,
+  { op, qid }: QueueEntryOperation<MutationOptions>) {
   if (op.context.operationName && mutationCacheUpdates[op.context.operationName]) {
-    op.update = mutationCacheUpdates[op.context.operationName]
-    addOptimisticResponse(apolloClient, { op, qid })
+    op.update = mutationCacheUpdates[op.context.operationName];
+    addOptimisticResponse(apolloClient, { op, qid });
   }
 }

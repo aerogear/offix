@@ -4,6 +4,7 @@ import { OfflineStore } from "./storage/OfflineStore";
 import { IResultProcessor } from "./processors";
 import { OfflineQueueConfig } from "./OfflineQueueConfig";
 import { generateClientId } from "offix-cache";
+import { ExecuteFunction } from "./ExecuteFunction";
 
 export interface QueueEntry<T> {
   operation: QueueEntryOperation<T>;
@@ -15,9 +16,12 @@ export interface QueueEntryOperation<T> {
   op: T;
 }
 
+export type resolveFunction = (value: any) => void;
+export type rejectFunction = (reason: any) => void;
+
 export interface QueueEntryHandlers {
-  resolve: Function;
-  reject: Function;
+  resolve: resolveFunction;
+  reject: rejectFunction;
 }
 
 /**
@@ -30,16 +34,16 @@ export interface QueueEntryHandlers {
  * - updating client IDs with server IDs (explained below)
  */
 export class OfflineQueue<T> {
-  public queue: QueueEntry<T>[] = [];
+  public queue: Array<QueueEntry<T>> = [];
 
   // listeners that can be added by the user to handle various events coming from the offline queue
-  public listeners: OfflineQueueListener<T>[] = [];
+  public listeners: Array<OfflineQueueListener<T>> = [];
 
   private store?: OfflineStore<T>;
 
-  private execute: Function;
+  private execute: ExecuteFunction<T>;
 
-  private resultProcessors: IResultProcessor<T>[] | undefined;
+  private resultProcessors: Array<IResultProcessor<T>> | undefined;
 
   constructor(store: OfflineStore<T> | undefined, options: OfflineQueueConfig<T>) {
     this.store = store;
@@ -55,7 +59,7 @@ export class OfflineQueue<T> {
    * Enqueue offline change and wait for it to be sent to server when online.
    * Every offline change is added to queue.
    */
-  public async enqueueOperation(op: T, resolve: Function, reject: Function): Promise<any> {
+  public async enqueueOperation(op: T, resolve: resolveFunction, reject: rejectFunction): Promise<any> {
 
     const entry: QueueEntry<T> = {
       operation: {
@@ -75,7 +79,7 @@ export class OfflineQueue<T> {
       try {
         await this.store.saveEntry(entry.operation);
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     }
 
@@ -89,17 +93,15 @@ export class OfflineQueue<T> {
       try {
         await this.store.removeEntry(entry.operation);
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     }
   }
 
   public async forwardOperations() {
     for (const entry of this.queue) {
-      console.log("forwarding operation", entry);
       await this.forwardOperation(entry);
     }
-    console.log("operations forwarded", this.queue);
   }
 
   public async forwardOperation(entry: QueueEntry<T>) {
@@ -111,7 +113,6 @@ export class OfflineQueue<T> {
       }
       // this.onForwardNext(operation, op, result)
     } catch (error) {
-      console.log("error forwarding operation", error);
       if (entry.handlers) {
         entry.handlers.reject(error);
       }
@@ -129,13 +130,12 @@ export class OfflineQueue<T> {
 
   public async restoreOfflineOperations() {
     if (this.store) {
-      console.log("restoring operations");
       try {
         const offlineEntries = await this.store.getOfflineData();
         for (const entry of offlineEntries) {
-          this.onOperationRequeued(entry.operation)
+          this.onOperationRequeued(entry.operation);
         }
-        this.queue = offlineEntries
+        this.queue = offlineEntries;
       } catch (error) {
         console.error(error);
       }

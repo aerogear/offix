@@ -13,7 +13,7 @@ import { MutationOptions } from "offix-cache/node_modules/apollo-client";
  */
 export class IDProcessor implements IResultProcessor<MutationOptions> {
 
-  public execute(queue: QueueEntry<MutationOptions>[], entry: QueueEntry<MutationOptions>, result: FetchResult) {
+  public execute(queue: Array<QueueEntry<MutationOptions>>, entry: QueueEntry<MutationOptions>, result: FetchResult) {
     if (!entry || !entry.operation || !entry.operation.op) {
       return;
     }
@@ -33,10 +33,9 @@ export class IDProcessor implements IResultProcessor<MutationOptions> {
     // Ensure we dealing with string
     clientId = clientId.toString();
     if (isClientGeneratedId(optimisticResponse[operationName][idField])) {
-      queue.forEach((entry) => {
-        const op = entry.operation.op;
-        if (op.variables && op.variables[idField] === clientId) {
-          op.variables[idField] = result.data && result.data[operationName][idField];
+      queue.forEach(({ operation }) => {
+        if (operation.op.variables && operation.op.variables[idField] === clientId) {
+         operation.op.variables[idField] = result.data && result.data[operationName][idField];
         }
       });
     }

@@ -15,5 +15,5 @@ export interface IResultProcessor<T> {
      * @param op
      * @param result
      */
-    execute(queue: QueueEntry<T>[], op: QueueEntry<T>, result: FetchResult<any>): void;
+    execute(queue: Array<QueueEntry<T>>, op: QueueEntry<T>, result: FetchResult<any>): void;
 }
