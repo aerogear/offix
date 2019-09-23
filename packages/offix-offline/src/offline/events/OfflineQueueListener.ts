@@ -12,6 +12,11 @@ export interface OfflineQueueListener<T> {
    */
   onOperationEnqueued?: (op: QueueEntryOperation<T>) => void;
 
+   /**
+   * Called when an operation is being restored to the offline queue from storage
+   */
+  onOperationRequeued?: (op: QueueEntryOperation<T>) => void;
+
   /**
    * Called when back online and operation succeeds
    */

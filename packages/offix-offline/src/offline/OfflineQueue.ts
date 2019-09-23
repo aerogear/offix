@@ -131,7 +131,11 @@ export class OfflineQueue<T> {
     if (this.store) {
       console.log("restoring operations");
       try {
-        this.queue = await this.store.getOfflineData();
+        const offlineEntries = await this.store.getOfflineData();
+        for (const entry of offlineEntries) {
+          this.onOperationRequeued(entry.operation)
+        }
+        this.queue = offlineEntries
       } catch (error) {
         console.error(error);
       }
@@ -146,6 +150,14 @@ export class OfflineQueue<T> {
     for (const listener of this.listeners) {
       if (listener.onOperationEnqueued) {
         listener.onOperationEnqueued(op);
+      }
+    }
+  }
+
+  public onOperationRequeued(op: QueueEntryOperation<T>) {
+    for (const listener of this.listeners) {
+      if (listener.onOperationRequeued) {
+        listener.onOperationRequeued(op);
       }
     }
   }
