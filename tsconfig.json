@@ -15,7 +15,8 @@
     ],
     "module": "CommonJS",
     "jsx": "react",
-    "declaration": true
+    "declaration": true,
+    "types": ["jest", "node"]
   },
   "lib": [
      "esnext.asynciterable"
