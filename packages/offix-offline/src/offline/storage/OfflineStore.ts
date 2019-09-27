@@ -33,11 +33,11 @@ export class OfflineStore<T> {
    */
   public async saveEntry(entry: QueueEntryOperation<T>) {
     this.arrayOfKeys.push(entry.qid);
-    const serialized = this.serializer.serializeForStorage(entry)
-    const offlineKey = getOfflineKey(entry.qid)
+    const serialized = this.serializer.serializeForStorage(entry);
+    const offlineKey = getOfflineKey(entry.qid);
     await this.storage.setItem(this.offlineMetaKey, this.arrayOfKeys);
-    await this.storage.setItem(offlineKey, serialized)
-  } 
+    await this.storage.setItem(offlineKey, serialized);
+  }
 
   /**
    * Remove an entry from the store
