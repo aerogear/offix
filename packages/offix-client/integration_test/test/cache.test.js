@@ -160,7 +160,6 @@ describe("Offline cache and mutations", () => {
 
       goOffline(network);
 
-      debugger;
       // create new task while offline
       await addTaskWhileOffline(client);
 
