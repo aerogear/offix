@@ -1,5 +1,5 @@
 import "fake-indexeddb/auto";
-import 'cross-fetch/polyfill';
+import "cross-fetch/polyfill";
 
 import { CacheOperation, createMutationOptions, createSubscriptionOptions } from "../../offix-cache/src/cache";
 import {

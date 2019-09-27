@@ -3,7 +3,7 @@ import { OffixDefaultConfig } from "../src/config/OffixDefaultConfig";
 import { OffixClientConfig } from "../src/config/OffixClientConfig";
 
 test("OffixDefaultConfig Merges defaults with user config", () => {
-  
+
   const userConfig = {
     httpUrl: "test",
     // storage,
@@ -13,7 +13,7 @@ test("OffixDefaultConfig Merges defaults with user config", () => {
       }
     }
   };
-  
+
   const config = new OffixDefaultConfig(userConfig);
   expect(config.httpUrl).toBe(userConfig.httpUrl);
   expect(config.retryOptions).toBe(userConfig.retryOptions);
@@ -29,5 +29,5 @@ it("conflict strategy is a function", () => {
   };
 
   const mergedConfig = new OffixDefaultConfig(configWithStrategy);
-  expect(mergedConfig.conflictStrategy).toBe(configWithStrategy.conflictStrategy)
+  expect(mergedConfig.conflictStrategy).toBe(configWithStrategy.conflictStrategy);
 });
