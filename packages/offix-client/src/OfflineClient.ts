@@ -201,20 +201,33 @@ export class OfflineClient {
       throw new Error("Apollo offline client not initialised before mutation called.");
     } else {
 
-      const mutationOptions = createMutationOptions<T, TVariables>(options);
-      mutationOptions.context.conflictBase = this.baseProcessor.getBaseState(mutationOptions as unknown as MutationOptions);
+      const mutationOptions = this.createOfflineMutationOptions(options);
 
       if (this.online) {
         return this.apolloClient.mutate(mutationOptions);
       } else {
+        const queueEntry = await this.queue.enqueueOperation(mutationOptions as unknown as MutationOptions);
 
         const mutationPromise = new Promise(async (resolve, reject) => {
-          await this.queue.enqueueOperation(mutationOptions as unknown as MutationOptions, resolve, reject);
+          this.queue.assignHandlersToQueueEntry(queueEntry, resolve, reject);
         });
 
         throw new OfflineError(mutationPromise as any);
       }
     }
+  }
+
+  // TODO - does offix-cache actually need createMutationOptions?
+  // Could we just consolidate that in here?
+  protected createOfflineMutationOptions<T = any, TVariables = OperationVariables>(
+    options: MutationHelperOptions<T, TVariables>): MutationOptions<T, TVariables> {
+    const offlineMutationOptions = createMutationOptions<T, TVariables>(options);
+    offlineMutationOptions.context.conflictBase = this.baseProcessor.getBaseState(offlineMutationOptions as unknown as MutationOptions);
+
+    if (!offlineMutationOptions.update && this.config.mutationCacheUpdates) {
+      offlineMutationOptions.update = this.config.mutationCacheUpdates[offlineMutationOptions.context.operationName];
+    }
+    return offlineMutationOptions;
   }
 
   protected decorateApolloClient(apolloClient: any): ApolloOfflineClient {

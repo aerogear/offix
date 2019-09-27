@@ -59,16 +59,12 @@ export class OfflineQueue<T> {
    * Enqueue offline change and wait for it to be sent to server when online.
    * Every offline change is added to queue.
    */
-  public async enqueueOperation(op: T, resolve: resolveFunction, reject: rejectFunction): Promise<any> {
+  public async enqueueOperation(op: T): Promise<any> {
 
     const entry: QueueEntry<T> = {
       operation: {
         qid: generateClientId(),
         op
-      },
-      handlers: {
-        resolve,
-        reject
       }
     };
 
@@ -84,6 +80,15 @@ export class OfflineQueue<T> {
         console.error(err);
       }
     }
+
+    return entry;
+  }
+
+  public assignHandlersToQueueEntry(entry: QueueEntry<T>, resolve: resolveFunction, reject: rejectFunction) {
+    entry.handlers = {
+      resolve,
+      reject
+    };
   }
 
   public async dequeueOperation(entry: QueueEntry<T>) {
