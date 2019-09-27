@@ -16,7 +16,9 @@ app.post('/start', async (_, res) => {
   res.sendStatus(200);
 });
 app.post('/stop', (_, res) => {
-  graphqlServer.close();
+  if (graphqlServer) {
+    graphqlServer.close();
+  }
   res.sendStatus(200);
 });
 app.post('/reset', (_, res) => {
