@@ -74,6 +74,8 @@ export class OfflineQueue<T> {
 
     // enqueue and persist
     this.queue.push(entry);
+    // notify listeners
+    this.onOperationEnqueued(entry.operation);
 
     if (this.store) {
       try {
@@ -82,9 +84,6 @@ export class OfflineQueue<T> {
         console.error(err);
       }
     }
-
-    // notify listeners
-    this.onOperationEnqueued(entry.operation);
   }
 
   public async dequeueOperation(entry: QueueEntry<T>) {
