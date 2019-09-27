@@ -49,7 +49,7 @@ describe('Offline mutations', function () {
   const optimisticOptions = {
     mutation: ADD_TASK,
     operationType: CacheOperation.ADD,
-    typeName: "Task",
+    returnType: "Task",
     variables: newTask,
     updateQuery: GET_TASKS
   };
@@ -84,362 +84,247 @@ describe('Offline mutations', function () {
     return store.length === 0
   }
 
-  // describe('save mutation to offlineMutationStore while offline', function () {
+  describe('offline mutations', function () {
 
-  //   it('should succeed', async function () {
-  //     await client.offlineMutation({
-  //       mutation: ADD_TASK,
-  //       variables: newTask
-  //     }).catch(err => {});
+    // it('mutations are queued when offline', async function () {
+    //   // debugger
+    //   const mutationOptions = {
+    //     mutation: ADD_TASK,
+    //     variables: newTask
+    //   }
+    //   await client.offlineMutation(mutationOptions).catch(err => { });
+    //   // debugger
+    //   const queue = client.queue.queue
+    //   expect(queue.length).to.equal(1)
+    //   // debugger
+    //   const op = queue[0].operation.op
+    //   expect(op.mutation).to.deep.equal(mutationOptions.mutation)
+    //   expect(op.variables).to.deep.equal(mutationOptions.variables)
+    // });
 
-  //     const offlineKeys = await store.getItem(offlineMetaKey);
-  //     const offlineItem = await store.getItem("offline:" + offlineKeys[0]);
-
-  //     expect(offlineItem).to.exist;
-  //     expect(offlineItem.operationName).to.equal('createTask');
-  //     expect(offlineItem.variables).to.exist;
-  //     expect(offlineItem.query).to.equal(ADD_TASK);
-  //     expect(offlineItem.variables.title).to.equal(newTask.title);
-  //     expect(offlineItem.variables.description).to.equal(newTask.description);
-  //   });
-
-  // });
-
-  // describe('send mutation when going back online', function () {
-
-  //   beforeEach('prepare data', async function () {
-  //     console.log('client', client)
-  //       await client.offlineMutation({
-  //         mutation: ADD_TASK,
-  //         variables: newTask
-  //       }).catch((err) => {
-  //         const promise = err.offlineMutationPromise
-
-  //         promise.then((result) => {
-  //           console.log('offline changes replicated', result)
-  //         }).catch((err) => {
-  //           console.log('error replicating offline changes', err)
-  //         })
-  //       })
-  //   });
-
-  //   it('should succeed', async function () {
-  //     networkStatus.setOnline(true);
-
-  //     // await wait(200)
-
-  //     const response = await client.query({
-  //       query: GET_TASKS
-  //     });
-
-  //     expect(response.data.allTasks).to.exist;
-  //     expect(response.data.allTasks.length).to.equal(1);
-  //     expect(response.data.allTasks[0].title).to.equal(newTask.title);
-  //     expect(response.data.allTasks[0].description).to.equal(newTask.description);
-  //   });
-
-  // });
-
-  // describe('save more mutations while offline', function () {
-
-  //   let task;
-
-  //   beforeEach('prepare data', async function () {
-  //     networkStatus.setOnline(true);
-
-  //     const response = await client.offlineMutation({
-  //       mutation: ADD_TASK,
-  //       variables: newTask
-  //     });
-
-  //     task = response.data.createTask;
-
-  //     networkStatus.setOnline(false);
-  //   });
-
-  //   it('should succeed', async function () {
-  //     const variables = { ...updatedTask, id: task.id, version: task.version };
-  //     try {
-  //       await client.offlineMutation({
-  //         mutation: UPDATE_TASK,
-  //         variables
-  //       });
-  //     } catch (ignore) { }
-
-  //     try {
-  //       await client.offlineMutation({
-  //         mutation: DELETE_TASK,
-  //         variables: { id: task.id }
-  //       });
-  //     } catch (ignore) { }
-
-  //     const offlineKeys = await store.getItem(offlineMetaKey);
-  //     const offlineMutation1 = await store.getItem("offline:" + offlineKeys[0]);
-  //     const offlineMutation2 = await store.getItem("offline:" + offlineKeys[1]);
-
-  //     expect(offlineMutation1).to.exist;
-  //     expect(offlineMutation2).to.exist;
-  //     expect(offlineMutation1.operationName).to.equal('updateTask');
-  //     expect(offlineMutation2.operationName).to.equal('deleteTask');
-  //   });
-  // });
-
-  // describe('send more mutations when back online', function () {
-
-  //   beforeEach('prepare data', async function () {
-  //     networkStatus.setOnline(true);
-
-  //     const response = await client.mutate({
-  //       mutation: ADD_TASK,
-  //       variables: newTask
-  //     });
-
-  //     networkStatus.setOnline(false);
-
-  //     const task = response.data.createTask;
-  //     const variables = { ...task, ...updatedTask };
-
-  //     try {
-  //       await client.offlineMutation({
-  //         mutation: UPDATE_TASK,
-  //         variables
-  //       });
-  //     } catch (ignore) { }
-  //     try {
-  //       await client.offlineMutation({
-  //         mutation: DELETE_TASK,
-  //         variables: { id: task.id }
-  //       });
-  //     } catch (ignore) { }
-  //   });
-
-  //   it('should succeed', async function () {
-  //     networkStatus.setOnline(true);
-
-  //     await new Promise(resolve => setTimeout(resolve, 300));
-
-  //     const response = await client.query({
-  //       query: GET_TASKS,
-  //       fetchPolicy: 'network-only'
-  //     });
-
-  //     expect(response.data.allTasks).to.exist;
-  //     expect(response.data.allTasks.length).to.equal(0);
-  //   });
-  // });
-
-  // describe('create then update item while offline', function () {
-  //   it('should succeed', async function () {
-  //     let task;
-  //     try {
-  //       await client.offlineMutation({
-  //         mutation: ADD_TASK,
-  //         variables: newTask,
-  //         optimisticResponse: createOptimisticResponse(optimisticOptions),
-  //         update: (_, { data: { createTask } }) => task = createTask
-  //       });
-  //     } catch (ignore) { }
-
-  //     const variables = { ...updatedTask, id: task.id, version: task.version };
-
-  //     try {
-  //       await client.offlineMutation({
-  //         mutation: UPDATE_TASK,
-  //         variables
-  //       });
-  //     } catch (ignore) { }
-
-  //     networkStatus.setOnline(true);
-
-  //     await new Promise(resolve => setTimeout(resolve, 300));
-
-  //     const response = await client.query({
-  //       query: GET_TASKS,
-  //       fetchPolicy: 'network-only'
-  //     });
-
-  //     expect(response.data.allTasks).to.exist;
-  //     expect(response.data.allTasks.length).to.equal(1);
-  //     expect(response.data.allTasks[0].title).to.equal(updatedTask.title);
-  //   });
-  // });
-
-  // describe('create then update item while offline then replaying mutations', function () {
-  //   it('should succeed', async function () {
-  //     let task;
-  //     try {
-  //       await client.offlineMutation({
-  //         mutation: ADD_TASK,
-  //         variables: newTask,
-  //         optimisticResponse: createOptimisticResponse(optimisticOptions),
-  //         update: (_, { data: { createTask } }) => task = createTask
-  //       });
-  //     } catch (err) {
-  //       console.log(err)
-  //       const promise = err.offlineMutationPromise
-
-  //         promise.then((result) => {
-  //           console.log('offline changes replicated', result)
-  //         }).catch((err) => {
-  //           console.log('error replicating offline changes', err)
-  //         })
-  //     }
-
-  //     console.log('TASK AFTER OFFLINE CREATE', task)
-
-  //     const variables = { ...updatedTask, id: task.id, version: task.version };
-  //     console.log('client going to update task', variables)
-  //     try {
-  //       await client.offlineMutation({
-  //         mutation: UPDATE_TASK,
-  //         variables
-  //       });
-  //     } catch (err) { 
-  //       console.log(err)
-  //       const promise = err.offlineMutationPromise
-
-  //         promise.then((result) => {
-  //           console.log('offline changes replicated', result)
-  //         }).catch((err) => {
-  //           console.log('error replicating offline changes', err)
-  //         })
-  //     }
-  //     networkStatus = newNetworkStatus();
-  //     console.log('store', store.data)
-  //     client = await newClient({ networkStatus, storage: store, mutationsQueueName });
-
-  //     await new Promise(resolve => setTimeout(resolve, 3000));
-
-  //     const response = await client.query({
-  //       query: GET_TASKS,
-  //       fetchPolicy: 'network-only'
-  //     });
-
-  //     expect(response.data.allTasks).to.exist;
-  //     expect(response.data.allTasks.length).to.equal(1);
-  //     expect(response.data.allTasks[0].title).to.equal(updatedTask.title);
-  //   });
-  // });
-
-
-  // describe('replaying mutations with mutationCacheUpdates', function () {
-  //   it('should succeed', async function () {
-  //     let task;
-  //     let updateMethod = (_, { data: { createTask } }) => task = createTask;
-  //     try {
-  //       await client.offlineMutation({
-  //         mutation: ADD_TASK,
-  //         variables: newTask,
-  //         optimisticResponse: createOptimisticResponse(optimisticOptions),
-  //         update: updateMethod
-  //       });
-  //     } catch (ignore) { }
-
-  //     const variables = { ...updatedTask, id: task.id, version: task.version };
-  //     try {
-  //       await client.offlineMutation({
-  //         mutation: UPDATE_TASK,
-  //         variables
-  //       });
-  //     } catch (ignore) { }
-
-  //     networkStatus = newNetworkStatus();
-  //     client = await newClient({
-  //       mutationCacheUpdates: { updateTask: updateMethod }, networkStatus, storage: store, mutationsQueueName,
-  //     });
-
-  //     await new Promise(resolve => setTimeout(resolve, 100));
-
-  //     const response = await client.query({
-  //       query: GET_TASKS,
-  //       fetchPolicy: 'cache-first'
-  //     });
-
-  //     expect(response.data.allTasks).to.exist;
-  //     expect(response.data.allTasks.length).to.equal(1);
-  //     expect(response.data.allTasks[0].title).to.equal(updatedTask.title);
-  //   });
-  // });
-
-  describe('queue offline mutations', function () {
-
-    let task;
-
-    beforeEach('prepare data', async function () {
-      networkStatus.setOnline(true);
-
-      const response = await client.offlineMutation({
+    it('mutations are persisted while offline', async function () {
+      const mutationOptions = {
         mutation: ADD_TASK,
-        variables: newTask,
-        returnType: "Task",
-        optimisticResponse: createOptimisticResponse(optimisticOptions),
-      });
+        variables: newTask
+      }
+      debugger;
+      await client.offlineMutation(mutationOptions).catch(err => {
+        console.log(err)
+        debugger
+      })
 
-      task = response.data.createTask;
+      const store = client.queue.store
+      debugger
+      const storeData = await store.getOfflineData()
 
-      networkStatus.setOnline(false);
+      expect(storeData.length).to.equal(1);
+      debugger
+      const op = storeData[0].operation.op
+      expect(op.mutation).to.deep.equal(mutationOptions.mutation)
+      expect(op.variables).to.deep.equal(mutationOptions.variables)
     });
 
-    it('should succeed', async function () {
-      
+    // it('offlineMutate throws an offline error, we can get result when coming back online', function (done) {
+    //   client.offlineMutation({
+    //     mutation: ADD_TASK,
+    //     variables: newTask
+    //   }).catch((err) => {
+    //     const promise = err.offlineMutationPromise
+    //     networkStatus.setOnline(true);  // go online
+    //     promise.then((response) => {
+    //       console.log('offline changes replicated', response)
+    //       expect(response.data.createTask).to.exist;
+    //       expect(response.data.createTask.title).to.equal(newTask.title);
+    //       expect(response.data.createTask.description).to.equal(newTask.description);
+    //       done()
+    //     })
+    //   })
+    // });
+
+    // it('queues multiple mutations while offline', async function () {
+    //   networkStatus.setOnline(true);
+
+    //   const response = await client.offlineMutation({
+    //     mutation: ADD_TASK,
+    //     variables: newTask
+    //   });
+
+    //   let task = response.data.createTask;
+
+    //   networkStatus.setOnline(false);
+
+    //   const variables = { ...updatedTask, id: task.id, version: task.version };
+    //   try {
+    //     await client.offlineMutation({
+    //       mutation: UPDATE_TASK,
+    //       variables
+    //     });
+    //   } catch (ignore) { }
+
+    //   try {
+    //     await client.offlineMutation({
+    //       mutation: DELETE_TASK,
+    //       variables: { id: task.id }
+    //     });
+    //   } catch (ignore) { }
+
+    //   const queue = client.queue.queue
+    //   expect(queue.length).to.equal(2)
+    //   expect(queue[0].operation.op.context.operationName).to.equal('updateTask');
+    //   expect(queue[1].operation.op.context.operationName).to.equal('deleteTask');
+    // });
+
+    // it('Handles multiple mutations on the same object in queue/store', async function () {
+    //   networkStatus.setOnline(true);
+
+    //   const result = await client.mutate({
+    //     mutation: ADD_TASK,
+    //     variables: newTask
+    //   })
+
+    //   networkStatus.setOnline(false);
+
+    //   const task = result.data.createTask;
+    //   const variables = { ...task, ...updatedTask };
+
+    //   try {
+    //     await client.offlineMutation({
+    //       mutation: UPDATE_TASK,
+    //       variables
+    //     });
+    //   } catch (ignore) { }
+    //   try {
+    //     await client.offlineMutation({
+    //       mutation: DELETE_TASK,
+    //       variables: { id: task.id }
+    //     });
+    //   } catch (ignore) { }
+
+    //   networkStatus.setOnline(true);
+
+    //   await new Promise(resolve => setTimeout(resolve, 300));
+
+    //   const response = await client.query({
+    //     query: GET_TASKS,
+    //     fetchPolicy: 'network-only'
+    //   });
+
+    //   expect(response.data.allTasks).to.exist;
+    //   expect(response.data.allTasks.length).to.equal(0);
+    // });
+
+    // it('can create new items and subsequently mutate them while offline, async function ()', async () => {
+    //   let task;
+    //   const optimisticResponse = createOptimisticResponse(optimisticOptions)
+    //   try {
+    //     await client.offlineMutation({
+    //       mutation: ADD_TASK,
+    //       variables: newTask,
+    //       optimisticResponse,
+    //       update: (_, { data: { createTask } }) => task = createTask
+    //     })
+    //   } catch (ignore) { }
+
+    //   const variables = { ...updatedTask, id: task.id, version: task.version };
+    //   try {
+    //     await client.offlineMutation({
+    //       mutation: UPDATE_TASK,
+    //       variables
+    //     });
+
+    //   } catch (ignore) { }
+    //   networkStatus.setOnline(true);
+
+    //   await new Promise(resolve => setTimeout(resolve, 300));
+
+    //   const response = await client.query({
+    //     query: GET_TASKS,
+    //     fetchPolicy: 'network-only'
+    //   })
+    //   expect(response.data.allTasks).to.exist;
+    //   expect(response.data.allTasks.length).to.equal(1);
+    //   expect(response.data.allTasks[0].title).to.equal(updatedTask.title);
+    // });
+
+    it('reinitialized client will replay operations from the offline storage (simulates an app restart)', async function () {
+      let task;
+      try {
+        await client.offlineMutation({
+          mutation: ADD_TASK,
+          variables: newTask,
+          optimisticResponse: createOptimisticResponse(optimisticOptions),
+          update: (_, { data: { createTask } }) => task = createTask
+        });
+      } catch (ignore) { }
+
+      const variables = { ...updatedTask, id: task.id, version: task.version };
       try {
         await client.offlineMutation({
           mutation: UPDATE_TASK,
-          returnType: 'Task',
-          variables: { title: 'update1', description: 'merge', id: task.id, version: task.version }
+          variables
         });
-      } catch (err) { 
-        console.log(err)
-      }
+      } catch (ignore) { }
 
-      try {
-        await client.offlineMutation({
-          mutation: UPDATE_TASK,
-          returnType: 'Task',
-          variables: { title: 'update2', description: 'merge', id: task.id, version: task.version }
-        });
-      } catch (err) { 
-        console.log(err)
-      }
-      
+      networkStatus = newNetworkStatus();
+      client = await newClient({ networkStatus, storage: store, mutationsQueueName });
 
-      const offlineKeys = await store.getItem(offlineMetaKey);
-
-      console.log(JSON.stringify(offlineKeys, null, 2))
-
-      const offlineMutation1 = await store.getItem("offline:" + offlineKeys[0]);
-      const offlineMutation2 = await store.getItem("offline:" + offlineKeys[1]);
-
-      console.log(JSON.stringify(offlineMutation1.variables, null, 2))
-      console.log(JSON.stringify(offlineMutation2.variables, null, 2))
-
-      const offlineData = await client.queue.store.getOfflineData()
-
-      // console.log(client.queue.queue[0])
-      console.log(JSON.stringify(offlineData, null, 2));
-
-      expect(offlineMutation1).to.exist;
-      expect(offlineMutation2).to.exist;
-      expect(offlineMutation1.variables.title).to.equal('update1');
-      expect(offlineMutation2.variables.title).to.equal('update2');
-
-      debugger
-      networkStatus.setOnline(true);
-
-      await waitFor(() => isQueueEmpty, 1000);
-      await timeout(1000);
+      await new Promise(resolve => setTimeout(resolve, 300));
 
       const response = await client.query({
         query: GET_TASKS,
         fetchPolicy: 'network-only'
       });
- 
-      debugger
+
       expect(response.data.allTasks).to.exist;
       expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal(variables.title);
-
+      expect(response.data.allTasks[0].title).to.equal(updatedTask.title);
     });
+
+    // it('it can handle multiple offline mutations on an existing object and replay them successfully', async function () {
+    //   networkStatus.setOnline(true);
+
+    //   const result = await client.offlineMutation({
+    //     mutation: ADD_TASK,
+    //     variables: newTask,
+    //     returnType: "Task",
+    //     optimisticResponse: createOptimisticResponse(optimisticOptions),
+    //   });
+
+    //   let task = result.data.createTask;
+
+    //   networkStatus.setOnline(false);
+
+    //   try {
+    //     await client.offlineMutation({
+    //       mutation: UPDATE_TASK,
+    //       returnType: 'Task',
+    //       variables: { title: 'update1', description: 'merge', id: task.id, version: task.version }
+    //     });
+    //   } catch (err) { }
+
+    //   try {
+    //     await client.offlineMutation({
+    //       mutation: UPDATE_TASK,
+    //       returnType: 'Task',
+    //       variables: { title: 'update2', description: 'merge', id: task.id, version: task.version }
+    //     });
+    //   } catch (err) { }
+
+    //   networkStatus.setOnline(true);
+
+    //   await timeout(1000);
+
+    //   const response = await client.query({
+    //     query: GET_TASKS,
+    //     fetchPolicy: 'network-only'
+    //   });
+
+    //   expect(response.data.allTasks).to.exist;
+    //   expect(response.data.allTasks.length).to.equal(1);
+    //   expect(response.data.allTasks[0].title).to.equal('update2');
+    // });
+
+
   });
 
   // describe('do not merge offline mutations', function () {
