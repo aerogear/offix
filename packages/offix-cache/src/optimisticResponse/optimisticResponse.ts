@@ -38,6 +38,7 @@ export interface OptimisticOptions {
  */
 export const createOptimisticResponse = (options: OptimisticOptions) => {
   const operation = getOperationFieldName(options.mutation);
+  // TODO things get really bad if returnType is not provided
   const {
     returnType,
     variables,
