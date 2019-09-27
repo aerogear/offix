@@ -2,7 +2,7 @@ import { IResultProcessor } from "./IResultProcessor";
 import { FetchResult } from "apollo-link";
 import { isClientGeneratedId } from "offix-cache";
 import { QueueEntry } from "../OfflineQueue";
-import { MutationOptions } from "offix-cache/node_modules/apollo-client";
+import { MutationOptions } from "apollo-client";
 
 /**
  * Allow updates on items created while offline.
