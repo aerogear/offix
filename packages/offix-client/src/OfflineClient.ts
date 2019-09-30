@@ -66,7 +66,7 @@ export class OfflineClient {
   // the network status interface that determines online/offline state
   public networkStatus: NetworkStatus;
   // the offline storage interface that persists offline data across restarts
-  public store?: OfflineStore<MutationOptions>;
+  public offlineStore?: OfflineStore<MutationOptions>;
   // the in memory queue that holds offline data
   public queue: OfflineQueue<MutationOptions>;
   // listeners that can be added by the user to handle various events coming from the offline queue
@@ -87,12 +87,12 @@ export class OfflineClient {
 
     // its possible that no storage is available
     if (this.config.offlineStorage) {
-      this.store = new OfflineStore(this.config.offlineStorage, ApolloOperationSerializer);
+      this.offlineStore = new OfflineStore(this.config.offlineStorage, ApolloOperationSerializer);
     }
 
     const resultProcessors: Array<IResultProcessor<MutationOptions>> = [new IDProcessor()];
 
-    this.queue = new OfflineQueue<MutationHelperOptions>(this.store, {
+    this.queue = new OfflineQueue<MutationHelperOptions>(this.offlineStore, {
       listeners: this.buildEventListeners(),
       networkStatus: this.networkStatus,
       resultProcessors,
@@ -116,8 +116,8 @@ export class OfflineClient {
   * Initialize client
   */
   public async init(): Promise<ApolloOfflineClient> {
-    if (this.store) {
-      await this.store.init();
+    if (this.offlineStore) {
+      await this.offlineStore.init();
     }
     if (this.persistor) {
       await this.persistor.restore();
@@ -223,7 +223,7 @@ export class OfflineClient {
   }
 
   protected decorateApolloClient(apolloClient: any): ApolloOfflineClient {
-    apolloClient.offlineStore = this.store;
+    apolloClient.offlineStore = this.offlineStore;
     apolloClient.registerOfflineEventListener = this.registerOfflineEventListener.bind(this);
     apolloClient.offlineMutation = this.offlineMutation.bind(this);
     apolloClient.queue = this.queue;
