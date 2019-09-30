@@ -60,13 +60,6 @@ export const createClient = async (userConfig: OffixClientConfig):
  */
 export class OfflineClient {
 
-  /**
-   * Get access to offline store that can be used to
-   * visualize  offline  operations that are currently pending
-   */
-  public get offlineStore(): OfflineStore<MutationOptions> | undefined {
-    return this.store;
-  }
   // the offix client global config
   public config: OffixDefaultConfig;
   // the network status interface that determines online/offline state
@@ -231,7 +224,7 @@ export class OfflineClient {
   }
 
   protected decorateApolloClient(apolloClient: any): ApolloOfflineClient {
-    apolloClient.offlineStore = this.offlineStore;
+    apolloClient.offlineStore = this.store;
     apolloClient.registerOfflineEventListener = this.registerOfflineEventListener.bind(this);
     apolloClient.offlineMutation = this.offlineMutation.bind(this);
     apolloClient.queue = this.queue;
