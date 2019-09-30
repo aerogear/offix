@@ -22,7 +22,7 @@ export interface QueueEntry<T> {
 /**
  * QueueEntryOperaton contains the actual data
  * for a particular offline operation
- * this could be all the options used 
+ * this could be all the options used
  * to build a HTTP request or a GraphQL request
  */
 export interface QueueEntryOperation<T> {
