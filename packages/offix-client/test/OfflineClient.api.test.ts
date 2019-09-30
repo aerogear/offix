@@ -32,7 +32,7 @@ test("OfflineClient using terminatingLink", async () => {
   const client = new OfflineClient({ terminatingLink });
   await client.init();
   expect(client.apolloClient).toBeDefined();
-  expect(client.store).toBeDefined();
+  expect(client.offlineStore).toBeDefined();
 });
 
 test("client.init() throws when invalid config is given", async () => {
