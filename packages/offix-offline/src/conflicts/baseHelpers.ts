@@ -1,10 +1,9 @@
 import { MutationOptions } from "apollo-client";
 import { ApolloCache } from "apollo-cache";
 import { ObjectState } from "./state/ObjectState";
-import { LocalConflictError } from './LocalConflictError';
+import { LocalConflictError } from "./LocalConflictError";
 import { ConflictResolutionData } from "./strategies/ConflictResolutionData";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
-
 
 /**
  * Convenience interface that specifies a few extra properties found on ApolloCache
@@ -27,7 +26,11 @@ export interface ApolloCacheWithData extends ApolloCache<NormalizedCacheObject> 
  * If we have no local conflict, we add the original base to the operation's context,
  * which can then be used for conflict resolution later on.
  */
-export function getBaseStateFromCache(cache: ApolloCacheWithData, objectState: ObjectState, mutationOptions: MutationOptions): ConflictResolutionData {
+export function getBaseStateFromCache(
+  cache: ApolloCacheWithData,
+  objectState: ObjectState,
+  mutationOptions: MutationOptions
+): ConflictResolutionData {
   const context = mutationOptions.context;
   const idField: string = context.idField || "id";
   const id: string = mutationOptions.variables && mutationOptions.variables[idField];
