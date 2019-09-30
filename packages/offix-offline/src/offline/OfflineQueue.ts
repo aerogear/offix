@@ -6,19 +6,40 @@ import { OfflineQueueConfig } from "./OfflineQueueConfig";
 import { generateClientId } from "offix-cache";
 import { ExecuteFunction } from "./ExecuteFunction";
 
+/**
+ * An entry in the OfflineQueue
+ */
 export interface QueueEntry<T> {
+  // contains the acutal entry data
   operation: QueueEntryOperation<T>;
+  // handler functions for when the entry is fulfilled/not fulfilled
+  // handlers can not be written to storage
+  // so they will not be present on operations that were restored
+  // after app restart
   handlers?: QueueEntryHandlers;
 }
 
+/**
+ * QueueEntryOperaton contains the actual data
+ * for a particular offline operation
+ * this could be all the options used 
+ * to build a HTTP request or a GraphQL request
+ */
 export interface QueueEntryOperation<T> {
+  // Unique ID assigned to the operation by the queue
   qid: string;
+  // The generic data/options for that particular operation
   op: T;
 }
 
+// handler function for when a QueueEntry is fulfilled
 export type resolveFunction = (value: any) => void;
+// handler function for when a QueueEntry is not fulfilled
 export type rejectFunction = (reason: any) => void;
 
+/**
+ * // handler functions for when a QueueEntry is fulfilled/not fulfilled
+ */
 export interface QueueEntryHandlers {
   resolve: resolveFunction;
   reject: rejectFunction;
