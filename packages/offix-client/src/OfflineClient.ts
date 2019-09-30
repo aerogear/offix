@@ -10,13 +10,14 @@ import {
   restoreOptimisticResponse
 } from "./apollo/optimisticResponseHelpers";
 import {
+  ApolloCacheWithData,
   OfflineStore,
   OfflineQueue,
   OfflineQueueListener,
   IDProcessor,
   IResultProcessor,
   OfflineError,
-  BaseProcessor,
+  getBaseStateFromCache,
   WebNetworkStatus,
   NetworkStatus,
   ConflictLink,
@@ -74,8 +75,6 @@ export class OfflineClient {
   public cache: InMemoryCache;
   // wrapper around the apollo cache for persisting it across restarts
   public persistor?: CachePersistor<object>;
-  // captures the 'base' object a mutation is performed on. Used for conflict resolution
-  public baseProcessor: BaseProcessor;
   // The apollo client!
   public apolloClient?: ApolloOfflineClient;
 
@@ -111,11 +110,6 @@ export class OfflineClient {
         debug: false
       });
     }
-
-    this.baseProcessor = new BaseProcessor({
-      stater: this.config.conflictProvider,
-      cache: this.cache
-    });
   }
 
   /**
@@ -215,7 +209,12 @@ export class OfflineClient {
   protected createOfflineMutationOptions<T = any, TVariables = OperationVariables>(
     options: MutationHelperOptions<T, TVariables>): MutationOptions<T, TVariables> {
     const offlineMutationOptions = createMutationOptions<T, TVariables>(options);
-    offlineMutationOptions.context.conflictBase = this.baseProcessor.getBaseState(offlineMutationOptions as unknown as MutationOptions);
+
+    offlineMutationOptions.context.conflictBase = getBaseStateFromCache(
+      this.cache as unknown as ApolloCacheWithData,
+      this.config.conflictProvider,
+      offlineMutationOptions as unknown as MutationOptions
+    );
 
     if (!offlineMutationOptions.update && this.config.mutationCacheUpdates) {
       offlineMutationOptions.update = this.config.mutationCacheUpdates[offlineMutationOptions.context.operationName];
