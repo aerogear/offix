@@ -118,6 +118,8 @@ export class OfflineQueue<T> {
       try {
         await this.store.removeEntry(entry.operation);
       } catch (err) {
+        // TODO integration test for this
+        // TODO should we log something here?
         console.error(err);
       }
     }
@@ -136,7 +138,6 @@ export class OfflineQueue<T> {
       if (entry.handlers) {
         entry.handlers.resolve(result);
       }
-      // this.onForwardNext(operation, op, result)
     } catch (error) {
       if (entry.handlers) {
         entry.handlers.reject(error);
@@ -162,6 +163,11 @@ export class OfflineQueue<T> {
         }
         this.queue = offlineEntries;
       } catch (error) {
+        // TODO should we be logging something here?
+        // TODO integration tests covering this
+        // Possible reasons for failure are
+        // no storage available
+        // or the deserializeFromStorage function failed
         console.error(error);
       }
     }
