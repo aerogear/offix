@@ -1,6 +1,6 @@
 import { PersistentStore, PersistedData } from "./PersistentStore";
 import { QueueEntryOperation, QueueEntry } from "../OfflineQueue";
-import { Serializer } from "./Serializer";
+import { OfflineStoreSerializer } from "./OfflineStoreSerializer";
 
 /**
  * Abstract Offline storage
@@ -10,9 +10,9 @@ export class OfflineStore<T> {
   private storage: PersistentStore<PersistedData>;
   private offlineMetaKey: string = "offline-meta-data";
   private arrayOfKeys: string[];
-  private serializer: Serializer<T>;
+  private serializer: OfflineStoreSerializer<T>;
 
-  constructor(storage: PersistentStore<PersistedData>, serializer: Serializer<T>) {
+  constructor(storage: PersistentStore<PersistedData>, serializer: OfflineStoreSerializer<T>) {
     this.arrayOfKeys = [];
     this.storage = storage;
     this.serializer = serializer;
@@ -57,13 +57,11 @@ export class OfflineStore<T> {
   public async getOfflineData(): Promise<Array<QueueEntry<T>>> {
     const offlineItems: Array<QueueEntry<T>> = [];
     for (const key of this.arrayOfKeys) {
-      let item = await this.storage.getItem(getOfflineKey(key));
-      if (typeof item === "string") {
-        item = JSON.parse(item);
-      }
+      const item = await this.storage.getItem(getOfflineKey(key));
+      const deserializedItem = this.serializer.deserializeFromStorage(item);
       offlineItems.push({
         operation: {
-          op: item as unknown as T,
+          op: deserializedItem as unknown as T,
           qid: key
         }
       });

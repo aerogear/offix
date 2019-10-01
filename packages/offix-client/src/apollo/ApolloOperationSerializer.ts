@@ -1,4 +1,4 @@
-import { QueueEntryOperation } from "offix-offline";
+import { QueueEntryOperation, PersistedData } from "offix-offline";
 import { MutationOptions } from "apollo-client";
 
 /**
@@ -13,5 +13,11 @@ export const ApolloOperationSerializer = {
       optimisticResponse: op.optimisticResponse,
       context: op.context
     };
+  },
+  deserializeFromStorage: (item: PersistedData) => {
+    if (typeof item === "string") {
+      item = JSON.parse(item);
+    }
+    return item;
   }
 };
