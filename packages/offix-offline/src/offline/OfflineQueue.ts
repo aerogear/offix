@@ -32,17 +32,14 @@ export interface QueueEntryOperation<T> {
   op: T;
 }
 
-// handler function for when a QueueEntry is fulfilled
-export type resolveFunction = (value: any) => void;
-// handler function for when a QueueEntry is not fulfilled
-export type rejectFunction = (reason: any) => void;
-
 /**
  * // handler functions for when a QueueEntry is fulfilled/not fulfilled
  */
 export interface QueueEntryHandlers {
-  resolve: resolveFunction;
-  reject: rejectFunction;
+  // handler function for when a QueueEntry is fulfilled
+  resolve: (value: any) => void;
+  // handler function for when a QueueEntry is not fulfilled
+  reject: (reason: any) => void;
 }
 
 /**
@@ -105,11 +102,13 @@ export class OfflineQueue<T> {
     return entry;
   }
 
-  public assignHandlersToQueueEntry(entry: QueueEntry<T>, resolve: resolveFunction, reject: rejectFunction) {
-    entry.handlers = {
-      resolve,
-      reject
-    };
+  public buildPromiseForEntry(entry: QueueEntry<T>) {
+    return new Promise((resolve, reject) => {
+      entry.handlers = {
+        resolve,
+        reject
+      };
+    });
   }
 
   public async dequeueOperation(entry: QueueEntry<T>) {

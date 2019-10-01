@@ -193,12 +193,13 @@ export class OfflineClient {
       if (this.online) {
         return this.apolloClient.mutate(mutationOptions);
       } else {
+        // Queue the operation
         const queueEntry = await this.queue.enqueueOperation(mutationOptions as unknown as MutationOptions);
 
-        const mutationPromise = new Promise(async (resolve, reject) => {
-          this.queue.assignHandlersToQueueEntry(queueEntry, resolve, reject);
-        });
+        // build a promise that will resolve/reject when the operation has been fulfilled
+        const mutationPromise = this.queue.buildPromiseForEntry(queueEntry);
 
+        // throw an error with a reference to the promise
         throw new OfflineError(mutationPromise as any);
       }
     }
