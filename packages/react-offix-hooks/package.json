@@ -36,7 +36,7 @@
     "typescript": "3.6.3"
   },
   "dependencies": {
-    "@types/lodash": "^4.14.141",
+    "@types/lodash": "4.14.141",
     "lodash": "4.17.15",
     "offix-client": "0.8.2"
   },
