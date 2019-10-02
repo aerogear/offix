@@ -24,7 +24,7 @@ fi
 
 # validate that all packages have the same version found in lerna.json
 for package in $PACKAGES; do
-  version=$(lerna --loglevel=silent ls -l | grep $package | awk -F ' ' '{print $2}' | awk -F 'v' '{print $2}')
+  version=$(lerna --loglevel=silent ls -l | grep $package | awk -F ' ' '{print $2}' | cut -c2-)
   if [[ $version =~ $PACKAGE_VERSION ]]; then
     echo "package $package has version $version"
   else
@@ -47,4 +47,4 @@ for package in $PACKAGES; do
   fi
 done
 
-echo "TAG and PACKAGE_VERSION are valid"
+echo "Ready for release"
