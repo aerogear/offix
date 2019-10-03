@@ -14,7 +14,7 @@ Because of this, when mutations that can change query results are performed, the
 
 Offix makes your cache simple to manage, with out of the box cache helpers in `offix-cache` or by automatically wrapping these helpers in offix-client through the `OfflineClient` class.
 
-To use the `offlineMutation` function, we first need to create our `MutationHelperOptions` object. This is an extension of Apollo's MutationOptions.
+To use the `offlineMutate` function, we first need to create our `MutationHelperOptions` object. This is an extension of Apollo's MutationOptions.
 
 ```javascript
 const { CacheOperation } = require('offix-cache');
@@ -50,13 +50,13 @@ const mutationOptions = {
 };
 ```
 
-We then simply pass this object to `offlineMutation` and our cache is automatically kept up to date.
+We then simply pass this object to `offlineMutate` and our cache is automatically kept up to date.
 
 ```javascript
-client.offlineMutation(mutationOptions);
+client.offlineMutate(mutationOptions);
 ```
 
-If you do not wish to use the `offlineMutation` function you can also use the `createMutationOptions` function directly. This function provides an Apollo compatible `MutationOptions` object to pass to your pre-existing client.
+If you do not wish to use the `offlineMutate` function you can also use the `createMutationOptions` function directly. This function provides an Apollo compatible `MutationOptions` object to pass to your pre-existing client.
 This is shown below where `mutationOptions` is the same object shown in the above code example.
 
 ```javascript
