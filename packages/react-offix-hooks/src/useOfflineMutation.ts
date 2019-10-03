@@ -194,7 +194,7 @@ export function useOfflineMutation<TData, TVariables = OperationVariables>(
           : mutateOptions.variables;
 
         client
-          .offlineMutation({
+          .offlineMutate({
             mutation,
             ...options,
             ...mutateOptions,

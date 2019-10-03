@@ -182,7 +182,7 @@ export class OfflineClient {
    *
    * @param options the MutationHelperOptions to create the mutation
    */
-  public async offlineMutation<T = any, TVariables = OperationVariables>(
+  public async offlineMutate<T = any, TVariables = OperationVariables>(
     options: MutationHelperOptions<T, TVariables>): Promise<FetchResult<T>> {
     if (!this.apolloClient) {
       throw new Error("Apollo offline client not initialised before mutation called.");
@@ -203,6 +203,15 @@ export class OfflineClient {
         throw new OfflineError(mutationPromise as any);
       }
     }
+  }
+
+  public async offlineMutation<T = any, TVariables = OperationVariables>(
+    options: MutationHelperOptions<T, TVariables>): Promise<FetchResult<T>> {
+    console.warn(
+      "WARNING: client.offlineMutation is deprecated and will be" +
+      " removed in the next version of offix. Please use client.offlineMutate"
+    );
+    return this.offlineMutation(options);
   }
 
   // TODO - does offix-cache actually need createMutationOptions?
@@ -226,6 +235,7 @@ export class OfflineClient {
   protected decorateApolloClient(apolloClient: any): ApolloOfflineClient {
     apolloClient.offlineStore = this.offlineStore;
     apolloClient.registerOfflineEventListener = this.registerOfflineEventListener.bind(this);
+    apolloClient.offlineMutate = this.offlineMutate.bind(this);
     apolloClient.offlineMutation = this.offlineMutation.bind(this);
     apolloClient.queue = this.queue;
     return apolloClient;
@@ -236,10 +246,9 @@ export class OfflineClient {
    */
   protected async restoreOfflineOperations() {
 
-    // Reschedule offline mutations for new client instance
-    // this.offlineMutationHandler && await this.offlineMutationHandler.replayOfflineMutations();
+    // reschedule offline mutations for new client instance
     await this.queue.restoreOfflineOperations();
-    // After pushing all online changes check and set network status
+    // initialize network status
     await this.initOnlineState();
   }
 

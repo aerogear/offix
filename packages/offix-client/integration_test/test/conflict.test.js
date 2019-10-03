@@ -109,7 +109,7 @@ describe('Conflicts', function () {
 
     const vars1 = { ...variables1, id: 0, version: 1 };
     const vars2 = { ...variables2, id: 0, version: 1 };
-    await secondClient.offlineMutation({
+    await secondClient.offlineMutate({
       mutation,
       variables: vars1,
       returnType: 'Task'
@@ -119,7 +119,7 @@ describe('Conflicts', function () {
 
     networkStatus.setOnline(false);
 
-    await client.offlineMutation({
+    await client.offlineMutate({
       mutation,
       variables: vars2,
       returnType: 'Task'
@@ -174,7 +174,7 @@ describe('Conflicts', function () {
     const vars1 = { ...variables1, id: 0, version: 1 };
     const vars2 = { ...variables2, id: 0, version: 1 };
     const vars3 = { ...variables2, id: 0, version: 1, author: "Advanced conflict author" };
-    await secondClient.offlineMutation({
+    await secondClient.offlineMutate({
       mutation,
       variables: vars1,
       returnType: 'Task'
@@ -182,7 +182,7 @@ describe('Conflicts', function () {
 
     networkStatus.setOnline(false);
 
-    await client.offlineMutation({
+    await client.offlineMutate({
       mutation,
       variables: vars2,
       returnType: 'Task'
@@ -191,7 +191,7 @@ describe('Conflicts', function () {
       return;
     })
 
-    await client.offlineMutation({
+    await client.offlineMutate({
       mutation,
       variables: vars3,
       returnType: 'Task'
@@ -246,13 +246,13 @@ describe('Conflicts', function () {
     const vars1 = { ...variables1, id: 0, version: 1 };
     const vars2 = { ...variables2, id: 0, version: 1 };
     const vars3 = { ...variables2, id: 0, version: 1, author: "Advanced conflict author" };
-    await secondClient.offlineMutation({
+    await secondClient.offlineMutate({
       mutation,
       variables: vars1,
       returnType: 'Task'
     });
 
-    await secondClient.offlineMutation({
+    await secondClient.offlineMutate({
       mutation,
       variables: vars2,
       returnType: 'Task'
@@ -261,7 +261,7 @@ describe('Conflicts', function () {
     });
     networkStatus.setOnline(false);
 
-    await client.offlineMutation({
+    await client.offlineMutate({
       mutation,
       variables: vars3,
       returnType: 'Task'

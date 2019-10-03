@@ -15,13 +15,13 @@
  */
 export class OfflineError {
   public offline = true;
-  public offlineMutationPromise: Promise<any>;
+  public offlineMutatePromise: Promise<any>;
 
-  public constructor(offlineMutationPromise: Promise<any>) {
-    this.offlineMutationPromise = offlineMutationPromise;
+  public constructor(offlineMutatePromise: Promise<any>) {
+    this.offlineMutatePromise = offlineMutatePromise;
   }
 
   public watchOfflineChange(): Promise<any> {
-    return this.offlineMutationPromise;
+    return this.offlineMutatePromise;
   }
 }

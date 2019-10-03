@@ -63,9 +63,9 @@ const findTaskByTitle = async (client, options) => {
   });
 }
 
-const offlineMutationWhileOffline = async (client, options) => {
+const offlineMutateWhileOffline = async (client, options) => {
   try {
-    await client.offlineMutation(options);
+    await client.offlineMutate(options);
   } catch (e) {
     if (e.offline) {
       // expected result
@@ -74,11 +74,11 @@ const offlineMutationWhileOffline = async (client, options) => {
       throw e;
     }
   }
-  throw 'offlineMutation didn\'t throw OfflineError';
+  throw 'offlineMutate didn\'t throw OfflineError';
 }
 
 const addTaskWhileOffline = async (client, options) => {
-  return await offlineMutationWhileOffline(client, {
+  return await offlineMutateWhileOffline(client, {
     mutation: ADD_TASK,
     variables: TASK_TEMPLATE,
     returnType: TASK_TYPE,
@@ -370,7 +370,7 @@ describe("Offline cache and mutations", () => {
 
       const task = response1.data.allTasks[0];
       // delete the task while offline
-      const deleteTaskError = await offlineMutationWhileOffline(client, {
+      const deleteTaskError = await offlineMutateWhileOffline(client, {
         mutation: DELETE_TASK,
         variables: { id: task.id },
         operationType: CacheOperation.DELETE,
