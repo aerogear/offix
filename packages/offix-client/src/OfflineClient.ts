@@ -1,14 +1,20 @@
 import { ApolloClient, OperationVariables, MutationOptions } from "apollo-client";
 import { OffixClientConfig } from "./config/OffixClientConfig";
 import { OffixDefaultConfig } from "./config/OffixDefaultConfig";
-import { ApolloOperationSerializer } from "./apollo/ApolloOperationSerializer";
-import { createCompositeLink } from "./apollo/LinksBuilder";
-import { ApolloOfflineClient } from "./apollo/ApolloOfflineClient";
 import {
+  ApolloOfflineQueue,
+  ApolloOfflineStore,
+  ApolloOfflineQueueListener,
+  ApolloQueueEntryOperation,
+  ApolloIResultProcessor,
+  ApolloOperationSerializer,
+  ApolloOfflineClient,
+  createCompositeLink,
   addOptimisticResponse,
   removeOptimisticResponse,
   restoreOptimisticResponse
-} from "./apollo/optimisticResponseHelpers";
+} from "./apollo/";
+
 import {
   ApolloCacheWithData,
   OfflineStore,
@@ -66,11 +72,11 @@ export class OfflineClient {
   // the network status interface that determines online/offline state
   public networkStatus: NetworkStatus;
   // the offline storage interface that persists offline data across restarts
-  public offlineStore?: OfflineStore<MutationOptions>;
+  public offlineStore?: ApolloOfflineStore;
   // the in memory queue that holds offline data
-  public queue: OfflineQueue<MutationOptions>;
+  public queue: ApolloOfflineQueue;
   // listeners that can be added by the user to handle various events coming from the offline queue
-  public queueListeners: Array<OfflineQueueListener<MutationOptions>> = [];
+  public queueListeners: ApolloOfflineQueueListener[] = [];
   // The apollo cache that holds application state
   public cache: InMemoryCache;
   // wrapper around the apollo cache for persisting it across restarts
@@ -90,7 +96,7 @@ export class OfflineClient {
       this.offlineStore = new OfflineStore(this.config.offlineStorage, ApolloOperationSerializer);
     }
 
-    const resultProcessors: Array<IResultProcessor<MutationOptions>> = [new IDProcessor()];
+    const resultProcessors: ApolloIResultProcessor[] = [new IDProcessor()];
 
     this.queue = new OfflineQueue<MutationHelperOptions>(this.offlineStore, {
       listeners: this.buildEventListeners(),
@@ -141,22 +147,22 @@ export class OfflineClient {
     // Optimistic Responses
     // TODO move this somewhere that makes sense, also handle error cases
     this.queue.registerOfflineQueueListener({
-      onOperationEnqueued: (operation: QueueEntryOperation<MutationOptions>) => {
+      onOperationEnqueued: (operation: ApolloQueueEntryOperation) => {
         if (this.apolloClient) {
           addOptimisticResponse(this.apolloClient, operation);
         }
       },
-      onOperationSuccess: (operation: QueueEntryOperation<MutationOptions>) => {
+      onOperationSuccess: (operation: ApolloQueueEntryOperation) => {
         if (this.apolloClient) {
           removeOptimisticResponse(this.apolloClient, operation);
         }
       },
-      onOperationFailure: (operation: QueueEntryOperation<MutationOptions>, error) => {
+      onOperationFailure: (operation: ApolloQueueEntryOperation, error) => {
         if (this.apolloClient) {
           removeOptimisticResponse(this.apolloClient, operation);
         }
       },
-      onOperationRequeued: (operation: QueueEntryOperation<MutationOptions>) => {
+      onOperationRequeued: (operation: ApolloQueueEntryOperation) => {
         if (this.config.mutationCacheUpdates && this.apolloClient) {
           restoreOptimisticResponse(this.apolloClient, this.config.mutationCacheUpdates, operation);
         }
@@ -172,7 +178,7 @@ export class OfflineClient {
    *
    * @param listener
    */
-  public registerOfflineEventListener(listener: OfflineQueueListener<MutationOptions>) {
+  public registerOfflineEventListener(listener: ApolloOfflineQueueListener) {
     this.queue.registerOfflineQueueListener(listener);
   }
 
@@ -252,8 +258,8 @@ export class OfflineClient {
     await this.initOnlineState();
   }
 
-  protected buildEventListeners(): Array<OfflineQueueListener<MutationOptions>> {
-    const listeners: Array<OfflineQueueListener<MutationOptions>> = [];
+  protected buildEventListeners(): ApolloOfflineQueueListener[] {
+    const listeners: ApolloOfflineQueueListener[] = [];
 
     // Check if user provided legacy listener
     // To provide backwards compatibility we ignore this case
@@ -284,7 +290,7 @@ export class OfflineClient {
     });
   }
 
-  private async executeOfflineItem({ op, qid }: QueueEntryOperation<MutationOptions>) {
+  private async executeOfflineItem({ op, qid }: ApolloQueueEntryOperation) {
     if (this.apolloClient) {
       return await this.apolloClient.mutate(op);
     }

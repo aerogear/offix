@@ -1,12 +1,12 @@
-import { QueueEntryOperation, PersistedData } from "offix-offline";
-import { MutationOptions } from "apollo-client";
+import { PersistedData } from "offix-offline";
+import { ApolloQueueEntryOperation } from "./ApolloOfflineClient";
 
 /**
  * Apollo Specific implementation of the Serializer interface.
  * Knows sanitize a MutationOptions object for storage in indexedDB
  */
 export const ApolloOperationSerializer = {
-  serializeForStorage: ({ op, qid }: QueueEntryOperation<MutationOptions>) => {
+  serializeForStorage: ({ op, qid }: ApolloQueueEntryOperation) => {
     return {
       mutation: op.mutation,
       variables: op.variables,

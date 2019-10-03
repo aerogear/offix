@@ -3,8 +3,8 @@ import "fake-indexeddb/auto";
 import "cross-fetch/polyfill";
 
 import { HttpLink } from "apollo-link-http";
-import { OfflineClient, createClient, OfflineQueueListener } from "../src";
-import ApolloClient, { MutationOptions } from "apollo-client";
+import { OfflineClient, createClient, ApolloOfflineQueueListener } from "../src";
+import ApolloClient from "apollo-client";
 
 test("createClient does not throw", async () => {
   const url = "http://test";
@@ -50,7 +50,7 @@ test("registerOfflineEventListener adds the listener to the queue listeners", as
 
   expect(client.queue.listeners.length).toBe(1); // the default one added in by the client
 
-  const listener: OfflineQueueListener<MutationOptions> = {
+  const listener: ApolloOfflineQueueListener = {
     /* tslint:disable:no-empty */
     onOperationEnqueued: (op) => { }
   };
