@@ -1,9 +1,7 @@
-import { ApolloOfflineClient } from "./ApolloOfflineClient";
-import { QueueEntryOperation } from "offix-offline";
-import { MutationOptions } from "apollo-client";
+import { ApolloOfflineClient, ApolloQueueEntryOperation } from "./ApolloOfflineClient";
 import { CacheUpdates } from "offix-cache";
 
-export function addOptimisticResponse(apolloClient: ApolloOfflineClient, { op, qid }: QueueEntryOperation<MutationOptions>) {
+export function addOptimisticResponse(apolloClient: ApolloOfflineClient, { op, qid }: ApolloQueueEntryOperation) {
   apolloClient.store.markMutationInit({
     mutationId: qid,
     document: op.mutation,
@@ -15,7 +13,7 @@ export function addOptimisticResponse(apolloClient: ApolloOfflineClient, { op, q
   apolloClient.queryManager.broadcastQueries();
 }
 
-export function removeOptimisticResponse(apolloClient: ApolloOfflineClient, { op, qid }: QueueEntryOperation<MutationOptions>) {
+export function removeOptimisticResponse(apolloClient: ApolloOfflineClient, { op, qid }: ApolloQueueEntryOperation) {
   apolloClient.store.markMutationComplete({
     mutationId: qid,
     optimisticResponse: op.optimisticResponse
@@ -26,7 +24,7 @@ export function removeOptimisticResponse(apolloClient: ApolloOfflineClient, { op
 export function restoreOptimisticResponse(
   apolloClient: ApolloOfflineClient,
   mutationCacheUpdates: CacheUpdates,
-  { op, qid }: QueueEntryOperation<MutationOptions>) {
+  { op, qid }: ApolloQueueEntryOperation) {
   if (op.context.operationName && mutationCacheUpdates[op.context.operationName]) {
     op.update = mutationCacheUpdates[op.context.operationName];
     addOptimisticResponse(apolloClient, { op, qid });
