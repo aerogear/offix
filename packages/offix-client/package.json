@@ -32,7 +32,7 @@
     "chai": "4.2.0",
     "del": "5.1.0",
     "fake-indexeddb": "2.1.1",
-    "fetch-mock": "7.4.0",
+    "fetch-mock": "7.5.1",
     "graphql": "14.5.8",
     "graphql-tag": "2.10.1",
     "jest": "24.9.0",
