@@ -28,7 +28,7 @@
     "@types/mocha": "5.2.7",
     "chai": "4.2.0",
     "del": "5.1.0",
-    "fetch-mock": "7.4.0",
+    "fetch-mock": "7.5.1",
     "graphql": "14.5.8",
     "graphql-tag": "2.10.1",
     "mocha": "6.2.1",
