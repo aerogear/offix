@@ -141,3 +141,29 @@ it("offlineStore.getOfflineData does not return data inserted by different versi
   expect(offlineData.length).toBe(1);
   expect(offlineData[0].operation).toEqual(entry);
 });
+
+it("offlineStore.getOfflineData throws when deserialize throws", async () => {
+
+  const badSerializer = {
+    serializeForStorage: (_: QueueEntryOperation<any>) => {
+      return _;
+    },
+    deserializeFromStorage: (_: PersistedData) => {
+      throw new Error("error in deserialize");
+    }
+  };
+
+  const offlineStore = new OfflineStore(storage as PersistentStore<PersistedData>, badSerializer);
+  await offlineStore.init();
+
+  const entry: QueueEntryOperation<any> = {
+    op: {
+      hello: "world"
+    },
+    qid: "123"
+  };
+
+  await offlineStore.saveEntry(entry);
+
+  await expect(offlineStore.getOfflineData()).rejects.toThrow("error in deserialize");
+});
