@@ -65,7 +65,7 @@ export class OfflineStore<T> {
         offlineItems.push({
           operation: {
             op: deserializedItem as unknown as T,
-            qid: key.split(":").slice(1).join(":")
+            qid: key.slice(this.storageVersion.length + 1) // remove the 'v1:' from the key when we put it back in the queue
           }
         });
       }
