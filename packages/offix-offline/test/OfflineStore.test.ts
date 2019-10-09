@@ -167,3 +167,27 @@ it("offlineStore.getOfflineData throws when deserialize throws", async () => {
 
   await expect(offlineStore.getOfflineData()).rejects.toThrow("error in deserialize");
 });
+
+it("offlineStore.saveEntry throws when serialize throws", async () => {
+
+  const badSerializer = {
+    serializeForStorage: (_: QueueEntryOperation<any>) => {
+      throw new Error("error in serialize");
+    },
+    deserializeFromStorage: (_: PersistedData) => {
+      return _;
+    }
+  };
+
+  const offlineStore = new OfflineStore(storage as PersistentStore<PersistedData>, badSerializer);
+  await offlineStore.init();
+
+  const entry: QueueEntryOperation<any> = {
+    op: {
+      hello: "world"
+    },
+    qid: "123"
+  };
+
+  await expect(offlineStore.saveEntry(entry)).rejects.toThrow("error in serialize");
+});
