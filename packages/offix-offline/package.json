@@ -8,7 +8,7 @@
     "clean": "del coverage src/**/*.js src/**/*.map test/**/*.js test/**/*.map dist types",
     "build": "tsc",
     "watch": "tsc --watch",
-    "test": "mocha",
+    "test": "jest",
     "preintegration-test": "cd integration_test && npm install",
     "integration-test": "cd integration_test && npm test"
   },
@@ -21,17 +21,13 @@
     "access": "public"
   },
   "devDependencies": {
-    "@types/chai": "4.2.3",
     "@types/debug": "4.1.5",
-    "@types/fetch-mock": "7.3.1",
     "@types/graphql": "14.2.3",
-    "@types/mocha": "5.2.7",
-    "chai": "4.2.0",
     "del": "5.1.0",
-    "fetch-mock": "7.5.1",
     "graphql": "14.5.8",
     "graphql-tag": "2.10.1",
-    "mocha": "6.2.1",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.1.0",
     "ts-node": "8.4.1",
     "typescript": "3.6.3"
   },
