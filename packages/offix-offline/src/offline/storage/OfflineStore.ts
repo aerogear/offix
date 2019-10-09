@@ -9,6 +9,7 @@ export class OfflineStore<T> {
 
   private storage: PersistentStore<PersistedData>;
   private offlineMetaKey: string = "offline-meta-data";
+  private storageVersion: string = "v1";
   private arrayOfKeys: string[];
   private serializer: OfflineStoreSerializer<T>;
 
@@ -32,9 +33,9 @@ export class OfflineStore<T> {
    * @param entry - the entry to be saved
    */
   public async saveEntry(entry: QueueEntryOperation<T>) {
-    this.arrayOfKeys.push(entry.qid);
     const serialized = this.serializer.serializeForStorage(entry);
-    const offlineKey = getOfflineKey(entry.qid);
+    const offlineKey = this.getOfflineKey(entry.qid);
+    this.arrayOfKeys.push(offlineKey);
     await this.storage.setItem(this.offlineMetaKey, this.arrayOfKeys);
     await this.storage.setItem(offlineKey, serialized);
   }
@@ -47,7 +48,7 @@ export class OfflineStore<T> {
   public async removeEntry(entry: QueueEntryOperation<T>) {
     this.arrayOfKeys.splice(this.arrayOfKeys.indexOf(entry.qid), 1);
     this.storage.setItem(this.offlineMetaKey, this.arrayOfKeys);
-    const offlineKey = getOfflineKey(entry.qid);
+    const offlineKey = this.getOfflineKey(entry.qid);
     await this.storage.removeItem(offlineKey);
   }
 
@@ -57,19 +58,23 @@ export class OfflineStore<T> {
   public async getOfflineData(): Promise<Array<QueueEntry<T>>> {
     const offlineItems: Array<QueueEntry<T>> = [];
     for (const key of this.arrayOfKeys) {
-      const item = await this.storage.getItem(getOfflineKey(key));
-      const deserializedItem = this.serializer.deserializeFromStorage(item);
-      offlineItems.push({
-        operation: {
-          op: deserializedItem as unknown as T,
-          qid: key
-        }
-      });
+      const keyVersion = key.split(":")[0];
+      if (keyVersion === this.storageVersion) {
+        const item = await this.storage.getItem(key);
+        const deserializedItem = this.serializer.deserializeFromStorage(item);
+        offlineItems.push({
+          operation: {
+            op: deserializedItem as unknown as T,
+            qid: key
+          }
+        });
+      }
+      // should we log that the item couldm't be loaded?
     }
     return offlineItems;
   }
-}
 
-function getOfflineKey(id: string): string {
-  return "offline:" + id;
+  private getOfflineKey(id: string): string {
+    return `${this.storageVersion}:${id}`;
+  }
 }
