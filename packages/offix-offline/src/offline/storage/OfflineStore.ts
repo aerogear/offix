@@ -65,7 +65,7 @@ export class OfflineStore<T> {
         offlineItems.push({
           operation: {
             op: deserializedItem as unknown as T,
-            qid: key
+            qid: key.split(":").slice(1).join(":")
           }
         });
       }
