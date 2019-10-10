@@ -1,7 +1,7 @@
 import { IDProcessor } from "../src/offline/processors/IDProcessor";
 import { DocumentNode } from "graphql";
 
-it("Process id without change", () => {
+test("Process id without change", () => {
     const idProcessor = new IDProcessor();
     const finalId = "test:1";
     const exampleOperation = {
@@ -25,7 +25,7 @@ it("Process id without change", () => {
     expect(exampleOperation.variables.id).toBe(finalId);
 });
 
-it("Process with change", () => {
+test("Process with change", () => {
     const idProcessor = new IDProcessor();
 
     const finalId = `client:`;
