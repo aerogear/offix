@@ -95,3 +95,4 @@ docs/api/**
 testfile.png
 
 testfile.txt
+.prettierrc
