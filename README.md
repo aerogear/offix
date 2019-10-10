@@ -28,4 +28,4 @@ https://offix.dev
 
 1) Star project!
 2) Create issue with ideas or bugs?
-3) Contribute (see Contributing guide)
+3) Contribute (see [Contributing guide](./.github/CONTRIBUTING.md))
