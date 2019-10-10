@@ -1,0 +1,12 @@
+{
+  "docs": {
+    "Getting Started": [
+      "getting-started",
+      "offline-client",
+      "offix-cache",
+      "conflict-client",
+      "conflict-server",
+      "release-notes"
+    ]
+  }
+}

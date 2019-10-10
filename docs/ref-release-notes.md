@@ -1,4 +1,8 @@
-## What is new in Offix
+---
+id: release-notes
+title: What is new in Offix
+sidebar_label: Release notes
+---
 
 # Next
 
@@ -10,7 +14,7 @@
 
 > NOTE: InMemoryCache needs to be wiped out as well along with the client. Please execute `offlineClient.cache.rest()`
 
-# 0.8.0 
+# 0.8.0
 
 ## Features
 
@@ -21,7 +25,7 @@ Please refer to package README for more information
 
 ### Ability to customize Apollo Link chain
 
-`OffixClientConfig.terminatingLink` allows to customize client by adding additional links 
+`OffixClientConfig.terminatingLink` allows to customize client by adding additional links
 for handling authentication, network requests etc.
 
 ### New way to access Apollo Client
@@ -30,12 +34,12 @@ for handling authentication, network requests etc.
 
 ## Breaking changes
 
-### Changes for Subscriptions and File Uploads 
+### Changes for Subscriptions and File Uploads
 
 Subscriptions and file uploads were removed from the main library.
-Developers can still configure Subscription access directly int their application by 
+Developers can still configure Subscription access directly int their application by
 creating Apollo link acording to documentation and passing `OffixClientConfig.terminatingLink`
- 
+
 ### 0.7.1
 
 #### Offline operations persist optimistic response
@@ -43,12 +47,12 @@ creating Apollo link acording to documentation and passing `OffixClientConfig.te
 Offline operations will now cache update functional and automatically apply optimistic response
 `OffixClientConfig.mutationCacheUpdates` is still required to see optimistic responses after application restart.
 
-#### watchOfflineChange returns mutation result  
+#### watchOfflineChange returns mutation result
 
 We have discovered bug where `watchOfflineChange` method from `OfflineError` was missing mutation results.
 This is now fixed so your UI can instantly watch for offline chances and render when succeeded.
 
-### 0.7.0 
+### 0.7.0
 
 #### Support Apollo 2.6.x
 
@@ -59,7 +63,7 @@ Apollo Client 2.6.x with new typings is now supported.
 New conflict implementation requires changes on both client and server.
 On server we have changed conflict detection mechanism to single method.
 Server side conflict resolution was removed due to the fact that we could not provide
-reliable diff source without separate store. 
+reliable diff source without separate store.
 
 ##### Server side implementation:
 
@@ -74,26 +78,26 @@ reliable diff source without separate store.
 ##### Client side implementation:
 
 Client side implementation now requires users to apply `returnType` to context when performing a mutation.
-Conflict interface now has an additional method `mergeOccured` that will be triggered when a conflict was  resolved without data loss.
+Conflict interface now has an additional method `mergeOccured` that will be triggered when a conflict was resolved without data loss.
 
 Please refer to documentation for more details.
 
 #### Breaking changes
 
-##### DataSync Config renamed 
+##### DataSync Config renamed
+
 `DataSyncConfig` interface was renamed to `OffixClientConfig`.
 Please review if your configuration still conforms to the new interface.
 
-##### Cache Helper Interface 
+##### Cache Helper Interface
 
 Cache Helper interface now will now accept object instead of individual parameters:
 
 ```javascript
- const updateFunction = getUpdateFunction({
-            mutationName,
-            idField,
-            operationType,
-            updateQuery
- });
+const updateFunction = getUpdateFunction({
+  mutationName,
+  idField,
+  operationType,
+  updateQuery
+});
 ```
-

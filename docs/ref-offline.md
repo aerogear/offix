@@ -1,4 +1,8 @@
-# Offline Support
+---
+id: offlineClient
+title: Offline Support
+sidebar_label: Offline Client
+---
 
 Offix provides first class support for performing GraphQL operations while offline. Mutations are held in a queue that is configured to hold requests while the client is offline. When the client goes offline for long periods of time they will still be able negotiate local updates with the server state thanks to powerful conflict resolution strategies.
 
@@ -99,11 +103,11 @@ const updateFunctions = {
   // Can contain update functions from each component
   ...ItemUpdates,
   ...TasksUpdates
-}
+};
 
 let config = {
-  mutationCacheUpdates: updateFunctions,
-}
+  mutationCacheUpdates: updateFunctions
+};
 ```
 
 ## Making modifications when offline
@@ -138,10 +142,14 @@ when performing queries. This policy will try to use local cache in
 situations when cache was already populated with the server side data.
 
 ```javascript
-    return this.apollo.watchQuery<YourType>({
-      query: YOUR_QUERY,
-      fetchPolicy: 'cache-first',
-    });
+return (
+  this.apollo.watchQuery <
+  YourType >
+  {
+    query: YOUR_QUERY,
+    fetchPolicy: 'cache-first'
+  }
+);
 ```
 
 Cache is going to be refueled by subscriptions, pooling or regular queries happening in UI.
