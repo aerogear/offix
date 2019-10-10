@@ -33,10 +33,10 @@
     "graphql": "14.5.8",
     "react": "16.10.2",
     "ts-node": "8.4.1",
-    "typescript": "3.6.3"
+    "typescript": "3.6.4"
   },
   "dependencies": {
-    "@types/lodash": "4.14.141",
+    "@types/lodash": "4.14.144",
     "lodash": "4.17.15",
     "offix-client": "0.9.2-dev2"
   },
