@@ -3,8 +3,9 @@
   <br/>
   Offix extends capabilities of Apollo GraphQL providing</br>
   fully featured Offline Workflow and Conflict Resolution.
-[![Discord Chat](https://img.shields.io/discord/625400653321076807)](https://discord.gg/mJ7j84m)
 </p>
+
+[![Discord Chat](https://img.shields.io/discord/625400653321076807)](https://discord.gg/mJ7j84m)
 
 ## Features
 
