@@ -5,6 +5,8 @@
   fully featured Offline Workflow and Conflict Resolution.
 </p>
 
+[![Discord Chat](https://img.shields.io/discord/625400653321076807)](https://discord.gg/mJ7j84m)
+
 ## Features
 
 - Offline support. Mutations are persisted when Offline.
