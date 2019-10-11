@@ -6,6 +6,38 @@ sidebar_label: Release notes
 
 # Next
 
+The `<version number>` release is a significant refactor of the core internals of Offix.
+
+* All queueing, scheduling, persistence, and replaying of offline operations now happens outside of the Apollo Link chain. Instead we use a much more generic queueing mechanism that opens the door to great flexibility.
+* It paves the way for new features in the future. Most importantly, the abiliy to use Offix with other GraphQL clients, or even with regular RESTful clients (and more).
+* The internal architecture of Offix is drastically simplified. It is much easier to understand, maintain and test.
+
+With this release, `OfflineClient` behaves mostly the same way as it has before but there were a couple of necessary breaking changes introduced that are outlined below.
+
+## Background
+
+Previous versions of Offix relied heavily on something called [Apollo Link](https://www.apollographql.com/docs/link/overview/) which is essentially chain of "middleware" functions that can modify the behaviour and results from calls like `ApolloClient.mutate()` and `ApolloClient.query()`. Most of the underlying queueing, scheduling, persistence and replaying of offline mutations done by Offix happened inside the of the Apollo Link chain. this approach seemed like the best idea but over time we have realised it made things difficult to maintain and it kept us limited in the features we could provide.
+
+## Breaking Changes
+
+### client.offlineMutation has been deprecated in favour of `client.offlineMutate`
+
+It didn't make sense to have a `mutate` and `offlineMutation` method. `offlineMutation` has been deprecated in favour of `offlineMutate`. `offlineMutation` can still be used, but it logs a deprecation warning to the console and it will be removed in the next release.
+
+Suggestion: Use change all uses of `client.offlineMutation` to `client.offlineMutate`
+
+### client.mutate no longer does any OfflineScheduling
+
+A side effect of our Apollo Link architecture was that `client.mutate()` would also schedule operations while offline (as well as `client.offlineMutation`). Using `client.mutate()` for offline operations was never recommended but it was possible. This is no longer the case.
+
+Suggestion: any places where you intentionally have offline behaviour using `client.mutate()` should use `client.offlineMutate()` instead.
+
+### Removed @OnlineOnly directive
+
+Because `client.mutate()` does not schedule offline operations anymore, the `@OnlineOnly` is no longer useful and has been completely removed.
+
+Suggestion: remove all instances of the `@OnlineOnly` directive and ensure those mutations are called using `client.mutate()`.
+
 ## Features
 
 ### Offline client enables wiping out cache using persistor interface
