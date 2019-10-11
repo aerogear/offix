@@ -1,5 +1,5 @@
 ---
-id: offlineClient
+id: offline-client
 title: Offline Support
 sidebar_label: Offline Client
 ---

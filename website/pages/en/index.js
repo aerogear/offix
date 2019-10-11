@@ -63,7 +63,10 @@ class HomeSplash extends React.Component {
         <div className="inner">
           <ProjectTitle siteConfig={siteConfig} />
           <PromoSection>
-            <Button href={docUrl('gettingStarted.html')}>
+            <Button href={docUrl('getting-started.html')}>
+              View Documentation
+            </Button>
+            <Button href="https://github.com/aerogear/offix">
               View Documentation
             </Button>
           </PromoSection>
@@ -99,14 +102,10 @@ class Index extends React.Component {
       >
         <h2>Introduction</h2>
         <div>
-          Offix enables working with localy cached GraphQL compilant data
-          without access to server. It will leverage Apollo GraphQL cache do
-          deliver seamless experience for querying data even when server side
-          data is not reachable. For more information about the Apollo and
-          GraphQL please go to
-          <a href="https://www.apollographql.com/">
-            https://www.apollographql.com/
-          </a>
+          Offix enables working with locally cached GraphQL compliant data
+          without access to the server. It leverages the <a href="https://www.apollographql.com/">Apollo GraphQL</a> cache
+          to deliver a seamless experience for querying data even when server side
+          data is not reachable.
         </div>
       </div>
     );
