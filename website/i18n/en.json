@@ -30,7 +30,7 @@
         "title": "Server Side Conflict Resolution",
         "sidebar_label": "Conflict Server"
       },
-      "offlineClient": {
+      "offline-client": {
         "title": "Offline Support",
         "sidebar_label": "Offline Client"
       },
@@ -44,7 +44,8 @@
       }
     },
     "links": {
-      "Documentation": "Documentation"
+      "Documentation": "Documentation",
+      "Github": "Github"
     },
     "categories": {
       "Getting Started": "Getting Started"
