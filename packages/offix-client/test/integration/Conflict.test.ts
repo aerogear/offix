@@ -1,4 +1,4 @@
-import { createClient } from '../../dist';
+import { createClient } from '../../types';
 import { TestStore } from '../utils/testStore';
 import { ToggleableNetworkStatus } from '../utils/network';
 import server from '../utils/server';
@@ -55,7 +55,7 @@ describe('Conflicts', function () {
     client = await newClient({ networkStatus, storage: store });
   });
 
-  const createBasicConflict = async (mutation, variables1, variables2, secondClient, customConflict) => {
+  const createBasicConflict = async (mutation, variables1, variables2, secondClient, customConflict?) => {
     networkStatus.setOnline(true);
 
     const response = await client.mutate({
@@ -135,7 +135,7 @@ describe('Conflicts', function () {
     return { success, failure, conflict, merge };
   };
 
-  const createAdvancedClientConflict = async (mutation, variables1, variables2, secondClient, customConflict) => {
+  const createAdvancedClientConflict = async (mutation, variables1, variables2, secondClient, customConflict?) => {
     networkStatus.setOnline(true);
 
     const response = await client.mutate({
@@ -207,7 +207,7 @@ describe('Conflicts', function () {
     return { success, failure, conflict, merge };
   };
 
-  const createAdvancedServerConflict = async (mutation, variables1, variables2, secondClient, customConflict) => {
+  const createAdvancedServerConflict = async (mutation, variables1, variables2, secondClient, customConflict?) => {
     networkStatus.setOnline(true);
 
     const response = await client.mutate({
@@ -296,13 +296,13 @@ describe('Conflicts', function () {
 
       console.log("ALL TASKS", response.data.allTasks);
 
-      expect(success).to.equal(1);
-      expect(failure).to.equal(0);
+      expect(success).toBe(1);
+      expect(failure).toBe(0);
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal('updated');
-      expect(response.data.allTasks[0].description).to.equal('updated');
+      expect(response.data.allTasks).toBeDefined();
+      expect(response.data.allTasks.length).toBe(1);
+      expect(response.data.allTasks[0].title).toBe('updated');
+      expect(response.data.allTasks[0].description).toBe('updated');
     });
 
   });
@@ -324,15 +324,15 @@ describe('Conflicts', function () {
       });
       console.log("ALL TASKS", response.data.allTasks);
 
-      expect(conflict).to.equal(0);
-      expect(merge).to.equal(1);
-      expect(success).to.equal(1);
-      expect(failure).to.equal(0);
+      expect(conflict).toBe(0);
+      expect(merge).toBe(1);
+      expect(success).toBe(1);
+      expect(failure).toBe(0);
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal('updated');
-      expect(response.data.allTasks[0].description).to.equal('updated');
+      expect(response.data.allTasks).toBeDefined();
+      expect(response.data.allTasks.length).toBe(1);
+      expect(response.data.allTasks[0].title).toBe('updated');
+      expect(response.data.allTasks[0].description).toBe('updated');
     });
 
   });
@@ -354,9 +354,9 @@ describe('Conflicts', function () {
       });
       console.log("ALL TASKS", response.data.allTasks);
 
-      expect(conflict).to.equal(1);
-      expect(failure).to.equal(0);
-      expect(success).to.equal(1);
+      expect(conflict).toBe(1);
+      expect(failure).toBe(0);
+      expect(success).toBe(1);
 
     });
 
@@ -382,14 +382,14 @@ describe('Conflicts', function () {
       });
       console.log("ALL TASKS", response.data.allTasks);
 
-      expect(success).to.equal(1);
-      expect(failure).to.equal(0);
+      expect(success).toBe(1);
+      expect(failure).toBe(0);
 
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal('updated');
-      expect(response.data.allTasks[0].description).to.equal('custom');
+      expect(response.data.allTasks).toBeDefined();
+      expect(response.data.allTasks.length).toBe(1);
+      expect(response.data.allTasks[0].title).toBe('updated');
+      expect(response.data.allTasks[0].description).toBe('custom');
     });
 
   });
@@ -412,13 +412,13 @@ describe('Conflicts', function () {
 
       console.log("ALL TASKS", response.data.allTasks);
 
-      expect(success).to.equal(1);
-      expect(failure).to.equal(0);
+      expect(success).toBe(1);
+      expect(failure).toBe(0);
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal('client wins');
-      expect(response.data.allTasks[0].description).to.equal('updated');
+      expect(response.data.allTasks).toBeDefined();
+      expect(response.data.allTasks.length).toBe(1);
+      expect(response.data.allTasks[0].title).toBe('client wins');
+      expect(response.data.allTasks[0].description).toBe('updated');
     });
 
   });
@@ -442,14 +442,14 @@ describe('Conflicts', function () {
 
       console.log("ALL TASKS", response.data.allTasks);
 
-      expect(success).to.equal(2);
-      expect(failure).to.equal(0);
+      expect(success).toBe(2);
+      expect(failure).toBe(0);
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal('updated');
-      expect(response.data.allTasks[0].description).to.equal('updated');
-      expect(response.data.allTasks[0].author).to.equal('Advanced conflict author');
+      expect(response.data.allTasks).toBeDefined();
+      expect(response.data.allTasks.length).toBe(1);
+      expect(response.data.allTasks[0].title).toBe('updated');
+      expect(response.data.allTasks[0].description).toBe('updated');
+      expect(response.data.allTasks[0].author).toBe('Advanced conflict author');
     });
 
   });
@@ -473,14 +473,14 @@ describe('Conflicts', function () {
 
       console.log("ALL TASKS", response.data.allTasks);
 
-      expect(success).to.equal(1);
-      expect(failure).to.equal(0);
+      expect(success).toBe(1);
+      expect(failure).toBe(0);
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal('updated');
-      expect(response.data.allTasks[0].description).to.equal('updated');
-      expect(response.data.allTasks[0].author).to.equal('Advanced conflict author');
+      expect(response.data.allTasks).toBeDefined();
+      expect(response.data.allTasks.length).toBe(1);
+      expect(response.data.allTasks[0].title).toBe('updated');
+      expect(response.data.allTasks[0].description).toBe('updated');
+      expect(response.data.allTasks[0].author).toBe('Advanced conflict author');
     });
 
   });

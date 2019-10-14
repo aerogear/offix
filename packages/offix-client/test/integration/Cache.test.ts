@@ -1,6 +1,6 @@
 import server from '../utils/server';
-import { createClient } from '../../dist';
-import { CacheOperation, getUpdateFunction, createOptimisticResponse } from '../../../offix-cache/dist';
+import { createClient } from '../../types';
+import { CacheOperation, getUpdateFunction, createOptimisticResponse } from 'offix-cache';
 import { ToggleableNetworkStatus } from '../utils/network';
 import { ADD_TASK, GET_TASKS, DELETE_TASK, FIND_TASK_BY_TITLE, GET_TASK } from '../utils/graphql.queries';
 import { TestStore } from '../utils/testStore';
@@ -8,7 +8,7 @@ import { TestStore } from '../utils/testStore';
 const CLIENT_HTTP_URL = 'http://localhost:4000/graphql';
 const CLIENT_WS_URL = 'ws://localhost:4000/graphql';
 
-const newClient = async (options) => {
+const newClient = async (options?) => {
   const networkStatus = new ToggleableNetworkStatus();
   const storage = new TestStore();
   const client = await createClient({
@@ -49,14 +49,14 @@ const FIND_TASK_BY_TITLE_QUERY = {
   },
 };
 
-const getTasks = async (client, options) => {
+const getTasks = async (client, options?) => {
   return await client.query({
     query: GET_TASKS,
     ...options,
   });
 }
 
-const findTaskByTitle = async (client, options) => {
+const findTaskByTitle = async (client, options?) => {
   return await client.query({
     ...FIND_TASK_BY_TITLE_QUERY,
     ...options
@@ -77,7 +77,7 @@ const offlineMutateWhileOffline = async (client, options) => {
   throw 'offlineMutate didn\'t throw OfflineError';
 }
 
-const addTaskWhileOffline = async (client, options) => {
+const addTaskWhileOffline = async (client, options?) => {
   return await offlineMutateWhileOffline(client, {
     mutation: ADD_TASK,
     variables: TASK_TEMPLATE,
@@ -86,21 +86,20 @@ const addTaskWhileOffline = async (client, options) => {
   });
 };
 
-const assertTaskEqualTaskTemplate = (task, template) => {
+const assertTaskEqualTaskTemplate = (task, template?) => {
 
   template = { ...TASK_TEMPLATE, ...template };
 
-  expect(task).to.exist;
-
+  expect(task).toBeDefined();
   if (template.id == null) {
-    expect(task.id).to.exist;
+    expect(task.id).toBeDefined();
   } else {
-    expect(task.id).to.equal(template.id);
+    expect(task.id).toBe(template.id);
   }
 
-  expect(task.title).to.equal(template.title);
-  expect(task.description).to.equal(template.description);
-  expect(task.version).to.equal(template.version);
+  expect(task.title).toBe(template.title);
+  expect(task.description).toBe(template.description);
+  expect(task.version).toBe(template.version);
 };
 
 describe("Offline cache and mutations", () => {
@@ -139,8 +138,8 @@ describe("Offline cache and mutations", () => {
       // search for tasks again while offline
       const response = await getTasks(client, { fetchPolicy: CACHE_ONLY });
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
+      expect(response.data.allTasks).toBeDefined();
+      expect(response.data.allTasks.length).toBe(1);
       assertTaskEqualTaskTemplate(response.data.allTasks[0]);
     });
 
@@ -166,8 +165,8 @@ describe("Offline cache and mutations", () => {
       // search for tasks again while offline
       const response = await getTasks(client, { fetchPolicy: CACHE_ONLY });
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
+      expect(response.data.allTasks).toBeDefined();
+      expect(response.data.allTasks.length).toBe(1);
       assertTaskEqualTaskTemplate(response.data.allTasks[0]);
     });
 
@@ -186,8 +185,8 @@ describe("Offline cache and mutations", () => {
       // search for tasks again while offline
       const response = await getTasks(client, { fetchPolicy: CACHE_ONLY });
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
+      expect(response.data.allTasks).toBeDefined();
+      expect(response.data.allTasks.length).toBe(1);
       assertTaskEqualTaskTemplate(response.data.allTasks[0]);
     });
 
@@ -208,8 +207,8 @@ describe("Offline cache and mutations", () => {
       // search for tasks again while offline
       const response = await getTasks(client, { fetchPolicy: CACHE_ONLY });
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
+      expect(response.data.allTasks).toBeDefined();
+      expect(response.data.allTasks.length).toBe(1);
       assertTaskEqualTaskTemplate(response.data.allTasks[0]);
     });
 
@@ -226,8 +225,8 @@ describe("Offline cache and mutations", () => {
       // search for tasks again while offline
       const response = await getTasks(client, { fetchPolicy: CACHE_ONLY });
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
+      expect(response.data.allTasks).toBeDefined();
+      expect(response.data.allTasks.length).toBe(1);
       assertTaskEqualTaskTemplate(response.data.allTasks[0]);
     });
   });
@@ -261,7 +260,7 @@ describe("Offline cache and mutations", () => {
 
       // search the task while online
       const result1 = await findTaskByTitle(client);
-      expect(result1.data.findTaskByTitle).to.not.exist;
+      expect(result1.data.findTaskByTitle).toBeFalsy();
 
       goOffline(network);
 
@@ -364,8 +363,8 @@ describe("Offline cache and mutations", () => {
       // retrieve the new task from the cache
       const response1 = await getTasks(client, { fetchPolicy: CACHE_ONLY });
 
-      expect(response1.data.allTasks).to.exist;
-      expect(response1.data.allTasks.length).to.equal(1);
+      expect(response1.data.allTasks).toBeDefined();
+      expect(response1.data.allTasks.length).toBe(1);
       assertTaskEqualTaskTemplate(response1.data.allTasks[0]);
 
       const task = response1.data.allTasks[0];
@@ -379,8 +378,8 @@ describe("Offline cache and mutations", () => {
       }).catch (ignore => {});
       // query tasks while still offline
       const response2 = await getTasks(client, { fetchPolicy: CACHE_ONLY });
-      expect(response2.data.allTasks).to.exist;
-      expect(response2.data.allTasks.length).to.equal(0);
+      expect(response2.data.allTasks).toBeDefined();
+      expect(response2.data.allTasks.length).toBe(0);
 
       goOnline(network);
 
@@ -389,8 +388,8 @@ describe("Offline cache and mutations", () => {
 
       // query tasks again from the cache
       const response3 = await getTasks(client, {fetchPolicy: CACHE_ONLY});
-      expect(response3.data.allTasks).to.exist;
-      expect(response3.data.allTasks.length).to.equal(0);
+      expect(response3.data.allTasks).toBeDefined();
+      expect(response3.data.allTasks.length).toBe(0);
     });
 
     it("query tasks while online, go offline, create task, delete task, go back online using mutationCacheUpdates", async () => {

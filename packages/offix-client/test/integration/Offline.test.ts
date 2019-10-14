@@ -1,4 +1,4 @@
-import { createClient } from '../../dist'
+import { createClient } from '../../types'
 import { createOptimisticResponse, CacheOperation } from 'offix-cache';
 import { TestStore } from '../utils/testStore';
 import { ToggleableNetworkStatus } from '../utils/network';
@@ -92,10 +92,10 @@ describe('Offline mutations', function () {
       await client.offlineMutate(mutationOptions).catch(err => { });
 
       const queue = client.queue.queue
-      expect(queue.length).to.equal(1)
+      expect(queue.length).toBe(1)
       const op = queue[0].operation.op
-      expect(op.mutation).to.deep.equal(mutationOptions.mutation)
-      expect(op.variables).to.deep.equal(mutationOptions.variables)
+      expect(op.mutation).toEqual(mutationOptions.mutation)
+      expect(op.variables).toEqual(mutationOptions.variables)
     });
 
     it('mutations are persisted while offline', async function () {
@@ -109,11 +109,11 @@ describe('Offline mutations', function () {
       const store = client.queue.store
       const storeData = await store.getOfflineData()
 
-      expect(storeData.length).to.equal(1);      
+      expect(storeData.length).toBe(1);      
       
       const op = storeData[0].operation.op
-      expect(op.mutation).to.deep.equal(mutationOptions.mutation)
-      expect(op.variables).to.deep.equal(mutationOptions.variables)
+      expect(op.mutation).toEqual(mutationOptions.mutation)
+      expect(op.variables).toEqual(mutationOptions.variables)
     });
 
     it('offlineMutate throws an offline error, we can get result when coming back online', function (done) {
@@ -125,9 +125,9 @@ describe('Offline mutations', function () {
         networkStatus.setOnline(true);  // go online
         promise.then((response) => {
           console.log('offline changes replicated', response)
-          expect(response.data.createTask).to.exist;
-          expect(response.data.createTask.title).to.equal(newTask.title);
-          expect(response.data.createTask.description).to.equal(newTask.description);
+          expect(response.data.createTask).toBeDefined();
+          expect(response.data.createTask.title).toBe(newTask.title);
+          expect(response.data.createTask.description).toBe(newTask.description);
           done()
         })
       })
@@ -161,9 +161,9 @@ describe('Offline mutations', function () {
       } catch (ignore) { }
 
       const queue = client.queue.queue
-      expect(queue.length).to.equal(2)
-      expect(queue[0].operation.op.context.operationName).to.equal('updateTask');
-      expect(queue[1].operation.op.context.operationName).to.equal('deleteTask');
+      expect(queue.length).toBe(2)
+      expect(queue[0].operation.op.context.operationName).toBe('updateTask');
+      expect(queue[1].operation.op.context.operationName).toBe('deleteTask');
     });
 
     it('Handles multiple mutations on the same object in queue/store', async function () {
@@ -201,8 +201,8 @@ describe('Offline mutations', function () {
         fetchPolicy: 'network-only'
       });
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(0);
+      expect(response.data.allTasks).toBeDefined();
+      expect(response.data.allTasks.length).toBe(0);
     });
 
     it('can create new items and subsequently mutate them while offline, async function ()', async () => {
@@ -233,9 +233,9 @@ describe('Offline mutations', function () {
         query: GET_TASKS,
         fetchPolicy: 'network-only'
       })
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal(updatedTask.title);
+      expect(response.data.allTasks).toBeDefined();
+      expect(response.data.allTasks.length).toBe(1);
+      expect(response.data.allTasks[0].title).toBe(updatedTask.title);
     });
 
     it('reinitialized client will replay operations from the offline storage (simulates an app restart)', async function () {
@@ -267,9 +267,9 @@ describe('Offline mutations', function () {
         fetchPolicy: 'network-only'
       });
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal(updatedTask.title);
+      expect(response.data.allTasks).toBeDefined();
+      expect(response.data.allTasks.length).toBe(1);
+      expect(response.data.allTasks[0].title).toBe(updatedTask.title);
     });
 
     it('it can handle multiple offline mutations on an existing object and replay them successfully', async function () {
@@ -311,9 +311,9 @@ describe('Offline mutations', function () {
         fetchPolicy: 'network-only'
       });
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal('update2');
+      expect(response.data.allTasks).toBeDefined();
+      expect(response.data.allTasks.length).toBe(1);
+      expect(response.data.allTasks[0].title).toBe('update2');
     });
 
   })
@@ -356,13 +356,13 @@ describe('Offline mutations', function () {
 
       const offlineData = await client.queue.store.getOfflineData()
 
-      expect(offlineData.length).to.equal(2)
+      expect(offlineData.length).toBe(2)
 
 
-      expect(offlineData[0]).to.exist;
-      expect(offlineData[1]).to.exist;
-      expect(offlineData[0].operation.op.variables.title).to.equal('nomerge1');
-      expect(offlineData[1].operation.op.variables.title).to.equal('nomerge2');
+      expect(offlineData[0]).toBeDefined();
+      expect(offlineData[1]).toBeDefined();
+      expect(offlineData[0].operation.op.variables.title).toBe('nomerge1');
+      expect(offlineData[1].operation.op.variables.title).toBe('nomerge2');
 
       networkStatus.setOnline(true);
 
@@ -373,9 +373,9 @@ describe('Offline mutations', function () {
         fetchPolicy: 'network-only'
       });
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal('nomerge2');
+      expect(response.data.allTasks).toBeDefined();
+      expect(response.data.allTasks.length).toBe(1);
+      expect(response.data.allTasks[0].title).toBe('nomerge2');
     });
   });
 
@@ -412,8 +412,8 @@ describe('Offline mutations', function () {
 
       const offlineData = await client.queue.store.getOfflineData()
       const op = offlineData[0].operation.op
-      expect(op.context.returnType).to.equal('ADifferentType');
-      expect(op.context.idField).to.equal('someOtherField');
+      expect(op.context.returnType).toBe('ADifferentType');
+      expect(op.context.idField).toBe('someOtherField');
     });
   });
 
@@ -435,13 +435,13 @@ describe('Offline mutations', function () {
         });
       } catch (ignore) { }
 
-      expect(offlineOps).to.equal(1);
+      expect(offlineOps).toBe(1);
 
       networkStatus.setOnline(true);
 
       await new Promise(resolve => setTimeout(resolve, 300));
 
-      expect(cleared).to.equal(1);
+      expect(cleared).toBe(1);
     });
   });
 });

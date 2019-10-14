@@ -1,4 +1,6 @@
 export class TestStore {
+	public data: any;
+
   constructor() {
     this.data = {};
   }

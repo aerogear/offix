@@ -1,4 +1,4 @@
-function manage(cmd) {
+function manage(cmd: string) {
   return fetch(`http://localhost:4001/${cmd}`, { method: 'POST' });
 }
 
@@ -14,8 +14,8 @@ function reset() {
   return manage('reset');
 }
 
-module.exports = {
+export default {
   start,
   stop,
   reset
-};
+}

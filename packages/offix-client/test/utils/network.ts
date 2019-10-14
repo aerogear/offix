@@ -9,6 +9,9 @@ export const goOnLine = () => {
 };
 
 export class ToggleableNetworkStatus {
+	public online: any;
+	public callbacks: any;
+
   constructor() {
     this.online = true;
     this.callbacks = []
