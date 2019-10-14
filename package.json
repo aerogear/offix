@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@types/graphql": "14.2.3",
-    "@types/jest": "24.0.18",
+    "@types/jest": "24.0.19",
     "coveralls": "3.0.7",
     "cross-fetch": "3.0.4",
     "del-cli": "3.0.0",
