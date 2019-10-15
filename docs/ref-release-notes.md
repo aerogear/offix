@@ -8,7 +8,7 @@ sidebar_label: Release notes
 
 The `<version number>` release is a significant refactor of the internals of Offix and introduces a couple of breaking changes to the end user API.
 
-* We have a new documentation site available at [offix.dev](https://offix.dev). Special thanks to [LakshanKarunathilake](https://github.com/LakshanKarunathilake) for the complete overhaul.
+* We have a new documentation site available at [offix.dev](https://offix.dev). Special thanks to [@LakshanKarunathilake](https://github.com/LakshanKarunathilake) for the complete overhaul.
 * All queueing, scheduling, persistence, and replaying of offline operations now happens outside of the Apollo Link chain. Instead we use a much more generic queueing mechanism that opens the door to great flexibility.
 * It paves the way for new features in the future. Most importantly, the ability to use Offix with other GraphQL clients, or even with regular RESTful clients (and more).
 * The internal architecture of Offix is drastically simplified. It is much easier to understand, maintain and test.
