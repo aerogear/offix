@@ -1,8 +1,8 @@
-const express = require('express');
-const cors = require('cors');
+const express = require("express");
+const cors = require("cors");
 
-const graphqlStart = require('./graphql');
-const resetData = require('./schema').resetData;
+const graphqlStart = require("./graphql");
+const resetData = require("./schema").resetData;
 
 const app = express();
 app.use(cors());
@@ -11,17 +11,17 @@ const PORT = 4001;
 
 let graphqlServer;
 
-app.post('/start', async (_, res) => {
+app.post("/start", async (_, res) => {
   graphqlServer = await graphqlStart();
   res.sendStatus(200);
 });
-app.post('/stop', (_, res) => {
+app.post("/stop", (_, res) => {
   if (graphqlServer) {
     graphqlServer.close();
   }
   res.sendStatus(200);
 });
-app.post('/reset', (_, res) => {
+app.post("/reset", (_, res) => {
   resetData();
   res.sendStatus(200);
 });

@@ -4,7 +4,7 @@ export const skipRestOnFail = () => {
       this.skip();
     }
   });
-  
+
   afterEach(function() {
     if (this.currentTest.state === "failed") {
       this.currentTest.parent.failedTests = true;

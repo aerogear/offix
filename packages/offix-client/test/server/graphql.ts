@@ -1,10 +1,10 @@
-const express = require('express');
-const { VoyagerServer } = require('@aerogear/voyager-server');
-const http = require('http');
-const { SubscriptionServer } = require('subscriptions-transport-ws')
-const { execute, subscribe } = require('graphql')
+const express = require("express");
+const { VoyagerServer } = require("@aerogear/voyager-server");
+const http = require("http");
+const { SubscriptionServer } = require("subscriptions-transport-ws");
+const { execute, subscribe } = require("graphql");
 
-const { typeDefs, resolvers } = require('./schema');
+const { typeDefs, resolvers } = require("./schema");
 
 const PORT = 4000;
 
@@ -23,7 +23,7 @@ function start() {
         schema: apolloServer.schema
       }, {
         server: httpServer,
-        path: '/graphql'
+        path: "/graphql"
       });
       console.log(`🚀  Server ready at http://localhost:${PORT}/graphql`);
       resolve(httpServer);

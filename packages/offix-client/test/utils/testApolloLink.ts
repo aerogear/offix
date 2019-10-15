@@ -1,4 +1,4 @@
-import { ApolloLink } from 'apollo-link';
+import { ApolloLink } from "apollo-link";
 
 const testLink = {
   link: new ApolloLink((operation, forward) => {
