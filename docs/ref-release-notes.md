@@ -179,7 +179,7 @@ It is now possible to pass your own `InMemoryCache` into `OfflineClient`. This m
 const cache = new InMemoryCache(yourCacheConfig);
 
 const offlineClient = new OfflineClient({
-  httpUrl: 'https://example.com'
+  httpUrl: 'https://example.com',
   cache
 });
 ```
