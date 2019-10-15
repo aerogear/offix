@@ -33,7 +33,7 @@ A side effect of our Apollo Link architecture was that `client.mutate()` would a
 
 **Suggestion:** any places where you intentionally have offline behaviour using `client.mutate()` should use `client.offlineMutate()` instead.
 
-### Removed @OnlineOnly directive
+### Removed `@OnlineOnly` directive
 
 Because `client.mutate()` does not schedule offline operations anymore, the `@OnlineOnly` directive is no longer useful and has been completely removed.
 
