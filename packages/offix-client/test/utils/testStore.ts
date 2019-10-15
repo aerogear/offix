@@ -5,23 +5,23 @@ export class TestStore {
     this.data = {};
   }
 
-  getItem(key) {
+  public getItem(key) {
     return new Promise((resolve, reject) => {
-      resolve(this.data[key])
-    })
+      resolve(this.data[key]);
+    });
   }
 
-  setItem(key, data) {
+  public setItem(key, data) {
     return new Promise((resolve, reject) => {
       this.data[key] = data;
-      resolve()
-    })
+      resolve();
+    });
   }
 
-  removeItem(key) {
+  public removeItem(key) {
     return new Promise((resolve, reject) => {
       delete this.data[key];
-      resolve()
-    })
+      resolve();
+    });
   }
 }
