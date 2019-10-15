@@ -83,7 +83,7 @@ client.offlineMutate(options).catch((error) => {
 
 **Suggestion:** review all code where `error.networkError.<property name>` is being accessed and change it to `error.<property name>`
 
-### OfflineQueue and OfflineStore are Generic (TypeScript Users Only)
+### `OfflineQueue` and `OfflineStore` are generic (TypeScript Users Only)
 
 The `OfflineQueue` and `OfflineStore` classes and some related interfaces have been refactored to handle generic objects. TypeScript users may experience compilation issues if their application references these types.
 
