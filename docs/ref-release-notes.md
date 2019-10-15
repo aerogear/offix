@@ -165,7 +165,7 @@ To ensure this doesn't happen in future, we have implemented versioning and new 
 
 ### New Documentation Website!
 
-Our documentation website has been rebuilt using Docusaurus. Special thanks to [LakshanKarunathilake](https://github.com/LakshanKarunathilake) for the complete overhaul.
+Our documentation website has been rebuilt using Docusaurus. Special thanks to [@LakshanKarunathilake](https://github.com/LakshanKarunathilake) for the complete overhaul.
 
 ### OfflineQueue is directly accessible on the client
 
