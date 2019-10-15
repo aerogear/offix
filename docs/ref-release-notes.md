@@ -6,18 +6,18 @@ sidebar_label: Release notes
 
 # Next
 
-The `<version number>` release is a significant refactor of the core internals of Offix.
+The `<version number>` release is a significant refactor of the internals of Offix and introduces a couple of breaking changes to the end user API.
 
 * We have a new documentation site available at [offix.dev](https://offix.dev). Special thanks to [LakshanKarunathilake](https://github.com/LakshanKarunathilake) for the complete overhaul.
 * All queueing, scheduling, persistence, and replaying of offline operations now happens outside of the Apollo Link chain. Instead we use a much more generic queueing mechanism that opens the door to great flexibility.
 * It paves the way for new features in the future. Most importantly, the abiliy to use Offix with other GraphQL clients, or even with regular RESTful clients (and more).
 * The internal architecture of Offix is drastically simplified. It is much easier to understand, maintain and test.
 
-With this release, `OfflineClient` behaves mostly the same way as it has before but there were a couple of necessary breaking changes introduced that are outlined below.
+With this release, `OfflineClient` behaves mostly the same way as it has before but there were a couple of breaking changes which are outlined below.
 
 ## Background
 
-Previous versions of Offix relied heavily on something called [Apollo Link](https://www.apollographql.com/docs/link/overview/) which is essentially chain of "middleware" functions that can modify the behaviour and results from calls like `ApolloClient.mutate()` and `ApolloClient.query()`. Most of the underlying queueing, scheduling, persistence and replaying of offline mutations done by Offix happened inside the of the Apollo Link chain. this approach seemed like the best idea but over time we have realised it made things difficult to maintain and it kept us limited in the features we could provide.
+Previous versions of Offix relied heavily on something called [Apollo Link](https://www.apollographql.com/docs/link/overview/) which is essentially chain of "middleware" functions that can modify the behaviour and results from calls like `ApolloClient.mutate()` and `ApolloClient.query()`. Most of the underlying queueing, scheduling, persistence and replaying of offline mutations done by Offix happened inside the of the Apollo Link chain. This approach seemed like a good idea, but over time we have realised it made things difficult to maintain and it kept us limited in the features we could provide.
 
 ## Breaking Changes
 
@@ -27,7 +27,7 @@ It didn't make sense to have a `mutate` and `offlineMutation` method. `offlineMu
 
 **Suggestion:** Change all uses of `client.offlineMutation` to `client.offlineMutate`
 
-### client.mutate no longer does any OfflineScheduling
+### client.mutate no longer does any offline scheduling
 
 A side effect of our Apollo Link architecture was that `client.mutate()` would also schedule operations while offline (as well as `client.offlineMutation`). Using `client.mutate()` for offline operations was never recommended but it was possible. This is no longer the case.
 
@@ -35,9 +35,9 @@ A side effect of our Apollo Link architecture was that `client.mutate()` would a
 
 ### Removed @OnlineOnly directive
 
-Because `client.mutate()` does not schedule offline operations anymore, the `@OnlineOnly` is no longer useful and has been completely removed.
+Because `client.mutate()` does not schedule offline operations anymore, the `@OnlineOnly` directive is no longer useful and has been completely removed.
 
-**Suggestion:** remove all instances of the `@OnlineOnly` directive and ensure those mutations are called using `client.mutate()`.
+**Suggestion:** remove all instances of the `@OnlineOnly` directive and ensure mutations that used it are called with `client.mutate()`.
 
 ### Errors from `client.offlineMutate()` do not have `networkError` property.
 
@@ -47,7 +47,8 @@ where `error.networkError` is the actual error thrown.
 
 This is no longer the case. Now the everything is found on the top level `error` object.
 See the example below:
-```
+
+```js
 const options = {
   mutation: gql`
     mutation greeting($name: String!){
@@ -71,7 +72,7 @@ client.offlineMutate(options).catch((error) => {
 
 This is the same for local conflict errors:
 
-```
+```js
 client.offlineMutate(options).catch((error) => {
   // This used to be `if (error.networkError.localConflict)`
   if (error.localConflict) {
