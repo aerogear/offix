@@ -15,7 +15,7 @@
         "url": "git+https://github.com/aerogear/offix.git"
     },
     "devDependencies": {
-        "@types/jest": "24.0.18",
+        "@types/jest": "24.0.19",
         "@types/node": "12.7.12",
         "graphql": "14.5.8",
         "jest": "24.9.0",
