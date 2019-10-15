@@ -64,7 +64,7 @@ const options = {
 client.offlineMutate(options).catch((error) => {
   // This used to be `if (error.networkError.offline)`
   if(error.offline) {
-    // This used to be error.networkError.watchOfflineChange()
+    // This used to be `error.networkError.watchOfflineChange()`
     error.watchOfflineChange().then(...)
   }
 });
