@@ -142,7 +142,7 @@ In previous versions of `offix-client`, these functions had an [Apollo Operation
 
 `ApolloQueueEntryOperation` objects have two top level fields:
 
-* `qid` - Queue ID. This ID is randomly generated and mostly used by the OfflineQueue
+* `qid` - Queue ID. This ID is randomly generated and mostly used by the `OfflineQueue`.
 * `op` - The operation. In `offix-client` It's of type `MutationOptions`, the options object passed into client.offlineMutate with some extra metadata set by `offix-client`.
 
 **Suggestion:** review any code where `registerOfflineEventListener` is used and refactor the listener functions to use the new data structure being passed.
