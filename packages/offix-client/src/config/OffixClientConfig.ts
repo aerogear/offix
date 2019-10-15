@@ -7,6 +7,7 @@ import { CacheUpdates } from "offix-cache";
 import { RetryLink } from "apollo-link-retry";
 import { ApolloLink } from "apollo-link";
 import { ApolloOfflineQueueListener } from "../apollo";
+import { InMemoryCache } from "apollo-cache-inmemory";
 
 /**
  * Contains all configuration options required to initialize Voyager Client
@@ -36,6 +37,13 @@ export interface OffixClientConfig {
    * The storage you want your client to use (Uses window.localStorage by default)
    */
   storage?: PersistentStore<PersistedData>;
+
+  /**
+   * [Modifier]
+   *
+   * The Apollo InMemoryCache you want your client to use. (Uses a default one if none provided)
+   */
+  cache?: InMemoryCache;
 
   /**
    * [Modifier]

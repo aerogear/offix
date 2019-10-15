@@ -1,7 +1,7 @@
 import { isMobileCordova } from "../utils/platform";
 import { PersistedData, PersistentStore, ConflictListener } from "offix-offline";
 import { OffixClientConfig } from "./OffixClientConfig";
-import { CordovaNetworkStatus, NetworkStatus, WebNetworkStatus, OfflineQueueListener } from "offix-offline";
+import { CordovaNetworkStatus, NetworkStatus, WebNetworkStatus } from "offix-offline";
 import { UseClient } from "offix-offline";
 import { VersionedState } from "offix-offline";
 import { ConflictResolutionStrategy } from "offix-offline";
@@ -10,6 +10,7 @@ import { createDefaultCacheStorage } from "../cache";
 import { ApolloLink } from "apollo-link";
 import { CacheUpdates } from "offix-cache";
 import { ApolloOfflineQueueListener } from "../apollo";
+import { InMemoryCache } from "apollo-cache-inmemory";
 
 /**
  * Class for managing user and default configuration.
@@ -26,6 +27,7 @@ export class OffixDefaultConfig implements OffixClientConfig {
   public offlineStorage?: PersistentStore<PersistedData>;
   public conflictListener?: ConflictListener;
   public mutationCacheUpdates?: CacheUpdates;
+  public cache?: InMemoryCache;
 
   public retryOptions = {
     delay: {

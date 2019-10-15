@@ -19,20 +19,17 @@ import {
   ApolloCacheWithData,
   OfflineStore,
   OfflineQueue,
-  OfflineQueueListener,
   IDProcessor,
-  IResultProcessor,
   OfflineError,
   getBaseStateFromCache,
   WebNetworkStatus,
   NetworkStatus,
   ConflictLink,
   ObjectState,
-  NetworkInfo,
-  QueueEntryOperation
+  NetworkInfo
 } from "offix-offline";
 import { FetchResult } from "apollo-link";
-import { MutationHelperOptions, createMutationOptions, CacheUpdates } from "offix-cache";
+import { MutationHelperOptions, createMutationOptions } from "offix-cache";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { CachePersistor } from "apollo-cache-persist";
 
@@ -105,7 +102,15 @@ export class OfflineClient {
       execute: this.executeOfflineItem.bind(this)
     });
 
-    this.cache = new InMemoryCache();
+    if (this.config.cache) {
+      if (this.config.cache instanceof InMemoryCache) {
+        this.cache = this.config.cache;
+      } else {
+        throw new Error("Unsupported cache. cache must be an InMemoryCache");
+      }
+    } else {
+      this.cache = new InMemoryCache();
+    }
 
     if (this.config.cacheStorage) {
       this.persistor = new CachePersistor({
