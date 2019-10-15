@@ -171,7 +171,20 @@ Our documentation website has been rebuilt using Docusaurus. Special thanks to [
 
 `client.queue` is now directly accessible. This opens up the possibility for your application to directly see the operations in the queue. It also means you can manually call `client.queue.forwardOperations()` to execute all operations in the queue.
 
-### Offline client enables wiping out cache using persistor interface
+### OfflineClient accepts user provided `InMemoryCache`
+
+It is now possible to pass your own `InMemoryCache` into `OfflineClient`. This makes it possible to configure things like cache redirects.
+
+```js
+const cache = new InMemoryCache(yourCacheConfig);
+
+const offlineClient = new OfflineClient({
+  httpUrl: 'https://example.com'
+  cache
+});
+```
+
+### OfflineClient enables wiping out cache using persistor interface
 
 `offlineClient.persitor.purge()` method will wipe entire persistence layer for Apollo cache.
 
