@@ -173,7 +173,7 @@ Our documentation website has been rebuilt using Docusaurus. Special thanks to [
 
 ### Offline client enables wiping out cache using persistor interface
 
-`offlineClient.persitor.purge()` method will wipe entire persistence layer for Apollo cache
+`offlineClient.persitor.purge()` method will wipe entire persistence layer for Apollo cache.
 
 > NOTE: InMemoryCache needs to be wiped out as well along with the client. Please execute `offlineClient.cache.rest()`
 
