@@ -21,7 +21,7 @@ Previous versions of Offix relied heavily on something called [Apollo Link](http
 
 ## Breaking Changes
 
-### client.offlineMutation has been deprecated in favour of `client.offlineMutate`
+### `client.offlineMutation` has been deprecated in favour of `client.offlineMutate`
 
 It didn't make sense to have a `mutate` and `offlineMutation` method. `offlineMutation` has been deprecated in favour of `offlineMutate`. `offlineMutation` can still be used, but it logs a deprecation warning to the console and it will be removed in the next release.
 
