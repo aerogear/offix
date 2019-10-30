@@ -4,6 +4,20 @@ title: Getting Started
 sidebar_label: Getting Started
 ---
 
+## Install Offix
+
+Using [npm](https://www.npmjs.com/package/offix-client):
+
+```shell
+npm install offix-client
+```
+
+Or [yarn](https://yarnpkg.com/en/package/offix-client):
+
+```shell
+yarn add offix-client
+```
+
 ## Importing the package
 
 ```javascript
