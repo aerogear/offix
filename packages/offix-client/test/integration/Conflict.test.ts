@@ -35,7 +35,8 @@ describe("Conflicts", function() {
     author: "new"
   };
 
-  let client, networkStatus, store;
+  let client;
+  let store;
 
   before("start server", async function() {
     await server.start();
@@ -50,7 +51,7 @@ describe("Conflicts", function() {
   });
 
   beforeEach("create client", async function() {
-    networkStatus = newNetworkStatus(false);
+    const networkStatus = newNetworkStatus(false);
     store = new TestStore();
     client = await newClient({ networkStatus, storage: store });
   });
@@ -99,8 +100,6 @@ describe("Conflicts", function() {
     const result = await client.query({
       query: GET_TASKS
     });
-
-    console.log("GET TASKS", result.data.allTasks[0]);
 
     await secondClient.query({
       query: GET_TASKS
@@ -280,18 +279,17 @@ describe("Conflicts", function() {
     it("should succeed", async function() {
       const updatedTitle = { title: "updated", description: "new" };
       const updatedDescription = { title: "new", description: "updated" };
-      const store2 = new TestStore();
-      const networkStatus = newNetworkStatus();
 
-      const client2 = await newClient({ networkStatus, storage: store2 });
+      const client2 = await newClient({
+        networkStatus: newNetworkStatus(),
+        storage: new TestStore()
+      });
       const { success, failure } = await createBasicConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2);
 
       const response = await client.query({
         query: GET_TASKS,
         fetchPolicy: "network-only"
       });
-
-      console.log("ALL TASKS", response.data.allTasks);
 
       expect(success).toBe(1);
       expect(failure).toBe(0);
@@ -309,17 +307,23 @@ describe("Conflicts", function() {
     it("should succeed", async function() {
       const updatedTitle = { title: "updated", description: "new", author: "new" };
       const updatedDescription = { title: "new", description: "updated", author: "new" };
-      const store2 = new TestStore();
-      const networkStatus = newNetworkStatus();
 
-      const client2 = await newClient({ networkStatus, storage: store2 });
-      const { success, failure, conflict, merge } = await createBasicConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2);
+      const client2 = await newClient({
+        networkStatus: newNetworkStatus(),
+        storage: new TestStore()
+      });
+
+      const {
+        success,
+        failure,
+        conflict,
+        merge
+      } = await createBasicConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2);
 
       const response = await client.query({
         query: GET_TASKS,
         fetchPolicy: "network-only"
       });
-      console.log("ALL TASKS", response.data.allTasks);
 
       expect(conflict).toBe(0);
       expect(merge).toBe(1);
@@ -339,17 +343,17 @@ describe("Conflicts", function() {
     it("should succeed", async function() {
       const updatedTitle = { title: "updated", description: "new" };
       const updatedTitleAgain = { title: "another update with conflict", description: "new" };
-      const networkStatus = newNetworkStatus();
 
-      const store2 = new TestStore();
-      const client2 = await newClient({ networkStatus, storage: store2 });
+      const client2 = await newClient({
+        networkStatus: newNetworkStatus(),
+        storage: new TestStore()
+      });
       const { success, failure, conflict } = await createBasicConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedTitleAgain, client2);
 
       const response = await client.query({
         query: GET_TASKS,
         fetchPolicy: "network-only"
       });
-      console.log("ALL TASKS", response.data.allTasks);
 
       expect(conflict).toBe(1);
       expect(failure).toBe(0);
@@ -364,11 +368,10 @@ describe("Conflicts", function() {
     it("should succeed", async function() {
       const updatedTitle = { title: "new", description: "new", author: "new" };
       const updatedDescription = { title: "updated", description: "new", author: "new" };
-      const store = new TestStore();
-      const networkStatus = newNetworkStatus();
 
       const client2 = await newClient({
-        networkStatus, storage: store
+        networkStatus: newNetworkStatus(),
+        storage: new TestStore()
       });
 
       const { success, failure } = await createBasicConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2, true);
@@ -377,7 +380,6 @@ describe("Conflicts", function() {
         query: GET_TASKS,
         fetchPolicy: "network-only"
       });
-      console.log("ALL TASKS", response.data.allTasks);
 
       expect(success).toBe(1);
       expect(failure).toBe(0);
@@ -395,18 +397,17 @@ describe("Conflicts", function() {
     it("should succeed", async function() {
       const updatedTitle = { title: "updated", description: "new" };
       const updatedBoth = { title: "client wins", description: "updated" };
-      const store2 = new TestStore();
-      const networkStatus = newNetworkStatus();
 
-      const client2 = await newClient({ networkStatus, storage: store2 });
+      const client2 = await newClient({
+        networkStatus: newNetworkStatus(),
+        storage: new TestStore()
+      });
       const { success, failure } = await createBasicConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedBoth, client2);
 
       const response = await client.query({
         query: GET_TASKS,
         fetchPolicy: "network-only"
       });
-
-      console.log("ALL TASKS", response.data.allTasks);
 
       expect(success).toBe(1);
       expect(failure).toBe(0);
@@ -425,18 +426,16 @@ describe("Conflicts", function() {
       const updatedTitle = { title: "updated", description: "new", author: "new" };
       const updatedDescription = { title: "new", description: "updated", author: "new" };
 
-      const store2 = new TestStore();
-      const networkStatus = newNetworkStatus();
-
-      const client2 = await newClient({ networkStatus, storage: store2 });
+      const client2 = await newClient({
+        networkStatus: newNetworkStatus(),
+        storage: new TestStore()
+      });
       const { success, failure } = await createAdvancedClientConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2);
 
       const response = await client.query({
         query: GET_TASKS,
         fetchPolicy: "network-only"
       });
-
-      console.log("ALL TASKS", response.data.allTasks);
 
       expect(success).toBe(2);
       expect(failure).toBe(0);
@@ -456,18 +455,17 @@ describe("Conflicts", function() {
       const updatedTitle = { title: "updated", description: "new", author: "new" };
       const updatedDescription = { title: "new", description: "updated", author: "new" };
 
-      const store2 = new TestStore();
-      const networkStatus = newNetworkStatus();
+      const client2 = await newClient({
+        networkStatus: newNetworkStatus(),
+        storage: new TestStore()
+      });
 
-      const client2 = await newClient({ networkStatus, storage: store2 });
       const { success, failure } = await createAdvancedServerConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2);
 
       const response = await client.query({
         query: GET_TASKS,
         fetchPolicy: "network-only"
       });
-
-      console.log("ALL TASKS", response.data.allTasks);
 
       expect(success).toBe(1);
       expect(failure).toBe(0);

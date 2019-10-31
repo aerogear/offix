@@ -1,5 +1,5 @@
 export class TestStore {
-	public data: any;
+  public data: any;
 
   constructor() {
     this.data = {};

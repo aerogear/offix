@@ -1,14 +1,14 @@
-const express = require("express");
-const { VoyagerServer } = require("@aerogear/voyager-server");
-const http = require("http");
-const { SubscriptionServer } = require("subscriptions-transport-ws");
-const { execute, subscribe } = require("graphql");
+import express from "express";
+import { VoyagerServer } from "@aerogear/voyager-server";
+import http from "http";
+import { SubscriptionServer } from "subscriptions-transport-ws";
+import { execute, subscribe } from "graphql";
 
-const { typeDefs, resolvers } = require("./schema");
+import { typeDefs, resolvers } from "./schema";
 
 const PORT = 4000;
 
-function start() {
+export function startServer() {
   const app = express();
 
   const apolloServer = VoyagerServer({ typeDefs, resolvers });
@@ -17,7 +17,7 @@ function start() {
 
   return new Promise(resolve => {
     httpServer.listen({ port: PORT }, async () => {
-      new SubscriptionServer({
+      const subscriptionServer = new SubscriptionServer({
         execute,
         subscribe,
         schema: apolloServer.schema
@@ -25,10 +25,7 @@ function start() {
         server: httpServer,
         path: "/graphql"
       });
-      console.log(`🚀  Server ready at http://localhost:${PORT}/graphql`);
       resolve(httpServer);
     });
   });
 }
-
-module.exports = start;

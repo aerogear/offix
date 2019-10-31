@@ -1,8 +1,8 @@
-const express = require("express");
-const cors = require("cors");
+import express from "express";
+import cors from "cors";
 
-const graphqlStart = require("./graphql");
-const resetData = require("./schema").resetData;
+import { startServer } from "./graphql";
+import { resetData } from "./schema";
 
 const app = express();
 app.use(cors());
@@ -12,7 +12,7 @@ const PORT = 4001;
 let graphqlServer;
 
 app.post("/start", async (_, res) => {
-  graphqlServer = await graphqlStart();
+  graphqlServer = await startServer();
   res.sendStatus(200);
 });
 app.post("/stop", (_, res) => {
@@ -26,4 +26,4 @@ app.post("/reset", (_, res) => {
   res.sendStatus(200);
 });
 
-app.listen(PORT, () => console.log(`Server listening on port ${PORT}!`));
+app.listen(PORT, () => console.info(`Server listening on port ${PORT}!`));

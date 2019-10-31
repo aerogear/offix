@@ -374,7 +374,9 @@ describe("Offline cache and mutations", () => {
         operationType: CacheOperation.DELETE,
         returnType: TASK_TYPE,
         updateQuery: GET_TASKS
-      }).catch (ignore => {});
+      }).catch ((_) => {
+        // ignore
+      });
       // query tasks while still offline
       const response2 = await getTasks(client, { fetchPolicy: CACHE_ONLY });
       expect(response2.data.allTasks).toBeDefined();
