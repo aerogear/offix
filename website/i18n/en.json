@@ -3,7 +3,7 @@
   "localized-strings": {
     "next": "Next",
     "previous": "Previous",
-    "tagline": "Offix extends the capabilities of Apollo GraphQL providing a fully featured Offline Workflow and Conflict Resolution.",
+    "tagline": "Offix extends Apollo GraphQL allowing you to build fully offline enabled applications",
     "docs": {
       "_sidebar": {
         "title": "_sidebar"
@@ -11,6 +11,9 @@
       "getting-started": {
         "title": "Getting Started",
         "sidebar_label": "Getting Started"
+      },
+      "react-native": {
+        "title": "react-native"
       },
       "README": {
         "title": "README"
@@ -39,6 +42,34 @@
         "sidebar_label": "Release notes"
       },
       "support": {
+        "title": "Support",
+        "sidebar_label": "Support"
+      },
+      "version-0.8.2/version-0.8.2-getting-started": {
+        "title": "Getting Started",
+        "sidebar_label": "Getting Started"
+      },
+      "version-0.8.2/version-0.8.2-offix-cache": {
+        "title": "Offix Cache",
+        "sidebar_label": "Client Cache"
+      },
+      "version-0.8.2/version-0.8.2-conflict-client": {
+        "title": "Client Side Conflict Resolution",
+        "sidebar_label": "Conflicts Client"
+      },
+      "version-0.8.2/version-0.8.2-conflict-server": {
+        "title": "Server Side Conflict Resolution",
+        "sidebar_label": "Conflict Server"
+      },
+      "version-0.8.2/version-0.8.2-offlineClient": {
+        "title": "Offline Support",
+        "sidebar_label": "Offline Client"
+      },
+      "version-0.8.2/version-0.8.2-release-notes": {
+        "title": "What is new in Offix",
+        "sidebar_label": "Release notes"
+      },
+      "version-0.8.2/version-0.8.2-support": {
         "title": "Support",
         "sidebar_label": "Support"
       }

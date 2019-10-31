@@ -23,7 +23,7 @@ const users = [
 const siteConfig = {
   title: 'Offix', // Title for your website.
   tagline:
-    'Offix extends the capabilities of Apollo GraphQL providing a fully featured Offline Workflow and Conflict Resolution.',
+    'Offix extends Apollo GraphQL for building fully featured offline experiences.',
   url: 'https://offix.dev', // Your website URL
   baseUrl: '/', // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:

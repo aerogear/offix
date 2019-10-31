@@ -64,10 +64,10 @@ class HomeSplash extends React.Component {
           <ProjectTitle siteConfig={siteConfig} />
           <PromoSection>
             <Button href={docUrl('getting-started.html')}>
-              View Documentation
+              Documentation
             </Button>
             <Button href="https://github.com/aerogear/offix">
-              View Documentation
+              Github
             </Button>
           </PromoSection>
         </div>
@@ -102,10 +102,14 @@ class Index extends React.Component {
       >
         <h2>Introduction</h2>
         <div>
-          Offix enables working with locally cached GraphQL compliant data
-          without access to the server. It leverages the <a href="https://www.apollographql.com/">Apollo GraphQL</a> cache
-          to deliver a seamless experience for querying data even when server side
-          data is not reachable.
+          <p>
+            Offix allows you to execute your GraphQL mutations and queries while your application is offline (or while the server is unreachable).
+            Offline Mutations are scheduled and persisted (across application restarts) and are replayed when server becomes available again.
+          </p>
+          <p>
+            We leverage the <a href="https://www.apollographql.com/">Apollo Cache</a>, allowing users to see their local changes and to perform fully offline workflows.
+            Fully featured conflict resolution strategies are provided, as well as interface to build custom ones, ensuring you can build seamless offline experiences.
+          </p>
         </div>
       </div>
     );

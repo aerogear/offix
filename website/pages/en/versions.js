@@ -27,7 +27,7 @@ function Versions(props) {
             <h1>{siteConfig.title} Versions</h1>
           </header>
           <p>New versions of this project are released every so often.</p>
-          <h3 id="latest">Current version (Stable)</h3>
+          <h3 id="latest">Current version</h3>
           <table className="versions">
             <tbody>
               <tr>
@@ -38,7 +38,7 @@ function Versions(props) {
                   <a
                     href={`${siteConfig.baseUrl}${siteConfig.docsUrl}/${
                       props.language ? props.language + '/' : ''
-                    }doc1`}>
+                    }getting-started`}>
                     Documentation
                   </a>
                 </td>
@@ -49,10 +49,9 @@ function Versions(props) {
             </tbody>
           </table>
           <p>
-            This is the version that is configured automatically when you first
-            install this project.
+            This is the latest version published to npm.
           </p>
-          <h3 id="rc">Pre-release versions</h3>
+          <h3 id="rc">Master</h3>
           <table className="versions">
             <tbody>
               <tr>
@@ -63,7 +62,7 @@ function Versions(props) {
                   <a
                     href={`${siteConfig.baseUrl}${siteConfig.docsUrl}/${
                       props.language ? props.language + '/' : ''
-                    }next/doc1`}>
+                    }next/getting-started`}>
                     Documentation
                   </a>
                 </td>
@@ -73,7 +72,6 @@ function Versions(props) {
               </tr>
             </tbody>
           </table>
-          <p>Other text describing this section.</p>
           <h3 id="archive">Past Versions</h3>
           <p>Here you can find previous versions of the documentation.</p>
           <table className="versions">
