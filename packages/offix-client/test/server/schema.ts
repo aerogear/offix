@@ -1,7 +1,7 @@
-const { gql } = require('@aerogear/voyager-server')
-const { conflictHandler } = require('offix-server-conflicts')
-const { PubSub } = require('graphql-subscriptions');
-const fs = require('fs');
+import { gql } from "@aerogear/voyager-server";
+import { conflictHandler } from "offix-server-conflicts";
+import { PubSub } from "graphql-subscriptions";
+import fs from "fs";
 
 const pubSub = new PubSub();
 
@@ -37,7 +37,7 @@ type File {
   mimetype: String!
   encoding: String!
 }
-`
+`;
 
 let id = 0;
 let data = [];
@@ -52,7 +52,6 @@ const resetData = () => {
 const resolvers = {
   Query: {
     allTasks: () => {
-      console.log('all: ', data);
       return data;
     },
     getTask: (_, args) => {
@@ -62,33 +61,30 @@ const resolvers = {
       return data.find(item => item.title === args.title);
     },
     uploads: () => {
-      return files
-    },
+      return files;
+    }
   },
 
   Mutation: {
     createTask: (_, args) => {
-      console.log('create: ', args);
       const newTask = { ...args, id: (id++).toString(), version: 1 };
       data.push(newTask);
-      pubSub.publish('taskCreated', {
+      pubSub.publish("taskCreated", {
         taskCreated: newTask
       });
       return newTask;
     },
     updateTask: async (_, args) => {
-      console.log('update: ', args);
       const index = data.findIndex(item => item.id === args.id);
 
-      const conflict = conflictHandler.checkForConflict(data[index], args)
-      if(conflict){
+      const conflict = conflictHandler.checkForConflict(data[index], args);
+      if (conflict) {
         throw conflict;
       }
       data[index] = {...(data[index]), ...args};
       return data[index];
     },
     deleteTask: (_, args) => {
-      console.log('delete: ', args);
       const index = data.findIndex(item => item.id === args.id);
       data.splice(index, 1);
       return args.id;
@@ -109,13 +105,13 @@ const resolvers = {
   },
   Subscription: {
     taskCreated: {
-      subscribe: () => pubSub.asyncIterator('taskCreated')
+      subscribe: () => pubSub.asyncIterator("taskCreated")
     }
-  },
-}
+  }
+};
 
-module.exports = {
+export {
   typeDefs,
   resolvers,
   resetData
-}
+};

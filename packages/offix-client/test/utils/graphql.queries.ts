@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import gql from "graphql-tag";
 
 export const ADD_TASK = gql`
   mutation createTask($description: String!, $title: String!, $author: String ) {
@@ -33,7 +33,7 @@ export const GET_TASK = gql`
       version
     }
   }
-`
+`;
 
 export const FIND_TASK_BY_TITLE = gql`
   query findTaskByTitle($title: String!) {
