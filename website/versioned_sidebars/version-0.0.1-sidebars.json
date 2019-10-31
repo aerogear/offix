@@ -1,12 +1,12 @@
 {
-  "version-0.0.1-docs": {
+  "version-0.8.2-docs": {
     "Getting Started": [
-      "version-0.0.1-getting-started",
-      "version-0.0.1-offline-client",
-      "version-0.0.1-offix-cache",
-      "version-0.0.1-conflict-client",
-      "version-0.0.1-conflict-server",
-      "version-0.0.1-release-notes"
+      "version-0.8.2-getting-started",
+      "version-0.8.2-offline-client",
+      "version-0.8.2-offix-cache",
+      "version-0.8.2-conflict-client",
+      "version-0.8.2-conflict-server",
+      "version-0.8.2-release-notes"
     ]
   }
 }

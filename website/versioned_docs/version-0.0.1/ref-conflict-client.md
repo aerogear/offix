@@ -1,5 +1,5 @@
 ---
-id: version-0.0.1-conflict-client
+id: version-0.8.2-conflict-client
 title: Client Side Conflict Resolution
 sidebar_label: Conflicts Client
 original_id: conflict-client

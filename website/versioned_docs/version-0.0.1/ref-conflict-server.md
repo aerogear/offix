@@ -1,5 +1,5 @@
 ---
-id: version-0.0.1-conflict-server
+id: version-0.8.2-conflict-server
 title: Server Side Conflict Resolution
 sidebar_label: Conflict Server
 original_id: conflict-server

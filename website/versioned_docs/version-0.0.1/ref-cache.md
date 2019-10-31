@@ -1,5 +1,5 @@
 ---
-id: version-0.0.1-offix-cache
+id: version-0.8.2-offix-cache
 title: Offix Cache
 sidebar_label: Client Cache
 original_id: offix-cache

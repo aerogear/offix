@@ -1,5 +1,5 @@
 ---
-id: version-0.0.1-support
+id: version-0.8.2-support
 title: Support
 sidebar_label: Support
 original_id: support
