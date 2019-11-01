@@ -1,5 +1,5 @@
 ---
-id: version-0.9.2-client-configuration
+id: version-0.9.0-client-configuration
 title: Client Configuration
 sidebar_label: Client Configuration
 original_id: client-configuration

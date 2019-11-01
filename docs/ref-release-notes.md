@@ -4,9 +4,9 @@ title: What is new in Offix
 sidebar_label: Release notes
 ---
 
-# 0.9.2
+# 0.9.0
 
-The `0.9.2` release is a significant refactor of the internals of Offix and introduces a couple of breaking changes to the end user API.
+The `0.9.0` release is a significant refactor of the internals of Offix and introduces a couple of breaking changes to the end user API.
 
 * We have a new documentation site available at [offix.dev](https://offix.dev). Special thanks to [@LakshanKarunathilake](https://github.com/LakshanKarunathilake) for the complete overhaul.
 * All queueing, scheduling, persistence, and replaying of offline operations now happens outside of the Apollo Link chain. Instead we use a much more generic queueing mechanism that opens the door to great flexibility.

@@ -1,5 +1,5 @@
 ---
-id: version-0.9.2-offline-client
+id: version-0.9.0-offline-client
 title: Offline Support
 sidebar_label: Offline Client
 original_id: offline-client
