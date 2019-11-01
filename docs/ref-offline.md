@@ -82,10 +82,9 @@ Example:
 ```javascript
 client.mutate(...).catch((error)=> {
   // 1. Detect if this was an offline error
-  if(error.networkError && error.networkError.offline){
-    const offlineError: OfflineError =  error.networkError;
+  if (error.offline){
     // 2. We can still track when offline change is going to be replicated.
-    offlineError.watchOfflineChange().then(...)
+    error.watchOfflineChange().then(...)
   }
 });
 ```
@@ -122,10 +121,50 @@ Developers can adjust how queue will process new mutations by supplying custom `
 
 It is possible to provide `offlineQueueListener` in config to be notified about offline related events:
 
-- `onOperationEnqueued` - Called when new operation is being added to offline queue
-- `onOperationSuccess` - Called when back online and operation succeeds
-- `onOperationFailure` - Called when back online and operation fails with GraphQL error
-- `queueCleared` - Called when offline operation queue is cleared
+```javascript
+client.registerOfflineEventListener({
+  onOperationEnqueued(operation) {
+    // called when operation was placed on the queue
+  },
+  onOperationFailure: (operation) => {
+    // called when the operation failed
+  },
+  onOperationSuccess: (operation) => {
+    // called when the operation was fulfilled
+  },
+  onOperationRequeued: (operation) => {
+    // called when an operation was loaded in from storage and placed back on the queue
+    // This would happen across app restarts
+  },
+  queueCleared() {
+    // called when all operations are fulfilled and the queue is cleared
+  }
+});
+```
+
+Below is an example `ApolloQueueEntryOperation` object.
+
+```js
+{
+  qid: 'client:abc123'
+  op: { 
+    context: {
+      operationName: 'createItem',
+      conflictBase: undefined,
+      idField: 'id',
+      returnType: 'Item'
+    },
+    mutation: <mutation object parsed by gql>,
+    optimisticResponse: <optimistic response object>,
+    variables: <mutation variables>
+  }
+}
+```
+
+`ApolloQueueEntryOperation` objects have two top level fields:
+
+* `qid` - Queue ID. This ID is randomly generated and mostly used by the `OfflineQueue`.
+* `op` - The operation. In `offix-client` It's of type `MutationOptions`, the options object passed into `client.offlineMutate` with some extra metadata set by `offix-client`.
 
 ## Cache
 

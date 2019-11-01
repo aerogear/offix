@@ -3,11 +3,8 @@
   "localized-strings": {
     "next": "Next",
     "previous": "Previous",
-    "tagline": "Offix extends Apollo GraphQL allowing you to build fully offline enabled applications",
+    "tagline": "Offix extends Apollo GraphQL for building fully featured offline experiences.",
     "docs": {
-      "_sidebar": {
-        "title": "_sidebar"
-      },
       "getting-started": {
         "title": "Getting Started",
         "sidebar_label": "Getting Started"
@@ -24,6 +21,10 @@
       "offix-cache": {
         "title": "Offix Cache",
         "sidebar_label": "Client Cache"
+      },
+      "client-configuration": {
+        "title": "Client Configuration",
+        "sidebar_label": "Client Configuration"
       },
       "conflict-client": {
         "title": "Client Side Conflict Resolution",
@@ -61,7 +62,7 @@
         "title": "Server Side Conflict Resolution",
         "sidebar_label": "Conflict Server"
       },
-      "version-0.8.2/version-0.8.2-offlineClient": {
+      "version-0.8.2/version-0.8.2-offline-client": {
         "title": "Offline Support",
         "sidebar_label": "Offline Client"
       },
