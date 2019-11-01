@@ -27,7 +27,7 @@ const config = {
   httpUrl: 'http://localhost:4000/graphql'
 };
 
-// offlineClient is a parent around the apollo client
+// offlineClient is a wrapper that gives access to an apollo client
 const offlineClient = new OfflineClient(config);
 
 // client is the initialized apollo client
@@ -75,10 +75,6 @@ try {
   }
 }
 ```
-
-## Configuration
-
-To provide custom configuration to the client, the following options are available. If you wish, these are also available by using the `OffixClientConfig` interface from the SDK.
 
 ## Basic concepts
 
