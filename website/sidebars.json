@@ -2,6 +2,7 @@
   "docs": {
     "Getting Started": [
       "getting-started",
+      "client-configuration",
       "offline-client",
       "offix-cache",
       "conflict-client",

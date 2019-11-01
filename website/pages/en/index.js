@@ -158,6 +158,7 @@ class Index extends React.Component {
       </Block>
     );
 
+
     const Features = () => (
       <Block layout="fourColumn">
         {[
@@ -184,17 +185,24 @@ class Index extends React.Component {
             Offix in Action
           </h2>
 
-          <div class="intro">
-            <iframe
-              class="introVideo"
-              src="https://www.youtube.com/embed/CrYinCtTHds"
-              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            ></iframe>
-          </div>
+          <OffixYoutubeDemo/>
         </React.Fragment>
       );
     };
+
+    const OffixYoutubeDemo = () => (
+      <Block align="center">
+        {[
+          {
+            content: `<div class="yt-frame">
+              <iframe frameBorder="0" width="560" height="310" scrolling="no" marginHeight="0" marginWidth="0" 
+              src="https://www.youtube.com/embed/CrYinCtTHds" 
+              frameborder="0" allowfullscreen align="middle"></iframe>
+            </div>`
+          },
+        ]}
+      </Block>
+    );
 
     const Showcase = () => {
       if ((siteConfig.users || []).length === 0) {

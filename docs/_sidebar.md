@@ -1,8 +1,0 @@
-* [Home](/)
-* [Getting Started](getting-started.md)
-* [Offline Client](ref-offline.md)
-* [Client Cache](ref-cache.md)
-* [Conflicts Client](ref-conflict-client.md)
-* [Conflict Server](ref-conflict-server.md)
-* [Release Notes](ref-release-notes.md)
-* [Support](ref-support.md)

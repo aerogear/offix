@@ -22,24 +22,58 @@ yarn add offix-client
 
 ```javascript
 import { OfflineClient } from 'offix-client';
-```
 
-## Configuration
-
-To provide custom configuration to the client, the following options are available. If you wish, these are also available by using the `OffixClientConfig` interface from the SDK.
-
-```javascript
-let config = {
-  httpUrl: 'http://localhost:4000/graphql',
-  wsUrl: 'ws://localhost:4000/graphql'
+const config = {
+  httpUrl: 'http://localhost:4000/graphql'
 };
+
+// offlineClient is a wrapper that gives access to an apollo client
+const offlineClient = new OfflineClient(config);
+
+// client is the initialized apollo client
+const client = await client.init();
 ```
 
-## Creating a Client
+## Example Mutation
 
-```javascript
-let client = new OfflineClient(config);
-client.init();
+The following example shows the `client.offlineMutate()` method which schedules mutations while the application is considered offline. 
+
+```js
+const options = {
+  mutation: gql`
+    mutation greeting($name: String!){
+    greeting(name: $name) {
+      body
+    }
+  }`,
+  variables: {
+    name: 'hello world!'
+  }
+};
+
+client.offlineMutate(options).catch((error) => {
+  // we are offline - lets wait for changes
+  if(error.offline) {
+    error.watchOfflineChange().then((result) => {
+      console.log('mutation was completed after we came back online!', result)
+    })
+  }
+});
+```
+
+When offline, an error is returned with a reference to a promise which can be used to wait for the mutation to complete. This will happen when the application comes back online.
+
+`async/await` can be used too.
+
+```js
+try {
+  await client.offlineMutate(options)
+} catch(error) {
+  if(error.offline) {
+    const result = await error.watchOfflineChange()
+    console.log('mutation was completed after we came back online!', result)
+  }
+}
 ```
 
 ## Basic concepts
