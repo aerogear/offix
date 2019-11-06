@@ -24,7 +24,7 @@ test("Offix allows executor to be passed", async () => {
 
   await offix.init();
 
-  const result = await offix.offlineAction({ foo: "world" });
+  const result = await offix.execute({ foo: "world" });
 
   expect(result).toBe("hello world");
 });

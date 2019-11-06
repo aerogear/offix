@@ -94,7 +94,7 @@ export class Offix {
    *
    * @param options the MutationHelperOptions to create the mutation
    */
-  public async offlineAction(options: any): Promise<any> {
+  public async execute(options: any): Promise<any> {
     if (this.online) {
       return this.executor.execute(options);
     } else {
