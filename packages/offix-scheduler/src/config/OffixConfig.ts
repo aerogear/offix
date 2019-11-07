@@ -23,7 +23,7 @@ export class OffixConfig implements OffixOptions {
     this.executor = options.executor || new DefaultOffixExecutor();
 
     if (options.networkStatus) {
-      this.networkStatus = options.networkStatus
+      this.networkStatus = options.networkStatus;
     } else {
       this.networkStatus = (isMobileCordova()) ?
       new CordovaNetworkStatus() : new WebNetworkStatus();
