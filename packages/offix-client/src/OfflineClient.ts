@@ -295,7 +295,7 @@ export class OfflineClient {
     });
   }
 
-  private async executeOfflineItem({ op, qid }: ApolloQueueEntryOperation) {
+  private async executeOfflineItem(op: MutationOptions) {
     if (this.apolloClient) {
       return await this.apolloClient.mutate(op);
     }
