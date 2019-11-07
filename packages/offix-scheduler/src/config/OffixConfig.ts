@@ -22,8 +22,12 @@ export class OffixConfig implements OffixOptions {
   constructor(options: OffixOptions) {
     this.executor = options.executor || new DefaultOffixExecutor();
 
-    this.networkStatus = (isMobileCordova()) ?
+    if (options.networkStatus) {
+      this.networkStatus = options.networkStatus
+    } else {
+      this.networkStatus = (isMobileCordova()) ?
       new CordovaNetworkStatus() : new WebNetworkStatus();
+    }
 
     this.offlineStorage = options.storage || createDefaultOfflineStorage();
     this.serializer = options.serializer || new DefaultOfflineSerializer();

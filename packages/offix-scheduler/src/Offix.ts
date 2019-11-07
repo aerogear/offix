@@ -50,7 +50,7 @@ export class Offix {
 
   constructor(options: OffixOptions = {}) {
     this.config = new OffixConfig(options);
-    this.networkStatus = this.config.networkStatus || new WebNetworkStatus();
+    this.networkStatus = this.config.networkStatus
 
     // its possible that no storage is available
     if (this.config.offlineStorage) {
