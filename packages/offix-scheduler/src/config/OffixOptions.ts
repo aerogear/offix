@@ -13,7 +13,7 @@ export interface OffixOptions {
 
   /**
    * [Modifier]
-   * 
+   *
    * A class or object with an 'execute' function.
    * This is the core function you want to be able to schedule while offline.
    * It could be a HTTP call, A GraphQL request, send a message.
@@ -29,11 +29,11 @@ export interface OffixOptions {
 
   /**
    * [Modifier]
-   * 
+   *
    * An object or class that has methods for:
    * 1. serializing objects from the offline queue to storage.
    * 2. deserializing objects from storage back to the queue.
-   * 
+   *
    * The objects being serialized/deserialized are based on what's passed to `execute`.
    * If your objects are simple JSON objects that don't have any functions or circular references
    * Then you probably don't need a custom serializer.
