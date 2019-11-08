@@ -22,12 +22,12 @@ export interface OffixExecutor {
  * Offix is a scheduler that queues function calls when
  * an application is considered offline and fulfills them
  * later when the app is back online.
- * 
- * The action or function being scheduled can be anything 
+ *
+ * The action or function being scheduled can be anything
  * but it is typically reliant on the network and is usually
  * something that causes a server side change
  * e.g. a HTTP Request, Sending a Message, a GraphQL Mutation
- * 
+ *
  * Offix queues all operations in order and fulfills them when back online.
  * It also persists them, allowing the operations to be kept across app restarts.
  *
@@ -68,7 +68,9 @@ export class Offix {
     this.queue = new OfflineQueue<any>(this.offlineStore, {
       networkStatus: this.networkStatus,
       resultProcessors,
-      execute: this.executor.execute.bind(this)
+      // TODO this needs to be revisited. What context should the execute function have?
+      // Should it be able to access things on the Offix scheduler?
+      execute: this.executor.execute.bind(this.executor)
     });
   }
 
