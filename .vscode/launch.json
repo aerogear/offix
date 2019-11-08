@@ -5,29 +5,27 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "node",
-      "request": "launch",
-      "name": "Offix Client Mocha Tests",
-      "program": "${workspaceFolder}/packages/offix-client/node_modules/mocha/bin/_mocha",
-      "args": [
-        "-r",
-        "ts-node/register",
-        "--timeout",
-        "999999",
-        "--colors",
-        "${workspaceFolder}/packages/offix-client/test/*.ts"
-      ],
-      "console": "integratedTerminal",
-      "protocol": "inspector"
-    },
-    {
-      "name": "Debug Jest Tests",
+      "name": "Debug Jest Tests in offix-client",
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceFolder}/packages/offix-client",
       "runtimeArgs": [
         "--inspect-brk",
         "${workspaceRoot}/packages/offix-client/node_modules/.bin/jest",
+        "--runInBand"
+      ],
+      // "console": "integratedTerminal",
+      // "internalConsoleOptions": "neverOpen",
+      "port": 9229
+    },
+    {
+      "name": "Debug Jest Tests in offix-scheduler",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/packages/offix-scheduler",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "${workspaceRoot}/packages/offix-scheduler/node_modules/.bin/jest",
         "--runInBand"
       ],
       // "console": "integratedTerminal",

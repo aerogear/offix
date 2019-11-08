@@ -1,3 +1,1 @@
-import { QueueEntryOperation } from "./OfflineQueue";
-
-export type ExecuteFunction<T> = (operation: QueueEntryOperation<T>) => Promise<any>;
+export type ExecuteFunction<T> = (operation: T) => Promise<any>;

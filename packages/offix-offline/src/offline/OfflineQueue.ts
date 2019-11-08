@@ -132,7 +132,7 @@ export class OfflineQueue<T> {
 
   public async forwardOperation(entry: QueueEntry<T>) {
     try {
-      const result = await this.execute(entry.operation);
+      const result = await this.execute(entry.operation.op);
       this.onForwardNext(entry, result);
       if (entry.handlers) {
         entry.handlers.resolve(result);
