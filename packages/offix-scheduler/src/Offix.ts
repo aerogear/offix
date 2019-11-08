@@ -6,7 +6,6 @@ import {
   OfflineQueue,
   IDProcessor,
   OfflineError,
-  WebNetworkStatus,
   NetworkStatus,
   NetworkInfo,
   OfflineQueueListener,
@@ -18,22 +17,28 @@ export interface OffixExecutor {
 }
 
 /**
- * OfflineClient
+ * Offix
  *
- * Enables offline workflows, conflict resolution and cache
- * storage on top Apollo GraphQL JavaScript client.
+ * Offix is a scheduler that queues function calls when
+ * an application is considered offline and fulfills them
+ * later when the app is back online.
+ * 
+ * The action or function being scheduled can be anything 
+ * but it is typically reliant on the network and is usually
+ * something that causes a server side change
+ * e.g. a HTTP Request, Sending a Message, a GraphQL Mutation
+ * 
+ * Offix queues all operations in order and fulfills them when back online.
+ * It also persists them, allowing the operations to be kept across app restarts.
  *
- * Usage:
- *
- *  ```javascript
- *  const offlineClient = new OfflineClient(config);
- *  await offlineClient.init();
- *  ```
  */
 export class Offix {
 
   // the offix client global config
   public config: OffixConfig;
+  // The class or object that contains the execute function to be scheduled
+  // e.g. a HTTP request, a GraphQL request, etc.
+  public executor: OffixExecutor;
   // the network status interface that determines online/offline state
   public networkStatus: NetworkStatus;
   // the offline storage interface that persists offline data across restarts
@@ -42,8 +47,6 @@ export class Offix {
   public queue: OfflineQueue<any>;
   // listeners that can be added by the user to handle various events coming from the offline queue
   public queueListeners: Array<OfflineQueueListener<any>> = [];
-
-  public executor: OffixExecutor;
 
   // determines whether we're offline or not
   private online: boolean = false;
