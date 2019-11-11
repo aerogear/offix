@@ -60,12 +60,17 @@ export class Offix {
       this.offlineStore = new OfflineStore(this.config.offlineStorage, this.config.serializer);
     }
 
+    if (this.config.offlineQueueListener) {
+      this.queueListeners.push(this.config.offlineQueueListener);
+    }
+
     // TODO we probably need a generic ID processor included by default???
     const resultProcessors: Array<IResultProcessor<any>> = [new IDProcessor()];
 
     this.executor = this.config.executor;
 
     this.queue = new OfflineQueue<any>(this.offlineStore, {
+      listeners: this.queueListeners,
       networkStatus: this.networkStatus,
       resultProcessors,
       // TODO this needs to be revisited. What context should the execute function have?
