@@ -1,8 +1,8 @@
 import "fake-indexeddb/auto";
-import { OffixDefaultConfig } from "../src/config/OffixDefaultConfig";
 import { OffixClientConfig } from "../src/config/OffixClientConfig";
+import { OffixClientOptions } from "../src/config/OffixClientOptions";
 
-test("OffixDefaultConfig Merges defaults with user config", () => {
+test("OffixClientConfig Merges defaults with user config", () => {
 
   const userConfig = {
     httpUrl: "test",
@@ -14,13 +14,13 @@ test("OffixDefaultConfig Merges defaults with user config", () => {
     }
   };
 
-  const config = new OffixDefaultConfig(userConfig);
+  const config = new OffixClientConfig(userConfig);
   expect(config.httpUrl).toBe(userConfig.httpUrl);
   expect(config.retryOptions).toBe(userConfig.retryOptions);
 });
 
 it("conflict strategy is a function", () => {
-  const configWithStrategy: OffixClientConfig = {
+  const configWithStrategy: OffixClientOptions = {
     httpUrl: "test",
     // storage,
     conflictStrategy: {
@@ -28,6 +28,6 @@ it("conflict strategy is a function", () => {
     }
   };
 
-  const mergedConfig = new OffixDefaultConfig(configWithStrategy);
+  const mergedConfig = new OffixClientConfig(configWithStrategy);
   expect(mergedConfig.conflictStrategy).toBe(configWithStrategy.conflictStrategy);
 });
