@@ -35,11 +35,9 @@ jobs:
       - run:
           name: test
           command: npm test
-      # No longer have integration tests as a separate command
-      # We may reintroduce it in the future
-      # - run:
-      #     name: integration test
-      #     command: cd packages/offix-client && npm run integration-test
+      - run:
+          name: integration test
+          command: cd packages/offix-client && npm run integration-test
       - store_artifacts:
           path: test-results.xml
           prefix: tests

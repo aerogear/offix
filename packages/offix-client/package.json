@@ -8,7 +8,9 @@
     "clean": "del coverage src/**/*.js src/**/*.map test/**/*.js test/**/*.map dist types",
     "build": "tsc",
     "watch": "tsc --watch",
-    "test": "jest"
+    "test": "jest",
+    "preintegration-test": "cd integration_test && yarn install",
+    "integration-test": "cd integration_test && yarn run test"
   },
   "license": "Apache-2.0",
   "repository": {
