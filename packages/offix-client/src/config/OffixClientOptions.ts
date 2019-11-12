@@ -1,10 +1,12 @@
 import { PersistedData, PersistentStore } from "offix-scheduler";
 import {
-  NetworkStatus,
+  NetworkStatus
+ } from "offix-offline";
+ import {
   ConflictResolutionStrategy,
   ObjectState,
   ConflictListener
- } from "offix-offline";
+ } from "offix-conflicts-client";
 import { CacheUpdates } from "offix-cache";
 import { RetryLink } from "apollo-link-retry";
 import { ApolloLink } from "apollo-link";

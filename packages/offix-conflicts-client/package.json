@@ -1,0 +1,29 @@
+{
+  "name": "offix-conflicts-client",
+  "version": "0.9.0",
+  "description": "adds client side conflict detection and resolution",
+  "main": "dist/index.js",
+  "types": "types/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/jest": "24.0.22",
+    "@types/node": "12.12.7",
+    "jest": "24.9.0",
+    "ts-jest": "24.1.0",
+    "ts-node": "8.5.0",
+    "typescript": "3.7.2"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aerogear/offix.git"
+  },
+  "license": "Apache-2.0"
+}

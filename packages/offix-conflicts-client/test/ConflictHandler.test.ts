@@ -1,6 +1,6 @@
-import { ConflictHandler } from "../src/conflicts/handler/ConflictHandler";
+import { ConflictHandler } from "../src//handler/ConflictHandler";
 import { ConflictListener, ConflictResolutionStrategy, UseClient } from "../src";
-import { VersionedState } from "../src/conflicts/state/VersionedState";
+import { VersionedState } from "../src/state/VersionedState";
 
 const listener: ConflictListener = {
   conflictOccurred(listenerBase: any, listenerClient: any, listenerServer: any) {

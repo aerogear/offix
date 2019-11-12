@@ -1,12 +1,15 @@
 import { onError, ErrorResponse } from "apollo-link-error";
 import { GraphQLError } from "graphql";
 import { ApolloLink, Operation, NextLink, Observable, FetchResult } from "apollo-link";
-import { ConflictResolutionData } from "./strategies/ConflictResolutionData";
-import { isMutation } from "../utils/helpers";
-import { ObjectState, ConflictListener } from "../index";
-import { ConflictResolutionStrategy } from "./strategies/ConflictResolutionStrategy";
-import { UseClient } from "./strategies/strategies";
-import { ConflictHandler } from "./handler/ConflictHandler";
+import {
+  ConflictListener,
+  ConflictResolutionData,
+  ObjectState,
+  ConflictResolutionStrategy,
+  UseClient,
+  ConflictHandler
+} from "offix-conflicts-client";
+import { isMutation } from "../helpers";
 
 /**
  * Represents conflict information that was returned from server

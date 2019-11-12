@@ -9,7 +9,7 @@ import {
   ConflictResolutionStrategy,
   ConflictListener,
   UseClient,
-  VersionedState } from "offix-offline";
+  VersionedState } from "offix-conflicts-client";
 import { createDefaultCacheStorage } from "../cache";
 import { ApolloLink } from "apollo-link";
 import { CacheUpdates } from "offix-cache";
