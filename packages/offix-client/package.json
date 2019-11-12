@@ -25,7 +25,7 @@
     "@types/debug": "4.1.5",
     "@types/fetch-mock": "7.3.1",
     "@types/graphql": "14.2.3",
-    "@types/jest": "24.0.22",
+    "@types/jest": "24.0.23",
     "@types/ws": "6.0.3",
     "del": "5.1.0",
     "fake-indexeddb": "2.1.1",
