@@ -13,8 +13,6 @@ export * from "./offline/storage/PersistentStore";
 export * from "./offline/storage/OfflineStore";
 export * from "./offline/storage/defaultStorage";
 export * from "./offline/storage/OfflineStoreSerializer";
-export * from "./offline/processors/IDProcessor";
-export * from "./offline/processors/IResultProcessor";
 export * from "./offline/OfflineQueueConfig";
 
 export * from "./conflicts/strategies/strategies";

@@ -1,7 +1,6 @@
 import { OfflineQueueListener } from "./events/OfflineQueueListener";
 import { FetchResult } from "apollo-link";
 import { OfflineStore } from "./storage/OfflineStore";
-import { IResultProcessor } from "./processors";
 import { OfflineQueueConfig } from "./OfflineQueueConfig";
 import { generateClientId } from "offix-cache";
 import { ExecuteFunction } from "./ExecuteFunction";
@@ -61,11 +60,8 @@ export class OfflineQueue<T> {
 
   private execute: ExecuteFunction<T>;
 
-  private resultProcessors: Array<IResultProcessor<T>> | undefined;
-
   constructor(store: OfflineStore<T> | undefined, options: OfflineQueueConfig<T>) {
     this.store = store;
-    this.resultProcessors = options.resultProcessors;
     this.execute = options.execute;
 
     if (options.listeners) {
@@ -145,14 +141,6 @@ export class OfflineQueue<T> {
     }
   }
 
-  public executeResultProcessors(entry: QueueEntry<T>, result: FetchResult<any>) {
-    if (this.resultProcessors) {
-      for (const resultProcessor of this.resultProcessors) {
-        resultProcessor.execute(this.queue, entry, result);
-      }
-    }
-  }
-
   public async restoreOfflineOperations() {
     if (this.store) {
       try {
@@ -223,7 +211,6 @@ export class OfflineQueue<T> {
       this.onOperationFailure(entry.operation, result.errors);
       // Notify for success otherwise
     } else if (result.data) {
-      this.executeResultProcessors(entry, result);
       this.onOperationSuccess(entry.operation, result);
     }
     this.dequeueOperation(entry);

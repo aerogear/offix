@@ -1,8 +1,7 @@
-import { IDProcessor } from "../src/offline/processors/IDProcessor";
+import { replaceClientGeneratedIDsInQueue } from "../src/apollo/optimisticResponseHelpers";
 import { DocumentNode } from "graphql";
 
 test("Process id without change", () => {
-    const idProcessor = new IDProcessor();
     const finalId = "test:1";
     const exampleOperation = {
         mutation: {} as DocumentNode,
@@ -21,13 +20,11 @@ test("Process id without change", () => {
         }
     };
     const queue = [entry];
-    idProcessor.execute(queue, entry, { data: { test: { id: "notApplied:1" } } });
+    replaceClientGeneratedIDsInQueue(queue, entry.operation, { data: { test: { id: "notApplied:1" } } });
     expect(exampleOperation.variables.id).toBe(finalId);
 });
 
 test("Process with change", () => {
-    const idProcessor = new IDProcessor();
-
     const finalId = `client:`;
     const exampleOperation = {
         mutation: {} as DocumentNode,
@@ -46,6 +43,6 @@ test("Process with change", () => {
         }
     };
     const queue = [entry];
-    idProcessor.execute(queue, entry, { data: { test: { id: "applied:1" } } });
+    replaceClientGeneratedIDsInQueue(queue, entry.operation, { data: { test: { id: "applied:1" } } });
     expect(exampleOperation.variables.id).toBe("applied:1");
 });
