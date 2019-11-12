@@ -2,7 +2,7 @@ import { ApolloLink } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { RetryLink } from "apollo-link-retry";
 import { OffixClientConfig } from "../config/OffixClientConfig";
-import { isMarkedOffline } from "offix-offline";
+import { isMarkedOffline } from "./helpers";
 import { ConfigError } from "../config/ConfigError";
 
 /**

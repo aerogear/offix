@@ -1,8 +1,10 @@
 import { MutationOptions } from "apollo-client";
 import { ApolloCache } from "apollo-cache";
-import { ObjectState } from "./state/ObjectState";
-import { LocalConflictError } from "./LocalConflictError";
-import { ConflictResolutionData } from "./strategies/ConflictResolutionData";
+import {
+  ObjectState,
+  LocalConflictError,
+  ConflictResolutionData
+} from "offix-conflicts-client";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
 
 /**

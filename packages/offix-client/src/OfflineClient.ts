@@ -15,16 +15,19 @@ import {
   addOptimisticResponse,
   removeOptimisticResponse,
   restoreOptimisticResponse,
-  replaceClientGeneratedIDsInQueue
+  replaceClientGeneratedIDsInQueue,
+  ApolloCacheWithData,
+  getBaseStateFromCache,
+  ConflictLink
 } from "./apollo/";
 
 import {
-  ApolloCacheWithData,
-  getBaseStateFromCache,
-  NetworkStatus,
-  ConflictLink,
-  ObjectState
+  NetworkStatus
 } from "offix-offline";
+
+import {
+  ObjectState
+} from "offix-conflicts-client";
 
 import { FetchResult } from "apollo-link";
 import { MutationHelperOptions, createMutationOptions } from "offix-cache";
