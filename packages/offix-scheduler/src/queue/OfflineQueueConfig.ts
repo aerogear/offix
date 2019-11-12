@@ -1,6 +1,8 @@
-import { NetworkStatus, OfflineQueueListener, PersistentStore, PersistedData } from "../index";
+import { NetworkStatus } from "offix-offline";
 import { CacheUpdates } from "offix-cache";
-import { ExecuteFunction } from "./ExecuteFunction";
+import { OfflineQueueListener } from "./OfflineQueueListener";
+import { QueueExecuteFunction } from "./QueueExecuteFunction";
+import { PersistentStore, PersistedData } from "../store";
 
 /**
  * Conguration required for OfflineQueue
@@ -10,5 +12,5 @@ export interface OfflineQueueConfig<T> {
   listeners?: Array<OfflineQueueListener<T>>;
   mutationCacheUpdates?: CacheUpdates;
   offlineStorage?: PersistentStore<PersistedData>;
-  execute: ExecuteFunction<T>;
+  execute: QueueExecuteFunction<T>;
 }

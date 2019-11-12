@@ -1,6 +1,6 @@
 import { PersistentStore, PersistedData } from "./PersistentStore";
-import { QueueEntryOperation, QueueEntry } from "../OfflineQueue";
-import { OfflineStoreSerializer } from "./OfflineStoreSerializer";
+import { QueueEntryOperation, QueueEntry } from "../queue";
+import { OfflineStoreSerializer, DefaultOfflineSerializer } from "./OfflineStoreSerializer";
 
 /**
  * Abstract Offline storage
@@ -13,10 +13,10 @@ export class OfflineStore<T> {
   private arrayOfKeys: string[];
   private serializer: OfflineStoreSerializer<T>;
 
-  constructor(storage: PersistentStore<PersistedData>, serializer: OfflineStoreSerializer<T>) {
+  constructor(storage: PersistentStore<PersistedData>, serializer?: OfflineStoreSerializer<T>) {
     this.arrayOfKeys = [];
     this.storage = storage;
-    this.serializer = serializer;
+    this.serializer = serializer || new DefaultOfflineSerializer();
   }
 
   /**

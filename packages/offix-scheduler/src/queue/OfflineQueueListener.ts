@@ -1,4 +1,4 @@
-import { QueueEntryOperation } from "../OfflineQueue";
+import { QueueEntryOperation } from "./OfflineQueue";
 
 /**
  * Interface for creating listeners for offline queue.

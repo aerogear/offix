@@ -1,11 +1,15 @@
-import { isMobileCordova } from "../utils/platform";
-import { PersistedData, PersistentStore, ConflictListener } from "offix-offline";
+import {
+  PersistedData,
+  PersistentStore,
+  createDefaultOfflineStorage
+} from "offix-scheduler";
 import { OffixClientOptions } from "./OffixClientOptions";
-import { CordovaNetworkStatus, NetworkStatus, WebNetworkStatus } from "offix-offline";
-import { UseClient } from "offix-offline";
-import { VersionedState } from "offix-offline";
-import { ConflictResolutionStrategy } from "offix-offline";
-import { createDefaultOfflineStorage } from "offix-offline";
+import { NetworkStatus } from "offix-offline";
+import {
+  ConflictResolutionStrategy,
+  ConflictListener,
+  UseClient,
+  VersionedState } from "offix-offline";
 import { createDefaultCacheStorage } from "../cache";
 import { ApolloLink } from "apollo-link";
 import { CacheUpdates } from "offix-cache";

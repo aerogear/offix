@@ -79,7 +79,7 @@ export class OfflineClient {
   // The apollo client!
   public apolloClient?: ApolloOfflineClient;
 
-  public offix: Offix;
+  public offix: Offix<MutationOptions>;
 
   constructor(userConfig: OffixClientOptions = {}) {
     this.config = new OffixClientConfig(userConfig);
@@ -104,7 +104,7 @@ export class OfflineClient {
       });
     }
 
-    this.offix = new Offix({
+    this.offix = new Offix<MutationOptions>({
       executor: this,
       storage: this.config.offlineStorage,
       networkStatus: this.config.networkStatus,
@@ -189,7 +189,7 @@ export class OfflineClient {
     } else {
 
       const mutationOptions = this.createOfflineMutationOptions(options);
-      return this.offix.execute(mutationOptions);
+      return this.offix.execute(mutationOptions as unknown as MutationOptions);
     }
   }
 

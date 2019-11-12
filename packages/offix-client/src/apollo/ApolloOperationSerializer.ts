@@ -1,4 +1,4 @@
-import { PersistedData } from "offix-offline";
+import { PersistedData } from "offix-scheduler";
 import { ApolloQueueEntryOperation } from "./ApolloOfflineClient";
 
 /**
