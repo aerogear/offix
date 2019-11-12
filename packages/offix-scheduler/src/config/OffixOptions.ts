@@ -5,7 +5,7 @@ import {
   OfflineStoreSerializer
 } from "../store";
 import { NetworkStatus } from "offix-offline";
-import { OffixExecutor } from "../Offix";
+import { OffixSchedulerExecutor } from "../OffixSchedulerExecutor";
 
 /**
  * The options that can be passed by a user to initialize the OffixScheduler
@@ -21,7 +21,7 @@ export interface OffixOptions {
    * This is the core function you want to be able to schedule while offline.
    * It could be a HTTP call, A GraphQL request, send a message.
    */
-  executor?: OffixExecutor;
+  executor?: OffixSchedulerExecutor;
 
   /**
    * [Modifier]

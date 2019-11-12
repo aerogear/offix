@@ -6,6 +6,8 @@ import {
   NetworkInfo
 } from "offix-offline";
 
+import { OffixSchedulerExecutor } from "./OffixSchedulerExecutor";
+
 import { OfflineError } from "./OfflineError";
 
 import {
@@ -14,10 +16,6 @@ import {
 } from "./queue";
 
 import { OfflineStore } from "./store";
-
-export interface OffixExecutor {
-  execute: (options: any) => Promise<any>;
-}
 
 /**
  * Offix
@@ -35,13 +33,13 @@ export interface OffixExecutor {
  * It also persists them, allowing the operations to be kept across app restarts.
  *
  */
-export class Offix<T> {
+export class OffixScheduler<T> {
 
   // the offix client global config
   public config: OffixConfig;
   // The class or object that contains the execute function to be scheduled
   // e.g. a HTTP request, a GraphQL request, etc.
-  public executor: OffixExecutor;
+  public executor: OffixSchedulerExecutor;
   // the network status interface that determines online/offline state
   public networkStatus: NetworkStatus;
   // the offline storage interface that persists offline data across restarts

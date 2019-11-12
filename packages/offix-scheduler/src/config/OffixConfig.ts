@@ -7,7 +7,7 @@ import {
   WebNetworkStatus
 } from "offix-offline";
 
-import { OffixExecutor } from "../Offix";
+import { OffixSchedulerExecutor } from "../OffixSchedulerExecutor";
 import {
   createDefaultOfflineStorage,
   DefaultOfflineSerializer,
@@ -22,7 +22,7 @@ import { OfflineQueueListener } from "../queue";
  * Default config is applied on top of user provided configuration
  */
 export class OffixConfig implements OffixOptions {
-  public executor: OffixExecutor;
+  public executor: OffixSchedulerExecutor;
   public networkStatus: NetworkStatus;
   public offlineStorage: PersistentStore<PersistedData>;
   public serializer: OfflineStoreSerializer<any>;
