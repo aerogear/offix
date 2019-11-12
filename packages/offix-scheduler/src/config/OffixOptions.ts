@@ -1,8 +1,11 @@
-import { OfflineQueueListener } from "offix-offline";
-import { PersistedData, PersistentStore } from "offix-offline";
+import { OfflineQueueListener } from "../queue";
+import {
+  PersistedData,
+  PersistentStore,
+  OfflineStoreSerializer
+} from "../store";
 import { NetworkStatus } from "offix-offline";
 import { OffixExecutor } from "../Offix";
-import { OfflineStoreSerializer } from "offix-offline/types/offline/storage/OfflineStoreSerializer";
 
 /**
  * The options that can be passed by a user to initialize the OffixScheduler

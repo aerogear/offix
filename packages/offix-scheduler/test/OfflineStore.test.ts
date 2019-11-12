@@ -1,9 +1,12 @@
-import { createDefaultOfflineStorage } from "../src/offline/storage/defaultStorage";
-import { OfflineStore } from "../src/offline/storage/OfflineStore";
-import "fake-indexeddb/auto";
-import { PersistedData, QueueEntryOperation } from "../src";
-import { PersistentStore } from "../src/offline/storage/PersistentStore";
+import {
+  createDefaultOfflineStorage,
+  OfflineStore,
+  PersistentStore,
+  PersistedData
+} from "../src/store";
+import { QueueEntryOperation } from "../src/queue";
 import { Store } from "idb-localstorage";
+import "fake-indexeddb/auto";
 
 const storage = createDefaultOfflineStorage() as Store;
 

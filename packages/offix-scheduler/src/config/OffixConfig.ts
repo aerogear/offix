@@ -1,12 +1,21 @@
 import { isMobileCordova } from "../utils/platform";
 import { DefaultOffixExecutor } from "../utils/DefaultOffixExecutor";
-import { PersistedData, PersistentStore, OfflineQueueListener } from "offix-offline";
 import { OffixOptions } from "./OffixOptions";
-import { CordovaNetworkStatus, NetworkStatus, WebNetworkStatus } from "offix-offline";
-import { createDefaultOfflineStorage } from "offix-offline";
-import { OfflineStoreSerializer } from "offix-offline/types/offline/storage/OfflineStoreSerializer";
+import {
+  CordovaNetworkStatus,
+  NetworkStatus,
+  WebNetworkStatus
+} from "offix-offline";
+
 import { OffixExecutor } from "../Offix";
-import { DefaultOfflineSerializer } from "../utils/DefaultOfflineSerializer";
+import {
+  createDefaultOfflineStorage,
+  DefaultOfflineSerializer,
+  OfflineStoreSerializer,
+  PersistedData,
+  PersistentStore
+} from "../store";
+import { OfflineQueueListener } from "../queue";
 
 /**
  * Class for managing user and default configuration.

@@ -1,9 +1,8 @@
-import { OfflineQueueListener } from "./events/OfflineQueueListener";
-import { FetchResult } from "apollo-link";
-import { OfflineStore } from "./storage/OfflineStore";
+import { OfflineQueueListener } from "./OfflineQueueListener";
+import { OfflineStore } from "../store/OfflineStore";
 import { OfflineQueueConfig } from "./OfflineQueueConfig";
 import { generateClientId } from "offix-cache";
-import { ExecuteFunction } from "./ExecuteFunction";
+import { QueueExecuteFunction } from "./QueueExecuteFunction";
 
 /**
  * An entry in the OfflineQueue
@@ -58,7 +57,7 @@ export class OfflineQueue<T> {
 
   private store?: OfflineStore<T>;
 
-  private execute: ExecuteFunction<T>;
+  private execute: QueueExecuteFunction<T>;
 
   constructor(store: OfflineStore<T> | undefined, options: OfflineQueueConfig<T>) {
     this.store = store;

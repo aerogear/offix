@@ -32,7 +32,9 @@
     "typescript": "3.7.2"
   },
   "dependencies": {
-    "offix-offline": "0.9.0"
+    "idb-localstorage": "^0.2.0",
+    "offix-cache": "^0.9.0",
+    "offix-offline": "^0.9.0"
   },
   "peerDependencies": {
     "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0"

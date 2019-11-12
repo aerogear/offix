@@ -2,13 +2,18 @@ import { OffixOptions } from "./config/OffixOptions";
 import { OffixConfig } from "./config/OffixConfig";
 
 import {
-  OfflineStore,
-  OfflineQueue,
-  OfflineError,
   NetworkStatus,
-  NetworkInfo,
-  OfflineQueueListener
+  NetworkInfo
 } from "offix-offline";
+
+import { OfflineError } from "./OfflineError";
+
+import {
+  OfflineQueue,
+  OfflineQueueListener
+} from "./queue";
+
+import { OfflineStore } from "./store";
 
 export interface OffixExecutor {
   execute: (options: any) => Promise<any>;
@@ -30,7 +35,7 @@ export interface OffixExecutor {
  * It also persists them, allowing the operations to be kept across app restarts.
  *
  */
-export class Offix {
+export class Offix<T> {
 
   // the offix client global config
   public config: OffixConfig;
@@ -40,11 +45,11 @@ export class Offix {
   // the network status interface that determines online/offline state
   public networkStatus: NetworkStatus;
   // the offline storage interface that persists offline data across restarts
-  public offlineStore?: OfflineStore<any>;
+  public offlineStore?: OfflineStore<T>;
   // the in memory queue that holds offline data
-  public queue: OfflineQueue<any>;
+  public queue: OfflineQueue<T>;
   // listeners that can be added by the user to handle various events coming from the offline queue
-  public queueListeners: Array<OfflineQueueListener<any>> = [];
+  public queueListeners: Array<OfflineQueueListener<T>> = [];
 
   // determines whether we're offline or not
   private online: boolean = false;
@@ -64,7 +69,7 @@ export class Offix {
 
     this.executor = this.config.executor;
 
-    this.queue = new OfflineQueue<any>(this.offlineStore, {
+    this.queue = new OfflineQueue<T>(this.offlineStore, {
       listeners: this.queueListeners,
       networkStatus: this.networkStatus,
       // TODO this needs to be revisited. What context should the execute function have?
@@ -88,7 +93,7 @@ export class Offix {
    *
    * @param listener
    */
-  public registerOfflineQueueListener(listener: OfflineQueueListener<any>) {
+  public registerOfflineQueueListener(listener: OfflineQueueListener<T>) {
     this.queue.registerOfflineQueueListener(listener);
   }
 
@@ -98,7 +103,7 @@ export class Offix {
    *
    * @param options the MutationHelperOptions to create the mutation
    */
-  public async execute(options: any): Promise<any> {
+  public async execute(options: T): Promise<any> {
     if (this.online) {
       return this.executor.execute(options);
     } else {

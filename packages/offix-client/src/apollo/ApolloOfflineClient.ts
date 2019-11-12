@@ -7,7 +7,7 @@ import {
   OfflineQueue,
   QueueEntryOperation,
   QueueEntry
-} from "offix-offline";
+} from "offix-scheduler";
 import { MutationHelperOptions } from "offix-cache";
 
 /**
