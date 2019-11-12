@@ -5,7 +5,6 @@ import {
   OfflineStore,
   OfflineQueueListener,
   OfflineQueue,
-  IResultProcessor,
   QueueEntryOperation,
   QueueEntry
 } from "offix-offline";
@@ -30,12 +29,6 @@ export type ApolloOfflineStore = OfflineStore<MutationOptions>;
  * ApolloOfflineQueue.
  */
 export type ApolloOfflineQueueListener = OfflineQueueListener<MutationOptions>;
-
-/**
- * A IResultProcessor that specifically deals with the result
- * from ApolloClient.mutate()
- */
-export type ApolloIResultProcessor = IResultProcessor<MutationOptions>;
 
 /**
  * The top level entry held in the ApolloOfflineQueue.

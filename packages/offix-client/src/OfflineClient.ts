@@ -9,13 +9,13 @@ import {
   ApolloOfflineStore,
   ApolloOfflineQueueListener,
   ApolloQueueEntryOperation,
-  ApolloIResultProcessor,
   ApolloOperationSerializer,
   ApolloOfflineClient,
   createCompositeLink,
   addOptimisticResponse,
   removeOptimisticResponse,
-  restoreOptimisticResponse
+  restoreOptimisticResponse,
+  replaceClientGeneratedIDsInQueue
 } from "./apollo/";
 
 import {
@@ -147,7 +147,8 @@ export class OfflineClient {
           addOptimisticResponse(this.apolloClient, operation);
         }
       },
-      onOperationSuccess: (operation: ApolloQueueEntryOperation) => {
+      onOperationSuccess: (operation: ApolloQueueEntryOperation, result: FetchResult) => {
+        replaceClientGeneratedIDsInQueue(this.offix.queue.queue, operation, result);
         if (this.apolloClient) {
           removeOptimisticResponse(this.apolloClient, operation);
         }

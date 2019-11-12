@@ -4,12 +4,10 @@ import { OffixConfig } from "./config/OffixConfig";
 import {
   OfflineStore,
   OfflineQueue,
-  IDProcessor,
   OfflineError,
   NetworkStatus,
   NetworkInfo,
-  OfflineQueueListener,
-  IResultProcessor
+  OfflineQueueListener
 } from "offix-offline";
 
 export interface OffixExecutor {
@@ -64,15 +62,11 @@ export class Offix {
       this.queueListeners.push(this.config.offlineQueueListener);
     }
 
-    // TODO we probably need a generic ID processor included by default???
-    const resultProcessors: Array<IResultProcessor<any>> = [new IDProcessor()];
-
     this.executor = this.config.executor;
 
     this.queue = new OfflineQueue<any>(this.offlineStore, {
       listeners: this.queueListeners,
       networkStatus: this.networkStatus,
-      resultProcessors,
       // TODO this needs to be revisited. What context should the execute function have?
       // Should it be able to access things on the Offix scheduler?
       execute: this.executor.execute.bind(this.executor)
