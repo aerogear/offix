@@ -1,7 +1,7 @@
 import "fake-indexeddb/auto";
 
-import { Offix } from "../src/Offix";
-import { OffixExecutor } from "../src/Offix";
+import { OffixScheduler } from "../src/OffixScheduler";
+import { OffixSchedulerExecutor } from "../src/OffixSchedulerExecutor";
 import { ToggleableNetworkStatus } from "./mock/ToggleableNetworkStatus";
 
 import fetch from "node-fetch";
@@ -24,7 +24,7 @@ afterAll(() => {
 // However there are still lots of things to figure out (such as error handling)
 // Example: fetch does not throw errors for 3xx - 5xx Status Codes
 // You'd have to implement that behaviour to work nicely with Offix
-class FetchExecutor implements OffixExecutor {
+class FetchExecutor implements OffixSchedulerExecutor {
   public baseUrl: string;
   public defaultOptions: RequestInit;
 
@@ -51,7 +51,7 @@ class FetchExecutor implements OffixExecutor {
 
 test("Offix using a HTTP based Executor (online happy path)", async () => {
 
-  const offix = new Offix({
+  const offix = new OffixScheduler({
     executor: new FetchExecutor("http://localhost:5000")
   });
 
@@ -74,7 +74,7 @@ test("Offix using a HTTP based Executor (offline happy path)", async () => {
   const networkStatus = new ToggleableNetworkStatus();
   networkStatus.setOnline(false);
 
-  const offix = new Offix({
+  const offix = new OffixScheduler({
     networkStatus,
     executor: new FetchExecutor("http://localhost:5000")
   });

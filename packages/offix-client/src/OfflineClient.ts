@@ -2,7 +2,7 @@ import { ApolloClient, OperationVariables, MutationOptions } from "apollo-client
 import { OffixClientOptions } from "./config/OffixClientOptions";
 import { OffixClientConfig } from "./config/OffixClientConfig";
 
-import { Offix } from "offix-scheduler";
+import { OffixScheduler } from "offix-scheduler";
 
 import {
   ApolloOfflineQueue,
@@ -79,7 +79,7 @@ export class OfflineClient {
   // The apollo client!
   public apolloClient?: ApolloOfflineClient;
 
-  public offix: Offix<MutationOptions>;
+  public scheduler: OffixScheduler<MutationOptions>;
 
   constructor(userConfig: OffixClientOptions = {}) {
     this.config = new OffixClientConfig(userConfig);
@@ -104,7 +104,7 @@ export class OfflineClient {
       });
     }
 
-    this.offix = new Offix<MutationOptions>({
+    this.scheduler = new OffixScheduler<MutationOptions>({
       executor: this,
       storage: this.config.offlineStorage,
       networkStatus: this.config.networkStatus,
@@ -112,9 +112,9 @@ export class OfflineClient {
       offlineQueueListener: this.config.offlineQueueListener
     });
 
-    this.queue = this.offix.queue;
-    this.networkStatus = this.offix.networkStatus;
-    this.offlineStore = this.offix.offlineStore;
+    this.queue = this.scheduler.queue;
+    this.networkStatus = this.scheduler.networkStatus;
+    this.offlineStore = this.scheduler.offlineStore;
   }
 
   /**
@@ -148,7 +148,7 @@ export class OfflineClient {
         }
       },
       onOperationSuccess: (operation: ApolloQueueEntryOperation, result: FetchResult) => {
-        replaceClientGeneratedIDsInQueue(this.offix.queue.queue, operation, result);
+        replaceClientGeneratedIDsInQueue(this.scheduler.queue.queue, operation, result);
         if (this.apolloClient) {
           removeOptimisticResponse(this.apolloClient, operation);
         }
@@ -164,7 +164,7 @@ export class OfflineClient {
         }
       }
     });
-    await this.offix.init();
+    await this.scheduler.init();
     return this.apolloClient;
   }
 
@@ -189,7 +189,7 @@ export class OfflineClient {
     } else {
 
       const mutationOptions = this.createOfflineMutationOptions(options);
-      return this.offix.execute(mutationOptions as unknown as MutationOptions);
+      return this.scheduler.execute(mutationOptions as unknown as MutationOptions);
     }
   }
 
@@ -199,7 +199,7 @@ export class OfflineClient {
    * @param listener
    */
   public registerOfflineEventListener(listener: ApolloOfflineQueueListener) {
-    this.offix.registerOfflineQueueListener(listener);
+    this.scheduler.registerOfflineQueueListener(listener);
   }
 
   // TODO - does offix-cache actually need createMutationOptions?
@@ -224,7 +224,7 @@ export class OfflineClient {
     apolloClient.offlineStore = this.offlineStore;
     apolloClient.registerOfflineEventListener = this.registerOfflineEventListener.bind(this);
     apolloClient.offlineMutate = this.offlineMutate.bind(this);
-    apolloClient.queue = this.offix.queue;
+    apolloClient.queue = this.scheduler.queue;
     return apolloClient;
   }
 }

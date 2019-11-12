@@ -1,4 +1,5 @@
-export * from "./Offix";
+export { OffixScheduler } from "./OffixScheduler";
+export { OffixSchedulerExecutor } from "./OffixSchedulerExecutor";
 
 export {
   OfflineStore,
