@@ -39,7 +39,7 @@
     "replace": "1.1.1",
     "ts-node": "8.5.0",
     "tslint": "5.20.1",
-    "typedoc": "0.15.0",
+    "typedoc": "0.15.1",
     "typescript": "3.7.2"
   },
   "dependencies": {
