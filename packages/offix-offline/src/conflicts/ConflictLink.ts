@@ -106,8 +106,10 @@ export class ConflictLink extends ApolloLink {
     if (graphQLErrors) {
       for (const err of graphQLErrors) {
         if (err.extensions) {
-          if (err.extensions.exception.conflictInfo) {
-            return err.extensions.exception.conflictInfo;
+          if (err.extensions.exception) {
+            if (err.extensions.exception.conflictInfo) {
+              return err.extensions.exception.conflictInfo;
+            }
           }
         }
       }
