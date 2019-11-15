@@ -105,12 +105,8 @@ export class ConflictLink extends ApolloLink {
   private getConflictData(graphQLErrors?: ReadonlyArray<GraphQLError>): ConflictInfo | undefined {
     if (graphQLErrors) {
       for (const err of graphQLErrors) {
-        if (err.extensions) {
-          if (err.extensions.exception) {
-            if (err.extensions.exception.conflictInfo) {
-              return err.extensions.exception.conflictInfo;
-            }
-          }
+        if (err.extensions && err.extensions.exception && err.extensions.exception.conflictInfo) {
+          return err.extensions.exception.conflictInfo;
         }
       }
     }
