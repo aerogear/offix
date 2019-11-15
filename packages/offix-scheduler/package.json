@@ -28,7 +28,7 @@
     "json-server": "0.15.1",
     "node-fetch": "2.6.0",
     "ts-jest": "24.1.0",
-    "ts-node": "8.5.0",
+    "ts-node": "8.5.2",
     "typescript": "3.7.2"
   },
   "dependencies": {
