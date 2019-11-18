@@ -8,7 +8,7 @@ Offix Scheduler is the core component that delivers the offline queueing and sto
 
 Unlike `offix-client` which provides many features out of the box, `offix-scheduler` provides a lower level set of core functionalities which can be used to build offline experiences.
 
-* Flexible `NetworkStatus` interface for defining when an app is and is not offline.
+* `NetworkStatus` interface for defining when an app is and is not offline.
 * `Executor` interface for defining the operations/behaviour to be scheduled. Example: A HTTP request, sending a message, a GraphQL request.
 * Offline queue mechanism where all operations are scheduled and fulfilled in order.
 * `OfflineQueueListener` functions that are called at various stages in the queue lifecycle. Can be used to extend the queue with additional behaviour.
