@@ -18,9 +18,7 @@ import {
 import { OfflineStore } from "./store";
 
 /**
- * Offix
- *
- * Offix is a scheduler that queues function calls when
+ * OffixScheduler is a scheduler that queues function calls when
  * an application is considered offline and fulfills them
  * later when the app is back online.
  *
@@ -77,7 +75,7 @@ export class OffixScheduler<T> {
   }
 
   /**
-  * Initialize client
+  * Initialize the scheduler
   */
   public async init(): Promise<any> {
     if (this.offlineStore) {
@@ -96,10 +94,10 @@ export class OffixScheduler<T> {
   }
 
   /**
-   * Offline wrapper for apollo mutations. Provide Mutation Helper Options and use
-   * this offline friendly function to handle the optimistic UI and cache updates.
+   * The scheduler execute method. Schedules an operation and its options to be
+   * fulfilled when online
    *
-   * @param options the MutationHelperOptions to create the mutation
+   * @param options the options as expected by the Executor
    */
   public async execute(options: T): Promise<any> {
     if (this.online) {
