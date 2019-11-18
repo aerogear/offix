@@ -1,6 +1,6 @@
 {
   "docs": {
-    "Getting Started": [
+    "Offix Client": [
       "getting-started",
       "client-configuration",
       "offline-client",
@@ -8,6 +8,9 @@
       "conflict-client",
       "conflict-server",
       "release-notes"
+    ],
+    "Offix Scheduler": [
+      "offix-scheduler-introduction"
     ]
   }
 }
