@@ -1,6 +1,6 @@
 {
   "name": "conflict-examples",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "private": true,
   "description": "",
   "scripts": {
@@ -13,7 +13,7 @@
     "express": "^4.16.4",
     "graphql": "0.13.2",
     "graphql-tools": "^4.0.3",
-    "offix-conflicts-server": "0.9.0"
+    "offix-conflicts-server": "0.10.0"
   },
   "devDependencies": {
     "@types/graphql": "^14.0.3",

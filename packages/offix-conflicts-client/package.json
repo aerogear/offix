@@ -1,6 +1,6 @@
 {
   "name": "offix-conflicts-client",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "adds client side conflict detection and resolution",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -17,7 +17,6 @@
     "ts-node": "8.5.0",
     "typescript": "3.7.2"
   },
-  "dependencies": {},
   "peerDependencies": {
     "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0"
   },

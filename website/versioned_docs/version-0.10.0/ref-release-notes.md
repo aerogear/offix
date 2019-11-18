@@ -1,7 +1,8 @@
 ---
-id: release-notes
+id: version-0.10.0-release-notes
 title: What is new in Offix
 sidebar_label: Release notes
+original_id: release-notes
 ---
 
 # 0.10.0
