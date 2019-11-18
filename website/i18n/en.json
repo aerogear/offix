@@ -34,6 +34,10 @@
         "title": "Server Side Conflict Resolution",
         "sidebar_label": "Conflict Server"
       },
+      "offix-scheduler-introduction": {
+        "title": "Offix Scheduler Introduction",
+        "sidebar_label": "Introduction"
+      },
       "offline-client": {
         "title": "Offline Support",
         "sidebar_label": "Offline Client"
@@ -96,6 +100,8 @@
       "Github": "Github"
     },
     "categories": {
+      "Offix Client": "Offix Client",
+      "Offix Scheduler": "Offix Scheduler",
       "Getting Started": "Getting Started"
     }
   },
