@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@types/mocha": "5.2.7",
-    "@types/node": "12.12.8"
+    "@types/node": "12.12.9"
   },
   "nyc": {
     "extension": [
