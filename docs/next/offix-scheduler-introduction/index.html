@@ -1,0 +1,130 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Offix Scheduler Introduction · Offix</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="Offix Scheduler is the core component that delivers the offline queueing and storage in packages such as `offix-client`. The scheduler can be used in an application directly to build offline workflows, or it can be as the foundation to build new packages and clients with offline functionality."/><meta name="docsearch:version" content="next"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Offix Scheduler Introduction · Offix"/><meta property="og:type" content="website"/><meta property="og:url" content="https://offix.dev/"/><meta property="og:description" content="Offix Scheduler is the core component that delivers the offline queueing and storage in packages such as `offix-client`. The scheduler can be used in an application directly to build offline workflows, or it can be as the foundation to build new packages and clients with offline functionality."/><meta property="og:image" content="https://offix.dev/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://offix.dev/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/offix-logo.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/offix-logo.png" alt="Offix"/><h2 class="headerTitleWithLogo">Offix</h2></a><a href="/versions"><h3>next</h3></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/docs/next/getting-started" target="_self">Documentation</a></li><li class=""><a href="https://github.com/aerogear/offix" target="_self">Github</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Offix Scheduler</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Offix Client</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/next/getting-started">Getting Started</a></li><li class="navListItem"><a class="navItem" href="/docs/next/client-configuration">Client Configuration</a></li><li class="navListItem"><a class="navItem" href="/docs/next/offline-client">Offline Client</a></li><li class="navListItem"><a class="navItem" href="/docs/next/offix-cache">Client Cache</a></li><li class="navListItem"><a class="navItem" href="/docs/next/conflict-client">Conflicts Client</a></li><li class="navListItem"><a class="navItem" href="/docs/next/conflict-server">Conflict Server</a></li><li class="navListItem"><a class="navItem" href="/docs/next/release-notes">Release notes</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Offix Scheduler</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/docs/next/offix-scheduler-introduction">Introduction</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">Offix Scheduler Introduction</h1></header><article><div><span><p>Offix Scheduler is the core component that delivers the offline queueing and storage in packages such as <code>offix-client</code>. The scheduler can be used in an application directly to build offline workflows, or it can be as the foundation to build new packages and clients with offline functionality.</p>
+<p>Unlike <code>offix-client</code> which provides many features out of the box, <code>offix-scheduler</code> provides a lower level set of core functionalities which can be used to build offline experiences.</p>
+<ul>
+<li><code>NetworkStatus</code> interface for defining when an app is and is not offline.</li>
+<li><code>Executor</code> interface for defining the operations/behaviour to be scheduled. Example: A HTTP request, sending a message, a GraphQL request.</li>
+<li>Offline queue mechanism where all operations are scheduled and fulfilled in order.</li>
+<li><code>OfflineQueueListener</code> functions that are called at various stages in the queue lifecycle. Can be used to extend the queue with additional behaviour.</li>
+<li>Offline storage mechanism for persisting operations in the queue and restoring them after application restarts.</li>
+</ul>
+<p>See <a href="/docs/next/getting-started">Offix-Client</a> for a fully featured implementation that uses the Offix Scheduler.</p>
+<h2><a class="anchor" aria-hidden="true" id="installation"></a><a href="#installation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Installation</h2>
+<p>Using <a href="https://www.npmjs.com/package/offix-scheduler">npm</a>:</p>
+<pre><code class="hljs css language-shell">npm install offix-scheduler
+</code></pre>
+<p>Or <a href="https://yarnpkg.com/en/package/offix-scheduler">yarn</a>:</p>
+<pre><code class="hljs css language-shell">yarn add offix-scheduler
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="getting-started-example"></a><a href="#getting-started-example" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Getting Started Example</h2>
+<p>This example shows how <code>offix-scheduler</code> could be used to schedule HTTP Requests using the <code>fetch</code> API found in most browsers.</p>
+<h3><a class="anchor" aria-hidden="true" id="executor"></a><a href="#executor" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Executor</h3>
+<p>An <code>Executor</code> is a class or an object with an <code>execute</code> method that will be called by the scheduler. This is the core operation/behaviour to be scheduled while offline. In this example we will define a <code>FetchExecutor</code> class that can make requests using <code>fetch</code>.</p>
+<pre><code class="hljs css language-js"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FetchExecutor</span> </span>{
+  <span class="hljs-comment">// You could pass in some state and initialize it within the constructor</span>
+  <span class="hljs-keyword">constructor</span>() {}
+
+  <span class="hljs-comment">// The execute function where the http request is made</span>
+  <span class="hljs-comment">// options is an object which can contain any properties</span>
+  <span class="hljs-comment">// you wish to pass in.</span>
+  public <span class="hljs-keyword">async</span> execute(options) {
+
+    <span class="hljs-comment">// in this example options will have a url and a body</span>
+    <span class="hljs-keyword">const</span> { url, body } = options;
+
+    <span class="hljs-comment">// make the request</span>
+    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> fetch(url, {
+      <span class="hljs-attr">method</span>: <span class="hljs-string">"post"</span>,
+      <span class="hljs-attr">headers</span>: { <span class="hljs-string">"Content-Type"</span>: <span class="hljs-string">"application/json"</span> },
+      <span class="hljs-attr">body</span>: <span class="hljs-built_in">JSON</span>.stringify(body)
+    });
+
+    <span class="hljs-comment">// return the result</span>
+    <span class="hljs-keyword">return</span> res.json();
+  }
+}
+</code></pre>
+<p>The <code>execute</code> method defines the business logic to be scheduled. In this example, we're scheduling HTTP <code>POST</code> requests using the <code>fetch</code> API. <code>execute</code> accepts an <code>options</code> object which can contain any properties needed to perform the operation. In this case <code>execute</code> expects the options to have a <code>url</code> which is where we will send the request and a <code>body</code> which will be the body of the request.</p>
+<p>This example is simplified as a realistic example would likely need to handle more options and also various error cases.</p>
+<h3><a class="anchor" aria-hidden="true" id="initialize-the-offixscheduler"></a><a href="#initialize-the-offixscheduler" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Initialize the <code>OffixScheduler</code></h3>
+<p>The example below shows how to initialize the <code>OffixScheduler</code> with the <code>Executor</code> we defined above.</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">const</span> offix = <span class="hljs-keyword">new</span> OffixScheduler({
+  <span class="hljs-attr">executor</span>: <span class="hljs-keyword">new</span> FetchExecutor()
+});
+
+<span class="hljs-keyword">await</span> offix.init();
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="schedule-an-operation"></a><a href="#schedule-an-operation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Schedule an Operation</h3>
+<p>To schedule an operation, call <code>execute</code> on the scheduler and pass down any options needed by the <code>Executor</code>.</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">try</span> {
+  <span class="hljs-comment">// if online the result is immediately returned</span>
+  <span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> offix.execute({
+    <span class="hljs-attr">url</span>: <span class="hljs-string">"http://example.com/tasks"</span>,
+    <span class="hljs-attr">body</span>: {
+      <span class="hljs-attr">title</span>: <span class="hljs-string">"A New Task!"</span>,
+      <span class="hljs-attr">description</span>: <span class="hljs-string">"This was created by Offix Scheduler"</span>
+    }
+  });
+} <span class="hljs-keyword">catch</span> (err) {
+  <span class="hljs-comment">// check if an offline error occurred and wait for the result.</span>
+  <span class="hljs-keyword">if</span> (err.offline) {
+    <span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> err.watchOfflineChange();
+  }
+}
+</code></pre>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/next/release-notes"><span class="arrow-prev">← </span><span>Release notes</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#installation">Installation</a></li><li><a href="#getting-started-example">Getting Started Example</a><ul class="toc-headings"><li><a href="#executor">Executor</a></li><li><a href="#initialize-the-offixscheduler">Initialize the <code>OffixScheduler</code></a></li><li><a href="#schedule-an-operation">Schedule an Operation</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2019 Offix Contributors</section></footer></div></body></html>
