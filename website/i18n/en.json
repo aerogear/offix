@@ -50,6 +50,14 @@
         "title": "Support",
         "sidebar_label": "Support"
       },
+      "version-0.10.0/version-0.10.0-offix-scheduler-introduction": {
+        "title": "Offix Scheduler Introduction",
+        "sidebar_label": "Introduction"
+      },
+      "version-0.10.0/version-0.10.0-release-notes": {
+        "title": "What is new in Offix",
+        "sidebar_label": "Release notes"
+      },
       "version-0.8.2/version-0.8.2-getting-started": {
         "title": "Getting Started",
         "sidebar_label": "Getting Started"
