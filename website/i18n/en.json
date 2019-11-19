@@ -42,6 +42,10 @@
         "title": "Offline Support",
         "sidebar_label": "Offline Client"
       },
+      "react-offix-hooks": {
+        "title": "React Offix Hooks",
+        "sidebar_label": "React Offix Hooks"
+      },
       "release-notes": {
         "title": "What is new in Offix",
         "sidebar_label": "Release notes"
@@ -109,6 +113,7 @@
     },
     "categories": {
       "Offix Client": "Offix Client",
+      "React": "React",
       "Offix Scheduler": "Offix Scheduler",
       "Getting Started": "Getting Started"
     }
