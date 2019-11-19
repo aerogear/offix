@@ -8,6 +8,8 @@ The Apollo Client that `OfflineClient` provides is compatible with all of the of
 
 The `react-offix-hooks` library makes provides an additional `useOfflineMutation` React hook which lets you perform offline mutations.
 
+**Note:** `react-offix-hooks` is experimental. Feel free to try it and please [log any issues](https://github.com/aerogear/offix/issues/new/choose) to help us improve it.
+
 ## App Initialization
 
 In a normal React application that uses Apollo Client, the client would be created at startup and the root component is wrapped with `ApolloProvider`.
