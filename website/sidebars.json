@@ -9,6 +9,9 @@
       "conflict-server",
       "release-notes"
     ],
+    "React": [
+      "react-offix-hooks"
+    ],
     "Offix Scheduler": [
       "offix-scheduler-introduction"
     ]
