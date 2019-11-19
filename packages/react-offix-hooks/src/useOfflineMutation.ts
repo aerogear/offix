@@ -70,7 +70,7 @@ const getInitialState = (): MutationResult<any> => ({
 });
 
 function isOfflineError(error: any) {
-  return (error.networkError && error.networkError.offline);
+  return (error.offline);
 }
 
 export function useOfflineMutation<TData, TVariables = OperationVariables>(
@@ -132,13 +132,11 @@ export function useOfflineMutation<TData, TVariables = OperationVariables>(
     Promise<ExecutionResult<TData>> => {
     return new Promise((resolve, reject) => {
       if (isMostRecentMutation(mutationId)) {
-        const offlineError = error.networkError as any;
-
         mergeResult({
           calledWhileOffline: true,
           mutationVariables
         });
-        offlineError.watchOfflineChange().then((mutationResult: any) => {
+        error.watchOfflineChange().then((mutationResult: any) => {
           mergeResult({
             offlineChangeReplicated: true,
             data: mutationResult.data,
