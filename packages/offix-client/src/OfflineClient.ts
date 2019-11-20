@@ -136,11 +136,8 @@ export class OfflineClient {
 
     const link = await createCompositeLink(this.config, conflictLink);
 
-    const client = new ApolloClient({
-      link,
-      cache: this.cache
-    });
-
+    this.createApolloClient(link, cache);
+  
     this.apolloClient = this.decorateApolloClient(client);
 
     // Optimistic Responses
@@ -169,6 +166,17 @@ export class OfflineClient {
     });
     await this.scheduler.init();
     return this.apolloClient;
+  }
+  
+  /**
+  * Developers can extend and replace this function to inject extra parameters
+  * into the ApolloClient instance
+  */
+  protected createApolloClient(link: ApolloLink, cache: InMemoryCache){
+    const client = new ApolloClient({
+      link,
+      cache: this.cache
+    });
   }
 
   public async execute(options: MutationOptions) {
