@@ -1,4 +1,7 @@
-import { ConflictLink } from "../../../src/apollo/conflicts/ConflictLink";
+import {
+  ConflictLink,
+  ConflictInfo
+} from "../../../src/apollo/conflicts/ConflictLink";
 import { GraphQLError } from "graphql";
 import { VersionedState } from "offix-conflicts-client";
 
@@ -32,6 +35,12 @@ test("get conflict error from graphql error with generic extensions", () => {
 });
 
 test("get conflict error from conflict error", () => {
+  const conflictInfo: ConflictInfo = {
+    serverState: {},
+    clientState: {},
+    returnType: "MyType"
+  };
+
   const link = newConflictLink();
   const result = link.getConflictData([
     new GraphQLError("some other errors"),
@@ -42,12 +51,8 @@ test("get conflict error from conflict error", () => {
       undefined,
       undefined,
       undefined,
-      {
-        exception: {
-          conflictInfo: {}
-        }
-      }
+      { exception: { conflictInfo } }
     )
   ]);
-  expect(result).toEqual({});
+  expect(result).toEqual(conflictInfo);
 });
