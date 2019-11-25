@@ -84,7 +84,7 @@ export class OfflineClient {
 
   public scheduler: OffixScheduler<MutationOptions>;
 
-  constructor(userConfig: OffixClientOptions = {}) {
+  constructor(userConfig: OffixClientOptions = {} as any) {
     this.config = new OffixClientConfig(userConfig);
 
     if (this.config.cache) {
@@ -136,7 +136,10 @@ export class OfflineClient {
 
     const link = await createCompositeLink(this.config, conflictLink);
 
-    this.createApolloClient(link, cache);
+    const client = new ApolloClient({
+      link,
+      cache: this.cache
+    });
   
     this.apolloClient = this.decorateApolloClient(client);
 
@@ -166,17 +169,6 @@ export class OfflineClient {
     });
     await this.scheduler.init();
     return this.apolloClient;
-  }
-  
-  /**
-  * Developers can extend and replace this function to inject extra parameters
-  * into the ApolloClient instance
-  */
-  protected createApolloClient(link: ApolloLink, cache: InMemoryCache){
-    const client = new ApolloClient({
-      link,
-      cache: this.cache
-    });
   }
 
   public async execute(options: MutationOptions) {

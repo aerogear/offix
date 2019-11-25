@@ -14,7 +14,8 @@ import { createDefaultCacheStorage } from "../cache";
 import { ApolloLink } from "apollo-link";
 import { CacheUpdates } from "offix-cache";
 import { ApolloOfflineQueueListener } from "../apollo";
-import { InMemoryCache } from "apollo-cache-inmemory";
+import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
+import ApolloClient from "apollo-client";
 
 /**
  * Class for managing user and default configuration.
@@ -31,7 +32,8 @@ export class OffixClientConfig implements OffixClientOptions {
   public offlineStorage?: PersistentStore<PersistedData>;
   public conflictListener?: ConflictListener;
   public mutationCacheUpdates?: CacheUpdates;
-  public cache?: InMemoryCache;
+  public createApolloClient?: () => ApolloClient<NormalizedCacheObject>;
+  public cache: any;
 
   public retryOptions = {
     delay: {

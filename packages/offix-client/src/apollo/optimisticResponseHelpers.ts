@@ -1,8 +1,10 @@
-import { ApolloOfflineClient, ApolloQueueEntry, ApolloQueueEntryOperation } from "./ApolloOfflineClient";
+import { ApolloQueueEntry, ApolloQueueEntryOperation } from "./ApolloOfflineClient";
 import { CacheUpdates, isClientGeneratedId } from "offix-cache";
 import { FetchResult } from "apollo-link";
+import ApolloClient from "apollo-client";
+import { NormalizedCacheObject } from "apollo-cache-inmemory";
 
-export function addOptimisticResponse(apolloClient: ApolloOfflineClient, { op, qid }: ApolloQueueEntryOperation) {
+export function addOptimisticResponse(apolloClient: ApolloClient<NormalizedCacheObject>, { op, qid }: ApolloQueueEntryOperation) {
   apolloClient.store.markMutationInit({
     mutationId: qid,
     document: op.mutation,
@@ -14,7 +16,7 @@ export function addOptimisticResponse(apolloClient: ApolloOfflineClient, { op, q
   apolloClient.queryManager.broadcastQueries();
 }
 
-export function removeOptimisticResponse(apolloClient: ApolloOfflineClient, { op, qid }: ApolloQueueEntryOperation) {
+export function removeOptimisticResponse(apolloClient: ApolloClient<NormalizedCacheObject>, { op, qid }: ApolloQueueEntryOperation) {
   apolloClient.store.markMutationComplete({
     mutationId: qid,
     optimisticResponse: op.optimisticResponse
@@ -23,7 +25,7 @@ export function removeOptimisticResponse(apolloClient: ApolloOfflineClient, { op
 }
 
 export function restoreOptimisticResponse(
-  apolloClient: ApolloOfflineClient,
+  apolloClient: ApolloClient<NormalizedCacheObject>,
   mutationCacheUpdates: CacheUpdates,
   { op, qid }: ApolloQueueEntryOperation) {
   if (op.context.operationName && mutationCacheUpdates[op.context.operationName]) {

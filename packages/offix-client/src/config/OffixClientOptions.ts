@@ -11,7 +11,8 @@ import { CacheUpdates } from "offix-cache";
 import { RetryLink } from "apollo-link-retry";
 import { ApolloLink } from "apollo-link";
 import { ApolloOfflineQueueListener } from "../apollo";
-import { InMemoryCache } from "apollo-cache-inmemory";
+import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
+import ApolloClient, { ApolloClientOptions } from "apollo-client";
 
 /**
  * Contains all configuration options required to initialize Voyager Client
@@ -21,7 +22,7 @@ import { InMemoryCache } from "apollo-cache-inmemory";
  * Please refer to documentation for more information about the individual flag and it's side effects.
  *
  */
-export interface OffixClientOptions {
+export interface OffixClientOptions extends ApolloClientOptions<NormalizedCacheObject> {
 
   /**
    * The URL of http server that will be used to initialize default http link
@@ -37,17 +38,35 @@ export interface OffixClientOptions {
 
   /**
    * [Modifier]
-   *
-   * The storage you want your client to use (Uses window.localStorage by default)
+   * user defined function that initializes and returns an Apollo Client.
+   * the httpUrl, terminatingLink, cache, and retryOptions are ignored
+   * if this is passed
    */
-  storage?: PersistentStore<PersistedData>;
+  createApolloClient?: () => ApolloClient<NormalizedCacheObject>;
 
   /**
    * [Modifier]
    *
-   * The Apollo InMemoryCache you want your client to use. (Uses a default one if none provided)
+   * The storage you want your client to use for the cache
+   * Uses window.localStorage by default
    */
-  cache?: InMemoryCache;
+  cacheStore?: PersistentStore<PersistedData>;
+
+  /**
+   * [Modifier]
+   *
+   * The storage you want your client to use for offline operations
+   * Uses window.localStorage by default
+   */
+  offlineStore?: PersistentStore<PersistedData>;
+
+  /**
+   * [Modifier]
+   *
+   * The storage you want your client to use for offline operations
+   * Uses window.localStorage by default
+   */
+  storage?: PersistentStore<PersistedData>;
 
   /**
    * [Modifier]
