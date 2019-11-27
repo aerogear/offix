@@ -3,7 +3,7 @@ import {
   PersistentStore,
   createDefaultOfflineStorage
 } from "offix-scheduler";
-import { ApolloOfflineClientOptions } from "./ApolloOfflineClientoptions";
+import { ApolloOfflineClientOptions } from "./ApolloOfflineClientOptions";
 import { NetworkStatus } from "offix-offline";
 import {
   ConflictResolutionStrategy,
