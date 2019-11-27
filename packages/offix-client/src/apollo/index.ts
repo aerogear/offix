@@ -1,4 +1,4 @@
-export * from "./ApolloOfflineClient";
+export * from "./ApolloOfflineTypes";
 export * from "./ApolloOperationSerializer";
 export * from "./LinksBuilder";
 export * from "./optimisticResponseHelpers";

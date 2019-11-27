@@ -1,7 +1,6 @@
 // polyfills that let us test in node
 import "fake-indexeddb/auto";
-// import "cross-fetch/polyfill";
-import 'whatwg-fetch'
+import "cross-fetch/polyfill";
 
 import { HttpLink } from "apollo-link-http";
 import { ApolloOfflineClient, ApolloOfflineQueueListener } from "../src";
