@@ -8,21 +8,21 @@ https://offix.dev
 
 # API
 
-## OffixProvider
+## ApolloOfflineProvider
 
 ```javascript
 import React from 'react'
 import { render } from 'react-dom';
 
-import { OfflineClient } from 'offix-client'
-import { OffixProvider } from 'react-offix-hooks'
+import { ApolloOfflineClient } from 'offix-client'
+import { ApolloOfflineProvider } from 'react-offix-hooks'
 
-const offixClient = new OfflineClient(config)
+const client = new ApolloOfflineClient(config)
 
 const App = () => (
-  <OffixProvider client={offixClient}>
+  <ApolloOfflineProvider client={client}>
     <MyRootComponent/>
-  </OffixProvider>
+  </ApolloOfflineProvider>
 )
 
 render(<App />, document.getElementById('root'))
@@ -35,26 +35,26 @@ import React, { useState, useEffect } from 'react'
 import { render } from 'react-dom';
 
 import { OfflineClient } from 'offix-client'
-import { OffixProvider } from 'react-offix-hooks'
+import { ApolloOfflineProvider } from 'react-offix-hooks'
 import { ApolloProvider } from 'react-apollo-hooks'
 
-const offixClient = new OfflineClient(clientConfig)
+const client = new ApolloOfflineClient(clientConfig)
 
 const App = () => {
-  const [apolloClient, setApolloClient] = useState(null)
+  const [initialized, setInitialized] = useState(false)
 
-  // initialize the offix client and set the apollo client
+  // initialize the offix client
   useEffect(() => {
-    offixClient.init().then(setApolloClient)
+    client.init().then(() => setInitialized(true))
   }, [])
 
-  if (apolloClient) {
+  if (initialized) {
     return (
-      <OffixProvider client={offixClient}>
+      <ApolloOfflineProvider client={client}>
         <ApolloProvider client={apolloClient}>
           <MyRootComponent/>
         </ApolloProvider>
-      </OffixProvider>
+      </ApolloOfflineProvider>
     )
   }
   return <h2>Loading...</h2>
