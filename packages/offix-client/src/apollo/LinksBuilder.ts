@@ -31,7 +31,7 @@ function createDefaultLink(config: ApolloOfflineClientConfig) {
     if (!config.httpUrl) {
       throw new ConfigError("Missing url", "httpUrl");
     }
-    terminatingLink = new HttpLink({ uri: config.httpUrl })
+    terminatingLink = new HttpLink({ uri: config.httpUrl });
   }
 
   const links: ApolloLink[] = [conflictLink, retryLink, terminatingLink];

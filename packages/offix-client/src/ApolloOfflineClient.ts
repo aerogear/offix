@@ -26,22 +26,30 @@ import { ApolloOfflineClientConfig } from "./config/ApolloOfflineClientConfig";
 
 export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
 
+  // wrapper around the apollo cache for persisting it across restarts
   public persistor: CachePersistor<object>;
+  // the offix scheduler
   public scheduler: OffixScheduler<MutationOptions>;
+  // the offline storage interface that persists offline data across restarts
   public offlineStore?: ApolloOfflineStore;
+  // interface that performs conflict detection and resolution
   public conflictProvider: ObjectState;
   // the network status interface that determines online/offline state
   public networkStatus: NetworkStatus;
   // the in memory queue that holds offline data
   public queue: ApolloOfflineQueue;
+  // cache update functions for mutations. Used to restore optimistic responses after restarts
   public mutationCacheUpdates?: CacheUpdates;
+  // true after client is initialized
+  public initialized: boolean;
 
   constructor(options: ApolloOfflineClientOptions) {
     const config = new ApolloOfflineClientConfig(options);
     super(config);
 
+    this.initialized = false;
     this.mutationCacheUpdates = config.mutationCacheUpdates;
-    this.conflictProvider = config.conflictProvider || new VersionedState();
+    this.conflictProvider = config.conflictProvider;
 
     this.persistor = new CachePersistor({
       cache: this.cache,
@@ -88,6 +96,7 @@ export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
       }
     });
     await this.scheduler.init();
+    this.initialized = true;
   }
 
   public async execute(options: MutationOptions) {
@@ -96,8 +105,11 @@ export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
 
   public async offlineMutate<T = any, TVariables = OperationVariables>(
     options: MutationHelperOptions<T, TVariables>): Promise<FetchResult<T>> {
-    const mutationOptions = this.createOfflineMutationOptions(options);
-    return this.scheduler.execute(mutationOptions as unknown as MutationOptions);
+      if (!this.initialized) {
+        throw new Error("cannot call client.offlineMutate until client is initialized");
+      }
+      const mutationOptions = this.createOfflineMutationOptions(options);
+      return this.scheduler.execute(mutationOptions as unknown as MutationOptions);
   }
 
   /**

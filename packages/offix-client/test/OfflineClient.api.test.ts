@@ -26,7 +26,7 @@ test("OfflineClient using terminatingLink", async () => {
 });
 
 test("ApolloOfflineClient throws when invalid config is given", async () => {
-  //@ts-ignore
+  // @ts-ignore
   expect(() => new ApolloOfflineClient()).toThrow("Missing url");
 });
 
