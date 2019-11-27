@@ -94,7 +94,23 @@ module.exports = {
   // preset: null,
 
   // Run tests from one or more projects
-  // projects: null,
+  projects: [
+    {
+      displayName: "unit",
+      testMatch: ["<rootDir>/test/**/*.test.ts"],
+      transform: {
+        '^.+\\.tsx?$': 'ts-jest',
+      },
+    },
+    {
+      displayName: "integration",
+      testMatch: ["**/integrationTest/*.test.ts"],
+      maxConcurrency: 1,
+      transform: {
+        '^.+\\.tsx?$': 'ts-jest',
+      },
+    }
+  ],
 
   // Use this configuration option to add custom reporters to Jest
   // reporters: undefined,
@@ -142,7 +158,7 @@ module.exports = {
 
   // The glob patterns Jest uses to detect test files
   testMatch: [
-    "**/test/*.test.ts",
+    // "**/test/*.test.ts",
     // "**/test/integration/*.test.ts"
     // "**/__tests__/**/*.[jt]s?(x)",
     // "**/?(*.)+(spec|test).[tj]s?(x)"
@@ -169,9 +185,9 @@ module.exports = {
   // timers: "real",
 
   // A map from regular expressions to paths to transformers
-  transform: {
-    '^.+\\.tsx?$': 'ts-jest',
-  },
+  // transform: {
+  //   '^.+\\.tsx?$': 'ts-jest',
+  // },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   // transformIgnorePatterns: [
