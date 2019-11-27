@@ -23,18 +23,18 @@ function createDefaultLink(config: ApolloOfflineClientConfig) {
     conflictStrategy: config.conflictStrategy
   });
 
-  const links: ApolloLink[] = [conflictLink];
   const retryLink = ApolloLink.split(isMarkedOffline, new RetryLink(config.retryOptions));
-  links.push(retryLink);
 
-  if (config.terminatingLink) {
-    links.push(config.terminatingLink);
-  } else if (config.httpUrl) {
-    const httpLink = new HttpLink({ uri: config.httpUrl }) as ApolloLink;
-    links.push(httpLink);
-  } else {
-    throw new ConfigError("Missing url", "httpUrl");
+  let terminatingLink = config.terminatingLink;
+
+  if (!terminatingLink) {
+    if (!config.httpUrl) {
+      throw new ConfigError("Missing url", "httpUrl");
+    }
+    terminatingLink = new HttpLink({ uri: config.httpUrl })
   }
+
+  const links: ApolloLink[] = [conflictLink, retryLink, terminatingLink];
 
   return ApolloLink.from(links);
 }
