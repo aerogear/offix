@@ -22,7 +22,7 @@ import ApolloClient, { ApolloClientOptions } from "apollo-client";
  * Please refer to documentation for more information about the individual flag and it's side effects.
  *
  */
-export interface OffixClientOptions extends ApolloClientOptions<NormalizedCacheObject> {
+export interface ApolloOfflineClientOptions extends ApolloClientOptions<NormalizedCacheObject> {
 
   /**
    * The URL of http server that will be used to initialize default http link

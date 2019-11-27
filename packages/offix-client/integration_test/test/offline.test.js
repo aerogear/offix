@@ -1,9 +1,10 @@
-import { createClient } from '../../dist'
+import { ApolloOfflineClient } from '../../dist'
 import { createOptimisticResponse, CacheOperation } from 'offix-cache';
 import { TestStore } from '../utils/testStore';
 import { ToggleableNetworkStatus } from '../utils/network';
 import server from '../utils/server';
 import { ADD_TASK, GET_TASKS, UPDATE_TASK, DELETE_TASK } from '../utils/graphql.queries';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 
 function wait(time) {
   return new Promise((resolve, reject) => {
@@ -25,10 +26,13 @@ const newClient = async (clientOptions = {}) => {
   const config = {
     httpUrl: "http://localhost:4000/graphql",
     wsUrl: "ws://localhost:4000/graphql",
+    cache: new InMemoryCache(),
     ...clientOptions
   };
 
-  return await createClient(config);
+  const client = new ApolloOfflineClient(config);
+  await client.init()
+  return client
 };
 
 describe('Offline mutations', function () {

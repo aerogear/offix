@@ -1,10 +1,9 @@
-import ApolloClient, { ApolloClientOptions, MutationOptions, OperationVariables } from "apollo-client";
+import ApolloClient, { MutationOptions, OperationVariables } from "apollo-client";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
 import { PersistedData, PersistentStore, OffixScheduler, createDefaultOfflineStorage } from "offix-scheduler";
 import { CachePersistor } from "apollo-cache-persist";
 import { MutationHelperOptions, CacheUpdates, createMutationOptions } from "offix-cache";
 import { FetchResult } from "apollo-link";
-import { OffixClientOptions } from "./config/OffixClientOptions";
 import { createDefaultCacheStorage } from "./cache";
 import {
   ApolloOperationSerializer,
@@ -17,50 +16,53 @@ import {
   ApolloQueueEntryOperation,
   ApolloOfflineQueueListener,
   getBaseStateFromCache,
-  ApolloCacheWithData
+  ApolloCacheWithData,
+  createDefaultLink
 } from "./apollo";
 import { NetworkStatus } from "offix-offline";
 import { ObjectState, VersionedState } from "offix-conflicts-client";
+import { ApolloOfflineClientOptions } from "./config/ApolloOfflineClientOptions";
+import { ApolloOfflineClientConfig } from "./config/ApolloOfflineClientConfig";
 
 export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
 
   public persistor: CachePersistor<object>;
   public scheduler: OffixScheduler<MutationOptions>;
-  public cacheStore: PersistentStore<PersistedData>;
   public offlineStore?: ApolloOfflineStore;
   public conflictProvider: ObjectState;
   // the network status interface that determines online/offline state
   public networkStatus: NetworkStatus;
   // the in memory queue that holds offline data
   public queue: ApolloOfflineQueue;
- public mutationCacheUpdates?: CacheUpdates;
+  public mutationCacheUpdates?: CacheUpdates;
 
-  constructor(config: OffixClientOptions) {
+  constructor(options: ApolloOfflineClientOptions) {
+    const config = new ApolloOfflineClientConfig(options);
     super(config);
+
     this.mutationCacheUpdates = config.mutationCacheUpdates;
     this.conflictProvider = config.conflictProvider || new VersionedState();
 
-    this.cacheStore = config.cacheStore || createDefaultCacheStorage();
-      this.persistor = new CachePersistor({
-        cache: this.cache,
-        serialize: false,
-        storage: this.cacheStore,
-        maxSize: false,
-        debug: false
-      });
+    this.persistor = new CachePersistor({
+      cache: this.cache,
+      serialize: false,
+      storage: config.cacheStorage,
+      maxSize: false,
+      debug: false
+    });
 
-      this.scheduler = new OffixScheduler<MutationOptions>({
-        executor: this,
-        storage: config.offlineStore,
-        networkStatus: config.networkStatus,
-        serializer: ApolloOperationSerializer,
-        offlineQueueListener: config.offlineQueueListener
-      });
+    this.scheduler = new OffixScheduler<MutationOptions>({
+      executor: this,
+      storage: config.offlineStorage,
+      networkStatus: config.networkStatus,
+      serializer: ApolloOperationSerializer,
+      offlineQueueListener: config.offlineQueueListener
+    });
 
-      this.queue = this.scheduler.queue;
-      this.networkStatus = this.scheduler.networkStatus;
-      this.offlineStore = this.scheduler.offlineStore;
-    }
+    this.queue = this.scheduler.queue;
+    this.networkStatus = this.scheduler.networkStatus;
+    this.offlineStore = this.scheduler.offlineStore;
+  }
 
   public async init() {
     if (this.persistor) {
@@ -70,14 +72,14 @@ export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
     // Optimistic Responses
     this.queue.registerOfflineQueueListener({
       onOperationEnqueued: (operation: ApolloQueueEntryOperation) => {
-          addOptimisticResponse(this, operation);
+        addOptimisticResponse(this, operation);
       },
       onOperationSuccess: (operation: ApolloQueueEntryOperation, result: FetchResult) => {
         replaceClientGeneratedIDsInQueue(this.scheduler.queue.queue, operation, result);
-          removeOptimisticResponse(this, operation);
+        removeOptimisticResponse(this, operation);
       },
       onOperationFailure: (operation: ApolloQueueEntryOperation, error) => {
-          removeOptimisticResponse(this, operation);
+        removeOptimisticResponse(this, operation);
       },
       onOperationRequeued: (operation: ApolloQueueEntryOperation) => {
         if (this.mutationCacheUpdates) {
@@ -85,6 +87,7 @@ export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
         }
       }
     });
+    await this.scheduler.init();
   }
 
   public async execute(options: MutationOptions) {
@@ -93,8 +96,8 @@ export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
 
   public async offlineMutate<T = any, TVariables = OperationVariables>(
     options: MutationHelperOptions<T, TVariables>): Promise<FetchResult<T>> {
-      const mutationOptions = this.createOfflineMutationOptions(options);
-      return this.scheduler.execute(mutationOptions as unknown as MutationOptions);
+    const mutationOptions = this.createOfflineMutationOptions(options);
+    return this.scheduler.execute(mutationOptions as unknown as MutationOptions);
   }
 
   /**

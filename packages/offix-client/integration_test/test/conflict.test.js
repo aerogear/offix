@@ -1,6 +1,7 @@
-import { createClient } from '../../dist';
+import { ApolloOfflineClient } from '../../dist';
 import { TestStore } from '../utils/testStore';
 import { ToggleableNetworkStatus } from '../utils/network';
+import { InMemoryCache } from "apollo-cache-inmemory";
 import server from '../utils/server';
 import {
   ADD_TASK,
@@ -18,10 +19,13 @@ const newClient = async (clientOptions = {}) => {
   const config = {
     httpUrl: "http://localhost:4000/graphql",
     wsUrl: "ws://localhost:4000/graphql",
+    cache: new InMemoryCache(),
     ...clientOptions
   };
 
-  return await createClient(config);
+  const client = new ApolloOfflineClient(config);
+  await client.init()
+  return client
 };
 
 describe('Conflicts', function () {

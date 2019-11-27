@@ -1,9 +1,11 @@
 import { ApolloLink } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { RetryLink } from "apollo-link-retry";
-import { OffixClientConfig } from "../config/OffixClientConfig";
+import { ApolloOfflineClientConfig } from "../config/ApolloOfflineClientConfig";
 import { isMarkedOffline } from "./helpers";
 import { ConfigError } from "../config/ConfigError";
+import { ConflictLink } from "./conflicts/ConflictLink";
+import { ObjectState } from "..";
 
 /**
  * Default HTTP Apollo Links
@@ -13,8 +15,13 @@ import { ConfigError } from "../config/ConfigError";
  * - Conflict resolution
  * - Error handling
  */
-async function createCompositeLink(config: OffixClientConfig,
-  conflictLink: ApolloLink): Promise<ApolloLink> {
+function createDefaultLink(config: ApolloOfflineClientConfig) {
+
+  const conflictLink = new ConflictLink({
+    conflictProvider: config.conflictProvider as ObjectState,
+    conflictListener: config.conflictListener,
+    conflictStrategy: config.conflictStrategy
+  });
 
   const links: ApolloLink[] = [conflictLink];
   const retryLink = ApolloLink.split(isMarkedOffline, new RetryLink(config.retryOptions));
@@ -32,4 +39,4 @@ async function createCompositeLink(config: OffixClientConfig,
   return ApolloLink.from(links);
 }
 
-export { createCompositeLink };
+export { createDefaultLink };

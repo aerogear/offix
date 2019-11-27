@@ -21,18 +21,24 @@ yarn add offix-client
 ## Importing the package
 
 ```javascript
-import { OfflineClient } from 'offix-client';
+import { ApolloOfflineClient } from 'offix-client';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 
 const config = {
-  httpUrl: 'http://localhost:4000/graphql'
+  httpUrl: 'http://localhost:4000/graphql',
+  cache: new InMemoryCache()
 };
 
-// offlineClient is a wrapper that gives access to an apollo client
-const offlineClient = new OfflineClient(config);
+// create the client
+const client = new ApolloOfflineClient(config);
 
-// client is the initialized apollo client
-const client = await client.init();
+// initialise the client
+await client.init();
 ```
+
+The `ApolloOfflineClient` is a full `ApolloClient` but with some additional features for building offline workflows.
+
+**Note** `client.init` must be resolved before the application makes any queries/mutations, otherwise the cache and storage mechanisms may not work properly.
 
 ## Example Mutation
 

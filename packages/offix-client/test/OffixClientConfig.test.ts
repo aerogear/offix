@@ -1,8 +1,10 @@
 import "fake-indexeddb/auto";
-import { OffixClientConfig } from "../src/config/OffixClientConfig";
-import { OffixClientOptions } from "../src/config/OffixClientOptions";
+import "cross-fetch/polyfill";
+import { ApolloOfflineClientConfig } from "../src/config/ApolloOfflineClientConfig";
+import { ApolloOfflineClientOptions } from "../src/config/ApolloOfflineClientOptions";
+import { InMemoryCache } from "apollo-cache-inmemory";
 
-test("OffixClientConfig Merges defaults with user config", () => {
+test("ApolloOfflineClientConfig Merges defaults with user config", () => {
 
   const userConfig = {
     httpUrl: "test",
@@ -11,23 +13,25 @@ test("OffixClientConfig Merges defaults with user config", () => {
       attempts: {
         max: 10
       }
-    }
+    },
+    cache: new InMemoryCache()
   };
 
-  const config = new OffixClientConfig(userConfig);
+  const config = new ApolloOfflineClientConfig(userConfig);
   expect(config.httpUrl).toBe(userConfig.httpUrl);
   expect(config.retryOptions).toBe(userConfig.retryOptions);
 });
 
 it("conflict strategy is a function", () => {
-  const configWithStrategy: OffixClientOptions = {
+  const configWithStrategy: ApolloOfflineClientOptions = {
     httpUrl: "test",
     // storage,
     conflictStrategy: {
       resolve: ({ base, server, client }) => server
-    }
+    },
+    cache: new InMemoryCache()
   };
 
-  const mergedConfig = new OffixClientConfig(configWithStrategy);
+  const mergedConfig = new ApolloOfflineClientConfig(configWithStrategy);
   expect(mergedConfig.conflictStrategy).toBe(configWithStrategy.conflictStrategy);
 });
