@@ -1,10 +1,9 @@
 import ApolloClient, { MutationOptions, OperationVariables } from "apollo-client";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
-import { PersistedData, PersistentStore, OffixScheduler, createDefaultOfflineStorage } from "offix-scheduler";
+import { OffixScheduler } from "offix-scheduler";
 import { CachePersistor } from "apollo-cache-persist";
 import { MutationHelperOptions, CacheUpdates, createMutationOptions } from "offix-cache";
 import { FetchResult } from "apollo-link";
-import { createDefaultCacheStorage } from "./cache";
 import {
   ApolloOperationSerializer,
   ApolloOfflineQueue,
@@ -16,11 +15,10 @@ import {
   ApolloQueueEntryOperation,
   ApolloOfflineQueueListener,
   getBaseStateFromCache,
-  ApolloCacheWithData,
-  createDefaultLink
+  ApolloCacheWithData
 } from "./apollo";
 import { NetworkStatus } from "offix-offline";
-import { ObjectState, VersionedState } from "offix-conflicts-client";
+import { ObjectState } from "offix-conflicts-client";
 import { ApolloOfflineClientOptions } from "./config/ApolloOfflineClientOptions";
 import { ApolloOfflineClientConfig } from "./config/ApolloOfflineClientConfig";
 

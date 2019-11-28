@@ -3,38 +3,47 @@ import "fake-indexeddb/auto";
 import "cross-fetch/polyfill";
 
 import { HttpLink } from "apollo-link-http";
-import { ApolloOfflineClient, ApolloOfflineQueueListener } from "../src";
+import { ApolloOfflineClient, ApolloOfflineQueueListener, MutationHelperOptions } from "../src";
 import { InMemoryCache } from "apollo-cache-inmemory";
 
 test("OfflineClient constructor does not throw", async () => {
-  const url = "http://test";
+  const link = new HttpLink({ uri: "http://test" });
   const client = new ApolloOfflineClient({
     cache: new InMemoryCache(),
-    httpUrl: url
+    link
   });
   await client.init();
 });
 
-test("OfflineClient using terminatingLink", async () => {
-  const url = "http://test";
-  const terminatingLink = new HttpLink({ uri: url });
+test("OfflineClient constructor throws if no link provided", async () => {
+  expect(() => new ApolloOfflineClient({cache: new InMemoryCache()})).toThrow("config missing link property");
+});
+
+test("client.initialized is false before client.init and true afterwards", async () => {
+  const link = new HttpLink({ uri: "http://test" });
   const client = new ApolloOfflineClient({
-    terminatingLink,
-    cache: new InMemoryCache()
+    cache: new InMemoryCache(),
+    link
   });
+  expect(client.initialized).toBe(false);
   await client.init();
+  expect(client.initialized).toBe(true);
 });
 
-test("ApolloOfflineClient throws when invalid config is given", async () => {
-  // @ts-ignore
-  expect(() => new ApolloOfflineClient()).toThrow("Missing url");
+test("client.offlineMutate throws an error if client is not initialized", async () => {
+  const link = new HttpLink({ uri: "http://test" });
+  const client = new ApolloOfflineClient({
+    cache: new InMemoryCache(),
+    link
+  });
+  await expect(client.offlineMutate({} as MutationHelperOptions)).rejects.toThrow("cannot call client.offlineMutate until client is initialized");
 });
 
 test("registerOfflineEventListener adds the listener to the queue listeners", async () => {
-  const url = "http://test";
+  const link = new HttpLink({ uri: "http://test" });
   const client = new ApolloOfflineClient({
     cache: new InMemoryCache(),
-    httpUrl: url
+    link
   });
   await client.init();
 

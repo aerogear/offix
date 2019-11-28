@@ -11,7 +11,7 @@ import { CacheUpdates } from "offix-cache";
 import { RetryLink } from "apollo-link-retry";
 import { ApolloLink } from "apollo-link";
 import { ApolloOfflineQueueListener } from "../apollo";
-import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
+import { NormalizedCacheObject } from "apollo-cache-inmemory";
 import ApolloClient, { ApolloClientOptions } from "apollo-client";
 
 /**
@@ -23,34 +23,13 @@ import ApolloClient, { ApolloClientOptions } from "apollo-client";
  *
  */
 export interface ApolloOfflineClientOptions extends ApolloClientOptions<NormalizedCacheObject> {
-
-  /**
-   * The URL of http server that will be used to initialize default http link
-   * Value is ignored if terminating link is passed
-   */
-  httpUrl?: string;
-
-  /**
-   * [Modifier]
-   * Apollo link that will be passed to created client
-   */
-  terminatingLink?: ApolloLink;
-
-  /**
-   * [Modifier]
-   * user defined function that initializes and returns an Apollo Client.
-   * the httpUrl, terminatingLink, cache, and retryOptions are ignored
-   * if this is passed
-   */
-  createApolloClient?: () => ApolloClient<NormalizedCacheObject>;
-
   /**
    * [Modifier]
    *
    * The storage you want your client to use for the cache
    * Uses window.localStorage by default
    */
-  cacheStore?: PersistentStore<PersistedData>;
+  cacheStorage?: PersistentStore<PersistedData>;
 
   /**
    * [Modifier]
@@ -58,15 +37,7 @@ export interface ApolloOfflineClientOptions extends ApolloClientOptions<Normaliz
    * The storage you want your client to use for offline operations
    * Uses window.localStorage by default
    */
-  offlineStore?: PersistentStore<PersistedData>;
-
-  /**
-   * [Modifier]
-   *
-   * The storage you want your client to use for offline operations
-   * Uses window.localStorage by default
-   */
-  storage?: PersistentStore<PersistedData>;
+  offlineStorage?: PersistentStore<PersistedData>;
 
   /**
    * [Modifier]

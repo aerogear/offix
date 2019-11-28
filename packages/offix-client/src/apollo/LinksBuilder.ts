@@ -25,16 +25,11 @@ function createDefaultLink(config: ApolloOfflineClientConfig) {
 
   const retryLink = ApolloLink.split(isMarkedOffline, new RetryLink(config.retryOptions));
 
-  let terminatingLink = config.terminatingLink;
-
-  if (!terminatingLink) {
-    if (!config.httpUrl) {
-      throw new ConfigError("Missing url", "httpUrl");
-    }
-    terminatingLink = new HttpLink({ uri: config.httpUrl });
+  if (!config.link) {
+    throw new Error("config missing link property");
   }
 
-  const links: ApolloLink[] = [conflictLink, retryLink, terminatingLink];
+  const links: ApolloLink[] = [conflictLink, retryLink, config.link];
 
   return ApolloLink.from(links);
 }

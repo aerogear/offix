@@ -14,9 +14,9 @@ import {
   DOESNT_EXIST,
   GET_NON_EXISTENT
 } from "./mock/mutations";
-import { NormalizedCacheObject, InMemoryCache } from "apollo-cache-inmemory";
+import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloOfflineClient } from "../src";
-import ApolloClient from "apollo-client";
+import { HttpLink } from "apollo-link-http";
 
 const url = "http://testCache";
 
@@ -119,7 +119,11 @@ const url = "http://testCache";
   };
 
   beforeEach(async () => {
-    client = new ApolloOfflineClient({ httpUrl: url, cache: new InMemoryCache() });
+    const link = new HttpLink({ uri: "http://test" });
+    client = new ApolloOfflineClient({
+      cache: new InMemoryCache(),
+      link
+    });
     await client.init();
     client.writeQuery({
       query: GET_ITEMS,

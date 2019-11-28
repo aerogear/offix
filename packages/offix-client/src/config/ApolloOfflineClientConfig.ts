@@ -52,15 +52,10 @@ export class ApolloOfflineClientConfig implements ApolloOfflineClientOptions {
   constructor(options = {} as ApolloOfflineClientOptions) {
     Object.assign(this, options);
 
-    if (options.storage) {
-      this.cacheStorage = options.storage;
-      this.offlineStorage = options.storage;
-    } else {
-      this.cacheStorage = createDefaultCacheStorage();
-      this.offlineStorage = createDefaultOfflineStorage();
-    }
+    this.cacheStorage = options.cacheStorage || createDefaultCacheStorage();
+    this.offlineStorage = options.offlineStorage || createDefaultOfflineStorage();
     this.conflictStrategy = options.conflictStrategy || UseClient;
     this.conflictProvider = options.conflictProvider || new VersionedState();
-    this.link = options.link || createDefaultLink(this);
+    this.link = createDefaultLink(this);
   }
 }
