@@ -4,17 +4,17 @@ title: React Offix Hooks
 sidebar_label: React Offix Hooks
 ---
 
-The Apollo Client that `OfflineClient` provides is compatible with all of the official [Apollo React Hooks](https://www.apollographql.com/docs/react/api/react-hooks/) such as `useQuery`, `useMutation` and `useSubscription`.
+`ApolloOfflineClient` is compatible with all of the official [Apollo React Hooks](https://www.apollographql.com/docs/react/api/react-hooks/) such as `useQuery`, `useMutation` and `useSubscription`.
 
-The `react-offix-hooks` library provides an additional `useOfflineMutation` React hook which lets you perform offline mutations.
+The `react-offix-hooks` library provides an additional `useOfflineMutation` React hook for performing offline mutations.
 
-**Note:** `react-offix-hooks` is experimental. Feel free to try it and please [log any issues](https://github.com/aerogear/offix/issues/new/choose) to help us improve it.
+**Note:** `react-offix-hooks` is experimental. Please try it and [log any issues](https://github.com/aerogear/offix/issues/new/choose) to help us improve it.
 
 ## App Initialization
 
-In a normal React application that uses Apollo Client, the client would be created at startup and the root component is wrapped with `ApolloProvider`.
+In a normal React application that uses Apollo Client, the client is created at startup and the root component is wrapped with `ApolloProvider`.
 
-Because `OfflineClient.init()` needs to be called and this is an asynchronous function call, an extra step is needed. The root `ApolloProvider` also needs to be wrapped with `OffixProvider` for the `useOfflineMutation` hook to work.
+Because `client.init()` needs to be called and this is an asynchronous function call, an extra step is needed. The root `ApolloProvider` also needs to be wrapped with `ApolloOfflineProvider` for the `useOfflineMutation` hook to work.
 
 Below is a boilerplate example that can be used.
 
@@ -22,27 +22,27 @@ Below is a boilerplate example that can be used.
 import React, { useState, useEffect } from 'react'
 import { render } from 'react-dom'
 
-import { OfflineClient } from 'offix-client'
-import { OffixProvider } from 'react-offix-hooks'
+import { ApolloOfflineClient } from 'offix-client'
+import { ApolloOfflineProvider } from 'react-offix-hooks'
 import { ApolloProvider } from '@apollo/react-hooks'
 
-const offixClient = new OfflineClient(clientConfig)
+const client = new ApolloOfflineClient(clientConfig)
 
 const App = () => {
-  const [apolloClient, setApolloClient] = useState(null)
+  const [initialized, setInitialized] = useState(false)
 
   // initialize the offix client and set the apollo client
   useEffect(() => {
-    offixClient.init().then(setApolloClient)
+    client.init().then(() => setInitialized(true))
   }, [])
 
-  if (apolloClient) {
+  if (initialized) {
     return (
-      <OffixProvider client={offixClient}>
-        <ApolloProvider client={apolloClient}>
+      <ApolloOfflineProvider client={client}>
+        <ApolloProvider client={client}>
           <MyRootComponent/>
         </ApolloProvider>
-      </OffixProvider>
+      </ApolloOfflineProvider>
     )
   }
   return <h2>Loading...</h2>
@@ -54,10 +54,10 @@ render(<App />, document.getElementById('root'))
 
 In the example above, the following happens.
 
-1. An `OfflineClient` is created.
-2. `useState()` is used to set state that will hold the `apolloClient`, once initialized.
-3. `offixClient.init()` is called inside a `useEffect` call making sure the initialization happens only once. Once initialized, the `apolloClient` state will be set.
-4. If the `apolloClient` state is there, then the application is rendered including the `OffixProvider` and the `ApolloProvider`. Otherwise a loading screen is shown.
+1. An `ApolloOfflineClient` is created.
+2. `useState()` is used to set a boolean that will be `true` once the client is initialized.
+3. `client.init()` is called inside a `useEffect` call making sure the initialization happens only once.
+4. If `initialized` is true, then the application is rendered including the `ApolloOfflineProvider` and the `ApolloProvider`. Otherwise a loading screen is shown.
 
 ## useOfflineMutation
 

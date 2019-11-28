@@ -1,9 +1,13 @@
-import { createClient } from '../../dist'
+import { ApolloOfflineClient } from '../../dist'
 import { createOptimisticResponse, CacheOperation } from 'offix-cache';
 import { TestStore } from '../utils/testStore';
 import { ToggleableNetworkStatus } from '../utils/network';
 import server from '../utils/server';
 import { ADD_TASK, GET_TASKS, UPDATE_TASK, DELETE_TASK } from '../utils/graphql.queries';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { HttpLink } from 'apollo-link-http';
+
+const CLIENT_HTTP_URL = 'http://localhost:4000/graphql';
 
 function wait(time) {
   return new Promise((resolve, reject) => {
@@ -22,13 +26,16 @@ const newNetworkStatus = (online = true) => {
 const offlineMetaKey = "offline-meta-data";
 
 const newClient = async (clientOptions = {}) => {
+  const link = new HttpLink({ uri: CLIENT_HTTP_URL })
   const config = {
-    httpUrl: "http://localhost:4000/graphql",
-    wsUrl: "ws://localhost:4000/graphql",
+    link,
+    cache: new InMemoryCache(),
     ...clientOptions
   };
 
-  return await createClient(config);
+  const client = new ApolloOfflineClient(config);
+  await client.init()
+  return client
 };
 
 describe('Offline mutations', function () {
@@ -74,7 +81,7 @@ describe('Offline mutations', function () {
   beforeEach('create client', async function () {
     networkStatus = newNetworkStatus(false);
     store = new TestStore();
-    client = await newClient({ networkStatus, storage: store, mutationsQueueName });
+    client = await newClient({ networkStatus, offlineStorage: store, mutationsQueueName });
   });
 
   async function isQueueEmpty() {
@@ -258,7 +265,7 @@ describe('Offline mutations', function () {
       } catch (ignore) { }
 
       networkStatus = newNetworkStatus();
-      client = await newClient({ networkStatus, storage: store, mutationsQueueName });
+      client = await newClient({ networkStatus, offlineStorage: store, mutationsQueueName });
 
       await new Promise(resolve => setTimeout(resolve, 300));
 
@@ -323,7 +330,7 @@ describe('Offline mutations', function () {
     let task;
 
     beforeEach('prepare data', async function () {
-      client = await newClient({ networkStatus, storage: store, mutationsQueueName });
+      client = await newClient({ networkStatus, offlineStorage: store, mutationsQueueName });
       networkStatus.setOnline(true);
 
       const response = await client.offlineMutate({
@@ -384,7 +391,7 @@ describe('Offline mutations', function () {
     let task;
 
     beforeEach('prepare data', async function () {
-      client = await newClient({ networkStatus, storage: store, mutationsQueueName });
+      client = await newClient({ networkStatus, offlineStorage: store, mutationsQueueName });
       networkStatus.setOnline(true);
 
       const response = await client.offlineMutate({
@@ -427,7 +434,7 @@ describe('Offline mutations', function () {
         queueCleared: () => cleared++
       };
 
-      client = await newClient({ networkStatus, storage: store, mutationsQueueName, offlineQueueListener: listener });
+      client = await newClient({ networkStatus, offlineStorage: store, mutationsQueueName, offlineQueueListener: listener });
       try {
         await client.offlineMutate({
           mutation: ADD_TASK,

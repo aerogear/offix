@@ -1,9 +1,11 @@
 import { ApolloLink } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { RetryLink } from "apollo-link-retry";
-import { OffixClientConfig } from "../config/OffixClientConfig";
+import { ApolloOfflineClientConfig } from "../config/ApolloOfflineClientConfig";
 import { isMarkedOffline } from "./helpers";
 import { ConfigError } from "../config/ConfigError";
+import { ConflictLink } from "./conflicts/ConflictLink";
+import { ObjectState } from "..";
 
 /**
  * Default HTTP Apollo Links
@@ -13,23 +15,23 @@ import { ConfigError } from "../config/ConfigError";
  * - Conflict resolution
  * - Error handling
  */
-async function createCompositeLink(config: OffixClientConfig,
-  conflictLink: ApolloLink): Promise<ApolloLink> {
+function createDefaultLink(config: ApolloOfflineClientConfig) {
 
-  const links: ApolloLink[] = [conflictLink];
+  const conflictLink = new ConflictLink({
+    conflictProvider: config.conflictProvider as ObjectState,
+    conflictListener: config.conflictListener,
+    conflictStrategy: config.conflictStrategy
+  });
+
   const retryLink = ApolloLink.split(isMarkedOffline, new RetryLink(config.retryOptions));
-  links.push(retryLink);
 
-  if (config.terminatingLink) {
-    links.push(config.terminatingLink);
-  } else if (config.httpUrl) {
-    const httpLink = new HttpLink({ uri: config.httpUrl }) as ApolloLink;
-    links.push(httpLink);
-  } else {
-    throw new ConfigError("Missing url", "httpUrl");
+  if (!config.link) {
+    throw new Error("config missing link property");
   }
+
+  const links: ApolloLink[] = [conflictLink, retryLink, config.link];
 
   return ApolloLink.from(links);
 }
 
-export { createCompositeLink };
+export { createDefaultLink };
