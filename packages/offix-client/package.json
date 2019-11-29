@@ -48,10 +48,17 @@
     "apollo-link-retry": "2.2.15",
     "debug": "4.1.1",
     "idb-localstorage": "0.2.0",
+<<<<<<< HEAD
     "offix-cache": "0.11.0",
     "offix-conflicts-client": "0.11.0",
     "offix-offline": "0.11.0",
     "offix-scheduler": "0.11.0"
+=======
+    "offix-cache": "0.11.0-dev2",
+    "offix-conflicts-client": "0.11.0-dev2",
+    "offix-offline": "0.11.0-dev2",
+    "offix-scheduler": "0.11.0-dev2"
+>>>>>>> feat: initial offix-client-boost package
   },
   "peerDependencies": {
     "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0"
