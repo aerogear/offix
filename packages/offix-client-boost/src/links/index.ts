@@ -21,8 +21,8 @@ export function createDefaultLink(config: OffixBoostOptions): ApolloLink {
     const wsLink = defaultWebSocketLink(config, { uri: config.wsUrl });
     terminatingLink = ApolloLink.split(isSubscription, wsLink, terminatingLink);
   }
-  return terminatingLink
-};
+  return terminatingLink;
+}
 
 /**
  * Default HTTP Apollo Links
@@ -33,8 +33,8 @@ export function createDefaultLink(config: OffixBoostOptions): ApolloLink {
  * - File Upload Link
  * - Audit logging
  */
-function createHTTPCompositeLink (config: OffixBoostOptions): ApolloLink {
-  
+function createHTTPCompositeLink(config: OffixBoostOptions): ApolloLink {
+
   const links: ApolloLink[] = [];
 
   if (config.authContextProvider) {
@@ -57,4 +57,4 @@ function createHTTPCompositeLink (config: OffixBoostOptions): ApolloLink {
   }
 
   return ApolloLink.from(links);
-};
+}

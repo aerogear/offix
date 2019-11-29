@@ -12,7 +12,7 @@ import { ApolloOfflineClient } from "offix-client";
 *  ```
 */
 export const createClient = async (options: OffixBoostOptions): Promise<ApolloOfflineClient> => {
-  const boostConfig = new OffixBoostConfig(options)
+  const boostConfig = new OffixBoostConfig(options);
   const offlineClient = new ApolloOfflineClient(boostConfig);
   await offlineClient.init();
   return offlineClient;

@@ -4,10 +4,10 @@ import {
   VersionedState,
   ObjectState
 } from "offix-conflicts-client";
-import { createDefaultLink } from '../links'
+import { createDefaultLink } from "../links";
 import { ApolloLink } from "apollo-link";
 import { InMemoryCache } from "apollo-cache-inmemory";
-import { OffixBoostOptions } from "./OffixBoostOptions"
+import { OffixBoostOptions } from "./OffixBoostOptions";
 import { RetryLink } from "apollo-link-retry";
 
 /**
@@ -16,12 +16,12 @@ import { RetryLink } from "apollo-link-retry";
  */
 export class OffixBoostConfig implements OffixBoostOptions {
   public conflictStrategy: ConflictResolutionStrategy;
-  public conflictProvider: ObjectState
+  public conflictProvider: ObjectState;
   public link: ApolloLink;
   public cache: any;
-  public retryOptions: RetryLink.Options
-  public fileUpload: boolean
-  public auditLogging: boolean
+  public retryOptions: RetryLink.Options;
+  public fileUpload: boolean;
+  public auditLogging: boolean;
 
   constructor(options = {} as OffixBoostOptions) {
     Object.assign(this, options);
@@ -39,7 +39,7 @@ export class OffixBoostConfig implements OffixBoostOptions {
       attempts: {
         max: 5
       }
-    }
-    this.link = createDefaultLink(this)
+    };
+    this.link = createDefaultLink(this);
   }
 }

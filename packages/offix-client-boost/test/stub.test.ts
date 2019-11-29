@@ -1,5 +1,4 @@
 
-
-it('stub', () => {
-  expect(1).toBe(1)
-})
+it("stub", () => {
+  expect(1).toBe(1);
+});

@@ -1,10 +1,10 @@
 import { AuthContextProvider } from "../auth/AuthContextProvider";
 import { ApolloOfflineClientOptions } from "offix-client";
-import { ApolloCache } from 'apollo-cache'
+import { ApolloCache } from "apollo-cache";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
 
 // Define Omit.  Can be defined in a utilities package
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 /**
  * Contains all configuration options required to initialize Voyager Client
@@ -28,7 +28,7 @@ export interface OffixBoostOptions extends Omit<ApolloOfflineClientOptions, "lin
 
   /**
    * [Modifier]
-   * 
+   *
    * An Apollo Cache instance
    */
 

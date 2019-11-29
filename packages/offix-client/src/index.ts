@@ -1,4 +1,4 @@
-export * from "./config/ApolloOfflineClientOptions"
+export * from "./config/ApolloOfflineClientOptions";
 export * from "./ApolloOfflineClient";
 export * from "./apollo/ApolloOfflineTypes";
 export * from "./apollo/conflicts/ConflictLink";
