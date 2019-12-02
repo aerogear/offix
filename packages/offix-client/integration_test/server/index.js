@@ -26,4 +26,4 @@ app.post('/reset', (_, res) => {
   res.sendStatus(200);
 });
 
-app.listen(PORT, () => console.log(`Server listening on port ${PORT}!`));
+module.exports = app.listen(PORT, () => console.log(`Server listening on port ${PORT}!`));
