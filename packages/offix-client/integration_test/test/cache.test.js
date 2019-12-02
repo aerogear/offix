@@ -1,21 +1,24 @@
-import server from '../utils/server';
 import { ApolloOfflineClient } from '../../dist';
 import { CacheOperation, getUpdateFunction, createOptimisticResponse } from '../../../offix-cache/dist';
 import { ToggleableNetworkStatus } from '../utils/network';
-import { ADD_TASK, GET_TASKS, DELETE_TASK, FIND_TASK_BY_TITLE, GET_TASK } from '../utils/graphql.queries';
 import { TestStore } from '../utils/testStore';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http/lib/httpLink';
+import { TestxDirector } from "graphql-testx/dist/src/TestxDirector"
+import gql from 'graphql-tag';
 
-const CLIENT_HTTP_URL = 'http://localhost:4000/graphql';
-const CLIENT_WS_URL = 'ws://localhost:4000/graphql';
+let server;
+let httpUrl;
+
+let FIND_ALL_TASKS;
+let CREATE_TASK;
 
 const newClient = async (options) => {
   const networkStatus = new ToggleableNetworkStatus();
   const storage = new TestStore();
 
-  const link = new HttpLink({ uri: CLIENT_HTTP_URL })
-  
+  const link = new HttpLink({ uri: httpUrl })
+
   const client = new ApolloOfflineClient({
     link,
     cache: new InMemoryCache(),
@@ -49,26 +52,26 @@ const TASK_TEMPLATE = {
   version: 1,
 };
 
-const FIND_TASK_BY_TITLE_QUERY = {
-  query: FIND_TASK_BY_TITLE,
-  variables: {
-    title: TASK_TEMPLATE.title,
-  },
-};
+// const FIND_TASK_BY_TITLE_QUERY = {
+//   query: FIND_TASK_BY_TITLE,
+//   variables: {
+//     title: TASK_TEMPLATE.title,
+//   },
+// };
 
-const getTasks = async (client, options) => {
+const findAllTasks = async (client, options) => {
   return await client.query({
-    query: GET_TASKS,
+    query: FIND_ALL_TASKS,
     ...options,
   });
 }
 
-const findTaskByTitle = async (client, options) => {
-  return await client.query({
-    ...FIND_TASK_BY_TITLE_QUERY,
-    ...options
-  });
-}
+// const findTaskByTitle = async (client, options) => {
+//   return await client.query({
+//     ...FIND_TASK_BY_TITLE_QUERY,
+//     ...options
+//   });
+// }
 
 const offlineMutateWhileOffline = async (client, options) => {
   try {
@@ -84,9 +87,9 @@ const offlineMutateWhileOffline = async (client, options) => {
   throw 'offlineMutate didn\'t throw OfflineError';
 }
 
-const addTaskWhileOffline = async (client, options) => {
+const createTaskWhileOffline = async (client, options) => {
   return await offlineMutateWhileOffline(client, {
-    mutation: ADD_TASK,
+    mutation: CREATE_TASK,
     variables: TASK_TEMPLATE,
     returnType: TASK_TYPE,
     ...options,
@@ -113,15 +116,24 @@ const assertTaskEqualTaskTemplate = (task, template) => {
 describe("Offline cache and mutations", () => {
 
   before('start server', async function () {
+    server = new TestxDirector(__karma__.config.args[0])
     await server.start();
+
+    httpUrl = await server.httpUrl();
+    const queries = await server.getQueries();
+    const mutations = await server.getMutations();
+
+    FIND_ALL_TASKS = gql(queries.findAllTasks)
+    CREATE_TASK = gql(mutations.createTask)
   });
 
   after('stop server', async function () {
-    await server.stop();
+    this.timeout(0)
+    await server.close();
   });
 
   beforeEach('reset server', async function () {
-    await server.reset();
+    await server.cleanDatabase();
   });
 
   describe('update list query while offline', () => {
@@ -131,25 +143,25 @@ describe("Offline cache and mutations", () => {
         mutationCacheUpdates: {
           createTask: getUpdateFunction({
             mutationName: 'createTask',
-            updateQuery: GET_TASKS
+            updateQuery: FIND_ALL_TASKS
           }),
         },
       })
       // search for tasks while online
-      await getTasks(client);
+      await findAllTasks(client);
 
       goOffline(network);
 
       // create new task while offline
-      await addTaskWhileOffline(client, { updateQuery: GET_TASKS });
+      await createTaskWhileOffline(client, { updateQuery: FIND_ALL_TASKS });
 
       // search for tasks again while offline
-      const response = await getTasks(client, { fetchPolicy: CACHE_ONLY });
+      const response = await findAllTasks(client, { fetchPolicy: CACHE_ONLY });
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      assertTaskEqualTaskTemplate(response.data.allTasks[0]);
-    });
+      expect(response.data.findAllTasks).to.exist;
+      expect(response.data.findAllTasks.length).to.equal(1);
+      assertTaskEqualTaskTemplate(response.data.findAllTasks[0]);
+    })
 
     it('query tasks while online, go offline, create task and query tasks again using mutationCacheUpdates', async function () {
 
@@ -157,25 +169,25 @@ describe("Offline cache and mutations", () => {
         mutationCacheUpdates: {
           createTask: getUpdateFunction({
             mutationName: 'createTask',
-            updateQuery: GET_TASKS
+            updateQuery: FIND_ALL_TASKS
           })
         },
       })
 
       // search for tasks while online
-      await getTasks(client);
+      await findAllTasks(client);
 
       goOffline(network);
 
       // create new task while offline
-      await addTaskWhileOffline(client);
+      await createTaskWhileOffline(client);
 
       // search for tasks again while offline
-      const response = await getTasks(client, { fetchPolicy: CACHE_ONLY });
+      const response = await findAllTasks(client, { fetchPolicy: CACHE_ONLY });
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      assertTaskEqualTaskTemplate(response.data.allTasks[0]);
+      expect(response.data.findAllTasks).to.exist;
+      expect(response.data.findAllTasks.length).to.equal(1);
+      assertTaskEqualTaskTemplate(response.data.findAllTasks[0]);
     });
 
     it('query tasks while online, go offline, create task and query tasks again using updateQuery', async function () {
@@ -183,19 +195,19 @@ describe("Offline cache and mutations", () => {
       const { client, networkStatus: network } = await newClient()
 
       // search for tasks while online
-      await getTasks(client);
+      await findAllTasks(client);
 
       goOffline(network);
 
       // create new task while offline
-      await addTaskWhileOffline(client, { updateQuery: GET_TASKS });
+      await createTaskWhileOffline(client, { updateQuery: FIND_ALL_TASKS });
 
       // search for tasks again while offline
-      const response = await getTasks(client, { fetchPolicy: CACHE_ONLY });
+      const response = await findAllTasks(client, { fetchPolicy: CACHE_ONLY });
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      assertTaskEqualTaskTemplate(response.data.allTasks[0]);
+      expect(response.data.findAllTasks).to.exist;
+      expect(response.data.findAllTasks.length).to.equal(1);
+      assertTaskEqualTaskTemplate(response.data.findAllTasks[0]);
     });
 
     it('create task and query tasks while offline using mutationCacheUpdates', async function () {
@@ -203,39 +215,38 @@ describe("Offline cache and mutations", () => {
         mutationCacheUpdates: {
           createTask: getUpdateFunction({
             mutationName: 'createTask',
-            updateQuery: GET_TASKS
+            updateQuery: FIND_ALL_TASKS
           }),
         }
       })
 
       goOffline(network);
 
-      await addTaskWhileOffline(client);
+      await createTaskWhileOffline(client);
 
       // search for tasks again while offline
-      const response = await getTasks(client, { fetchPolicy: CACHE_ONLY });
+      const response = await findAllTasks(client, { fetchPolicy: CACHE_ONLY });
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      assertTaskEqualTaskTemplate(response.data.allTasks[0]);
+      expect(response.data.findAllTasks).to.exist;
+      expect(response.data.findAllTasks.length).to.equal(1);
+      assertTaskEqualTaskTemplate(response.data.findAllTasks[0]);
     });
 
-    // Not currently supported
-    it.skip('create task and query tasks while offline using updateQuery', async function () {
+    it('create task and query tasks while offline using updateQuery', async function () {
 
       const { client, networkStatus: network } = await newClient({})
 
       goOffline(network);
 
       // create new task while offline
-      await addTaskWhileOffline(client, { updateQuery: GET_TASKS });
+      await createTaskWhileOffline(client, { updateQuery: FIND_ALL_TASKS });
 
       // search for tasks again while offline
-      const response = await getTasks(client, { fetchPolicy: CACHE_ONLY });
+      const response = await findAllTasks(client, { fetchPolicy: CACHE_ONLY });
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      assertTaskEqualTaskTemplate(response.data.allTasks[0]);
+      expect(response.data.findAllTasks).to.exist;
+      expect(response.data.findAllTasks.length).to.equal(1);
+      assertTaskEqualTaskTemplate(response.data.findAllTasks[0]);
     });
   });
 
@@ -383,7 +394,7 @@ describe("Offline cache and mutations", () => {
         operationType: CacheOperation.DELETE,
         returnType: TASK_TYPE,
         updateQuery: GET_TASKS,
-      }).catch (ignore => {});
+      }).catch(ignore => { });
       // query tasks while still offline
       const response2 = await getTasks(client, { fetchPolicy: CACHE_ONLY });
       expect(response2.data.allTasks).to.exist;
@@ -395,7 +406,7 @@ describe("Offline cache and mutations", () => {
       await deleteTaskError.watchOfflineChange();
 
       // query tasks again from the cache
-      const response3 = await getTasks(client, {fetchPolicy: CACHE_ONLY});
+      const response3 = await getTasks(client, { fetchPolicy: CACHE_ONLY });
       expect(response3.data.allTasks).to.exist;
       expect(response3.data.allTasks.length).to.equal(0);
     });
@@ -406,24 +417,22 @@ describe("Offline cache and mutations", () => {
         mutationCacheUpdates: {
           createTask: getUpdateFunction({
             mutationName: 'createTask',
-            updateQuery: GET_TASKS
+            updateQuery: FIND_ALL_TASKS
           })
         },
       });
 
       // search tasks while online
-      await getTasks(client);
+      await findAllTasks(client);
 
       goOffline(network);
 
       // create new task while offline
-      const addTaskError = await addTaskWhileOffline(client, { updateQuery: GET_TASKS });
+      const addTaskError = await createTaskWhileOffline(client, { updateQuery: FIND_ALL_TASKS });
 
       // retrieve the new task from the cache
-      const getTasksQuery = await getTasks(client, { fetchPolicy: CACHE_ONLY });
-      const task = getTasksQuery.data.allTasks[0];
-
-      assertTaskEqualTaskTemplate(task);
+      const result = await findAllTasks(client, { fetchPolicy: CACHE_ONLY });
+      assertTaskEqualTaskTemplate(result.data.findAllTasks[0]);
 
       goOnline(network);
 
