@@ -1,15 +1,12 @@
 import { OffixBoostOptions } from "./config/OffixBoostOptions";
 import { OffixBoostConfig } from "./config/OffixBoostConfig";
 import { ApolloOfflineClient } from "offix-client";
+
 /**
-* Factory for creating Apollo Offline Client
+* Create an ApolloOfflineClient with authentication, 
+websockets and file uploads enabled
 *
-* @param userConfig options object used to build client
-* @deprecated use OfflineClient class directly:
-*  ```javascript
-*  const offlineClient = new OfflineClient(config);
-*  await offlineClient.init();
-*  ```
+* @param options options object used to build client
 */
 export const createClient = async (options: OffixBoostOptions): Promise<ApolloOfflineClient> => {
   const boostConfig = new OffixBoostConfig(options);

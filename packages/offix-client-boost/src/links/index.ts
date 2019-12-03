@@ -2,9 +2,8 @@ import { ApolloLink } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { OffixBoostOptions } from "../config/OffixBoostOptions";
 import { createAuthLink } from "./AuthLink";
-import { AuditLoggingLink } from "./AuditLoggingLink";
 import { createUploadLink } from "apollo-upload-client";
-import { isSubscription, isMarkedOffline, ObjectState } from "offix-client";
+import { isSubscription } from "offix-client";
 import { defaultWebSocketLink } from "./WebsocketLink";
 /**
  * Method for creating "uber" composite Apollo Link implementation including:
