@@ -1,2 +1,49 @@
 <!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>react-native · Offix</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## React Native Support"/><meta name="docsearch:version" content="next"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="react-native · Offix"/><meta property="og:type" content="website"/><meta property="og:url" content="https://offix.dev/"/><meta property="og:description" content="## React Native Support"/><meta property="og:image" content="https://offix.dev/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://offix.dev/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/offix-logo.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/offix-logo.png" alt="Offix"/><h2 class="headerTitleWithLogo">Offix</h2></a><a href="/versions"><h3>next</h3></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/next/getting-started" target="_self">Documentation</a></li><li class=""><a href="https://github.com/aerogear/offix" target="_self">Github</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">react-native</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="react-native-support"></a><a href="#react-native-support" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>React Native Support</h2>
-</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#react-native-support">React Native Support</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2019 Offix Contributors</section></footer></div></body></html>
+<p>Offix Client can be used within React Native by providing some React Native specific interfaces that override the original usage of browser APIs.</p>
+<h2><a class="anchor" aria-hidden="true" id="network-status"></a><a href="#network-status" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Network Status</h2>
+<p>Firstly, a React Native <code>NetworkStatus</code> implementation should be defined in your application.</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> {  NetInfo } <span class="hljs-keyword">from</span> <span class="hljs-string">"react-native"</span>
+<span class="hljs-keyword">import</span> { NetworkStatus, NetworkStatusChangeCallback } <span class="hljs-keyword">from</span> <span class="hljs-string">"apollo-offline-client"</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ReactNativeNetworkStatus</span> <span class="hljs-title">implements</span> <span class="hljs-title">NetworkStatus</span> </span>{
+  public onStatusChangeListener(callback: NetworkStatusChangeCallback): <span class="hljs-keyword">void</span> {
+    <span class="hljs-keyword">const</span> listener = <span class="hljs-function">(<span class="hljs-params">connected: boolean</span>) =&gt;</span> {
+      callback.onStatusChange({<span class="hljs-attr">online</span>: connected})
+    };
+    NetInfo.isConnected.addEventListener(<span class="hljs-string">'connectionChange'</span>, listener)
+  }
+
+  public <span class="hljs-keyword">async</span> isOffline(): <span class="hljs-built_in">Promise</span>&lt;boolean&gt; {
+    <span class="hljs-keyword">const</span> isConnected = <span class="hljs-keyword">await</span> NetInfo.isConnected.fetch()
+    <span class="hljs-keyword">return</span> !isConnected
+  }
+}
+</code></pre>
+<p>This implementation uses the React Native <code>NetInfo</code> API to determine the network state.</p>
+<h2><a class="anchor" aria-hidden="true" id="storage"></a><a href="#storage" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Storage</h2>
+<p>In React Native <code>AsyncStorage</code> is typically used. You can use either <code>AsyncStorage</code> implementation:</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> AsyncStorage <span class="hljs-keyword">from</span> <span class="hljs-string">'@react-native-community/async-storage'</span>;
+</code></pre>
+<p>or</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> { AsyncStorage } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-native'</span>;
+</code></pre>
+<p>Then define the storage interface:</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">const</span> storage = {
+  <span class="hljs-attr">getItem</span>: <span class="hljs-keyword">async</span> (key) =&gt; {                                  
+    <span class="hljs-keyword">const</span> data = <span class="hljs-keyword">await</span> AsyncStorage.getItem(key);
+    <span class="hljs-comment">// required to prevent data becoming corrupt and bloated</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> data === <span class="hljs-string">'string'</span>) {
+      <span class="hljs-keyword">return</span> <span class="hljs-built_in">JSON</span>.parse(data);
+    }
+    <span class="hljs-keyword">return</span> data;
+  },
+  <span class="hljs-attr">setItem</span>: <span class="hljs-keyword">async</span> (key, value) =&gt; {
+    <span class="hljs-keyword">let</span> valueStr = value;
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> valueStr === <span class="hljs-string">'object'</span>) {
+      valueStr = <span class="hljs-built_in">JSON</span>.stringify(value);
+    }
+    <span class="hljs-keyword">return</span> AsyncStorage.setItem(key, valueStr);
+  },
+}
+</code></pre>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#react-native-support">React Native Support</a></li><li><a href="#network-status">Network Status</a></li><li><a href="#storage">Storage</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2019 Offix Contributors</section></footer></div></body></html>
