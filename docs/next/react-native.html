@@ -90,13 +90,12 @@ We recomend developers to use following React Native plugins:</p>
 <span class="hljs-keyword">const</span> networkStatus = {
   onStatusChangeListener(callback) {
     <span class="hljs-keyword">const</span> listener = <span class="hljs-function">(<span class="hljs-params">connected</span>) =&gt;</span> {
-      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"network changed"</span>, connected)
       callback.onStatusChange({ <span class="hljs-attr">online</span>: connected })
     };
     NetInfo.isConnected.addEventListener(<span class="hljs-string">'connectionChange'</span>, listener)
   },
   isOffline() {
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>; NetInfo.isConnected.fetch().then(<span class="hljs-function"><span class="hljs-params">connected</span> =&gt;</span> !connected)
+    <span class="hljs-keyword">return</span> NetInfo.isConnected.fetch().then(<span class="hljs-function"><span class="hljs-params">connected</span> =&gt;</span> !connected)
   }
 };
 
