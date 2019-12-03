@@ -39,7 +39,7 @@ const cacheStorage = {
   }
 };
 
-// Create newtwork interface
+// Create network interface
 const networkStatus = {
   onStatusChangeListener(callback) {
     const listener = (connected) => {
