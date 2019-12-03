@@ -1,19 +1,26 @@
 {
   "docs": {
-    "Offix Client": [
+    "Getting Started": [
       "getting-started",
-      "client-configuration",
+      "client-configuration"
+    ],
+    "OffixClient": [
       "offline-client",
       "offix-cache",
       "conflict-client",
-      "conflict-server",
-      "release-notes"
+      "conflict-server"
     ],
-    "React": [
-      "react-offix-hooks"
+    "Platforms": [
+      "react",
+      "react-native",
+      "ionic",
+      "android"
     ],
-    "Offix Scheduler": [
+    "Advanced topics": [
       "offix-scheduler-introduction"
+    ],
+    "Releases": [
+      "release-notes"
     ]
   }
 }
