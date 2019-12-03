@@ -4,6 +4,47 @@ title: What is new in Offix
 sidebar_label: Release notes
 ---
 
+# 0.11.0
+
+The 0.11.0 release simplifies the creation of offline clients. 
+
+## Breaking Changes
+
+### OfflineClient replaced with ApolloOfflineClient
+
+The `OfflineClient` class has been replaced with `ApolloOfflineClient`. `OfflineClient` was a wrapper that would internally create an `ApolloClient` which could be accessed after initialization. The flow looked something like this.
+
+```js
+const offlineClient = new OfflineClient(options)
+const apolloClient = await offlineClient.init()
+```
+
+The new `ApolloOfflineClient` directly `extends` `ApolloClient` which makes initialization simpler and more flexible as all of the standard Apollo Client options are supported.
+
+Initialization is slightly different, mainly, and `ApolloLink` must be passed that can connect with the GraphQL server. See the example code below.
+
+```js
+import { ApolloOfflineClient } from 'offix-client'
+
+const link = new HttpLink({ uri: 'http://localhost/graphql' })
+  
+const config = {
+  link,
+  typeDefs,
+  resolvers,
+  ...otherOptions
+}
+
+const client = new ApolloOfflineClient(config)
+await client.init()
+...
+
+// `client` is an ApolloClient so you can call all of the methods you'd expect
+client.query(...)
+client.mutate(...)
+client.offlineMutate(...)
+```
+
 # 0.10.0
 
 The `0.10.0` release builds upon the `0.9.0` release and adds two new packages. `offix-scheduler` and `offix-conflicts-client`

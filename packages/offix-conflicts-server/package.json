@@ -1,6 +1,6 @@
 {
     "name": "offix-conflicts-server",
-    "version": "0.10.0",
+    "version": "0.11.0",
     "description": "Offix GraphQL server",
     "main": "dist/index.js",
     "scripts": {
