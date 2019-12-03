@@ -1,0 +1,19 @@
+{
+  "version-0.11.0-docs": {
+    "Offix Client": [
+      "version-0.11.0-getting-started",
+      "version-0.11.0-client-configuration",
+      "version-0.11.0-offline-client",
+      "version-0.11.0-offix-cache",
+      "version-0.11.0-conflict-client",
+      "version-0.11.0-conflict-server",
+      "version-0.11.0-release-notes"
+    ],
+    "React": [
+      "version-0.11.0-react-offix-hooks"
+    ],
+    "Offix Scheduler": [
+      "version-0.11.0-offix-scheduler-introduction"
+    ]
+  }
+}
