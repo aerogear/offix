@@ -5,12 +5,21 @@
     "previous": "Previous",
     "tagline": "Offix extends Apollo GraphQL for building fully featured offline experiences.",
     "docs": {
+      "android": {
+        "title": "Android",
+        "sidebar_label": "Android"
+      },
       "getting-started": {
         "title": "Getting Started",
         "sidebar_label": "Getting Started"
       },
+      "ionic": {
+        "title": "Ionic and Apache Cordova integration",
+        "sidebar_label": "Ionic and Cordova"
+      },
       "react-native": {
-        "title": "react-native"
+        "title": "React Native",
+        "sidebar_label": "React Native"
       },
       "README": {
         "title": "README"
@@ -36,15 +45,15 @@
       },
       "offix-scheduler-introduction": {
         "title": "Offix Scheduler Introduction",
-        "sidebar_label": "Introduction"
+        "sidebar_label": "Offix Scheduler"
       },
       "offline-client": {
         "title": "Offline Support",
         "sidebar_label": "Offline Client"
       },
-      "react-offix-hooks": {
-        "title": "React Offix Hooks",
-        "sidebar_label": "React Offix Hooks"
+      "react": {
+        "title": "React - using Offix Hooks",
+        "sidebar_label": "React"
       },
       "release-notes": {
         "title": "What is new in Offix",
@@ -59,6 +68,30 @@
         "sidebar_label": "Introduction"
       },
       "version-0.10.0/version-0.10.0-release-notes": {
+        "title": "What is new in Offix",
+        "sidebar_label": "Release notes"
+      },
+      "version-0.11.0/version-0.11.0-android": {
+        "title": "Android",
+        "sidebar_label": "Android"
+      },
+      "version-0.11.0/version-0.11.0-getting-started": {
+        "title": "Getting Started",
+        "sidebar_label": "Getting Started"
+      },
+      "version-0.11.0/version-0.11.0-ionic": {
+        "title": "Ionic and Apache Cordova integration",
+        "sidebar_label": "Ionic and Cordova"
+      },
+      "version-0.11.0/version-0.11.0-react-native": {
+        "title": "React Native",
+        "sidebar_label": "React Native"
+      },
+      "version-0.11.0/version-0.11.0-react": {
+        "title": "React - using Offix Hooks",
+        "sidebar_label": "React"
+      },
+      "version-0.11.0/version-0.11.0-release-notes": {
         "title": "What is new in Offix",
         "sidebar_label": "Release notes"
       },
@@ -112,10 +145,13 @@
       "Github": "Github"
     },
     "categories": {
+      "Getting Started": "Getting Started",
+      "OffixClient": "OffixClient",
+      "Platforms": "Platforms",
+      "Advanced topics": "Advanced topics",
+      "Releases": "Releases",
       "Offix Client": "Offix Client",
-      "React": "React",
-      "Offix Scheduler": "Offix Scheduler",
-      "Getting Started": "Getting Started"
+      "Offix Scheduler": "Offix Scheduler"
     }
   },
   "pages-strings": {

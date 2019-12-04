@@ -1,2 +1,2 @@
-export * from "./OffixProvider";
+export * from "./ApolloOfflineProvider";
 export * from "./useOfflineMutation";

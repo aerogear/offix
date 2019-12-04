@@ -7,7 +7,7 @@ import { FetchResult } from "apollo-link";
 import { DocumentNode, GraphQLError } from "graphql";
 import React from "react";
 
-import { useOffixApolloClient } from "./OffixProvider";
+import { useApolloOfflineClient } from "./ApolloOfflineProvider";
 import { Omit, objToKey } from "./utils";
 import { ApolloOfflineClient, MutationHelperOptions } from "offix-client";
 
@@ -78,7 +78,7 @@ export function useOfflineMutation<TData, TVariables = OperationVariables>(
   baseOptions: MutationHookOptions<TData, TVariables> = {}
 ): [MutationFn<TData, TVariables>, MutationResult<TData>] {
 
-  const client = useOffixApolloClient(baseOptions.client);
+  const client = useApolloOfflineClient(baseOptions.client);
 
   const [result, setResult] = React.useState<MutationResult<TData>>(
     getInitialState

@@ -1,5 +1,5 @@
 import { PersistedData } from "offix-scheduler";
-import { ApolloQueueEntryOperation } from "./ApolloOfflineClient";
+import { ApolloQueueEntryOperation } from "./ApolloOfflineTypes";
 
 /**
  * Apollo Specific implementation of the Serializer interface.

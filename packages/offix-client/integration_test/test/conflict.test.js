@@ -1,12 +1,16 @@
-import { createClient } from '../../dist';
+import { ApolloOfflineClient } from '../../dist';
 import { TestStore } from '../utils/testStore';
 import { ToggleableNetworkStatus } from '../utils/network';
+import { InMemoryCache } from "apollo-cache-inmemory";
 import server from '../utils/server';
 import {
   ADD_TASK,
   GET_TASKS,
   UPDATE_TASK_CLIENT_RESOLUTION,
 } from '../utils/graphql.queries';
+import { HttpLink } from 'apollo-link-http';
+
+const CLIENT_HTTP_URL = 'http://localhost:4000/graphql';
 
 const newNetworkStatus = (online = true) => {
   const networkStatus = new ToggleableNetworkStatus();
@@ -15,13 +19,16 @@ const newNetworkStatus = (online = true) => {
 };
 
 const newClient = async (clientOptions = {}) => {
+  const link = new HttpLink({ uri: CLIENT_HTTP_URL })
   const config = {
-    httpUrl: "http://localhost:4000/graphql",
-    wsUrl: "ws://localhost:4000/graphql",
+    link,
+    cache: new InMemoryCache(),
     ...clientOptions
   };
 
-  return await createClient(config);
+  const client = new ApolloOfflineClient(config);
+  await client.init()
+  return client
 };
 
 describe('Conflicts', function () {
@@ -52,7 +59,7 @@ describe('Conflicts', function () {
   beforeEach('create client', async function () {
     networkStatus = newNetworkStatus(false);
     store = new TestStore();
-    client = await newClient({ networkStatus, storage: store });
+    client = await newClient({ networkStatus, offlineStorage: store });
   });
 
   const createBasicConflict = async (mutation, variables1, variables2, secondClient, customConflict) => {
@@ -92,9 +99,9 @@ describe('Conflicts', function () {
           return something;
         }
       };
-      client = await newClient({ networkStatus, storage: store, offlineQueueListener: listener, conflictListener, conflictStrategy: customStrategy });
+      client = await newClient({ networkStatus, offlineStorage: store, offlineQueueListener: listener, conflictListener, conflictStrategy: customStrategy });
     } else {
-      client = await newClient({ networkStatus, storage: store, offlineQueueListener: listener, conflictListener });
+      client = await newClient({ networkStatus, offlineStorage: store, offlineQueueListener: listener, conflictListener });
     }
 
     const result = await client.query({
@@ -161,7 +168,7 @@ describe('Conflicts', function () {
       mergeOccurred: () => merge++
     }
 
-    client = await newClient({ networkStatus, storage: store, offlineQueueListener: listener, conflictListener });
+    client = await newClient({ networkStatus, offlineStorage: store, offlineQueueListener: listener, conflictListener });
 
     await client.query({
       query: GET_TASKS
@@ -233,7 +240,7 @@ describe('Conflicts', function () {
       mergeOccurred: () => merge++
     }
 
-    client = await newClient({ networkStatus, storage: store, offlineQueueListener: listener, conflictListener });
+    client = await newClient({ networkStatus, offlineStorage: store, offlineQueueListener: listener, conflictListener });
 
     await client.query({
       query: GET_TASKS
@@ -284,7 +291,7 @@ describe('Conflicts', function () {
       const store2 = new TestStore();
       const networkStatus = newNetworkStatus();
 
-      const client2 = await newClient({ networkStatus, storage: store2 });
+      const client2 = await newClient({ networkStatus, offlineStorage: store2 });
       const { success, failure } = await createBasicConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2);
 
 
@@ -315,7 +322,7 @@ describe('Conflicts', function () {
       const store2 = new TestStore();
       const networkStatus = newNetworkStatus();
 
-      const client2 = await newClient({ networkStatus, storage: store2 });
+      const client2 = await newClient({ networkStatus, offlineStorage: store2 });
       const { success, failure, conflict, merge } = await createBasicConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2);
 
       const response = await client.query({
@@ -345,7 +352,7 @@ describe('Conflicts', function () {
       const networkStatus = newNetworkStatus();
 
       const store2 = new TestStore();
-      const client2 = await newClient({ networkStatus, storage: store2 });
+      const client2 = await newClient({ networkStatus, offlineStorage: store2 });
       const { success, failure, conflict } = await createBasicConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedTitleAgain, client2);
 
       const response = await client.query({
@@ -371,7 +378,7 @@ describe('Conflicts', function () {
       const networkStatus = newNetworkStatus();
 
       const client2 = await newClient({
-        networkStatus, storage: store
+        networkStatus, offlineStorage: store
       });
 
       const { success, failure } = await createBasicConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2, true);
@@ -402,7 +409,7 @@ describe('Conflicts', function () {
       const store2 = new TestStore();
       const networkStatus = newNetworkStatus();
 
-      const client2 = await newClient({ networkStatus, storage: store2 });
+      const client2 = await newClient({ networkStatus, offlineStorage: store2 });
       const { success, failure } = await createBasicConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedBoth, client2);
 
       const response = await client.query({
@@ -432,7 +439,7 @@ describe('Conflicts', function () {
       const store2 = new TestStore();
       const networkStatus = newNetworkStatus();
 
-      const client2 = await newClient({ networkStatus, storage: store2 });
+      const client2 = await newClient({ networkStatus, offlineStorage: store2 });
       const { success, failure } = await createAdvancedClientConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2);
 
       const response = await client.query({
@@ -463,7 +470,7 @@ describe('Conflicts', function () {
       const store2 = new TestStore();
       const networkStatus = newNetworkStatus();
 
-      const client2 = await newClient({ networkStatus, storage: store2 });
+      const client2 = await newClient({ networkStatus, offlineStorage: store2 });
       const { success, failure } = await createAdvancedServerConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2);
 
       const response = await client.query({

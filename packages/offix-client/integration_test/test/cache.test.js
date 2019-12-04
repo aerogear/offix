@@ -1,9 +1,11 @@
 import server from '../utils/server';
-import { createClient } from '../../dist';
+import { ApolloOfflineClient } from '../../dist';
 import { CacheOperation, getUpdateFunction, createOptimisticResponse } from '../../../offix-cache/dist';
 import { ToggleableNetworkStatus } from '../utils/network';
 import { ADD_TASK, GET_TASKS, DELETE_TASK, FIND_TASK_BY_TITLE, GET_TASK } from '../utils/graphql.queries';
 import { TestStore } from '../utils/testStore';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { HttpLink } from 'apollo-link-http/lib/httpLink';
 
 const CLIENT_HTTP_URL = 'http://localhost:4000/graphql';
 const CLIENT_WS_URL = 'ws://localhost:4000/graphql';
@@ -11,13 +13,18 @@ const CLIENT_WS_URL = 'ws://localhost:4000/graphql';
 const newClient = async (options) => {
   const networkStatus = new ToggleableNetworkStatus();
   const storage = new TestStore();
-  const client = await createClient({
-    httpUrl: CLIENT_HTTP_URL,
-    wsUrl: CLIENT_WS_URL,
+
+  const link = new HttpLink({ uri: CLIENT_HTTP_URL })
+  
+  const client = new ApolloOfflineClient({
+    link,
+    cache: new InMemoryCache(),
     networkStatus,
-    storage,
+    offlineStorage: storage,
     ...options
   });
+
+  await client.init()
 
   return { client, networkStatus, storage }
 }
