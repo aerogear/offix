@@ -413,7 +413,7 @@ describe("Offline cache and mutations", () => {
       expect(response3.data.allTasks.length).to.equal(0);
     });
 
-    it("query tasks while online, go offline, create task, delete task, go back online using mutationCacheUpdates", async () => {
+    it("query tasks while online, go offline, create task, go back online using mutationCacheUpdates and updateQuery", async () => {
 
       const { client, networkStatus: network } = await newClient({
         mutationCacheUpdates: {
