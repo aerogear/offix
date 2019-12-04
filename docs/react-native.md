@@ -4,7 +4,7 @@ title: React Native
 sidebar_label: React Native
 ---
 
-To integrate offix in React Native developers need to provide custom storage and network layers.
+To integrate offix in React Native, developers need to provide custom storage and network layers.
 We recomend developers to use following React Native plugins:
 
 - `@react-native-community/async-storage` - for storage
