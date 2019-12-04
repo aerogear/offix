@@ -1,7 +1,8 @@
 ---
-id: getting-started
+id: version-0.11.0-getting-started
 title: Getting Started
 sidebar_label: Getting Started
+original_id: getting-started
 ---
 
 ## Install Offix

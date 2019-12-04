@@ -1,7 +1,8 @@
 ---
-id: react-native
+id: version-0.11.0-react-native
 title: React Native
 sidebar_label: React Native
+original_id: react-native
 ---
 
 To integrate offix in React Native, developers need to provide custom storage and network layers.

@@ -1,6 +1,6 @@
 {
     "name": "offix-conflicts-server",
-    "version": "0.10.0",
+    "version": "0.11.0",
     "description": "Offix GraphQL server",
     "main": "dist/index.js",
     "scripts": {
@@ -16,11 +16,11 @@
     },
     "devDependencies": {
         "@types/jest": "24.0.23",
-        "@types/node": "12.12.11",
+        "@types/node": "12.12.14",
         "graphql": "14.5.8",
         "jest": "24.9.0",
-        "ts-jest": "24.1.0",
-        "ts-node": "8.5.2",
+        "ts-jest": "24.2.0",
+        "ts-node": "8.5.4",
         "typescript": "3.7.2"
     },
     "peerDependencies": {
