@@ -2,12 +2,10 @@ import { ApolloOfflineClient } from '../../dist'
 import { createOptimisticResponse, CacheOperation } from 'offix-cache';
 import { TestStore } from '../utils/testStore';
 import { ToggleableNetworkStatus } from '../utils/network';
-import server from '../utils/server';
-import { ADD_TASK, GET_TASKS, UPDATE_TASK, DELETE_TASK } from '../utils/graphql.queries';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
-
-const CLIENT_HTTP_URL = 'http://localhost:4000/graphql';
+import { TestxDirector } from "graphql-testx/dist/src/TestxDirector"
+import gql from 'graphql-tag';
 
 function wait(time) {
   return new Promise((resolve, reject) => {
@@ -16,6 +14,20 @@ function wait(time) {
 }
 
 // TODO: error handling when server is down
+
+const TESTX_CONTROLLER_URL = "http://localhost:4002";
+
+let server;
+let httpUrl;
+
+let FIND_ALL_TASKS;
+let CREATE_TASK;
+let UPDATE_TASK;
+let DELETE_TASK = gql`
+  mutation deleteTask($id: ID!) {
+    deleteTask(id: $id)
+  }
+`;
 
 const newNetworkStatus = (online = true) => {
   const networkStatus = new ToggleableNetworkStatus();
@@ -26,7 +38,7 @@ const newNetworkStatus = (online = true) => {
 const offlineMetaKey = "offline-meta-data";
 
 const newClient = async (clientOptions = {}) => {
-  const link = new HttpLink({ uri: CLIENT_HTTP_URL })
+  const link = new HttpLink({ uri: httpUrl })
   const config = {
     link,
     cache: new InMemoryCache(),
@@ -38,7 +50,7 @@ const newClient = async (clientOptions = {}) => {
   return client
 };
 
-describe('Offline mutations', function () {
+describe.only('Offline mutations', function () {
 
   this.timeout(20000);
 
@@ -51,13 +63,15 @@ describe('Offline mutations', function () {
     author: "new"
   };
 
-  const optimisticOptions = {
-    mutation: ADD_TASK,
-    operationType: CacheOperation.ADD,
-    returnType: "Task",
-    variables: newTask,
-    updateQuery: GET_TASKS
-  };
+  const newOptimisticResponse = () => {
+    return createOptimisticResponse({
+      mutation: CREATE_TASK,
+      operationType: CacheOperation.ADD,
+      returnType: "Task",
+      variables: newTask,
+      updateQuery: FIND_ALL_TASKS
+    })
+  }  
 
   const updatedTask = {
     description: 'updated',
@@ -67,7 +81,18 @@ describe('Offline mutations', function () {
   let client, networkStatus, store;
 
   before('start server', async function () {
+    server = new TestxDirector(TESTX_CONTROLLER_URL)
     await server.start();
+
+    httpUrl = await server.httpUrl();
+    const queries = await server.getQueries();
+    const mutations = await server.getMutations();
+
+    FIND_ALL_TASKS = gql(queries.findAllTasks)
+    CREATE_TASK = gql(mutations.createTask)
+    UPDATE_TASK = gql(mutations.updateTask)
+    // TODO: 
+    // DELETE_TASK = gql(mutations.deleteTask)
   });
 
   after('stop server', async function () {
@@ -75,7 +100,7 @@ describe('Offline mutations', function () {
   });
 
   beforeEach('reset server', async function () {
-    await server.reset();
+    await server.cleanDatabase();
   });
 
   beforeEach('create client', async function () {
@@ -93,7 +118,7 @@ describe('Offline mutations', function () {
 
     it('mutations are queued when offline', async function () {
       const mutationOptions = {
-        mutation: ADD_TASK,
+        mutation: CREATE_TASK,
         variables: newTask
       }
       await client.offlineMutate(mutationOptions).catch(err => { });
@@ -107,17 +132,17 @@ describe('Offline mutations', function () {
 
     it('mutations are persisted while offline', async function () {
       const mutationOptions = {
-        mutation: ADD_TASK,
+        mutation: CREATE_TASK,
         variables: newTask
       }
-    
-      await client.offlineMutate(mutationOptions).catch(err => {})
-      
+
+      await client.offlineMutate(mutationOptions).catch(err => { })
+
       const store = client.queue.store
       const storeData = await store.getOfflineData()
 
-      expect(storeData.length).to.equal(1);      
-      
+      expect(storeData.length).to.equal(1);
+
       const op = storeData[0].operation.op
       expect(op.mutation).to.deep.equal(mutationOptions.mutation)
       expect(op.variables).to.deep.equal(mutationOptions.variables)
@@ -125,7 +150,7 @@ describe('Offline mutations', function () {
 
     it('offlineMutate throws an offline error, we can get result when coming back online', function (done) {
       client.offlineMutate({
-        mutation: ADD_TASK,
+        mutation: CREATE_TASK,
         variables: newTask
       }).catch((err) => {
         const promise = err.offlineMutatePromise
@@ -144,7 +169,7 @@ describe('Offline mutations', function () {
       networkStatus.setOnline(true);
 
       const response = await client.offlineMutate({
-        mutation: ADD_TASK,
+        mutation: CREATE_TASK,
         variables: newTask
       });
 
@@ -174,10 +199,11 @@ describe('Offline mutations', function () {
     });
 
     it('Handles multiple mutations on the same object in queue/store', async function () {
+      this.timeout(0)
       networkStatus.setOnline(true);
 
       const result = await client.mutate({
-        mutation: ADD_TASK,
+        mutation: CREATE_TASK,
         variables: newTask
       })
 
@@ -204,20 +230,20 @@ describe('Offline mutations', function () {
       await new Promise(resolve => setTimeout(resolve, 300));
 
       const response = await client.query({
-        query: GET_TASKS,
+        query: FIND_ALL_TASKS,
         fetchPolicy: 'network-only'
       });
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(0);
+      expect(response.data.findAllTasks).to.exist;
+      expect(response.data.findAllTasks.length).to.equal(0);
     });
 
     it('can create new items and subsequently mutate them while offline, async function ()', async () => {
       let task;
-      const optimisticResponse = createOptimisticResponse(optimisticOptions)
+      const optimisticResponse = newOptimisticResponse();
       try {
         await client.offlineMutate({
-          mutation: ADD_TASK,
+          mutation: CREATE_TASK,
           variables: newTask,
           optimisticResponse,
           update: (_, { data: { createTask } }) => task = createTask
@@ -237,21 +263,21 @@ describe('Offline mutations', function () {
       await new Promise(resolve => setTimeout(resolve, 300));
 
       const response = await client.query({
-        query: GET_TASKS,
+        query: FIND_ALL_TASKS,
         fetchPolicy: 'network-only'
       })
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal(updatedTask.title);
+      expect(response.data.findAllTasks).to.exist;
+      expect(response.data.findAllTasks.length).to.equal(1);
+      expect(response.data.findAllTasks[0].title).to.equal(updatedTask.title);
     });
 
     it('reinitialized client will replay operations from the offline storage (simulates an app restart)', async function () {
       let task;
       try {
         await client.offlineMutate({
-          mutation: ADD_TASK,
+          mutation: CREATE_TASK,
           variables: newTask,
-          optimisticResponse: createOptimisticResponse(optimisticOptions),
+          optimisticResponse: newOptimisticResponse(),
           update: (_, { data: { createTask } }) => task = createTask
         });
       } catch (ignore) { }
@@ -270,23 +296,23 @@ describe('Offline mutations', function () {
       await new Promise(resolve => setTimeout(resolve, 300));
 
       const response = await client.query({
-        query: GET_TASKS,
+        query: FIND_ALL_TASKS,
         fetchPolicy: 'network-only'
       });
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal(updatedTask.title);
+      expect(response.data.findAllTasks).to.exist;
+      expect(response.data.findAllTasks.length).to.equal(1);
+      expect(response.data.findAllTasks[0].title).to.equal(updatedTask.title);
     });
 
     it('it can handle multiple offline mutations on an existing object and replay them successfully', async function () {
       networkStatus.setOnline(true);
 
       const result = await client.offlineMutate({
-        mutation: ADD_TASK,
+        mutation: CREATE_TASK,
         variables: newTask,
         returnType: "Task",
-        optimisticResponse: createOptimisticResponse(optimisticOptions),
+        optimisticResponse: newOptimisticResponse(),
       });
 
       let task = result.data.createTask;
@@ -314,13 +340,13 @@ describe('Offline mutations', function () {
       await wait(1000);
 
       const response = await client.query({
-        query: GET_TASKS,
+        query: FIND_ALL_TASKS,
         fetchPolicy: 'network-only'
       });
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal('update2');
+      expect(response.data.findAllTasks).to.exist;
+      expect(response.data.findAllTasks.length).to.equal(1);
+      expect(response.data.findAllTasks[0].title).to.equal('update2');
     });
 
   })
@@ -334,9 +360,9 @@ describe('Offline mutations', function () {
       networkStatus.setOnline(true);
 
       const response = await client.offlineMutate({
-        mutation: ADD_TASK,
+        mutation: CREATE_TASK,
         variables: newTask,
-        optimisticResponse: createOptimisticResponse(optimisticOptions),
+        optimisticResponse: newOptimisticResponse(),
       });
 
       task = response.data.createTask;
@@ -376,13 +402,13 @@ describe('Offline mutations', function () {
       await wait(300);
 
       const response = await client.query({
-        query: GET_TASKS,
+        query: FIND_ALL_TASKS,
         fetchPolicy: 'network-only'
       });
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal('nomerge2');
+      expect(response.data.findAllTasks).to.exist;
+      expect(response.data.findAllTasks.length).to.equal(1);
+      expect(response.data.findAllTasks[0].title).to.equal('nomerge2');
     });
   });
 
@@ -395,9 +421,9 @@ describe('Offline mutations', function () {
       networkStatus.setOnline(true);
 
       const response = await client.offlineMutate({
-        mutation: ADD_TASK,
+        mutation: CREATE_TASK,
         variables: newTask,
-        optimisticResponse: createOptimisticResponse(optimisticOptions),
+        optimisticResponse: newOptimisticResponse(),
       });
 
       task = response.data.createTask;
@@ -437,7 +463,7 @@ describe('Offline mutations', function () {
       client = await newClient({ networkStatus, offlineStorage: store, mutationsQueueName, offlineQueueListener: listener });
       try {
         await client.offlineMutate({
-          mutation: ADD_TASK,
+          mutation: CREATE_TASK,
           variables: newTask
         });
       } catch (ignore) { }
