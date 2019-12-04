@@ -18,14 +18,15 @@ Or [yarn](https://yarnpkg.com/en/package/offix-client):
 yarn add offix-client
 ```
 
-## Importing the package
+## Creating the Client
 
 ```javascript
 import { ApolloOfflineClient } from 'offix-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import { HttpLink } from "apollo-link-http";
 
 const config = {
-  httpUrl: 'http://localhost:4000/graphql',
+  link: new HttpLink({ uri: 'http://example.com/graphql' })
   cache: new InMemoryCache()
 };
 

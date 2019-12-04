@@ -1,7 +1,8 @@
 ---
-id: ionic
+id: version-0.11.0-ionic
 title: Ionic and Apache Cordova integration
 sidebar_label: Ionic and Cordova
+original_id: ionic
 ---
 
 Offix supports the Cordova platform out of the box by utilizing existing
