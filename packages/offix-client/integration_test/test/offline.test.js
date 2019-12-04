@@ -50,7 +50,7 @@ const newClient = async (clientOptions = {}) => {
   return client
 };
 
-describe.only('Offline mutations', function () {
+describe('Offline mutations', function () {
 
   this.timeout(20000);
 
