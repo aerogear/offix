@@ -3,7 +3,7 @@ import { OffixBoostConfig } from "./config/OffixBoostConfig";
 import { ApolloOfflineClient } from "offix-client";
 
 /**
-* Create an ApolloOfflineClient with authentication, 
+* Create an ApolloOfflineClient with authentication,
 websockets and file uploads enabled
 *
 * @param options options object used to build client
