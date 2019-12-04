@@ -7,6 +7,8 @@ import { HttpLink } from 'apollo-link-http/lib/httpLink';
 import { TestxDirector } from "graphql-testx/dist/src/TestxDirector"
 import gql from 'graphql-tag';
 
+const TESTX_CONTROLLER_URL = "http://localhost:4002";
+
 let server;
 let httpUrl;
 
@@ -116,7 +118,7 @@ const assertTaskEqualTaskTemplate = (task, template) => {
 describe("Offline cache and mutations", () => {
 
   before('start server', async function () {
-    server = new TestxDirector(__karma__.config.args[0])
+    server = new TestxDirector(TESTX_CONTROLLER_URL)
     await server.start();
 
     httpUrl = await server.httpUrl();
