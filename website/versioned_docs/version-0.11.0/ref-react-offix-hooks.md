@@ -1,8 +1,8 @@
 ---
-id: version-0.11.0-react-offix-hooks
-title: React Offix Hooks
-sidebar_label: React Offix Hooks
-original_id: react-offix-hooks
+id: version-0.11.0-react
+title: React - using Offix Hooks
+sidebar_label: React
+original_id: react
 ---
 
 `ApolloOfflineClient` is compatible with all of the official [Apollo React Hooks](https://www.apollographql.com/docs/react/api/react-hooks/) such as `useQuery`, `useMutation` and `useSubscription`.
