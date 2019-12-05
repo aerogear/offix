@@ -1,4 +1,14 @@
-# Advanced topics
+---
+id: cookbooks
+title: Cookbooks
+sidebar_label: Offline Cookbook
+---
+
+
+# Offix Cookbook
+
+This section contains multiple tips and trics for working with Offix.
+
 
 ## Implementing Custom Network Status checks
 
@@ -11,36 +21,16 @@ To use your own custom network checks, implement the [NetworkStatus](NetworkStat
   isOffline(): boolean;
 ```
 
-## Logging debug messages
+This interface can be used to redefine what being offline means. 
+For example for some use cases developers might decide to use scheduler only when Wifi connection is available.
 
-Sync package is using debug package to print out debug messages
+## Querying data when offiline
 
-To enable debug please execute in console
-`localStorage.debug = 'AeroGearSync:*'`
+To make sure that data will be available when device will be going online we need to query it with the proper 
+`fetchPolicy`
 
-Some certain features can be enabled separately
+We recomend to always use default fetch policy and let offix to control the folow, however for advanced use cases
+developers can modify their approach. 
 
-`localStorage.debug = 'AeroGearSync:OfflineMutations*'`
-
-## Optimistic UI
-
-By default user changes that are made when offline will not appear in the app
-until they going to be synced to server. In some circumstances users may want to see them instantly to perform various operations on the data
-When performing mutations users can decide to supply `optimisticResponse` object that will
-appear instantly in the application UI. SDK provides helper method to work with optimistic responses.
-
-```javascript
- import { createOptimisticResponse } from "@aerogear/datasync-js";
-
- createOptimisticResponse("updateTest", "Test", { data: "test" });
-```
-
-Users can detect if the provided data is optimistic response by checking `optimisticResponse` flag is set to true.
-
-## Listening to the offline queue events
-
-Developers can implement `offlineQueueListener` that can be passed as config element.
-This listener is going to be notified about new items that were added to offline queue.
-Listener can be used to build UI support and show pending changes.
-This feature can be mixed together with `OptimisticResponse` to deliver great offline experience
-See example application for more information.
+For more information see: 
+https://medium.com/@wtr/data-query-patterns-for-graphql-clients-af66830531aa
