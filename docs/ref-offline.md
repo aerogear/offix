@@ -86,7 +86,7 @@ client.offlineMutate(...).catch((error)=> {
 
 Apollo client holds all mutation parameters in memory. An offline Apollo client will continue to store mutation parameters and once online, it will restore all mutations to memory. Any Update Functions that are supplied to mutations cannot be cached by an Apollo client resulting in the loss of all optimisticResponses after a restart. Update functions supplied to mutations cannot be saved in the cache. As a result, all optimisticResponses will disappear from the application after a restart and it will only reappear when the Apollo client becomes online and successfully syncs with the server.
 
-To prevent the loss of all optimisticResponses after a restart, you can configure the Update Functions to restore all optimisticResponses.
+To prevent the loss of all optimisticResponses after a restart, you can configure the `update` functions to restore all optimisticResponses.
 
 ```javascript
 const updateFunctions = {
