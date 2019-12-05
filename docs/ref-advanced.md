@@ -22,7 +22,7 @@ To use your own custom network checks, implement the [NetworkStatus](NetworkStat
 ```
 
 This interface can be used to redefine what being offline means. 
-For example for some use cases developers might decide to use scheduler only when Wifi connection is available.
+For example, for some use cases developers might decide to use scheduler only when Wifi connection is available.
 
 ## Querying data when offiline
 
