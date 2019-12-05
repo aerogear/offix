@@ -5,7 +5,7 @@ sidebar_label: Getting Started
 ---
 
 Offix can be used with existing Apollo GraphQL applications as an extension to the Apollo Client.
-Client will provide additional methods that will support various offline use cases. 
+The Offix Client provides additional methods that support various offline use cases. 
 
 Offix supports multiple platforms by extendable javascript library and individual wrappers for 
 specific web and cross platform frameworks. 
