@@ -24,7 +24,7 @@ To use your own custom network checks, implement the [NetworkStatus](NetworkStat
 This interface can be used to redefine what being offline means. 
 For example, for some use cases developers might decide to use scheduler only when Wifi connection is available.
 
-## Querying data when offiline
+## Querying Data when Offline
 
 To make sure that data will be available when device will be going online we need to query it with the proper 
 `fetchPolicy`
