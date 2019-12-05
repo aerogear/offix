@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": [
+    "./src/**/*.ts"
+  ],
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "declarationDir": "./types",
+    "lib": [
+      "esnext.asynciterable",
+      "es2015",
+      "dom",
+      "es2016"
+    ]
+  }
+}
