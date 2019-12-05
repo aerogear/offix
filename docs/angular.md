@@ -9,7 +9,7 @@ However, the regular `offix-client` module can be used for most use cases.
 
 ## Example Angular Application
 
-Offix is implemented in Angular based Ionic example application.
+We maintain an Angular based example Ionic application that showcases how to use Offix.
 For more information please check:
 
 https://github.com/aerogear/ionic-showcase/
