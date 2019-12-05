@@ -60,7 +60,7 @@ We then simply pass this object to `offlineMutate` and our cache is automaticall
 client.offlineMutate(mutationOptions);
 ```
 
-If you do not wish to use offline capabilities of the offix for some of the mutations please use an `client.mutate` function . This function will not react to the changes in network state. Your requests will not be enqueued into offline queue.
+If you do not wish to use offline capabilities of offix for some mutations, use the `client.mutate` function. `client.mutate` will not react to the changes in the network state. Requests are not enqueued into offline queue.
 
 ## Offline Workflow
 
