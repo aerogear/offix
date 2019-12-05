@@ -26,7 +26,7 @@ For example, for some use cases developers might decide to use scheduler only wh
 
 ## Querying Data when Offline
 
-To make sure that data will be available when device will be going online we need to query it with the proper 
+To make sure that data will be available when the devices comes back online, we need to query it with the proper 
 `fetchPolicy`
 
 We recomend to always use default fetch policy and let offix to control the folow, however for advanced use cases
