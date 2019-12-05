@@ -60,16 +60,7 @@ We then simply pass this object to `offlineMutate` and our cache is automaticall
 client.offlineMutate(mutationOptions);
 ```
 
-If you do not wish to use the `offlineMutate` function you can also use the `createMutationOptions` function directly. This function provides an Apollo compatible `MutationOptions` object to pass to your pre-existing client.
-This is shown below where `mutationOptions` is the same object shown in the above code example.
-
-```javascript
-const { createMutationOptions } = require('offix-cache');
-
-const options = createMutationOptions(mutationOptions);
-
-client.mutate(options);
-```
+If you do not wish to use offline capabilities of the offix for some of the mutations please use an `client.mutate` function . This function will not react to the changes in network state. Your requests will not be enqueued into offline queue.
 
 ## Offline Workflow
 
