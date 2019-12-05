@@ -22,7 +22,7 @@
     "apollo-link-http": "1.5.16",
     "apollo-link-retry": "2.2.15",
     "apollo-link-ws": "1.0.19",
-    "apollo-upload-client": "11.0.0",
+    "apollo-upload-client": "12.1.0",
     "offix-client": "0.11.0",
     "offix-conflicts-client": "0.11.0",
     "subscriptions-transport-ws": "0.9.16"
