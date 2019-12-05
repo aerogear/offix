@@ -15,6 +15,8 @@ import { RetryLink } from "apollo-link-retry";
  * Default config is applied on top of user provided configuration
  */
 export class OffixBoostConfig implements OffixBoostOptions {
+  public httpUrl: string;
+  public wsUrl: string;
   public conflictStrategy: ConflictResolutionStrategy;
   public conflictProvider: ObjectState;
   public link: ApolloLink;
@@ -24,7 +26,15 @@ export class OffixBoostConfig implements OffixBoostOptions {
   public auditLogging: boolean;
 
   constructor(options = {} as OffixBoostOptions) {
+    if (!options.httpUrl) {
+      throw new Error('config missing httpUrl')
+    }
+    if (!options.wsUrl) {
+      throw new Error('config missing wsUrl')
+    }
     Object.assign(this, options);
+    this.httpUrl = options.httpUrl;
+    this.wsUrl = options.wsUrl;
     this.cache = options.cache || new InMemoryCache(),
     this.conflictProvider = options.conflictProvider || new VersionedState(),
     this.conflictStrategy = options.conflictStrategy || UseClient,

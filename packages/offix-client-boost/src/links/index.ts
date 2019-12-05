@@ -17,7 +17,7 @@ import { defaultWebSocketLink } from "./WebsocketLink";
 export function createDefaultLink(config: OffixBoostOptions): ApolloLink {
   let terminatingLink = createHTTPCompositeLink(config);
   if (config.wsUrl) {
-    const wsLink = defaultWebSocketLink(config, { uri: config.wsUrl });
+    const wsLink = defaultWebSocketLink(config);
     terminatingLink = ApolloLink.split(isSubscription, wsLink, terminatingLink);
   }
   return terminatingLink;

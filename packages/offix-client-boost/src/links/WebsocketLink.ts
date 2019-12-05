@@ -1,24 +1,24 @@
 import { WebSocketLink } from "apollo-link-ws";
 import { OffixBoostOptions } from "../config/OffixBoostOptions";
 
-export const defaultWebSocketLink = (userOptions: OffixBoostOptions, config: WebSocketLink.Configuration) => {
-  const options = config.options || {};
+export const defaultWebSocketLink = (options: OffixBoostOptions) => {
+  const websocketClientOptions = options.websocketClientOptions || {}
   return new WebSocketLink({
-    uri: config.uri,
+    uri: options.wsUrl,
     options: {
       // Params that can be used to send authentication token etc.
-      connectionParams: async () => {
-        if (userOptions.authContextProvider) {
-          const { headers } = await userOptions.authContextProvider();
-          return headers;
+      connectionParams: websocketClientOptions.connectionParams || async function connectionParams() {
+        if (options.authContextProvider) {
+          const { headers } = await options.authContextProvider()
+          return headers
         }
       },
-      connectionCallback: options.connectionCallback,
-      timeout: options.timeout || 10000,
+      connectionCallback: websocketClientOptions.connectionCallback,
+      timeout: websocketClientOptions.timeout || 10000,
       // How long client should wait to kill connection
       inactivityTimeout: 10000,
       // Large value to support offline state connections
-      reconnectionAttempts: options.reconnectionAttempts || 500,
+      reconnectionAttempts: websocketClientOptions.reconnectionAttempts || 500,
       // Fixed value to support going offline
       reconnect: true,
       // Fixed value to support clients with no subscriptions

@@ -2,6 +2,7 @@ import { AuthContextProvider } from "../auth/AuthContextProvider";
 import { ApolloOfflineClientOptions } from "offix-client";
 import { ApolloCache } from "apollo-cache";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
+import { ClientOptions } from "subscriptions-transport-ws";
 
 // Define Omit.  Can be defined in a utilities package
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
@@ -19,12 +20,12 @@ export interface OffixBoostOptions extends Omit<ApolloOfflineClientOptions, "lin
   /**
    * The URL of http server
    */
-  httpUrl?: string;
+  httpUrl: string;
 
   /**
    *  The URL of websocket endpoint
    */
-  wsUrl?: string;
+  wsUrl: string;
 
   /**
    * [Modifier]
@@ -53,4 +54,11 @@ export interface OffixBoostOptions extends Omit<ApolloOfflineClientOptions, "lin
    * If set to true, GraphGL file uploads will be enabled and supported
    */
   fileUpload?: boolean;
+
+  /**
+   * [Modifier]
+   * 
+   * Options for the websocket client
+   */
+  websocketClientOptions?: Omit<ClientOptions, "lazy"|"inactivityTimeout"|"reconnect">
 }
