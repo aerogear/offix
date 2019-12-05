@@ -5,7 +5,7 @@ sidebar_label: Angular
 ---
 
 Offix does not provide a specific API for Angular,
-however deverlopers can use our vanilla js client for the most of the tasks.
+However, the regular `offix-client` module can be used for most use cases.
 
 ## Example Angular Application
 
