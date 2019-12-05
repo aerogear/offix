@@ -1,6 +1,6 @@
 {
   "name": "react-offix-hooks",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "Use offix-client in react hooks",
   "keywords": [
     "offix",
@@ -38,7 +38,7 @@
   "dependencies": {
     "@types/lodash": "4.14.149",
     "lodash": "4.17.15",
-    "offix-client": "0.11.0"
+    "offix-client": "0.12.0"
   },
   "peerDependencies": {
     "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0",
