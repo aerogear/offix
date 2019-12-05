@@ -4,7 +4,7 @@ title: Getting Started
 sidebar_label: Getting Started
 ---
 
-## Install Offix
+## Install Offix Client
 
 Using [npm](https://www.npmjs.com/package/offix-client):
 
@@ -40,6 +40,21 @@ await client.init();
 The `ApolloOfflineClient` is a full `ApolloClient` but with some additional features for building offline workflows.
 
 **Note** `client.init` must be resolved before the application makes any queries/mutations, otherwise the cache and storage mechanisms may not work properly.
+
+## Offix Client Boost
+
+The `offix-client-boost` is a convenient way to create a client already bundled with a cache and [Apollo Links](https://www.apollographql.com/docs/link/) subscriptions and file uploads.
+
+```js
+import { createClient } from 'offix-client-boost'
+
+const config = {
+  httpUrl: 'http://example.com/graphql',
+  wsUrl: 'ws://example.com/graphql'
+}
+
+const client = await createClient(config)
+```
 
 ## Example Mutation
 
@@ -85,7 +100,7 @@ try {
 
 ## Basic concepts
 
-OfflineClient is based on Apollo GraphQL client and can be used with various web and mobile frameworks.
+`ApolloOfflineClient` is and extension of the Apollo GraphQL client and can be used with various web and mobile frameworks.
 We provide a version for web and Apache Cordova. For basic concepts about Apollo GraphQL please refer to the documentation for your own platform.
 
 For React:
