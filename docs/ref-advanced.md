@@ -7,7 +7,7 @@ sidebar_label: Offline Cookbook
 
 # Offix Cookbook
 
-This section contains multiple tips and trics for working with Offix.
+This section contains multiple tips and tricks for working with Offix.
 
 
 ## Implementing Custom Network Status checks
