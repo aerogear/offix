@@ -29,7 +29,7 @@ For example, for some use cases developers might decide to use scheduler only wh
 To make sure that data will be available when the devices comes back online, we need to query it with the proper 
 `fetchPolicy`
 
-We recomend to always use default fetch policy and let offix to control the folow, however for advanced use cases
+We recommend to always use the default fetch policy and to let Offix to control the flow. However, for advanced use cases
 developers can modify their approach. 
 
 For more information see: 
