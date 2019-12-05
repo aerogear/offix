@@ -23,14 +23,13 @@ export class OffixBoostConfig implements OffixBoostOptions {
   public cache: any;
   public retryOptions: RetryLink.Options;
   public fileUpload: boolean;
-  public auditLogging: boolean;
 
   constructor(options = {} as OffixBoostOptions) {
     if (!options.httpUrl) {
-      throw new Error('config missing httpUrl')
+      throw new Error("config missing httpUrl");
     }
     if (!options.wsUrl) {
-      throw new Error('config missing wsUrl')
+      throw new Error("config missing wsUrl");
     }
     Object.assign(this, options);
     this.httpUrl = options.httpUrl;
@@ -39,7 +38,6 @@ export class OffixBoostConfig implements OffixBoostOptions {
     this.conflictProvider = options.conflictProvider || new VersionedState(),
     this.conflictStrategy = options.conflictStrategy || UseClient,
     this.fileUpload = options.fileUpload || false,
-    this.auditLogging = options.auditLogging || false,
     this.retryOptions = options.retryOptions || {
       delay: {
         initial: 1000,

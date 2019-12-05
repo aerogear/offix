@@ -11,7 +11,6 @@ import { defaultWebSocketLink } from "./WebsocketLink";
  * - Http support
  * - Websocket support
  * - Conflict resolution
- * - Audit logging
  * - File uploads
  */
 export function createDefaultLink(config: OffixBoostOptions): ApolloLink {
@@ -30,7 +29,6 @@ export function createDefaultLink(config: OffixBoostOptions): ApolloLink {
  * - Auth Link
  * - HTTP Link
  * - File Upload Link
- * - Audit logging
  */
 function createHTTPCompositeLink(config: OffixBoostOptions): ApolloLink {
 
@@ -43,14 +41,12 @@ function createHTTPCompositeLink(config: OffixBoostOptions): ApolloLink {
   if (config.fileUpload) {
     links.push(
       createUploadLink({
-        uri: config.httpUrl,
-        includeExtensions: config.auditLogging
+        uri: config.httpUrl
       })
     );
   } else {
     const httpLink = new HttpLink({
-      uri: config.httpUrl,
-      includeExtensions: config.auditLogging
+      uri: config.httpUrl
     }) as ApolloLink;
     links.push(httpLink);
   }

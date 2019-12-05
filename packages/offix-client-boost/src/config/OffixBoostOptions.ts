@@ -44,11 +44,6 @@ export interface OffixBoostOptions extends Omit<ApolloOfflineClientOptions, "lin
   authContextProvider?: AuthContextProvider;
 
   /**
-   * If set to true, GraphGL requests will include some additional data to audit log in the server side.
-   */
-  auditLogging?: boolean;
-
-  /**
    * [Modifier]
    *
    * If set to true, GraphGL file uploads will be enabled and supported
@@ -57,8 +52,8 @@ export interface OffixBoostOptions extends Omit<ApolloOfflineClientOptions, "lin
 
   /**
    * [Modifier]
-   * 
+   *
    * Options for the websocket client
    */
-  websocketClientOptions?: Omit<ClientOptions, "lazy"|"inactivityTimeout"|"reconnect">
+  websocketClientOptions?: Omit<ClientOptions, "lazy"|"inactivityTimeout"|"reconnect">;
 }

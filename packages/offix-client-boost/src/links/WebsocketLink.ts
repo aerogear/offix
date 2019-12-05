@@ -2,15 +2,15 @@ import { WebSocketLink } from "apollo-link-ws";
 import { OffixBoostOptions } from "../config/OffixBoostOptions";
 
 export const defaultWebSocketLink = (options: OffixBoostOptions) => {
-  const websocketClientOptions = options.websocketClientOptions || {}
+  const websocketClientOptions = options.websocketClientOptions || {};
   return new WebSocketLink({
     uri: options.wsUrl,
     options: {
       // Params that can be used to send authentication token etc.
       connectionParams: websocketClientOptions.connectionParams || async function connectionParams() {
         if (options.authContextProvider) {
-          const { headers } = await options.authContextProvider()
-          return headers
+          const { headers } = await options.authContextProvider();
+          return headers;
         }
       },
       connectionCallback: websocketClientOptions.connectionCallback,
