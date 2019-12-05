@@ -73,14 +73,14 @@ client.mutate(options);
 
 ## Offline Workflow
 
-When offline `client.mutate` function will return immediately after is called.
+When offline `client.offlineMutate` function will return immediately after is called.
 Returned promise will resolve into error (`catch` method is triggered).
 Developers can detect if error is an offline error and watch for change to be replicated back to server.
 
 Example:
 
 ```javascript
-client.mutate(...).catch((error)=> {
+client.offlineMutate(...).catch((error)=> {
   // 1. Detect if this was an offline error
   if (error.offline){
     // 2. We can still track when offline change is going to be replicated.
