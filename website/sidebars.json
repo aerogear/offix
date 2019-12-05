@@ -13,6 +13,7 @@
     "Platforms": [
       "react",
       "react-native",
+      "angular",
       "ionic",
       "android"
     ],
