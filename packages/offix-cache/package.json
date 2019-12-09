@@ -1,6 +1,6 @@
 {
   "name": "offix-cache",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "GraphQL Mutation and Subscription Helpers",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -19,7 +19,7 @@
     "jest": "24.9.0",
     "ts-jest": "24.2.0",
     "ts-node": "8.5.4",
-    "typescript": "3.7.2"
+    "typescript": "3.7.3"
   },
   "dependencies": {
     "apollo-client": "2.6.4",
