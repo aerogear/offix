@@ -18,7 +18,7 @@
     "graphql": "14.5.8",
     "graphql-subscriptions": "1.1.0",
     "graphql-tag": "2.10.1",
-    "graphql-testx": "0.2.0",
+    "graphql-testx": "0.3.0-dev1",
     "karma": "4.4.1",
     "karma-chai": "0.1.0",
     "karma-chrome-launcher": "3.1.0",
