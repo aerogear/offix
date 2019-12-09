@@ -4,6 +4,13 @@ title: What is new in Offix
 sidebar_label: Release notes
 ---
 
+# 0.12.0
+
+The 0.12.0 release brings a new `offix-client-boost` package. This package is a batteries-included wrapper around the `offix-client` that brings
+everything needed to get started with GraphQL quickly. This includes a cache and support for subscriptions and file uploads.
+
+Check out the new documentation at [offix.dev](https://offix.dev).
+
 # 0.11.0
 
 The 0.11.0 release simplifies the creation of offline clients. 

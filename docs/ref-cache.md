@@ -4,7 +4,9 @@ title: Offix Cache
 sidebar_label: Client Cache
 ---
 
-The offix-cache package helps developers to manage some of their client's state such as cache, optimistic responses and subscriptions.
+The `offix-cache` package helps developers to manage some of their client's state such as cache, optimistic responses and subscriptions.
+
+Offix Cache capabilities are available automatically when using `client.offlineMutate`.
 
 ## Optimistic UI
 

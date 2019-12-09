@@ -13,10 +13,12 @@
     "Platforms": [
       "react",
       "react-native",
+      "angular",
       "ionic",
       "android"
     ],
     "Advanced topics": [
+      "cookbooks",
       "offix-scheduler-introduction"
     ],
     "Releases": [

@@ -6,8 +6,8 @@ sidebar_label: Android
 
 Offix supports Android platform by seprate project called Offix Android. 
 
-For docs go to:
+Offix Android Documentation:
 http://android.offix.dev
 
-Github:
+Offix Android Github:
 https://github.com/aerogear/offix-android

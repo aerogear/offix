@@ -60,27 +60,18 @@ We then simply pass this object to `offlineMutate` and our cache is automaticall
 client.offlineMutate(mutationOptions);
 ```
 
-If you do not wish to use the `offlineMutate` function you can also use the `createMutationOptions` function directly. This function provides an Apollo compatible `MutationOptions` object to pass to your pre-existing client.
-This is shown below where `mutationOptions` is the same object shown in the above code example.
-
-```javascript
-const { createMutationOptions } = require('offix-cache');
-
-const options = createMutationOptions(mutationOptions);
-
-client.mutate(options);
-```
+If you do not wish to use offline capabilities of offix for some mutations, use the `client.mutate` function. `client.mutate` will not react to the changes in the network state. Requests are not enqueued into offline queue.
 
 ## Offline Workflow
 
-When offline `client.mutate` function will return immediately after is called.
+When offline `client.offlineMutate` function will return immediately after is called.
 Returned promise will resolve into error (`catch` method is triggered).
 Developers can detect if error is an offline error and watch for change to be replicated back to server.
 
 Example:
 
 ```javascript
-client.mutate(...).catch((error)=> {
+client.offlineMutate(...).catch((error)=> {
   // 1. Detect if this was an offline error
   if (error.offline){
     // 2. We can still track when offline change is going to be replicated.
@@ -95,7 +86,7 @@ client.mutate(...).catch((error)=> {
 
 Apollo client holds all mutation parameters in memory. An offline Apollo client will continue to store mutation parameters and once online, it will restore all mutations to memory. Any Update Functions that are supplied to mutations cannot be cached by an Apollo client resulting in the loss of all optimisticResponses after a restart. Update functions supplied to mutations cannot be saved in the cache. As a result, all optimisticResponses will disappear from the application after a restart and it will only reappear when the Apollo client becomes online and successfully syncs with the server.
 
-To prevent the loss of all optimisticResponses after a restart, you can configure the Update Functions to restore all optimisticResponses.
+To prevent the loss of all optimisticResponses after a restart, you can configure the `update` functions to restore all optimisticResponses.
 
 ```javascript
 const updateFunctions = {
