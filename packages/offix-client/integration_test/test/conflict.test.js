@@ -2,15 +2,19 @@ import { ApolloOfflineClient } from '../../dist';
 import { TestStore } from '../utils/testStore';
 import { ToggleableNetworkStatus } from '../utils/network';
 import { InMemoryCache } from "apollo-cache-inmemory";
-import server from '../utils/server';
-import {
-  ADD_TASK,
-  GET_TASKS,
-  UPDATE_TASK_CLIENT_RESOLUTION,
-} from '../utils/graphql.queries';
 import { HttpLink } from 'apollo-link-http';
+import { TestxDirector } from "graphql-testx/dist/src/TestxDirector"
+import gql from 'graphql-tag';
+import { print } from 'graphql/language/printer'
 
-const CLIENT_HTTP_URL = 'http://localhost:4000/graphql';
+const TESTX_CONTROLLER_URL = "http://localhost:4002";
+
+let server;
+let httpUrl;
+
+let FIND_ALL_TASKS;
+let CREATE_TASK;
+let UPDATE_TASK;
 
 const newNetworkStatus = (online = true) => {
   const networkStatus = new ToggleableNetworkStatus();
@@ -19,8 +23,9 @@ const newNetworkStatus = (online = true) => {
 };
 
 const newClient = async (clientOptions = {}) => {
-  const link = new HttpLink({ uri: CLIENT_HTTP_URL })
+  const link = new HttpLink({ uri: httpUrl })
   const config = {
+    cacheStorage: new TestStore(),
     link,
     cache: new InMemoryCache(),
     ...clientOptions
@@ -45,15 +50,25 @@ describe('Conflicts', function () {
   let client, networkStatus, store;
 
   before('start server', async function () {
+    server = new TestxDirector(TESTX_CONTROLLER_URL)
     await server.start();
+
+    httpUrl = await server.httpUrl();
+    const queries = await server.getQueries();
+    const mutations = await server.getMutations();
+
+    FIND_ALL_TASKS = gql(queries.findAllTasks)
+    CREATE_TASK = gql(mutations.createTask)
+    UPDATE_TASK = gql(mutations.updateTask)
   });
 
   after('stop server', async function () {
-    await server.stop();
+    this.timeout(0)
+    await server.close();
   });
 
   beforeEach('reset server', async function () {
-    await server.reset();
+    await server.cleanDatabase();
   });
 
   beforeEach('create client', async function () {
@@ -66,11 +81,12 @@ describe('Conflicts', function () {
     networkStatus.setOnline(true);
 
     const response = await client.mutate({
-      mutation: ADD_TASK,
+      mutation: CREATE_TASK,
       variables: newTask
     }).catch(error => {
       return;
     })
+
 
     const task = response.data.createTask;
 
@@ -93,7 +109,7 @@ describe('Conflicts', function () {
 
     if (customConflict) {
       const customStrategy = {
-        resolve: ({base: baseData, server: serverData, client: clientData}) => {
+        resolve: ({ base: baseData, server: serverData, client: clientData }) => {
           const something = Object.assign(baseData, serverData, clientData);
           something.description = 'custom';
           return something;
@@ -105,23 +121,21 @@ describe('Conflicts', function () {
     }
 
     const result = await client.query({
-      query: GET_TASKS
+      query: FIND_ALL_TASKS
     });
 
-    console.log("GET TASKS", result.data.allTasks[0]);
+    console.log("GET TASKS", result.data.findAllTasks[0]);
 
     await secondClient.query({
-      query: GET_TASKS
+      query: FIND_ALL_TASKS
     });
 
-    const vars1 = { ...variables1, id: 0, version: 1 };
-    const vars2 = { ...variables2, id: 0, version: 1 };
+    const vars1 = { ...variables1, id: 1, version: 1 };
+    const vars2 = { ...variables2, id: 1, version: 1 };
     await secondClient.offlineMutate({
       mutation,
       variables: vars1,
       returnType: 'Task'
-    }).catch(error => {
-      return;
     })
 
     networkStatus.setOnline(false);
@@ -130,11 +144,9 @@ describe('Conflicts', function () {
       mutation,
       variables: vars2,
       returnType: 'Task'
-
     }).catch(error => {
       return;
     })
-
     networkStatus.setOnline(true);
 
     await new Promise(resolve => setTimeout(resolve, 100));
@@ -146,7 +158,7 @@ describe('Conflicts', function () {
     networkStatus.setOnline(true);
 
     const response = await client.mutate({
-      mutation: ADD_TASK,
+      mutation: CREATE_TASK,
       variables: newTask
     });
 
@@ -171,16 +183,16 @@ describe('Conflicts', function () {
     client = await newClient({ networkStatus, offlineStorage: store, offlineQueueListener: listener, conflictListener });
 
     await client.query({
-      query: GET_TASKS
+      query: FIND_ALL_TASKS
     });
 
     await secondClient.query({
-      query: GET_TASKS
+      query: FIND_ALL_TASKS
     });
 
-    const vars1 = { ...variables1, id: 0, version: 1 };
-    const vars2 = { ...variables2, id: 0, version: 1 };
-    const vars3 = { ...variables2, id: 0, version: 1, author: "Advanced conflict author" };
+    const vars1 = { ...variables1, id: 1, version: 1 };
+    const vars2 = { ...variables2, id: 1, version: 1 };
+    const vars3 = { ...variables2, id: 1, version: 1, author: "Advanced conflict author" };
     await secondClient.offlineMutate({
       mutation,
       variables: vars1,
@@ -218,7 +230,7 @@ describe('Conflicts', function () {
     networkStatus.setOnline(true);
 
     const response = await client.mutate({
-      mutation: ADD_TASK,
+      mutation: CREATE_TASK,
       variables: newTask
     });
 
@@ -243,16 +255,16 @@ describe('Conflicts', function () {
     client = await newClient({ networkStatus, offlineStorage: store, offlineQueueListener: listener, conflictListener });
 
     await client.query({
-      query: GET_TASKS
+      query: FIND_ALL_TASKS
     });
 
     await secondClient.query({
-      query: GET_TASKS
+      query: FIND_ALL_TASKS
     });
 
-    const vars1 = { ...variables1, id: 0, version: 1 };
-    const vars2 = { ...variables2, id: 0, version: 1 };
-    const vars3 = { ...variables2, id: 0, version: 1, author: "Advanced conflict author" };
+    const vars1 = { ...variables1, id: 1, version: 1 };
+    const vars2 = { ...variables2, id: 1, version: 1 };
+    const vars3 = { ...variables2, id: 1, version: 1, author: "Advanced conflict author" };
     await secondClient.offlineMutate({
       mutation,
       variables: vars1,
@@ -286,35 +298,36 @@ describe('Conflicts', function () {
   describe('no conflict should be thrown for mergeable data', function () {
 
     it('should succeed', async function () {
-      const updatedTitle = { title: "updated", description: "new" };
-      const updatedDescription = { title: "new", description: "updated" };
+      this.timeout(0)
+      const updatedTitle = { title: "updated", description: "new", author: "new" };
+      const updatedDescription = { title: "new", description: "updated", author: "new" };
       const store2 = new TestStore();
       const networkStatus = newNetworkStatus();
 
       const client2 = await newClient({ networkStatus, offlineStorage: store2 });
-      const { success, failure } = await createBasicConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2);
+      const { success, failure } = await createBasicConflict(UPDATE_TASK, updatedTitle, updatedDescription, client2);
 
 
       const response = await client.query({
-        query: GET_TASKS,
+        query: FIND_ALL_TASKS,
         fetchPolicy: 'network-only'
       });
 
 
-      console.log("ALL TASKS", response.data.allTasks);
+      console.log("ALL TASKS", response.data.findAllTasks);
 
       expect(success).to.equal(1);
       expect(failure).to.equal(0);
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal('updated');
-      expect(response.data.allTasks[0].description).to.equal('updated');
+      expect(response.data.findAllTasks).to.exist;
+      expect(response.data.findAllTasks.length).to.equal(1);
+      expect(response.data.findAllTasks[0].title).to.equal('updated');
+      expect(response.data.findAllTasks[0].description).to.equal('updated');
     });
 
   });
 
-    describe('merge should be called for mergeable conflict', function () {
+  describe('merge should be called for mergeable conflict', function () {
 
     it('should succeed', async function () {
       const updatedTitle = { title: "updated", description: "new", author: "new" };
@@ -323,23 +336,23 @@ describe('Conflicts', function () {
       const networkStatus = newNetworkStatus();
 
       const client2 = await newClient({ networkStatus, offlineStorage: store2 });
-      const { success, failure, conflict, merge } = await createBasicConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2);
+      const { success, failure, conflict, merge } = await createBasicConflict(UPDATE_TASK, updatedTitle, updatedDescription, client2);
 
       const response = await client.query({
-        query: GET_TASKS,
+        query: FIND_ALL_TASKS,
         fetchPolicy: 'network-only'
       });
-      console.log("ALL TASKS", response.data.allTasks);
+      console.log("ALL TASKS", response.data.findAllTasks);
 
       expect(conflict).to.equal(0);
       expect(merge).to.equal(1);
       expect(success).to.equal(1);
       expect(failure).to.equal(0);
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal('updated');
-      expect(response.data.allTasks[0].description).to.equal('updated');
+      expect(response.data.findAllTasks).to.exist;
+      expect(response.data.findAllTasks.length).to.equal(1);
+      expect(response.data.findAllTasks[0].title).to.equal('updated');
+      expect(response.data.findAllTasks[0].description).to.equal('updated');
     });
 
   });
@@ -347,19 +360,19 @@ describe('Conflicts', function () {
   describe('conflict should be called for unmergeable data', function () {
 
     it('should succeed', async function () {
-      const updatedTitle = { title: "updated", description: "new" };
-      const updatedTitleAgain = { title: "another update with conflict", description: "new" };
+      const updatedTitle = { title: "updated", description: "new", author: "new" };
+      const updatedTitleAgain = { title: "another update with conflict", description: "new", author: "new" };
       const networkStatus = newNetworkStatus();
 
       const store2 = new TestStore();
       const client2 = await newClient({ networkStatus, offlineStorage: store2 });
-      const { success, failure, conflict } = await createBasicConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedTitleAgain, client2);
+      const { success, failure, conflict } = await createBasicConflict(UPDATE_TASK, updatedTitle, updatedTitleAgain, client2);
 
       const response = await client.query({
-        query: GET_TASKS,
+        query: FIND_ALL_TASKS,
         fetchPolicy: 'network-only'
       });
-      console.log("ALL TASKS", response.data.allTasks);
+      console.log("ALL TASKS", response.data.findAllTasks);
 
       expect(conflict).to.equal(1);
       expect(failure).to.equal(0);
@@ -381,56 +394,56 @@ describe('Conflicts', function () {
         networkStatus, offlineStorage: store
       });
 
-      const { success, failure } = await createBasicConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2, true);
+      const { success, failure } = await createBasicConflict(UPDATE_TASK, updatedTitle, updatedDescription, client2, true);
 
       const response = await client.query({
-        query: GET_TASKS,
+        query: FIND_ALL_TASKS,
         fetchPolicy: 'network-only'
       });
-      console.log("ALL TASKS", response.data.allTasks);
+      console.log("ALL TASKS", response.data.findAllTasks);
 
       expect(success).to.equal(1);
       expect(failure).to.equal(0);
 
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal('updated');
-      expect(response.data.allTasks[0].description).to.equal('custom');
+      expect(response.data.findAllTasks).to.exist;
+      expect(response.data.findAllTasks.length).to.equal(1);
+      expect(response.data.findAllTasks[0].title).to.equal('updated');
+      expect(response.data.findAllTasks[0].description).to.equal('custom');
     });
 
   });
 
-    describe('default strategy should be client wins', function () {
+  describe('default strategy should be client wins', function () {
 
     it('should succeed', async function () {
-      const updatedTitle = { title: "updated", description: "new" };
-      const updatedBoth = { title: "client wins", description: "updated" };
+      const updatedTitle = { title: "updated", description: "new", author: "new" };
+      const updatedBoth = { title: "client wins", description: "updated", author: "new" };
       const store2 = new TestStore();
       const networkStatus = newNetworkStatus();
 
       const client2 = await newClient({ networkStatus, offlineStorage: store2 });
-      const { success, failure } = await createBasicConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedBoth, client2);
+      const { success, failure } = await createBasicConflict(UPDATE_TASK, updatedTitle, updatedBoth, client2);
 
       const response = await client.query({
-        query: GET_TASKS,
+        query: FIND_ALL_TASKS,
         fetchPolicy: 'network-only'
       });
 
-      console.log("ALL TASKS", response.data.allTasks);
+      console.log("ALL TASKS", response.data.findAllTasks);
 
       expect(success).to.equal(1);
       expect(failure).to.equal(0);
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal('client wins');
-      expect(response.data.allTasks[0].description).to.equal('updated');
+      expect(response.data.findAllTasks).to.exist;
+      expect(response.data.findAllTasks.length).to.equal(1);
+      expect(response.data.findAllTasks[0].title).to.equal('client wins');
+      expect(response.data.findAllTasks[0].description).to.equal('updated');
     });
 
   });
 
-    describe('multiple offline conflicts should be resolved', function () {
+  describe('multiple offline conflicts should be resolved', function () {
 
     it('should succeed', async function () {
       const updatedTitle = { title: "updated", description: "new", author: "new" };
@@ -440,28 +453,28 @@ describe('Conflicts', function () {
       const networkStatus = newNetworkStatus();
 
       const client2 = await newClient({ networkStatus, offlineStorage: store2 });
-      const { success, failure } = await createAdvancedClientConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2);
+      const { success, failure } = await createAdvancedClientConflict(UPDATE_TASK, updatedTitle, updatedDescription, client2);
 
       const response = await client.query({
-        query: GET_TASKS,
+        query: FIND_ALL_TASKS,
         fetchPolicy: 'network-only'
       });
 
-      console.log("ALL TASKS", response.data.allTasks);
+      console.log("ALL TASKS", response.data.findAllTasks);
 
       expect(success).to.equal(2);
       expect(failure).to.equal(0);
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal('updated');
-      expect(response.data.allTasks[0].description).to.equal('updated');
-      expect(response.data.allTasks[0].author).to.equal('Advanced conflict author');
+      expect(response.data.findAllTasks).to.exist;
+      expect(response.data.findAllTasks.length).to.equal(1);
+      expect(response.data.findAllTasks[0].title).to.equal('updated');
+      expect(response.data.findAllTasks[0].description).to.equal('updated');
+      expect(response.data.findAllTasks[0].author).to.equal('Advanced conflict author');
     });
 
   });
 
-    describe('offline conflict should not be affected by multiple server edits', function () {
+  describe('offline conflict should not be affected by multiple server edits', function () {
 
     it('should succeed', async function () {
       const updatedTitle = { title: "updated", description: "new", author: "new" };
@@ -471,26 +484,24 @@ describe('Conflicts', function () {
       const networkStatus = newNetworkStatus();
 
       const client2 = await newClient({ networkStatus, offlineStorage: store2 });
-      const { success, failure } = await createAdvancedServerConflict(UPDATE_TASK_CLIENT_RESOLUTION, updatedTitle, updatedDescription, client2);
+      const { success, failure } = await createAdvancedServerConflict(UPDATE_TASK, updatedTitle, updatedDescription, client2);
 
       const response = await client.query({
-        query: GET_TASKS,
+        query: FIND_ALL_TASKS,
         fetchPolicy: 'network-only'
       });
 
-      console.log("ALL TASKS", response.data.allTasks);
+      console.log("ALL TASKS", response.data.findAllTasks);
 
       expect(success).to.equal(1);
       expect(failure).to.equal(0);
 
-      expect(response.data.allTasks).to.exist;
-      expect(response.data.allTasks.length).to.equal(1);
-      expect(response.data.allTasks[0].title).to.equal('updated');
-      expect(response.data.allTasks[0].description).to.equal('updated');
-      expect(response.data.allTasks[0].author).to.equal('Advanced conflict author');
+      expect(response.data.findAllTasks).to.exist;
+      expect(response.data.findAllTasks.length).to.equal(1);
+      expect(response.data.findAllTasks[0].title).to.equal('updated');
+      expect(response.data.findAllTasks[0].description).to.equal('updated');
+      expect(response.data.findAllTasks[0].author).to.equal('Advanced conflict author');
     });
 
   });
-
-  server.stop();
 });
