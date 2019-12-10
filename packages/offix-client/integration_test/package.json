@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "Integration tests for datasync",
   "scripts": {
-    "pretest": "kill $(lsof -t -i:4001); kill $(lsof -t -i:4002); node server/index.js & node server/testx.js &",
+    "pretest": "kill $(lsof -t -i:4002); node server/testx.js &",
     "test": "karma start",
-    "posttest": "kill $(lsof -t -i:4001); kill $(lsof -t -i:4002); true"
+    "posttest": "kill $(lsof -t -i:4002); true"
   },
   "author": "",
   "license": "Apache-2.0",
