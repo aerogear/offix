@@ -5,7 +5,6 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import { HttpLink } from 'apollo-link-http';
 import { TestxDirector } from "graphql-testx/dist/src/TestxDirector"
 import gql from 'graphql-tag';
-import { print } from 'graphql/language/printer'
 
 const TESTX_CONTROLLER_URL = "http://localhost:4002";
 
