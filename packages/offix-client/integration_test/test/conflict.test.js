@@ -297,7 +297,6 @@ describe('Conflicts', function () {
   describe('no conflict should be thrown for mergeable data', function () {
 
     it('should succeed', async function () {
-      this.timeout(0)
       const updatedTitle = { title: "updated", description: "new", author: "new" };
       const updatedDescription = { title: "new", description: "updated", author: "new" };
       const store2 = new TestStore();
