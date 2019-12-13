@@ -34,12 +34,10 @@ export function getBaseStateFromCache(
   mutationOptions: MutationOptions
 ): ConflictResolutionData {
   const context = mutationOptions.context;
-  const idField: string = context.idField || "id";
-  const id: string = mutationOptions.variables && mutationOptions.variables[idField];
 
   if (!context.conflictBase) {
     // do nothing
-    const conflictBase = getObjectFromCache(cache, context.returnType, id);
+    const conflictBase = getObjectFromCache(cache, context.returnType, mutationOptions);
     if (conflictBase && Object.keys(conflictBase).length !== 0) {
       if (objectState.hasConflict(mutationOptions.variables, conflictBase)) {
         // 🙊 Input data is conflicted with the latest server projection
@@ -50,9 +48,9 @@ export function getBaseStateFromCache(
   }
 }
 
-function getObjectFromCache(cache: ApolloCacheWithData, typename: string, id: string) {
+function getObjectFromCache(cache: ApolloCacheWithData, typename: string, mutationOptions: MutationOptions) {
   if (cache && cache.data) {
-    const idKey = cache.config.dataIdFromObject({ __typename: typename, id });
+    const idKey = cache.config.dataIdFromObject({ __typename: typename, ...mutationOptions.variables });
 
     if (cache.optimisticData && cache.optimisticData.parent) {
       const optimisticData = cache.optimisticData.parent.data;
