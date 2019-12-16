@@ -39,7 +39,7 @@ const client = new ApolloOfflineClient({
 });
 ```
 
-Note: if using TypeScript, you may need to declare the cachePersistor as follows `const cachePersistor = new CachePersistor<NormalizedCacheObject>(...options)` or you may experience compiler errors.
+Note: if using TypeScript, you may need to declare the cachePersistor as follows `const cachePersistor = new CachePersistor<object>(...options)` or you may experience compiler errors.
 
 This example uses `createDefaultCacheStorage` to create the default IndexedDB based storage driver. 
 The storage can be swapped depending on the platform. For example `window.localstorage` in older browsers or `AsyncStorage` in [React Native](./react-native.md).
