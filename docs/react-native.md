@@ -5,21 +5,26 @@ sidebar_label: React Native
 ---
 
 To integrate offix in React Native, developers need to provide custom storage and network layers.
-We recomend developers to use following React Native plugins:
+
+We recomend developers use following React Native plugins:
 
 - `@react-native-community/async-storage` - for storage
 - `@react-native-community/netinfo` - for network information
 
+Note: if you are using [Expo](https://expo.io/), you must use the [AsyncStorage included in `react-native`](https://facebook.github.io/react-native/docs/asyncstorage) instead.
+
 ## Integration
 
-To integrate with offix we need to create wrappers for storage and network
+To integrate with offix we need to create wrappers for storage and network.
+
+Note: if using expo, you will need to `import { AsyncStorage } from 'react-native';` instead of using the `@react-native-community/async-storage` package.
 
 ```js
-import { ApolloOfflineClient } from "offix-client"
+import { ApolloOfflineClient } from 'offix-client'
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { HttpLink } from "apollo-link-http";
-import AsyncStorage from "@react-native-community/async-storage"
-import NetInfo from "@react-native-community/netinfo"
+import { HttpLink } from 'apollo-link-http';
+import AsyncStorage from '@react-native-community/async-storage'
+import NetInfo from '@react-native-community/netinfo'
 
 // Create cache wrapper
 const cacheStorage = {
@@ -62,5 +67,5 @@ const offlineClient = new ApolloOfflineClient({
 });
 ```
 
-For fully functional example please check react native example app:
+For a fully functional example please check react native example app:
 https://github.com/aerogear/offix-react-native-example
