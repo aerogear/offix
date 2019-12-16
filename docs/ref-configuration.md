@@ -12,9 +12,9 @@ sidebar_label: Client Configuration
 
 There are some additional options specific to `ApolloOfflineClient`.
 
-* `cacheStorage` - The [PersistentStore](https://github.com/aerogear/offix/blob/master/packages/offix-offline/src/offline/storage/PersistentStore.ts) you want your client to use for persisting the Apollo Cache (Uses indexeddb by default).
-* `offlineStorage` - The [PersistentStore](https://github.com/aerogear/offix/blob/master/packages/offix-offline/src/offline/storage/PersistentStore.ts) you want your client to use for persisting offline operations in the offline queue (Uses indexeddb by default).
-* `networkStatus` - [NetworkStatus](https://github.com/aerogear/offix/blob/master/packages/offix-offline/src/offline/network/NetworkStatus.ts) Interface for detecting changes in network status. (Uses browser networking APIs by default)
+* `cacheStorage` - The [PersistentStore](https://github.com/aerogear/offix/blob/master/packages/offix-scheduler/src/store/PersistentStore.ts) you want your client to use for persisting the Apollo Cache (Uses indexeddb by default).
+* `offlineStorage` - The [PersistentStore](https://github.com/aerogear/offix/blob/master/packages/offix-scheduler/src/store/PersistentStore.ts) you want your client to use for persisting offline operations in the offline queue (Uses indexeddb by default).
+* `networkStatus` - [NetworkStatus](https://github.com/aerogear/offix/blob/master/packages/offix-offline/src/network/NetworkStatus.ts) Interface for detecting changes in network status. (Uses browser networking APIs by default)
 * `offlineQueueListener` - [ApolloOfflineQueueListener](./ref-offline.md#listening-for-events) User provided listener that contains a set of methods that are called when certain events occur in the queue.
 * `conflictProvider` - [ObjectState](./ref-conflict-server.md#implementing-custom-conflict-resolution) Interface that defines how object state is progressed. This interface needs to match state provider supplied on server.
 * `conflictStrategy` - [ConflictResolutionStrategy](https://github.com/aerogear/offix/blob/master/packages/offix-conflicts-client/src/strategies/ConflictResolutionStrategy.ts)interface used on the client to resolve conflicts. The [default strategy](https://github.com/aerogear/offix/blob/master/packages/offix-conflicts-client/src/strategies/strategies.ts) merges client changes onto the server changes.
