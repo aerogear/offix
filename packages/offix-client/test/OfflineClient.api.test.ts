@@ -61,12 +61,12 @@ test("registerOfflineEventListener adds the listener to the queue listeners", as
 
 test("OfflineClient accepts a persistor object", async () => {
   const link = new HttpLink({ uri: "http://test" });
-  const cache = new InMemoryCache()
+  const cache = new InMemoryCache();
 
   const cachePersistor = new CachePersistor<NormalizedCacheObject>({
     cache,
     storage: createDefaultCacheStorage()
-  })
+  });
 
   const client = new ApolloOfflineClient({
     cache,
@@ -76,21 +76,20 @@ test("OfflineClient accepts a persistor object", async () => {
 
   await client.init();
 
-  expect(client.persistor).toEqual(cachePersistor)
+  expect(client.persistor).toEqual(cachePersistor);
 });
 
 test("OfflineClient throws if cachePersistor is not a CachePersistor instance", async () => {
   const link = new HttpLink({ uri: "http://test" });
-  const cache = new InMemoryCache()
+  const cache = new InMemoryCache();
 
-  const cachePersistor = { foo: 'bar' } as unknown as CachePersistor<NormalizedCacheObject>;
+  const cachePersistor = { foo: "bar" } as unknown as CachePersistor<NormalizedCacheObject>;
 
   expect(() => {
-    new ApolloOfflineClient({
+    const client = new ApolloOfflineClient({
       cache,
       cachePersistor,
       link
     });
-  }).toThrowError('Error: options.cachePersistor is not a CachePersistor instance')
+  }).toThrowError("Error: options.cachePersistor is not a CachePersistor instance");
 });
-

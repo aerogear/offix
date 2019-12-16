@@ -33,11 +33,11 @@ export interface ApolloOfflineClientOptions extends ApolloClientOptions<Normaliz
 
   /**
    * [Modifier]
-   * 
+   *
    * The CachePersistor instance that should be used by the client.
    * Pass your own CachePersistor instance to override the default one.
    */
-  cachePersistor?: CachePersistor<NormalizedCacheObject>
+  cachePersistor?: CachePersistor<NormalizedCacheObject>;
 
   /**
    * [Modifier]
