@@ -49,13 +49,20 @@ export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
     this.mutationCacheUpdates = config.mutationCacheUpdates;
     this.conflictProvider = config.conflictProvider;
 
-    this.persistor = new CachePersistor({
-      cache: this.cache,
-      serialize: false,
-      storage: config.cacheStorage,
-      maxSize: false,
-      debug: false
-    });
+    if (config.cachePersistor) {
+      if (!(config.cachePersistor instanceof CachePersistor)) {
+        throw new Error('Error: options.cachePersistor is not a CachePersistor instance') 
+      }
+      this.persistor = config.cachePersistor
+    } else {
+      this.persistor = new CachePersistor({
+        cache: this.cache,
+        serialize: false,
+        storage: config.cacheStorage,
+        maxSize: false,
+        debug: false
+      });
+    }
 
     this.scheduler = new OffixScheduler<MutationOptions>({
       executor: this,
