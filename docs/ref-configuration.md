@@ -12,6 +12,18 @@ sidebar_label: Client Configuration
 
 There are some additional options specific to `ApolloOfflineClient`.
 
+#### `networkStatus`
+
+[NetworkStatus](https://github.com/aerogear/offix/blob/master/packages/offix-offline/src/network/NetworkStatus.ts) Interface for detecting changes in network status. (Uses browser networking APIs by default)
+
+#### `offlineStorage`
+
+The [PersistentStore](https://github.com/aerogear/offix/blob/master/packages/offix-scheduler/src/store/PersistentStore.ts) you want your client to use for persisting offline operations in the offline queue (Uses IndexedDB by default).
+
+#### `cacheStorage`
+
+The [PersistentStore](https://github.com/aerogear/offix/blob/master/packages/offix-scheduler/src/store/PersistentStore.ts) you want your client to use for persisting the Apollo Cache (Uses IndexedDB by default).
+
 #### `cachePersistor`
 
 The [CachePersistor](https://github.com/apollographql/apollo-cache-persist#using-cachepersistor) instance used by the client to persist the Apollo Cache across application restarts. Pass your own instance to override the one that is created by default.
@@ -44,17 +56,6 @@ Note: if using TypeScript, you may need to declare the cachePersistor as follows
 This example uses `createDefaultCacheStorage` to create the default IndexedDB based storage driver. 
 The storage can be swapped depending on the platform. For example `window.localstorage` in older browsers or `AsyncStorage` in [React Native](./react-native.md).
 
-#### `cacheStorage`
-
-The [PersistentStore](https://github.com/aerogear/offix/blob/master/packages/offix-scheduler/src/store/PersistentStore.ts) you want your client to use for persisting the Apollo Cache (Uses IndexedDB by default).
-
-#### `offlineStorage`
-
-The [PersistentStore](https://github.com/aerogear/offix/blob/master/packages/offix-scheduler/src/store/PersistentStore.ts) you want your client to use for persisting offline operations in the offline queue (Uses IndexedDB by default).
-
-#### `networkStatus`
-
-[NetworkStatus](https://github.com/aerogear/offix/blob/master/packages/offix-offline/src/network/NetworkStatus.ts) Interface for detecting changes in network status. (Uses browser networking APIs by default)
 
 #### `offlineQueueListener`
 
