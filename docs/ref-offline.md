@@ -184,8 +184,49 @@ return (
 
 Cache is going to be refueled by subscriptions, pooling or regular queries happening in UI.
 
-## Designing your types
+## Designing your Types
 
-When designing your GraphQL schema types `id` field will be always required.
-We also expect that id will be always queried back from server.
-Library will perform business logic assuming that `id` field will be supplied and returned from server. Without this field some offline functionalities will not work properly.
+By default, `OfflineClient` assumes your GraphQL types have always have an `id` field. An `id` field is also expected from server responses. If your GraphQL types do not use `id` as the field name, a custom `id` field can be used.
+
+## Using Custom id Fields
+
+If your types use a different id field, for example `uuid`, take the following steps.
+
+### define a dataIdFromObject function for the Apollo Cache.
+
+The Apollo Cache needs to understand how to compose an id for a given object coming from queries and mutations. 
+By default the ID is composed as `${object.__typename}:${object.id}`, example `User:123`
+
+The following type uses `uuid` as the id field.
+
+```graphql
+type User {
+  uuid: ID
+  name: String
+}
+```
+
+To support this case, a custom `dataIdFromObject` field should be passed.
+
+```js
+const cache = new InMemoryCache({
+  dataIdFromObject: (data) => {
+    return `${data.__typename}:${data.uuid}`
+  }
+})
+
+const client = new ApolloOfflineClient({ cache, ...})
+```
+
+### Pass `idField` in offlineMutate
+
+When calling `offlineMutate`, the `idField` option should be included.
+
+```js
+client.offlineMutate({
+  mutation: CREATE_USER,
+  variables: {...},
+  idField: 'uuid',
+  returnType: 'User'
+})
+```
