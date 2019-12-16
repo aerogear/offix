@@ -63,7 +63,7 @@ test("OfflineClient accepts a persistor object", async () => {
   const link = new HttpLink({ uri: "http://test" });
   const cache = new InMemoryCache();
 
-  const cachePersistor = new CachePersistor<NormalizedCacheObject>({
+  const cachePersistor = new CachePersistor<object>({
     cache,
     storage: createDefaultCacheStorage()
   });
@@ -83,7 +83,7 @@ test("OfflineClient throws if cachePersistor is not a CachePersistor instance", 
   const link = new HttpLink({ uri: "http://test" });
   const cache = new InMemoryCache();
 
-  const cachePersistor = { foo: "bar" } as unknown as CachePersistor<NormalizedCacheObject>;
+  const cachePersistor = { foo: "bar" } as unknown as CachePersistor<object>;
 
   expect(() => {
     const client = new ApolloOfflineClient({
