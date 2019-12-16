@@ -8,7 +8,7 @@ Offix provides first class support for performing GraphQL operations while offli
 
 Offix-client offers a comprehensive set of features to perform data operations when offline. Thanks to the offline mutation store users can stage their changes to be replicated back to the server when they return online.
 
-Please follow chapters bellow for more information.
+Please follow chapters below for more information.
 
 ## Querying local cache
 
