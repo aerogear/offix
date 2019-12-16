@@ -24,10 +24,10 @@ import { HttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { CachePersistor } from "apollo-cache-persist";
 
-const link = new HttpLink({ uri: "http://test" });
+const link = new HttpLink({ uri: "http://example.com/graphql" });
 const cache = new InMemoryCache()
 
-const cachePersistor = new CachePersistor<NormalizedCacheObject>({
+const cachePersistor = new CachePersistor({
   cache,
   storage: createDefaultCacheStorage()
 })
@@ -38,6 +38,8 @@ const client = new ApolloOfflineClient({
   link
 });
 ```
+
+Note: if using TypeScript, you may need to declare the cachePersistor as follows `const cachePersistor = new CachePersistor<NormalizedCacheObject>(...options)` or you may experience compiler errors.
 
 This example uses `createDefaultCacheStorage` to create the default IndexedDB based storage driver. 
 The storage can be swapped depending on the platform. For example `window.localstorage` in older browsers or `AsyncStorage` in [React Native](./react-native.md).
