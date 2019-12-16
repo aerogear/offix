@@ -17,7 +17,6 @@ import { ApolloLink } from "apollo-link";
 import { CacheUpdates } from "offix-cache";
 import { ApolloOfflineQueueListener, createDefaultLink } from "../apollo";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
-import ApolloClient from "apollo-client";
 import { CachePersistor } from "apollo-cache-persist";
 
 /**
@@ -35,7 +34,7 @@ export class ApolloOfflineClientConfig implements ApolloOfflineClientOptions {
   public offlineStorage: PersistentStore<PersistedData>;
   public conflictListener?: ConflictListener;
   public mutationCacheUpdates?: CacheUpdates;
-  public cachePersistor?: CachePersistor<NormalizedCacheObject>;
+  public cachePersistor?: CachePersistor<object>;
   public link?: ApolloLink;
   public cache: any;
 
