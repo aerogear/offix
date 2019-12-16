@@ -51,9 +51,9 @@ export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
 
     if (config.cachePersistor) {
       if (!(config.cachePersistor instanceof CachePersistor)) {
-        throw new Error('Error: options.cachePersistor is not a CachePersistor instance') 
+        throw new Error("Error: options.cachePersistor is not a CachePersistor instance");
       }
-      this.persistor = config.cachePersistor
+      this.persistor = config.cachePersistor;
     } else {
       this.persistor = new CachePersistor({
         cache: this.cache,
