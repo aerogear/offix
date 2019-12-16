@@ -3,8 +3,9 @@ import "fake-indexeddb/auto";
 import "cross-fetch/polyfill";
 
 import { HttpLink } from "apollo-link-http";
-import { ApolloOfflineClient, ApolloOfflineQueueListener, MutationHelperOptions } from "../src";
-import { InMemoryCache } from "apollo-cache-inmemory";
+import { ApolloOfflineClient, ApolloOfflineQueueListener, MutationHelperOptions, createDefaultCacheStorage } from "../src";
+import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
+import { CachePersistor } from "apollo-cache-persist";
 
 test("OfflineClient constructor does not throw", async () => {
   const link = new HttpLink({ uri: "http://test" });
@@ -57,3 +58,39 @@ test("registerOfflineEventListener adds the listener to the queue listeners", as
   expect(client.queue.listeners.length).toBe(2);
   expect(client.queue.listeners[1]).toBe(listener);
 });
+
+test("OfflineClient accepts a persistor object", async () => {
+  const link = new HttpLink({ uri: "http://test" });
+  const cache = new InMemoryCache()
+
+  const cachePersistor = new CachePersistor<NormalizedCacheObject>({
+    cache,
+    storage: createDefaultCacheStorage()
+  })
+
+  const client = new ApolloOfflineClient({
+    cache,
+    cachePersistor,
+    link
+  });
+
+  await client.init();
+
+  expect(client.persistor).toEqual(cachePersistor)
+});
+
+test("OfflineClient throws if cachePersistor is not a CachePersistor instance", async () => {
+  const link = new HttpLink({ uri: "http://test" });
+  const cache = new InMemoryCache()
+
+  const cachePersistor = { foo: 'bar' } as unknown as CachePersistor<NormalizedCacheObject>;
+
+  expect(() => {
+    new ApolloOfflineClient({
+      cache,
+      cachePersistor,
+      link
+    });
+  }).toThrowError('Error: options.cachePersistor is not a CachePersistor instance')
+});
+

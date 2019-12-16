@@ -9,10 +9,10 @@ import {
  } from "offix-conflicts-client";
 import { CacheUpdates } from "offix-cache";
 import { RetryLink } from "apollo-link-retry";
-import { ApolloLink } from "apollo-link";
 import { ApolloOfflineQueueListener } from "../apollo";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
-import ApolloClient, { ApolloClientOptions } from "apollo-client";
+import { ApolloClientOptions } from "apollo-client";
+import { CachePersistor } from "apollo-cache-persist";
 
 /**
  * Contains all configuration options required to initialize Voyager Client
@@ -30,6 +30,14 @@ export interface ApolloOfflineClientOptions extends ApolloClientOptions<Normaliz
    * Uses window.localStorage by default
    */
   cacheStorage?: PersistentStore<PersistedData>;
+
+  /**
+   * [Modifier]
+   * 
+   * The CachePersistor instance that should be used by the client.
+   * Pass your own CachePersistor instance to override the default one.
+   */
+  cachePersistor?: CachePersistor<NormalizedCacheObject>
 
   /**
    * [Modifier]
