@@ -218,6 +218,8 @@ const cache = new InMemoryCache({
 const client = new ApolloOfflineClient({ cache, ...})
 ```
 
+See the [Apollo Cache Documentation](https://www.apollographql.com/docs/react/caching/cache-configuration/) for more details.
+
 ### Pass `idField` in offlineMutate
 
 When calling `offlineMutate`, the `idField` option should be included.
