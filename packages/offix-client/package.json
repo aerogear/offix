@@ -29,7 +29,7 @@
     "@types/ws": "6.0.4",
     "del": "5.1.0",
     "fake-indexeddb": "3.0.0",
-    "fetch-mock": "8.0.1",
+    "fetch-mock": "8.1.0",
     "graphql": "14.5.8",
     "graphql-tag": "2.10.1",
     "jest": "24.9.0",
