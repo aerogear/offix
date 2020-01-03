@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@types/graphql": "14.2.3",
-    "@types/jest": "24.0.24",
+    "@types/jest": "24.0.25",
     "coveralls": "3.0.9",
     "cross-fetch": "3.0.4",
     "del-cli": "3.0.0",
@@ -36,15 +36,15 @@
     "lerna": "3.20.0",
     "npm-run-all": "4.1.5",
     "nyc": "15.0.0",
-    "replace": "1.1.1",
+    "replace": "1.1.3",
     "ts-node": "8.5.4",
     "tslint": "5.20.1",
-    "typedoc": "0.15.5",
+    "typedoc": "0.15.6",
     "typescript": "3.7.4"
   },
   "dependencies": {
     "@types/mocha": "5.2.7",
-    "@types/node": "12.12.22"
+    "@types/node": "12.12.24"
   },
   "nyc": {
     "extension": [
