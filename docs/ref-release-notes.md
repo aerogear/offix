@@ -4,6 +4,40 @@ title: What is new in Offix
 sidebar_label: Release notes
 ---
 
+# 0.13.0
+
+The 0.13.0 release is a release contains a couple of bug fixes, dependency updates and the new ability to configure your own `CachePersistor` object as requested in [#273](https://github.com/aerogear/offix/issues/273) and [#281](https://github.com/aerogear/offix/issues/281).
+
+The [CachePersistor](https://github.com/apollographql/apollo-cache-persist#using-cachepersistor) is used by the client to persist the Apollo Cache across application restarts. Pass your own instance to override the one that is created by default.
+
+Example:
+
+```js
+import { ApolloOfflineClient, createDefaultCacheStorage } from "offix-client";
+import { HttpLink } from "apollo-link-http";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { CachePersistor } from "apollo-cache-persist";
+
+const link = new HttpLink({ uri: "http://example.com/graphql" });
+const cache = new InMemoryCache()
+
+const cachePersistor = new CachePersistor({
+  cache,
+  storage: createDefaultCacheStorage()
+})
+
+const client = new ApolloOfflineClient({
+  cache,
+  cachePersistor,
+  link
+});
+```
+
+Note: if using TypeScript, you may need to declare the cachePersistor as follows `const cachePersistor = new CachePersistor<object>(...options)` or you may experience compiler errors.
+
+This example uses `createDefaultCacheStorage` to create the default IndexedDB based storage driver. 
+The storage can be swapped depending on the platform. For example `window.localstorage` in older browsers or `AsyncStorage` in [React Native](https://offix.dev/docs/react-native).
+
 # 0.12.0
 
 The 0.12.0 release brings a new `offix-client-boost` package. This package is a batteries-included wrapper around the `offix-client` that brings
