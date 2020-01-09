@@ -9,6 +9,10 @@
         "title": "Android",
         "sidebar_label": "Android"
       },
+      "angular": {
+        "title": "Angular",
+        "sidebar_label": "Angular"
+      },
       "getting-started": {
         "title": "Getting Started",
         "sidebar_label": "Getting Started"
@@ -24,8 +28,9 @@
       "README": {
         "title": "README"
       },
-      "ref-advanced": {
-        "title": "ref-advanced"
+      "cookbooks": {
+        "title": "Cookbooks",
+        "sidebar_label": "Offline Cookbook"
       },
       "offix-cache": {
         "title": "Offix Cache",
@@ -63,6 +68,9 @@
         "title": "Support",
         "sidebar_label": "Support"
       },
+      "roadmap": {
+        "title": "roadmap"
+      },
       "version-0.10.0/version-0.10.0-offix-scheduler-introduction": {
         "title": "Offix Scheduler Introduction",
         "sidebar_label": "Introduction"
@@ -92,6 +100,38 @@
         "sidebar_label": "React"
       },
       "version-0.11.0/version-0.11.0-release-notes": {
+        "title": "What is new in Offix",
+        "sidebar_label": "Release notes"
+      },
+      "version-0.12.0/version-0.12.0-android": {
+        "title": "Android",
+        "sidebar_label": "Android"
+      },
+      "version-0.12.0/version-0.12.0-angular": {
+        "title": "Angular",
+        "sidebar_label": "Angular"
+      },
+      "version-0.12.0/version-0.12.0-getting-started": {
+        "title": "Getting Started",
+        "sidebar_label": "Getting Started"
+      },
+      "version-0.12.0/version-0.12.0-cookbooks": {
+        "title": "Cookbooks",
+        "sidebar_label": "Offline Cookbook"
+      },
+      "version-0.12.0/version-0.12.0-offix-cache": {
+        "title": "Offix Cache",
+        "sidebar_label": "Client Cache"
+      },
+      "version-0.12.0/version-0.12.0-client-configuration": {
+        "title": "Client Configuration",
+        "sidebar_label": "Client Configuration"
+      },
+      "version-0.12.0/version-0.12.0-offline-client": {
+        "title": "Offline Support",
+        "sidebar_label": "Offline Client"
+      },
+      "version-0.12.0/version-0.12.0-release-notes": {
         "title": "What is new in Offix",
         "sidebar_label": "Release notes"
       },
@@ -146,11 +186,11 @@
     },
     "categories": {
       "Getting Started": "Getting Started",
-      "OffixClient": "OffixClient",
+      "Offix Client": "Offix Client",
       "Platforms": "Platforms",
       "Advanced topics": "Advanced topics",
       "Releases": "Releases",
-      "Offix Client": "Offix Client",
+      "OffixClient": "OffixClient",
       "Offix Scheduler": "Offix Scheduler"
     }
   },
