@@ -4,6 +4,10 @@ title: What is new in Offix
 sidebar_label: Release notes
 ---
 
+# 0.13.1
+
+0.13.1 fixes package install issues that were introduced in 0.13.0. It also introduces some minor dependency updates.
+
 # 0.13.0
 
 The 0.13.0 release is a release contains a couple of bug fixes, dependency updates and the new ability to configure your own `CachePersistor` object as requested in [#273](https://github.com/aerogear/offix/issues/273) and [#281](https://github.com/aerogear/offix/issues/281).
