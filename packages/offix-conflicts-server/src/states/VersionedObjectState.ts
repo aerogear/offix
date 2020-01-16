@@ -1,7 +1,6 @@
 import { ObjectState } from "../api/ObjectState";
 import { ObjectStateData } from "../api/ObjectStateData";
 import { ObjectConflictError } from "../api/ObjectConflictError";
-import { conflictHandler } from "..";
 
 /**
  * Object state manager using a version field

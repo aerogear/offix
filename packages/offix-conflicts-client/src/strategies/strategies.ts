@@ -1,4 +1,3 @@
-import { ConflictResolutionData } from "./ConflictResolutionData";
 import { ConflictResolutionStrategy } from "./ConflictResolutionStrategy";
 
 // Used as default strategy for SDK

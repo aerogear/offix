@@ -2,7 +2,7 @@ import { getOperationFieldName } from "../utils/helperFunctions";
 import { CacheOperation } from "../cache/CacheOperation";
 import { generateClientId } from "../utils";
 import { DocumentNode } from "graphql";
-import { OperationVariables, MutationOptions } from "apollo-client";
+import { OperationVariables } from "apollo-client";
 
 // export type OptimisticOptions = Omit<MutationHelperOptions, keyof MutationOptions |"updateQuery" | "context">;
 

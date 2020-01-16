@@ -34,10 +34,10 @@ export class OffixBoostConfig implements OffixBoostOptions {
     Object.assign(this, options);
     this.httpUrl = options.httpUrl;
     this.wsUrl = options.wsUrl;
-    this.cache = options.cache || new InMemoryCache(),
-    this.conflictProvider = options.conflictProvider || new VersionedState(),
-    this.conflictStrategy = options.conflictStrategy || UseClient,
-    this.fileUpload = options.fileUpload || false,
+    this.cache = options.cache || new InMemoryCache();
+    this.conflictProvider = options.conflictProvider || new VersionedState();
+    this.conflictStrategy = options.conflictStrategy || UseClient;
+    this.fileUpload = options.fileUpload || false;
     this.retryOptions = options.retryOptions || {
       delay: {
         initial: 1000,

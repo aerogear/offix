@@ -25,7 +25,7 @@ test("Process id without change", () => {
 });
 
 test("Process with change", () => {
-    const finalId = `client:`;
+    const finalId = "client:";
     const exampleOperation = {
         mutation: {} as DocumentNode,
         variables: {

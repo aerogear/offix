@@ -1,4 +1,4 @@
-import { SubscribeToMoreOptions, OperationVariables, ObservableQuery, MutationUpdaterFn } from "apollo-client";
+import { SubscribeToMoreOptions, OperationVariables, ObservableQuery } from "apollo-client";
 import { QueryWithVariables, CacheUpdatesQuery, SubscribeToMoreUpdateFunction } from "./CacheUpdates";
 import { DocumentNode } from "graphql";
 import { CacheOperation } from "./CacheOperation";

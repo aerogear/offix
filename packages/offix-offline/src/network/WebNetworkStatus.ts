@@ -1,6 +1,6 @@
 import { NetworkStatus, NetworkStatusChangeCallback } from "./NetworkStatus";
 
-declare var window: any;
+declare let window: any;
 
 /**
  * Web networks status implementation based on: Mozilla

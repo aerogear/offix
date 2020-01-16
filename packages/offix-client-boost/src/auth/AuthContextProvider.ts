@@ -4,7 +4,7 @@
  */
 export interface AuthContext {
   headers: {
-    [headerName: string]: any
+    [headerName: string]: any;
   };
 }
 

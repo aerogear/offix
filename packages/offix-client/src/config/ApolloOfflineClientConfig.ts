@@ -16,7 +16,6 @@ import { createDefaultCacheStorage } from "../cache";
 import { ApolloLink } from "apollo-link";
 import { CacheUpdates } from "offix-cache";
 import { ApolloOfflineQueueListener, createDefaultLink } from "../apollo";
-import { NormalizedCacheObject } from "apollo-cache-inmemory";
 import { CachePersistor } from "apollo-cache-persist";
 
 /**

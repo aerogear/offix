@@ -43,7 +43,7 @@ it("base should be correctly calculated with regular id field", async function()
   }`;
 
   try {
-    const res = await client.offlineMutate({
+    await client.offlineMutate({
       mutation: ADD_TASK_MUTATION,
       variables: {
         id: "1",
@@ -99,7 +99,7 @@ it("base should be correctly calculated with custom id field", async function() 
   }`;
 
   try {
-    const res = await client.offlineMutate({
+    await client.offlineMutate({
       mutation: ADD_TASK_MUTATION,
       variables: {
         uuid: "1",
@@ -156,7 +156,7 @@ it("base should be correctly calculated with if custom id is non stanard", async
   }`;
 
   try {
-    const res = await client.offlineMutate({
+    await client.offlineMutate({
       mutation: ADD_TASK_MUTATION,
       variables: {
         uuid: "1",
