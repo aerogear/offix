@@ -1,6 +1,6 @@
 import { NetworkStatus, NetworkStatusChangeCallback } from "./NetworkStatus";
 
-declare var document: any;
+declare let document: any;
 
 /**
  * Cordova networks status implementation based on: cordova-plugin-network-information

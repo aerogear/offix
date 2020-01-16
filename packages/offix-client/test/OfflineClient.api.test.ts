@@ -4,7 +4,7 @@ import "cross-fetch/polyfill";
 
 import { HttpLink } from "apollo-link-http";
 import { ApolloOfflineClient, ApolloOfflineQueueListener, MutationHelperOptions, createDefaultCacheStorage } from "../src";
-import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
+import { InMemoryCache } from "apollo-cache-inmemory";
 import { CachePersistor } from "apollo-cache-persist";
 
 test("OfflineClient constructor does not throw", async () => {
@@ -51,7 +51,7 @@ test("registerOfflineEventListener adds the listener to the queue listeners", as
   expect(client.queue.listeners.length).toBe(1); // the default one added in by the client
 
   const listener: ApolloOfflineQueueListener = {
-    /* tslint:disable:no-empty */
+    // eslint-disable-next-line
     onOperationEnqueued: (op) => { }
   };
   client.registerOfflineEventListener(listener);
@@ -86,7 +86,7 @@ test("OfflineClient throws if cachePersistor is not a CachePersistor instance", 
   const cachePersistor = { foo: "bar" } as unknown as CachePersistor<object>;
 
   expect(() => {
-    const client = new ApolloOfflineClient({
+    new ApolloOfflineClient({
       cache,
       cachePersistor,
       link

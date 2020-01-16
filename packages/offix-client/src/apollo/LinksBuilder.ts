@@ -1,9 +1,7 @@
 import { ApolloLink } from "apollo-link";
-import { HttpLink } from "apollo-link-http";
 import { RetryLink } from "apollo-link-retry";
 import { ApolloOfflineClientConfig } from "../config/ApolloOfflineClientConfig";
 import { isMarkedOffline } from "./helpers";
-import { ConfigError } from "../config/ConfigError";
 import { ConflictLink } from "./conflicts/ConflictLink";
 import { ObjectState } from "..";
 

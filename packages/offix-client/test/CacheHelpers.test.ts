@@ -18,8 +18,6 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloOfflineClient } from "../src";
 import { HttpLink } from "apollo-link-http";
 
-const url = "http://testCache";
-
   const builtCreateOptions = createMutationOptions({
     mutation: CREATE_ITEM,
     variables: {
@@ -50,6 +48,7 @@ const url = "http://testCache";
     operationType: CacheOperation.ADD,
     idField: "id"
   });
+  // eslint-disable-next-line
   const builtNonExistent = createMutationOptions({
     mutation: DOESNT_EXIST,
     variables: {
