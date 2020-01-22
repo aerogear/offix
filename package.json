@@ -29,8 +29,8 @@
   "devDependencies": {
     "@types/graphql": "14.2.3",
     "@types/jest": "24.9.0",
-    "@typescript-eslint/eslint-plugin": "2.16.0",
-    "@typescript-eslint/parser": "2.16.0",
+    "@typescript-eslint/eslint-plugin": "2.17.0",
+    "@typescript-eslint/parser": "2.17.0",
     "coveralls": "3.0.9",
     "cross-fetch": "3.0.4",
     "del-cli": "3.0.0",
