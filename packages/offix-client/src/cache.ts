@@ -1,5 +1,5 @@
-import { Store } from "idb-localstorage";
+import { IDBLocalStore } from "offix-scheduler";
 
 export const createDefaultCacheStorage = () => {
-  return new Store("apollo-cache", "cache-store");
+  return new IDBLocalStore("apollo-cache", "cache-store");
 };

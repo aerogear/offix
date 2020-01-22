@@ -5,7 +5,8 @@ export {
   OfflineStore,
   PersistentStore,
   PersistedData,
-  createDefaultOfflineStorage
+  createDefaultOfflineStorage,
+  IDBLocalStore
  } from "./store";
 
 export {

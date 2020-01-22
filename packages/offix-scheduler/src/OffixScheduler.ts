@@ -41,7 +41,7 @@ export class OffixScheduler<T> {
   // the network status interface that determines online/offline state
   public networkStatus: NetworkStatus;
   // the offline storage interface that persists offline data across restarts
-  public offlineStore?: OfflineStore<T>;
+  public offlineStore: OfflineStore<T>;
   // the in memory queue that holds offline data
   public queue: OfflineQueue<T>;
   // listeners that can be added by the user to handle various events coming from the offline queue
@@ -54,10 +54,7 @@ export class OffixScheduler<T> {
     this.config = new OffixConfig(options);
     this.networkStatus = this.config.networkStatus;
 
-    // its possible that no storage is available
-    if (this.config.offlineStorage) {
-      this.offlineStore = new OfflineStore(this.config.offlineStorage, this.config.serializer);
-    }
+    this.offlineStore = new OfflineStore(this.config.offlineStorage, this.config.serializer);
 
     if (this.config.offlineQueueListener) {
       this.queueListeners.push(this.config.offlineQueueListener);
@@ -78,10 +75,14 @@ export class OffixScheduler<T> {
   * Initialize the scheduler
   */
   public async init(): Promise<any> {
-    if (this.offlineStore) {
+    try {
       await this.offlineStore.init();
+      await this.queue.restoreOfflineOperations();
+    } catch(error) {
+      console.error("Error initializing storage for offline queue", error);
+      console.error("Offline mutations will not be persisted across restarts");
     }
-    await this.restoreOfflineOperations();
+    await this.initOnlineState();
   }
 
   /**
@@ -114,16 +115,6 @@ export class OffixScheduler<T> {
     }
   }
 
-  /**
-   * Restore offline operations into the queue
-   */
-  protected async restoreOfflineOperations() {
-
-    // reschedule offline mutations for new client instance
-    await this.queue.restoreOfflineOperations();
-    // initialize network status
-    await this.initOnlineState();
-  }
 
   protected async initOnlineState() {
     const queue = this.queue;

@@ -7,6 +7,7 @@ import { OfflineStoreSerializer, DefaultOfflineSerializer } from "./OfflineStore
  */
 export class OfflineStore<T> {
 
+  public initialized: boolean = false;
   private storage: PersistentStore<PersistedData>;
   private offlineMetaKey: string = "offline-meta-data";
   private storageVersion: string = "v1";
@@ -25,6 +26,7 @@ export class OfflineStore<T> {
   public async init() {
     const keys = await this.storage.getItem(this.offlineMetaKey) as string[];
     this.arrayOfKeys = keys || [];
+    this.initialized = true;
   }
 
   /**
