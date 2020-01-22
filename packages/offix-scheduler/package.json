@@ -24,7 +24,7 @@
     "@types/node-fetch": "2.5.4",
     "del": "5.1.0",
     "fake-indexeddb": "3.0.0",
-    "jest": "24.9.0",
+    "jest": "25.1.0",
     "json-server": "0.15.1",
     "node-fetch": "2.6.0",
     "ts-jest": "24.3.0",
