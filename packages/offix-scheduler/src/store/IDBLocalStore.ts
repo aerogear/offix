@@ -54,6 +54,7 @@ export class IDBLocalStore {
     return this._withIDBStore("readonly", store => {
       // This would be store.getAllKeys(), but it isn't supported by Edge or Safari.
       // And openKeyCursor isn't supported by Safari.
+      // eslint-disable-next-line
       (store.openKeyCursor || store.openCursor).call(store).onsuccess = function() {
         if (!this.result) { return; }
         keys.push(this.result.key);

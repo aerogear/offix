@@ -55,7 +55,7 @@ export class OffixScheduler<T> {
     this.networkStatus = this.config.networkStatus;
 
     this.offlineStore = new OfflineStore(this.config.offlineStorage, this.config.serializer);
-    
+
     if (this.config.offlineQueueListener) {
       this.queueListeners.push(this.config.offlineQueueListener);
     }
@@ -75,12 +75,12 @@ export class OffixScheduler<T> {
   * Initialize the scheduler
   */
   public async init(): Promise<any> {
-    try { 
+    try {
       await this.offlineStore.init();
       await this.queue.restoreOfflineOperations();
     } catch(error) {
-      console.error('Error initializing storage for offline queue', error);
-      console.error('Offline mutations will not be persisted across restarts');
+      console.error("Error initializing storage for offline queue", error);
+      console.error("Offline mutations will not be persisted across restarts");
     }
     await this.initOnlineState();
   }

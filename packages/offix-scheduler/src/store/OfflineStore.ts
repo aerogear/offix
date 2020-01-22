@@ -7,12 +7,12 @@ import { OfflineStoreSerializer, DefaultOfflineSerializer } from "./OfflineStore
  */
 export class OfflineStore<T> {
 
+  public initialized: boolean = false;
   private storage: PersistentStore<PersistedData>;
   private offlineMetaKey: string = "offline-meta-data";
   private storageVersion: string = "v1";
   private arrayOfKeys: string[];
   private serializer: OfflineStoreSerializer<T>;
-  public initialized: boolean = false;
 
   constructor(storage: PersistentStore<PersistedData>, serializer?: OfflineStoreSerializer<T>) {
     this.arrayOfKeys = [];

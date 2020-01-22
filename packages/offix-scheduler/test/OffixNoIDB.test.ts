@@ -2,11 +2,13 @@ import { OffixScheduler } from "../src/OffixScheduler";
 import { OffixSchedulerExecutor } from "../src/OffixSchedulerExecutor";
 import { ToggleableNetworkStatus } from "./mock/ToggleableNetworkStatus";
 
+// eslint-disable-next-line
 console.error = jest.fn();
 
 test("Offix can be initialized with no store creates console error", async () => {
   const offix = new OffixScheduler();
   await offix.init();
+  // eslint-disable-next-line
   expect(console.error).toHaveBeenCalled();
 });
 

@@ -6,11 +6,11 @@ let store: IDBLocalStore;
 describe("Empty store tests", () => {
 
     beforeEach(() => {
-        store = new IDBLocalStore("db", "store");    
+        store = new IDBLocalStore("db", "store");
     });
-    
+
     afterEach(async () => {
-        await store.clear();    
+        await store.clear();
     });
 
     test("Key not in local store returns is undefined", async () => {
@@ -35,24 +35,24 @@ describe("Empty store tests", () => {
 });
 
 describe("Populated store tests", () => {
-    
-    beforeEach(async() => {
+
+    beforeEach(async () => {
         store = new IDBLocalStore("db", "store");
         await store.setItem("key", "value");
         await store.setItem("key1", "value1");
         await store.setItem("key2", "value2");
         await store.setItem("key3", "value3");
     });
-    
+
     afterEach(async () => {
-        await store.clear();    
+        await store.clear();
     });
 
     test("Local store can set and retrieve key value pair", async () => {
         const item = await store.getItem("key");
         expect(item).toEqual("value");
     });
-    
+
     test("Local store can remove a single key-value pair", async () => {
         await store.removeItem("key");
         const keys = await store.keys();
@@ -72,8 +72,5 @@ describe("Populated store tests", () => {
     });
 
 });
-
-
-
 
 
