@@ -1,5 +1,5 @@
-import { Store } from "idb-localstorage";
+import { IDBLocalStore } from "./IDBLocalStore";
 
 export const createDefaultOfflineStorage = () => {
-  return new Store("offline-store", "offline-data");
+  return new IDBLocalStore("offline-store", "offline-data");
 };

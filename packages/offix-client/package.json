@@ -47,7 +47,6 @@
     "apollo-link-http": "1.5.16",
     "apollo-link-retry": "2.2.15",
     "debug": "4.1.1",
-    "idb-localstorage": "0.2.0",
     "offix-cache": "0.13.1",
     "offix-conflicts-client": "0.13.1",
     "offix-offline": "0.13.1",

@@ -12,6 +12,7 @@ export class OfflineStore<T> {
   private storageVersion: string = "v1";
   private arrayOfKeys: string[];
   private serializer: OfflineStoreSerializer<T>;
+  public initialized: boolean = false;
 
   constructor(storage: PersistentStore<PersistedData>, serializer?: OfflineStoreSerializer<T>) {
     this.arrayOfKeys = [];
@@ -25,6 +26,7 @@ export class OfflineStore<T> {
   public async init() {
     const keys = await this.storage.getItem(this.offlineMetaKey) as string[];
     this.arrayOfKeys = keys || [];
+    this.initialized = true;
   }
 
   /**

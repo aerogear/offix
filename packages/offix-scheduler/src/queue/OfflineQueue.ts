@@ -55,11 +55,11 @@ export class OfflineQueue<T> {
   // listeners that can be added by the user to handle various events coming from the offline queue
   public listeners: Array<OfflineQueueListener<T>> = [];
 
-  private store?: OfflineStore<T>;
+  private store: OfflineStore<T>;
 
   private execute: QueueExecuteFunction<T>;
 
-  constructor(store: OfflineStore<T> | undefined, options: OfflineQueueConfig<T>) {
+  constructor(store: OfflineStore<T>, options: OfflineQueueConfig<T>) {
     this.store = store;
     this.execute = options.execute;
 
@@ -86,7 +86,7 @@ export class OfflineQueue<T> {
     // notify listeners
     this.onOperationEnqueued(entry.operation);
 
-    if (this.store) {
+    if (this.store.initialized) {
       try {
         await this.store.saveEntry(entry.operation);
       } catch (err) {
@@ -108,7 +108,7 @@ export class OfflineQueue<T> {
 
   public async dequeueOperation(entry: QueueEntry<T>) {
     this.queue = this.queue.filter(e => e !== entry);
-    if (this.store) {
+    if (this.store.initialized) {
       try {
         await this.store.removeEntry(entry.operation);
       } catch (err) {
@@ -141,7 +141,7 @@ export class OfflineQueue<T> {
   }
 
   public async restoreOfflineOperations() {
-    if (this.store) {
+    if (this.store.initialized) {
       try {
         const offlineEntries = await this.store.getOfflineData();
         for (const entry of offlineEntries) {

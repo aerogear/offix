@@ -79,7 +79,12 @@ export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
 
   public async init() {
     if (this.persistor) {
-      await this.persistor.restore();
+      try {
+        await this.persistor.restore();
+      } catch(error) {
+        console.error('Error restoring Apollo cache from storage.', error);
+        console.error('Cache persistence will not be available.');
+      }
     }
 
     // Optimistic Responses

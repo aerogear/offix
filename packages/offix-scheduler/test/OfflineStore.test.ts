@@ -2,10 +2,10 @@ import {
   createDefaultOfflineStorage,
   OfflineStore,
   PersistentStore,
-  PersistedData
+  PersistedData,
+  IDBLocalStore as Store
 } from "../src/store";
 import { QueueEntryOperation } from "../src/queue";
-import { Store } from "idb-localstorage";
 import "fake-indexeddb/auto";
 
 const storage = createDefaultOfflineStorage() as Store;
