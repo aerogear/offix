@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@types/jest": "24.9.0",
+    "@types/jest": "24.9.1",
     "@types/node": "12.12.25",
     "jest": "25.1.0",
     "ts-jest": "24.3.0",
