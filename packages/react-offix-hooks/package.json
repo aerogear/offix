@@ -26,7 +26,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@types/react": "16.9.17",
+    "@types/react": "16.9.19",
     "apollo-cache": "1.3.4",
     "apollo-client": "2.6.8",
     "apollo-link": "1.2.13",

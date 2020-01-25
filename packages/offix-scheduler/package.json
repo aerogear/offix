@@ -19,7 +19,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@types/jest": "24.9.0",
+    "@types/jest": "24.9.1",
     "@types/json-server": "0.14.2",
     "@types/node-fetch": "2.5.4",
     "del": "5.1.0",
