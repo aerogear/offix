@@ -39,6 +39,9 @@
   },
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.24",
+    "@apollo/link-error": "^2.0.0-beta.3",
+    "@apollo/link-retry": "^2.0.0-beta.3",
+    "@types/react": "^16.9.18",
     "apollo-cache-inmemory": "1.6.5",
     "apollo-cache-persist": "0.1.1",
     "apollo-client": "2.6.8",

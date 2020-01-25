@@ -1,4 +1,4 @@
-import { onError, ErrorResponse } from "apollo-link-error";
+import { onError, ErrorResponse } from "@apollo/link-error";
 import { GraphQLError } from "graphql";
 import { 
   ApolloLink,
@@ -57,13 +57,13 @@ export interface ConflictConfig {
  */
 export class ConflictLink extends ApolloLink {
   private stater: ObjectState;
-  // private link: ApolloLink;
+  private link: ApolloLink;
   private strategy: ConflictResolutionStrategy | undefined;
   private listener: ConflictListener | undefined;
 
   constructor(private config: ConflictConfig) {
     super();
-    // this.link = onError(this.conflictHandler.bind(this));
+    this.link = onError(this.conflictHandler.bind(this));
     this.stater = this.config.conflictProvider;
     this.strategy = this.config.conflictStrategy;
     this.listener = this.config.conflictListener;
@@ -75,7 +75,7 @@ export class ConflictLink extends ApolloLink {
   ): Observable<FetchResult> | null {
     if (isMutation(operation)) {
       if (this.stater.currentState(operation.variables) !== undefined) {
-        // return this.link.request(operation, forward);
+        return this.link.request(operation, forward);
       }
       return forward(operation);
     }
@@ -84,29 +84,29 @@ export class ConflictLink extends ApolloLink {
 
   // this is a custom onError ErrorHandler. It determines executes the conflictHandler and provides a new operation
   // to work with if necessary.
-  // private conflictHandler(errorResponse: ErrorResponse): Observable<FetchResult> {
-  //   const { operation, forward, graphQLErrors } = errorResponse;
-  //   const data = this.getConflictData(graphQLErrors);
-  //   const individualStrategy = this.strategy || UseClient;
-  //   if (data && operation.getContext().returnType) {
-  //     const base = operation.getContext().conflictBase;
-  //     const conflictHandler = new ConflictHandler({
-  //       base,
-  //       client: data.clientState,
-  //       server: data.serverState,
-  //       strategy: individualStrategy,
-  //       listener: this.listener,
-  //       objectState: this.config.conflictProvider as ObjectState,
-  //       operationName: operation.operationName
-  //     });
-  //     const resolvedConflict = conflictHandler.executeStrategy();
-  //     if (resolvedConflict) {
-  //       operation.variables = resolvedConflict;
-  //     }
-  //   }
-    // return forward(operation);
+  private conflictHandler(errorResponse: ErrorResponse): Observable<FetchResult> {
+    const { operation, forward, graphQLErrors } = errorResponse;
+    const data = this.getConflictData(graphQLErrors);
+    const individualStrategy = this.strategy || UseClient;
+    if (data && operation.getContext().returnType) {
+      const base = operation.getContext().conflictBase;
+      const conflictHandler = new ConflictHandler({
+        base,
+        client: data.clientState,
+        server: data.serverState,
+        strategy: individualStrategy,
+        listener: this.listener,
+        objectState: this.config.conflictProvider as ObjectState,
+        operationName: operation.operationName
+      });
+      const resolvedConflict = conflictHandler.executeStrategy();
+      if (resolvedConflict) {
+        operation.variables = resolvedConflict;
+      }
+    }
+    return forward(operation);
 
-  // }
+  }
 
   /**
   * Fetch conflict data from the errors returned from the server
@@ -121,5 +121,4 @@ export class ConflictLink extends ApolloLink {
       }
     }
   }
-
 }

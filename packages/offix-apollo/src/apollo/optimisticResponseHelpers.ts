@@ -7,7 +7,6 @@ import {
 } from "@apollo/client";
 
 export function addOptimisticResponse(apolloClient: ApolloClient<NormalizedCacheObject>, { op, qid }: ApolloQueueEntryOperation) {
-  //@ts-ignore
   apolloClient.store.markMutationInit({
     mutationId: qid,
     document: op.mutation,
@@ -16,17 +15,14 @@ export function addOptimisticResponse(apolloClient: ApolloClient<NormalizedCache
     update: op.update,
     optimisticResponse: op.optimisticResponse
   });
-  //@ts-ignore
   apolloClient.queryManager.broadcastQueries();
 }
 
 export function removeOptimisticResponse(apolloClient: ApolloClient<NormalizedCacheObject>, { op, qid }: ApolloQueueEntryOperation) {
-  //@ts-ignore
   apolloClient.store.markMutationComplete({
     mutationId: qid,
     optimisticResponse: op.optimisticResponse
   });
-  //@ts-ignore
   apolloClient.queryManager.broadcastQueries();
 }
 

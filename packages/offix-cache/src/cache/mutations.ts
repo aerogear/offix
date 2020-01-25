@@ -145,7 +145,7 @@ export const getUpdateFunction = (options: CacheUpdateOptions): MutationUpdaterF
   } = options;
 
   const { query, variables } = deconstructQuery(updateQuery);
-  const queryField = getOperationFieldName(query);
+  const queryName = getOperationFieldName(query);
   let updateFunction: MutationUpdaterFn;
   if (operationType === CacheOperation.ADD) {
     updateFunction = (cache, { data }) => {
@@ -158,14 +158,14 @@ export const getUpdateFunction = (options: CacheUpdateOptions): MutationUpdaterF
           queryResult = {};
         }
 
-        const result = queryResult[queryField];
+        let result = queryResult[queryName];
         if (result && operationData) {
           // FIXME deduplication should happen on subscriptions
           // We do that every time no matter if we have subscription
           if (!result.find((item: any) => {
             return item[idField] === operationData[idField];
           })) {
-            result.push(operationData);
+            result = result.concat(operationData);
           }
         } else {
           queryResult[queryField] = [operationData];

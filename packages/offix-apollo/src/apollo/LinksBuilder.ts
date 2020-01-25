@@ -1,5 +1,5 @@
 import { ApolloLink } from "@apollo/client";
-import { RetryLink } from "apollo-link-retry";
+import { RetryLink } from "@apollo/link-retry";
 import { ApolloOfflineClientConfig } from "../config/ApolloOfflineClientConfig";
 import { isMarkedOffline } from "./helpers";
 import { ConflictLink } from "./conflicts/ConflictLink";
@@ -21,15 +21,15 @@ function createDefaultLink(config: ApolloOfflineClientConfig) {
     conflictStrategy: config.conflictStrategy
   });
 
-  // const retryLink = ApolloLink.split(isMarkedOffline, new RetryLink(config.retryOptions));
+  const retryLink = ApolloLink.split(isMarkedOffline, new RetryLink(config.retryOptions));
 
   if (!config.link) {
     throw new Error("config missing link property");
   }
 
   const links: ApolloLink[] = [
-    // conflictLink,
-    // retryLink, 
+    conflictLink,
+    retryLink, 
     config.link
   ];
 
