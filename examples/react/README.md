@@ -1,19 +1,43 @@
-# Getting started
+# Offix - React Todo Example App
+
+This example demonstrates how to get started using Offix in a React project. The app is a simple
+todo app making use of the `offix-client` and can be used as launch pad to getting started
+with Offix and make use of the features in the library.
+
+## Getting started
+
+### Setting up a server
+
+For simplicity, a Graphback runtime server is available in the server folder in the examples directory. Follow the gettings started instructions there to get started quickly.
+
+Alternatively, you can implement your own backend server.
+
+### Starting the client
+
+Next, configure the GraphQL server address in the `src/clientConfig.js` file:
+
+```
+
+...
+
+const wsLink = new WebSocketLink({
+  uri: 'ws://<YOUR-SERVER-ADDRESS-HERE>',
+  ...
+});
+
+const httpLink = new HttpLink({
+    uri: 'http://<YOUR-SERVER-ADDRESS-HERE>', 
+});
+
+...
+
+```
+
+### Starting the client
 
 ```
 yarn install
 ```
-
-## Setting up a server
-
-To get started, you will need to set up a GraphQL server. 
-
-You can use the [Graphback runtime example](https://github.com/aerogear/graphback/tree/master/examples/runtime-example), to get
-set up quickly.
-
-Configure the GraphQL server address in the config file.
-
-## Starting the client
 
 ```
 yarn start

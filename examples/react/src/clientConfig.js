@@ -12,7 +12,9 @@ const wsLink = new WebSocketLink({
   },
 });
 
-const httpLink = new HttpLink({ uri: 'http://localhost:4000/graphql' });
+const httpLink = new HttpLink({ 
+  uri: 'http://localhost:4000/graphql',
+});
 
 const link = split(
   ({ query }) => {
