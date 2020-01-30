@@ -32,7 +32,6 @@
     "typescript": "3.7.5"
   },
   "dependencies": {
-    "offix-cache": "0.13.1",
     "offix-offline": "0.13.1"
   },
   "peerDependencies": {

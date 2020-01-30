@@ -1,7 +1,6 @@
 import { OfflineQueueListener } from "./OfflineQueueListener";
 import { OfflineStore } from "../store/OfflineStore";
 import { OfflineQueueConfig } from "./OfflineQueueConfig";
-import { generateClientId } from "offix-cache";
 import { QueueExecuteFunction } from "./QueueExecuteFunction";
 
 /**
@@ -76,7 +75,7 @@ export class OfflineQueue<T> {
 
     const entry: QueueEntry<T> = {
       operation: {
-        qid: generateClientId(),
+        qid: ID(),
         op
       }
     };
@@ -218,3 +217,14 @@ export class OfflineQueue<T> {
     }
   }
 }
+
+/**
+ *
+ * Helper function to generate a simple alphanumeric ID for queue entries
+ */
+function ID() {
+  // Math.random should be unique because of its seeding algorithm.
+  // Convert it to base 36 (numbers + letters), and grab the first 9 characters
+  // after the decimal.
+  return "queue:" + Math.random().toString(36).substr(2, 9);
+};
