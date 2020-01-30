@@ -4,7 +4,7 @@ import { GET_TODOS } from '../gql/queries';
 const options = {
   updateQuery: GET_TODOS,
   returnType: 'Todo',
-}
+};
 
 export const add = {
   ...options,
