@@ -1,20 +1,22 @@
 import { CacheOperation } from 'offix-cache';
 import { GET_TODOS } from '../gql/queries';
 
-export const add = {
+const options = {
   updateQuery: GET_TODOS,
   returnType: 'Todo',
+}
+
+export const add = {
+  ...options,
   operationType: CacheOperation.ADD,
 };
 
 export const edit = {
-  updateQuery: GET_TODOS,
-  returnType: 'Todo',
+  ...options,
   operationType: CacheOperation.REFRESH,
 };
 
 export const remove = {
-  updateQuery: GET_TODOS,
-  returnType: 'Todo',
+  ...options,
   operationType: CacheOperation.DELETE,
 };
