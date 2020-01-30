@@ -1,0 +1,32 @@
+{
+  "runtime": true,
+  "db": {
+    "dbConfig": {
+      "user": "postgresql",
+      "password": "postgres",
+      "database": "users",
+      "host": "127.0.0.1",
+      "port": 5432
+    },
+    "database": "pg"
+  },
+  "graphqlCRUD": {
+    "create": true,
+    "update": true,
+    "findAll": true,
+    "find": true,
+    "delete": true,
+    "subCreate": true,
+    "subUpdate": true,
+    "subDelete": true,
+    "disableGen": false
+  },
+  "folders": {
+    "model": "./model",
+    "generatedResolvers": "./src/resolvers",
+    "customResolvers": "./src/resolvers",
+    "schema": "./src/schema",
+    "client": "./client/src/graphql",
+    "migrations": "./migrations"
+  }
+}

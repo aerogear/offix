@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "declarationDir": "./types",
+    "lib": [
+      "esnext",
+      "esnext.asynciterable",
+      "es2015",
+      "es2018.promise",
+      "dom",
+      "es2016"
+    ],
+    "resolveJsonModule": true,
+    "noImplicitAny": true,
+    "preserveConstEnums": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true,
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "importHelpers": true,
+    "alwaysStrict": false,
+    "sourceMap": true,
+    "declaration": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitThis": false
+  },
+}
