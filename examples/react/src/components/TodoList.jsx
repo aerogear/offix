@@ -3,8 +3,7 @@ import { useOfflineMutation } from 'react-offix-hooks';
 import { Empty } from './Empty';
 import { Todo } from './Todo/Todo';
 import { EDIT_TODO, DELETE_TODO } from '../gql/queries';
-import * as mutateOptions from '../helpers/mutateOptions';
-import * as subscriptionOptions from '../helpers/subscriptionOptions';
+import { mutateOptions, subscriptionOptions } from '../helpers';
 
 export const TodoList = ({ todos, subscribeToMore }) => {
   const [editTodo] = useOfflineMutation(EDIT_TODO, mutateOptions.edit);

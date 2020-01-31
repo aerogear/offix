@@ -1,35 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { useApolloClient } from 'react-apollo';
+import React, { useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import { useOfflineMutation } from 'react-offix-hooks';
+import { useOfflineMutation, useNetworkStatus } from 'react-offix-hooks';
 import { AddTodo, TodoList, Modal, Loading, Error } from './components';
 import { GET_TODOS, ADD_TODO } from './gql/queries';
-import * as mutateOptions from './helpers/mutateOptions';
+import { mutateOptions } from './helpers';
 
 const App = () => {
-  const client = useApolloClient();
-
   const { loading, error, data, subscribeToMore } = useQuery(GET_TODOS);
   const [addTodo] = useOfflineMutation(ADD_TODO, mutateOptions.add);
   const [modalActive, setModalActive] = useState(false);
-  const [isOnline, setIsOnline] = useState(true);
 
-  // set up network listener to
-  // detect when app goes offline
-  client.networkStatus.onStatusChangeListener({
-    // get result and set online state to result
-    onStatusChange: ({ online }) => setIsOnline(online),
-  });
-
-  useEffect(() => {
-    // eslint-disable-next-line
-    async () => {
-      // check if app is offline and return result
-      const offline = await client.networkStatus.isOffline();
-      // set network state with result of offline check
-      setIsOnline(!offline);
-    };
-  }, []);
+  const isOnline = useNetworkStatus();
 
   const toggleModal = () => {
     setModalActive(!modalActive);
