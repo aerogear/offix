@@ -1,6 +1,6 @@
-import { getOperationFieldName } from "../utils/helperFunctions";
-import { CacheOperation } from "../cache/CacheOperation";
-import { generateClientId } from "../utils";
+import { getOperationFieldName } from "./utils/helperFunctions";
+import { CacheOperation } from "./api/CacheOperation";
+import { generateClientId } from "./utils";
 import { DocumentNode } from "graphql";
 import { OperationVariables } from "apollo-client";
 

@@ -1,8 +1,8 @@
 import { SubscribeToMoreOptions, OperationVariables, ObservableQuery } from "apollo-client";
-import { QueryWithVariables, CacheUpdatesQuery, SubscribeToMoreUpdateFunction } from "./CacheUpdates";
+import { QueryWithVariables, CacheUpdatesQuery, SubscribeToMoreUpdateFunction } from "./api/CacheUpdates";
 import { DocumentNode } from "graphql";
-import { CacheOperation } from "./CacheOperation";
-import { getOperationFieldName } from "..";
+import { CacheOperation } from "./api/CacheOperation";
+import { getOperationFieldName } from ".";
 
 export interface SubscriptionHelperOptions {
   subscriptionQuery: CacheUpdatesQuery;

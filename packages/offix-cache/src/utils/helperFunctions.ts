@@ -2,7 +2,7 @@ import { DocumentNode } from "apollo-link";
 import { OperationVariables } from "apollo-client";
 import { resultKeyNameFromField } from "apollo-utilities";
 import { OperationDefinitionNode, FieldNode } from "graphql";
-import { CacheUpdatesQuery, QueryWithVariables } from "../cache/CacheUpdates";
+import { CacheUpdatesQuery, QueryWithVariables } from "../api/CacheUpdates";
 import { CLIENT_ID_PREFIX } from "./constants";
 
 // Returns true if ID was generated on client
