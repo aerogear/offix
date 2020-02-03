@@ -1,5 +1,4 @@
-// eslint-disable-next-line
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useApolloOfflineClient } from "./ApolloOfflineProvider";
 
 /**
@@ -11,7 +10,7 @@ import { useApolloOfflineClient } from "./ApolloOfflineProvider";
  */
 export function useNetworkStatus(){
   const client = useApolloOfflineClient();
-  const [isOnline, setIsOnline] = useState(true);
+  const [isOnline, setIsOnline] = useState();
 
   useEffect(() => {
     const setOnlineStatus  = async () => {
@@ -20,7 +19,6 @@ export function useNetworkStatus(){
       // set network state with result of offline check
       setIsOnline(!offline);
     };
-
 
     setOnlineStatus();
 
