@@ -6,6 +6,12 @@ with Offix and make use of the features in the library.
 
 ## Getting started
 
+To get started, first run the following command in the root directory of this repo.
+
+```
+yarn install
+```
+
 ### Setting up a server
 
 For simplicity, a Graphback runtime server is available in the server folder in the examples directory. Follow the gettings started instructions there to get started quickly.
@@ -34,6 +40,8 @@ const httpLink = new HttpLink({
 ```
 
 ### Starting the client
+
+Lastly, run the following commands from the React example folder.
 
 ```
 yarn install
