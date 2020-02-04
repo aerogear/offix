@@ -241,3 +241,19 @@ After the offline mutation cannot be replayed
     "message": "Network error: Failed to fetch"
   }
 ```
+
+## useNetworkStatus
+
+The `useNetworkStatus` hook can be used to build components that render differently depending on the network state. The hook returns `true` when the network is online and `false` when the network is offline. The hook uses a listener to return a new value when the network status changes.
+
+Example:
+
+```
+import React from 'react';
+import { useNetworkStatus } from 'react-offix-hooks';
+
+export default App = () => {
+  const isOnline = useNetworkStatus();
+  return <span>Network status: { isOnline }</span>;
+}
+```
