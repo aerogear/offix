@@ -2,6 +2,7 @@ import { SubscribeToMoreOptions, OperationVariables, ObservableQuery } from "apo
 import { QueryWithVariables, CacheUpdatesQuery, SubscribeToMoreUpdateFunction } from "./api/CacheUpdates";
 import { DocumentNode } from "graphql";
 import { CacheOperation } from "./api/CacheOperation";
+import { CacheItem } from "./api/CacheUpdates"
 import { getOperationFieldName } from ".";
 
 export interface SubscriptionHelperOptions {
@@ -65,45 +66,64 @@ export const createSubscriptionOptions = (options: SubscriptionHelperOptions): S
 
 /**
  * Generate the standard update function to update the cache for a given operation type and query.
- * @param opType The type of operation being performed
+ * @param operationType The type of operation being performed
  * @param idField The id field the item keys off
  */
-export const getUpdateQueryFunction = (opType: CacheOperation, idField = "id"): SubscribeToMoreUpdateFunction => {
-  let updateFunction: SubscribeToMoreUpdateFunction;
-
-  switch (opType) {
-    case CacheOperation.ADD:
-      updateFunction = (prev, newItem) => {
-        if (!newItem) {
-          return [...prev];
-        } else {
-          return [...prev.filter(item => {
-            return item[idField] !== newItem[idField];
-          }), newItem];
-        }
-      };
-      break;
-    case CacheOperation.REFRESH:
-      updateFunction = (prev, newItem) => {
-        if (!newItem) {
-          return [...prev];
-        } else {
-          return prev.map((item: any) => item[idField] === newItem[idField] ? newItem : item);
-        }
-      };
-      break;
-    case CacheOperation.DELETE:
-      updateFunction = (prev, newItem) => {
-        if (!newItem) {
-          return [];
-        } else {
-          return prev.filter((item: any) => item[idField] !== newItem[idField]);
-        }
-      };
-      break;
-    default:
-      updateFunction = prev => prev;
+const getUpdateQueryFunction = (operationType: CacheOperation, idField = "id"): SubscribeToMoreUpdateFunction => {
+  if (operationType === CacheOperation.ADD) {
+    return addSubscriptionItem({ idField })
   }
+  if (operationType === CacheOperation.REFRESH) {
+    return updateSubscriptionItem({ idField })
+  }
+  if (operationType === CacheOperation.DELETE) {
+    return deleteSubscriptionItem({ idField })
+  }
+  // return a default function that does nothing
+  return (prev) => { return prev }
+};
 
-  return updateFunction;
+
+/**
+ * returns a generic updateQuery function used to add a new item to a previous list of items.
+ * may be exported in the future
+ */
+function addSubscriptionItem({ idField }: { idField: string }) {
+  return (prev: [CacheItem], newItem: CacheItem | undefined) => {
+    if (!newItem) {
+      return [...prev];
+    } else {
+      return [...prev.filter(item => {
+        return item[idField] !== newItem[idField];
+      }), newItem];
+    }
+  }
+};
+
+/**
+ * returns a generic updateQuery function used to delete an item from a previous list of items.
+ * may be exported in the future
+ */
+function deleteSubscriptionItem({ idField }: { idField: string }) {
+  return (prev: [CacheItem], newItem: CacheItem | undefined) => {
+    if (!newItem) {
+      return [];
+    } else {
+      return prev.filter((item: any) => item[idField] !== newItem[idField]);
+    }
+  };
+};
+
+/**
+ * returns a generic updateQuery function used to update an item in a previous list of items.
+ * may be exported in the future
+ */
+function updateSubscriptionItem({ idField }: { idField: string }) {
+  return (prev: [CacheItem], newItem: CacheItem | undefined) => {
+    if (!newItem) {
+      return [...prev];
+    } else {
+      return prev.map((item: any) => item[idField] === newItem[idField] ? newItem : item);
+    }
+  }
 };
