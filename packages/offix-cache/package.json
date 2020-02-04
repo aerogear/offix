@@ -12,12 +12,12 @@
   "devDependencies": {
     "@types/fetch-mock": "7.3.2",
     "@types/graphql": "14.2.3",
-    "@types/jest": "24.9.1",
+    "@types/jest": "25.1.1",
     "@types/node": "12.12.25",
     "graphql": "14.5.8",
     "graphql-tag": "2.10.2",
     "jest": "25.1.0",
-    "ts-jest": "24.3.0",
+    "ts-jest": "25.2.0",
     "ts-node": "8.6.2",
     "typescript": "3.7.5"
   },
