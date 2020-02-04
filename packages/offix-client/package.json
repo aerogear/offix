@@ -31,7 +31,7 @@
     "fake-indexeddb": "3.0.0",
     "fetch-mock": "8.3.2",
     "graphql": "14.5.8",
-    "graphql-tag": "2.10.1",
+    "graphql-tag": "2.10.2",
     "jest": "25.1.0",
     "ts-jest": "24.3.0",
     "ts-node": "8.6.2",
