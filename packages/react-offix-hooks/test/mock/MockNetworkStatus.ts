@@ -1,17 +1,3 @@
-
-// @ts-ignore
-const onLineGetter = window.navigator.__lookupGetter__("onLine");
-
-export const goOffLine = () => {
-  // @ts-ignore
-  window.navigator.__defineGetter__("onLine", () => false);
-};
-
-export const goOnLine = () => {
-  // @ts-ignore
-  window.navigator.__defineGetter__("onLine", onLineGetter);
-};
-
 export class MockNetworkStatus {
   public online: boolean;
   public callbacks: any[];
