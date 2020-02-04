@@ -244,7 +244,7 @@ After the offline mutation cannot be replayed
 
 ## useNetworkStatus
 
-In order to detect changes in the network status, the useNetworkStatus hook can be used. The hook returns truth for when the network is online and falsey for when the network is offline. The hook makes use of a network status change listener and will update the returned value on a network status change event.
+The `useNetworkStatus` hook can be used to build components that render differently depending on the network state. The hook returns `true` when the network is online and `false` when the network is offline. The hook uses a listener to return a new value when the network status changes.
 
 Example:
 
