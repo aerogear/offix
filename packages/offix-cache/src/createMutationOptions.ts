@@ -39,7 +39,7 @@ export interface MutationHelperOptions<T = {
 /**
  * Options that are passed to the generic cache update helper functions
  */
-export interface CacheUpdateHelperOptions {
+interface CacheUpdateHelperOptions {
   /**
    * Key used to access mutation result.
    * For example for `modifyObject(value: String!)` mutation it will be `modifyObject`
@@ -63,7 +63,7 @@ export interface CacheUpdateHelperOptions {
  * Set of parameters used to generate the update function to
  * update the cache for a given operation and query.
  */
-export interface CacheUpdateOptions extends CacheUpdateHelperOptions{
+interface CacheUpdateOptions extends CacheUpdateHelperOptions{
   /**
    * Defines operation type used to make appropriate changes in cache
    *
