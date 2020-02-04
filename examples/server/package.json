@@ -1,8 +1,9 @@
 {
   "name": "apollo-runtime-template",
-  "version": "0.10.2",
+  "version": "1.0.0",
   "description": "",
   "private": true,
+  "license": "Apache 2.0",
   "main": "dist/src/index.js",
   "scripts": {
     "build": "tsc",
@@ -10,7 +11,6 @@
     "start": "node dist/src/index.js",
     "watch": "tsc -w"
   },
-  "license": "Apache 2.0",
   "dependencies": {
     "@types/glob": "^7.1.1",
     "@types/pino": "^5.15.3",

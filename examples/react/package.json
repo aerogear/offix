@@ -2,7 +2,8 @@
   "name": "offix-react-example",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT",
+  "license": "Apache-2.0",
+  "private": true,
   "scripts": {
     "start": "parcel serve index.html",
     "watch": "parcel watch index.html",
