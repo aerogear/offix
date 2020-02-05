@@ -22,7 +22,7 @@ export interface CacheUpdates {
  */
 export type SubscribeToMoreUpdateFunction = (array: [CacheItem], newItem?: CacheItem) => CacheItem[];
 
-interface CacheItem {
+export interface CacheItem {
   [key: string]: any;
 }
 

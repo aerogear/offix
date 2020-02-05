@@ -1,7 +1,7 @@
 import "fake-indexeddb/auto";
 import "cross-fetch/polyfill";
 
-import { CacheOperation, createMutationOptions, createSubscriptionOptions } from "../../offix-cache/src/cache";
+import { CacheOperation, createMutationOptions, createSubscriptionOptions } from "../../offix-cache";
 import {
   CREATE_ITEM,
   GET_ITEMS,
