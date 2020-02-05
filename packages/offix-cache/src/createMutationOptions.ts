@@ -134,7 +134,7 @@ export const createMutationOptions = <T = {
 /**
  * Generate the update function to update the cache for a given operation and query.
  **/
-const getUpdateFunction = (options: CacheUpdateOptions): MutationUpdaterFn => {
+export const getUpdateFunction = (options: CacheUpdateOptions): MutationUpdaterFn => {
   if (!options.updateQuery) {
     throw new Error("Required updateQuery parameter is not supplied");
   }
