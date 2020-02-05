@@ -2,7 +2,7 @@ import { SubscribeToMoreOptions, OperationVariables, ObservableQuery } from "apo
 import { QueryWithVariables, CacheUpdatesQuery, SubscribeToMoreUpdateFunction } from "./api/CacheUpdates";
 import { DocumentNode } from "graphql";
 import { CacheOperation } from "./api/CacheOperation";
-import { CacheItem } from "./api/CacheUpdates"
+import { CacheItem } from "./api/CacheUpdates";
 import { getOperationFieldName } from ".";
 
 export interface SubscriptionHelperOptions {
@@ -71,16 +71,16 @@ export const createSubscriptionOptions = (options: SubscriptionHelperOptions): S
  */
 const getUpdateQueryFunction = (operationType: CacheOperation, idField = "id"): SubscribeToMoreUpdateFunction => {
   if (operationType === CacheOperation.ADD) {
-    return addSubscriptionItem({ idField })
+    return addSubscriptionItem({ idField });
   }
   if (operationType === CacheOperation.REFRESH) {
-    return updateSubscriptionItem({ idField })
+    return updateSubscriptionItem({ idField });
   }
   if (operationType === CacheOperation.DELETE) {
-    return deleteSubscriptionItem({ idField })
+    return deleteSubscriptionItem({ idField });
   }
   // return a default function that does nothing
-  return (prev) => { return prev }
+  return (prev) => { return prev; };
 };
 
 
@@ -97,7 +97,7 @@ function addSubscriptionItem({ idField }: { idField: string }) {
         return item[idField] !== newItem[idField];
       }), newItem];
     }
-  }
+  };
 };
 
 /**
@@ -125,5 +125,5 @@ function updateSubscriptionItem({ idField }: { idField: string }) {
     } else {
       return prev.map((item: any) => item[idField] === newItem[idField] ? newItem : item);
     }
-  }
+  };
 };

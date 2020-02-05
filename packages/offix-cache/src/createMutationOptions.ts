@@ -142,15 +142,16 @@ const getUpdateFunction = (options: CacheUpdateOptions): MutationUpdaterFn => {
     throw new Error("Required mutationName parameter is not supplied");
   }
 
-  const { operationType = CacheOperation.ADD, ...cacheHelperOptions } = options
+  const { operationType = CacheOperation.ADD, ...cacheHelperOptions } = options;
 
   if (operationType === CacheOperation.ADD) {
    return addItemToQuery(cacheHelperOptions);
-  } 
+  }
   if (operationType === CacheOperation.DELETE) {
     return deleteItemFromQuery(cacheHelperOptions);
-  } 
+  }
   // this default catches the REFRESH case and returns an empty update function which does nothing
+  // eslint-disable-next-line
   return () => {};
 };
 
