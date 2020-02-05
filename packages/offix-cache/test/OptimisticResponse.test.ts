@@ -1,5 +1,5 @@
 import { createOptimisticResponse, OptimisticOptions } from "../src";
-import { CacheOperation } from "../src/cache";
+import { CacheOperation } from "../src/api/CacheOperation";
 import { CREATE_ITEM } from "./mock/mutations";
 
 test("check that createNewOptimisticResponse is properly composed with __typename property", () => {
