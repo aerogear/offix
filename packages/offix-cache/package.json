@@ -1,6 +1,6 @@
 {
   "name": "offix-cache",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "description": "GraphQL Mutation and Subscription Helpers",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
