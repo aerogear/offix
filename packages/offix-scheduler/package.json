@@ -1,6 +1,6 @@
 {
   "name": "offix-scheduler",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "description": "",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -32,7 +32,7 @@
     "typescript": "3.7.5"
   },
   "dependencies": {
-    "offix-offline": "0.13.1"
+    "offix-offline": "0.13.2"
   },
   "peerDependencies": {
     "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0"
