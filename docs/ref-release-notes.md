@@ -4,6 +4,10 @@ title: What is new in Offix
 sidebar_label: Release notes
 ---
 
+# 0.13.2
+
+Add useNetworkStatus React hook which can be used to build components that render differently depending on the network state.
+
 # 0.13.1
 
 0.13.1 fixes package install issues that were introduced in 0.13.0. It also introduces some minor dependency updates.
