@@ -26,7 +26,7 @@ export class ToggleableNetworkStatus {
   setOnline(online) {
     this.online = online;
     for (const callback of this.callbacks) {
-      callback.onStatusChange({ online })
+      callback({ online })
     }
   }
 };
