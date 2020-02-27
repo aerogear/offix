@@ -15,13 +15,13 @@ export class CordovaNetworkStatus implements NetworkStatus {
     document.addEventListener("offline", this.handleNetworkStatusChange.bind(this), false);
   }
 
-  public onStatusChangeListener(listener: NetworkStatusChangeCallback): void {
+  public addListener(listener: NetworkStatusChangeCallback): void {
     this.listeners.push(listener);
   }
 
   public removeListener(listener: NetworkStatusChangeCallback): void {
     const index = this.listeners.indexOf(listener);
-    if (index > 0) {
+    if (index >= 0) {
       this.listeners.splice(index, 1);
     }
   }
@@ -37,7 +37,7 @@ export class CordovaNetworkStatus implements NetworkStatus {
   private handleNetworkStatusChange() {
     const online = window.navigator.onLine;
     this.listeners.forEach((listener) => {
-      listener.onStatusChange({ online });
+      listener({ online });
     });
   }
 

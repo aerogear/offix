@@ -23,16 +23,13 @@ export function useNetworkStatus(){
 
     setOnlineStatus();
 
-    const listener: NetworkStatusChangeCallback = {
-      // get result and set online state to result
-      onStatusChange: ({ online }) => setIsOnline(online)
-    };
+    // get result and set online state to result
+    const listener: NetworkStatusChangeCallback = ({ online }) => setIsOnline(online);
 
     // set up network listener to
-    client.networkStatus.onStatusChangeListener(listener);
+    client.networkStatus.addListener(listener);
 
     return function cleanup() {
-      // @ts-ignore
       client.networkStatus.removeListener(listener);
     };
   }, [client]);
