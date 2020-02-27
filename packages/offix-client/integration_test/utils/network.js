@@ -14,7 +14,7 @@ export class ToggleableNetworkStatus {
     this.callbacks = []
   }
 
-  onStatusChangeListener(callback) {
+  addListener(callback) {
     this.callbacks.push(callback)
   }
 
