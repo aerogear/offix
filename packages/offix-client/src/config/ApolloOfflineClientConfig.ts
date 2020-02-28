@@ -36,6 +36,7 @@ export class ApolloOfflineClientConfig implements ApolloOfflineClientOptions {
   public cachePersistor?: CachePersistor<object>;
   public link?: ApolloLink;
   public cache: any;
+  public inputMapper: (object: any) => any | undefined;
 
   public retryOptions = {
     delay: {
@@ -56,5 +57,6 @@ export class ApolloOfflineClientConfig implements ApolloOfflineClientOptions {
     this.conflictStrategy = options.conflictStrategy || UseClient;
     this.conflictProvider = options.conflictProvider || new VersionedState();
     this.link = createDefaultLink(this);
+    this.inputMapper = options.inputMapper;
   }
 }

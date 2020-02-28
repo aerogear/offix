@@ -3,7 +3,6 @@ import { RetryLink } from "apollo-link-retry";
 import { ApolloOfflineClientConfig } from "../config/ApolloOfflineClientConfig";
 import { isMarkedOffline } from "./helpers";
 import { ConflictLink } from "./conflicts/ConflictLink";
-import { ObjectState } from "..";
 
 /**
  * Default HTTP Apollo Links
@@ -15,11 +14,7 @@ import { ObjectState } from "..";
  */
 function createDefaultLink(config: ApolloOfflineClientConfig) {
 
-  const conflictLink = new ConflictLink({
-    conflictProvider: config.conflictProvider as ObjectState,
-    conflictListener: config.conflictListener,
-    conflictStrategy: config.conflictStrategy
-  });
+  const conflictLink = new ConflictLink(config);
 
   const retryLink = ApolloLink.split(isMarkedOffline, new RetryLink(config.retryOptions));
 

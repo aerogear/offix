@@ -42,6 +42,14 @@ export interface ConflictConfig {
    * The conflict resolution strategy your client should use. By default it takes client version.
    */
   conflictStrategy?: ConflictResolutionStrategy;
+
+  /**
+   * [Modifier]
+   *
+   * Maps input objects for the cases if variables are not passed to the root
+   *
+   */
+  inputMapper?: (object: any) => any;
 }
 
 /**
@@ -67,7 +75,12 @@ export class ConflictLink extends ApolloLink {
     forward: NextLink
   ): Observable<FetchResult> | null {
     if (isMutation(operation)) {
-      if (this.stater.currentState(operation.variables) !== undefined) {
+      let variables = operation.variables;
+      if (this.config.inputMapper) {
+        variables = this.config.inputMapper(operation.variables);
+      }
+
+      if (this.stater.currentState(variables) !== undefined) {
         return this.link.request(operation, forward);
       }
       return forward(operation);
@@ -94,6 +107,9 @@ export class ConflictLink extends ApolloLink {
       });
       const resolvedConflict = conflictHandler.executeStrategy();
       if (resolvedConflict) {
+        if (this.config.inputMapper) {
+          operation.variables = this.config.inputMapper(operation.variables);
+        }
         operation.variables = resolvedConflict;
       }
     }

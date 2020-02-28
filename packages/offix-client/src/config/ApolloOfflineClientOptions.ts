@@ -1,12 +1,12 @@
 import { PersistedData, PersistentStore } from "offix-scheduler";
 import {
   NetworkStatus
- } from "offix-offline";
- import {
+} from "offix-offline";
+import {
   ConflictResolutionStrategy,
   ObjectState,
   ConflictListener
- } from "offix-conflicts-client";
+} from "offix-conflicts-client";
 import { CacheUpdates } from "offix-cache";
 import { RetryLink } from "apollo-link-retry";
 import { ApolloOfflineQueueListener } from "../apollo";
@@ -98,4 +98,12 @@ export interface ApolloOfflineClientOptions extends ApolloClientOptions<Normaliz
    *
    */
   retryOptions?: RetryLink.Options;
+
+  /**
+   * [Modifier]
+   *
+   * Maps input objects for the cases if variables are not passed to the root
+   *
+   */
+  inputMapper?: (object: any) => any;
 }
