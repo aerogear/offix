@@ -36,7 +36,7 @@ export class ApolloOfflineClientConfig implements ApolloOfflineClientOptions {
   public cachePersistor?: CachePersistor<object>;
   public link?: ApolloLink;
   public cache: any;
-  public inputMapper: (object: any) => any | undefined;
+  public inputMapper?: (object: any) => any;
 
   public retryOptions = {
     delay: {
