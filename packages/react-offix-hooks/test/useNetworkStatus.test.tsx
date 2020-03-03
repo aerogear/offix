@@ -10,10 +10,10 @@ import { HttpLink } from "apollo-link-http";
 import { MockNetworkStatus } from "./mock/MockNetworkStatus";
 
 const createClient = async ({ online } : { online: boolean }) => {
-  let link = new HttpLink({ uri: "http://test" });
-  let networkStatus = new MockNetworkStatus();
+  const link = new HttpLink({ uri: "http://test" });
+  const networkStatus = new MockNetworkStatus();
   networkStatus.setOnline(online);
-  let client = new ApolloOfflineClient({
+  const client = new ApolloOfflineClient({
     cache: new InMemoryCache(),
     link,
     networkStatus

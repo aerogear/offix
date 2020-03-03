@@ -123,13 +123,15 @@ export class OffixScheduler<T> {
     if (this.online) {
       queue.forwardOperations();
     }
-    this.networkStatus.onStatusChangeListener({
-      onStatusChange(networkInfo: NetworkInfo) {
-        self.online = networkInfo.online;
-        if (self.online) {
-          queue.forwardOperations();
-        }
+
+    const listener = (networkInfo: NetworkInfo) => {
+      self.online = networkInfo.online;
+      if (self.online) {
+        queue.forwardOperations();
       }
-    });
+    };
+
+    this.networkStatus.addListener(listener);
+
   }
 }

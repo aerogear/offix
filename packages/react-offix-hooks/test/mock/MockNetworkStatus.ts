@@ -7,8 +7,15 @@ export class MockNetworkStatus {
     this.callbacks = [];
   }
 
-  public onStatusChangeListener(callback: any) {
+  public addListener(callback: any) {
     this.callbacks.push(callback);
+  }
+
+  public removeListener(callback: any) {
+    const index = this.callbacks.indexOf(callback);
+    if (index >= 0) {
+      this.callbacks.splice(index, 1);
+    }
   }
 
   public isOffline(): Promise<boolean> {
@@ -19,7 +26,7 @@ export class MockNetworkStatus {
   public setOnline(online: boolean) {
     this.online = online;
     for (const callback of this.callbacks) {
-      callback.onStatusChange({ online });
+      callback({ online });
     }
   }
 }

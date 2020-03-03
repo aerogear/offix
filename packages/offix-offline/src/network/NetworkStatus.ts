@@ -2,20 +2,25 @@ export interface NetworkInfo {
   online: boolean;
 }
 
-export interface NetworkStatusChangeCallback {
-  onStatusChange(info: NetworkInfo): void;
-}
+export type NetworkStatusChangeCallback = (info: NetworkInfo) => void;
 
 /**
  * Responsable to handle Networks status
  */
 export interface NetworkStatus {
   /**
-   * Trigger callback whenever the network status change
+   * Register callback whenever the network status change
    *
-   * @param callback Callback to be called when network status change
+   * @param callback Callback to be added when network status change
    */
-  onStatusChangeListener(callback: NetworkStatusChangeCallback): void;
+  addListener(listener: NetworkStatusChangeCallback): void;
+
+  /**
+   * Remove callback whenever the network status change
+   *
+   * @param callback Callback to be removed when network status change
+   */
+  removeListener(listener: NetworkStatusChangeCallback): void;
 
   /**
    * Check if device is offline
