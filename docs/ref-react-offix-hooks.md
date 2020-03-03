@@ -60,8 +60,52 @@ In the example above, the following happens.
 4. If `initialized` is true, then the application is rendered including the `ApolloOfflineProvider` and the `ApolloProvider`. Otherwise a loading screen is shown.
 
 ## useOfflineMutation
+`useOfflineMutation` is similar to `useMutation` but it internally calls `client.offlineMutate`. `useOfflineMutation` will throw an offline error if the mutation was made while offline which needs to be handled in the client.
 
-`useOfflineMutation` is similar to `useMutation` but it internally calls `client.offlineMutate` and it provides additional state that can be used to build UIs that handle offline cases.
+
+```javascript
+import gql from 'graphql-tag'
+import { useOfflineMutation } from 'react-offix-hooks'
+
+const ADD_MESSAGE_MUTATION = gql`
+  mutation addMessage($chatId: String!, $content: String!) {
+    addMessage(chatId: $chatId, content: $content)
+  }
+`
+
+function addMessageForm({ chatId }) {
+  const inputRef = useRef()
+
+  const [addMessage] = useOfflineMutation(ADD_MESSAGE_MUTATION)
+
+  async function handleSubmit() {
+    try {
+      await addMessage({
+        variables: {
+          chatId,
+          content: inputRef.current.value,
+        }
+      });
+    } catch(error) {
+      if (error.offline) {
+        error.watchOfflineChange();
+      }
+    }
+  }
+
+  return (
+    <form>
+      <input ref={inputRef} />
+      <button onClick={handleSubmit}>Send Message</button>
+    </form>
+  )
+}
+```
+
+
+### State Properties
+
+`useOfflineMutation` provides additional state that can be used to build UIs.
 
 ```javascript
 import gql from 'graphql-tag'
@@ -99,10 +143,7 @@ The following properties are available on the `state` returned from `useOfflineM
 * `error` - error returned from the mutation (not including offline errors).
 * `hasError` - true when an error occurred.
 * `loading` - true when a mutation is in flight or when an offline mutation hasn't been fulfilled yet.
-* `mutationVariables` - the variables passed to the mutation. Only present during an offline mutation.
 * `calledWhileOffline` - true when mutation was called while offline.
-* `offlineChangeReplicated` - true when offline mutation has been successfully fulfilled.
-* `offlineReplicationError` - true when an error happened trying to fulfill an offline mutation `error` will contain the actual error.
 
 Example:
 
@@ -125,10 +166,7 @@ const [addTask, {
     error,
     hasError,
     loading,
-    mutationVariables,
     calledWhileOffline,
-    offlineChangeReplicated,
-    offlineReplicationError
   }] = useOfflineMutation(ADD_TASK, {
     variables: {
       description,
@@ -149,7 +187,6 @@ Before the mutation is called:
   "hasError": false,
   "loading": false,
   "calledWhileOffline": false,
-  "offlineChangeReplicated": false
 }
 ```
 
@@ -171,75 +208,7 @@ After the mutation is called while online:
   "hasError": false,
   "loading": false,
   "calledWhileOffline": false,
-  "offlineChangeReplicated": false
 }
-```
-
-After the mutation is called while offline:
-
-```json
-{
-  "called": true,
-  "hasError": false,
-  "loading": true,
-  "mutationVariables": {
-    "description": "this is a description",
-    "title": "created while offline",
-    "status": "OPEN",
-    "version": 1
-  },
-  "calledWhileOffline": true,
-  "offlineChangeReplicated": false
-}
-```
-
-After the offline mutation is successfully replayed
-
-```json
-{
-  "called": true,
-  "data": {
-    "createTask": {
-      "id": "135",
-      "title": "created while offline",
-      "description": "this is a description",
-      "version": 1,
-      "status": "OPEN",
-      "__typename": "Task"
-    }
-  },
-  "hasError": false,
-  "loading": false,
-  "calledWhileOffline": true,
-  "offlineChangeReplicated": true
-}
-```
-
-After the offline mutation cannot be replayed
-
-```json
-{
-  "called": true,
-  "error": {
-    "graphQLErrors": [],
-    "networkError": {},
-    "message": "Network error: Failed to fetch"
-  },
-  "hasError": true,
-  "loading": true,
-  "mutationVariables": {
-    "description": "created while offline",
-    "title": "created while offline",
-    "status": "OPEN",
-    "version": 1
-  },
-  "calledWhileOffline": true,
-  "offlineChangeReplicated": false,
-  "offlineReplicationError": {
-    "graphQLErrors": [],
-    "networkError": {},
-    "message": "Network error: Failed to fetch"
-  }
 ```
 
 ## useNetworkStatus
