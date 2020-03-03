@@ -211,66 +211,6 @@ After the mutation is called while online:
 }
 ```
 
-<!-- After the mutation is called while offline:
-
-```json
-{
-  "called": true,
-  "hasError": false,
-  "loading": true,
-  "mutationVariables": {
-    "description": "this is a description",
-    "title": "created while offline",
-    "status": "OPEN",
-    "version": 1
-  },
-  "calledWhileOffline": true,
-  "offlineChangeReplicated": false
-}
-``` -->
-
-<!-- After the offline mutation is successfully replayed
-
-```json
-{
-  "called": true,
-  "data": {
-    "createTask": {
-      "id": "135",
-      "title": "created while offline",
-      "description": "this is a description",
-      "version": 1,
-      "status": "OPEN",
-      "__typename": "Task"
-    }
-  },
-  "hasError": false,
-  "loading": false,
-  "calledWhileOffline": true,
-}
-``` -->
-
-<!-- After the offline mutation cannot be replayed
-
-```json
-{
-  "called": true,
-  "error": {
-    "graphQLErrors": [],
-    "networkError": {},
-    "message": "Network error: Failed to fetch"
-  },
-  "hasError": true,
-  "loading": true,
-  "mutationVariables": {
-    "description": "created while offline",
-    "title": "created while offline",
-    "status": "OPEN",
-    "version": 1
-  },
-  "calledWhileOffline": true,
-``` -->
-
 ## useNetworkStatus
 
 The `useNetworkStatus` hook can be used to build components that render differently depending on the network state. The hook returns `true` when the network is online and `false` when the network is offline. The hook uses a listener to return a new value when the network status changes.
