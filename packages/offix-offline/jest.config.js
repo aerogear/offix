@@ -1,14 +1,10 @@
-// For a detailed explanation regarding each configuration property, visit:
-// https://jestjs.io/docs/en/configuration.html
+/* eslint-disable */
+const baseConfig = require("../../jest.config");
+const packageName = require("./package.json").name;
 
 module.exports = {
-  // Automatically clear mock calls and instances between every test
-  clearMocks: true,
-
-  // The directory where Jest should output its coverage files
-  coverageDirectory: "coverage",
-
-  // An array of file extensions your modules use
+  ...baseConfig,
+  rootDir: '../..',
   moduleFileExtensions: [
     "ts",
     "js",
@@ -17,14 +13,22 @@ module.exports = {
     "tsx",
     "node"
   ],
-
-  // The glob patterns Jest uses to detect test files
-  testMatch: [
-    "**/test/*.test.ts"
+  roots: [
+    `<rootDir>/packages/${packageName}`,
   ],
-
-  // A map from regular expressions to paths to transformers
-  transform: {
-    '^.+\\.tsx?$': 'ts-jest',
-  },
+  collectCoverageFrom: [
+      'src/**/*.{ts,tsx}',
+  ],
+  testRegex: `(packages/${packageName}/.*/__tests__/.*|\\.(test|spec))\\.tsx?$`,
+  testURL: 'http://localhost/',
+  moduleDirectories: [
+      'node_modules',
+  ],
+  modulePaths: [
+      `<rootDir>/packages/${packageName}/src/`,
+  ],
+  projects: [`<rootDir>/packages/${packageName}/jest.config.js`],
+  name: packageName,
+  displayName: packageName,
+  rootDir: '../..',
 };

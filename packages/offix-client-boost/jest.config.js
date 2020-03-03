@@ -1,25 +1,34 @@
-// For a detailed explanation regarding each configuration property, visit:
-// https://jestjs.io/docs/en/configuration.html
+/* eslint-disable */
+const baseConfig = require("../../jest.config");
+const packageName = require("./package.json").name;
 
 module.exports = {
-    clearMocks: true,
-    coverageDirectory: "coverage",
-    moduleFileExtensions: [
-      "ts",
-      "js",
-      "json",
-      "jsx",
-      "tsx",
-      "node"
-    ],
-    testMatch: [
-      "**/test/*.test.ts",
-      // "**/test/integration/*.test.ts"
-      // "**/__tests__/**/*.[jt]s?(x)",
-      // "**/?(*.)+(spec|test).[tj]s?(x)"
-    ],
-    transform: {
-      '^.+\\.tsx?$': 'ts-jest',
-    }
-  };
-  
+  ...baseConfig,
+  rootDir: '../..',
+  moduleFileExtensions: [
+    "ts",
+    "js",
+    "json",
+    "jsx",
+    "tsx",
+    "node"
+  ],
+  roots: [
+    `<rootDir>/packages/${packageName}`,
+  ],
+  collectCoverageFrom: [
+      'src/**/*.{ts,tsx}',
+  ],
+  testRegex: `(packages/${packageName}/.*/__tests__/.*|\\.(test|spec))\\.tsx?$`,
+  testURL: 'http://localhost/',
+  moduleDirectories: [
+      'node_modules',
+  ],
+  modulePaths: [
+      `<rootDir>/packages/${packageName}/src/`,
+  ],
+  projects: [`<rootDir>/packages/${packageName}/jest.config.js`],
+  name: packageName,
+  displayName: packageName,
+  rootDir: '../..',
+};
