@@ -43,7 +43,7 @@ export function restoreOptimisticResponse(
  * we need to update all references in the queue to the client generated ID
  * with the actual ID returned from the server.
  */
-export function replaceClientGeneratedIDsInQueue(queue: ApolloOfflineQueue, operation: ApolloQueueEntryOperation, result: FetchResult) {
+export function replaceClientGeneratedIDsInQueue(queue: ApolloQueueEntry[], operation: ApolloQueueEntryOperation, result: FetchResult) {
 
   const op = operation.op;
   const operationName = op.context.operationName as string;
@@ -62,7 +62,7 @@ export function replaceClientGeneratedIDsInQueue(queue: ApolloOfflineQueue, oper
   }
 
   if (isClientGeneratedId(optimisticId)) {
-    queue.queue.forEach((entry) => {
+    queue.forEach((entry) => {
       // replace all instances of the optimistic id in the queue with
       // the new id that came back from the server
       traverse(entry.operation.op.variables).forEach(function(val) {
