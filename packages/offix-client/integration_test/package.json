@@ -10,12 +10,12 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@aerogear/voyager-server": "0.7.1",
+    "@aerogear/voyager-server": "0.8.0",
     "apollo-server": "2.10.1",
     "chai": "4.2.0",
     "cors": "2.8.5",
     "express": "4.17.1",
-    "graphql": "14.5.8",
+    "graphql": "14.6.0",
     "graphql-subscriptions": "1.1.0",
     "graphql-tag": "2.10.3",
     "graphql-testx": "0.3.0",
@@ -26,10 +26,10 @@
     "karma-mocha-reporter": "2.2.5",
     "karma-sourcemap-loader": "0.3.7",
     "karma-webpack": "4.0.2",
-    "mocha": "7.0.0",
+    "mocha": "7.1.0",
     "offix-server-conflicts": "0.6.0",
     "subscriptions-transport-ws": "0.9.16",
-    "webpack": "4.41.5"
+    "webpack": "4.42.0"
   },
   "devDependencies": {}
 }
