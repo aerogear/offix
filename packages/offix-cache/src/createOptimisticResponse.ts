@@ -46,17 +46,17 @@ export const createOptimisticResponse = (options: OptimisticOptions) => {
     idField = "id",
     operationType
   } = options;
-  
+
   const optimisticResponse: any = {
     __typename: "Mutation"
   };
 
   const flattenedVariables = traverse(variables).reduce(function(acc, val) {
     if (this.isLeaf && this.key) {
-      acc[this.key] = val
+      acc[this.key] = val;
     }
-    return acc
-  }, {})
+    return acc;
+  }, {});
 
   optimisticResponse[operation] = {
     __typename: returnType,

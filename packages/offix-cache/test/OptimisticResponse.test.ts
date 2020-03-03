@@ -47,21 +47,21 @@ test("createOptimisticResponse flattens the variables object into top level keys
     operationType: CacheOperation.REFRESH,
     returnType: "Test",
     variables: {
-      a: 'val1',
-      b: 'val2',
+      a: "val1",
+      b: "val2",
       input: {
-        id: '123',
-        name: 'test'
+        id: "123",
+        name: "test"
       }
     }
   };
   const result = createOptimisticResponse(options);
   expect(result.createItem).toStrictEqual({
     __typename: "Test",
-    a: 'val1',
-    b: 'val2',
-    id: '123',
-    name: 'test',
+    a: "val1",
+    b: "val2",
+    id: "123",
+    name: "test",
     optimisticResponse: true
   });
 });

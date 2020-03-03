@@ -48,7 +48,7 @@ test("Process with change", () => {
 });
 
 test("Can handle cases where variables is a nested object", () => {
-  const optimisticId = "client:1"
+  const optimisticId = "client:1";
   const op0 = {
     operation: {
       qid: "queue:1",
@@ -65,7 +65,7 @@ test("Can handle cases where variables is a nested object", () => {
         }
       }
     }
-  }
+  };
   const op1 = {
     operation: {
       qid: "queue:2",
@@ -82,10 +82,10 @@ test("Can handle cases where variables is a nested object", () => {
         }
       }
     }
-  }
-  const queue = [op0, op1]
+  };
+  const queue = [op0, op1];
 
-  const op0Result = { data: { someOperation: { id: "applied:1" } } }
+  const op0Result = { data: { someOperation: { id: "applied:1" } } };
   replaceClientGeneratedIDsInQueue(queue, op0.operation, op0Result);
   expect(op0.operation.op.variables.someOperationInput.id).toBe("applied:1");
   expect(op1.operation.op.variables.anotherOperationInput.id).toBe("applied:1");
@@ -108,7 +108,7 @@ test("Can handle cases optimistic value is referenced in other keys (example: re
         }
       }
     }
-  }
+  };
   const op1 = {
     operation: {
       qid: "queue:2",
@@ -126,10 +126,10 @@ test("Can handle cases optimistic value is referenced in other keys (example: re
         }
       }
     }
-  }
-  const queue = [op0, op1]
+  };
+  const queue = [op0, op1];
 
-  const op0Result = { data: { createExample: { id: "applied:1" } } }
+  const op0Result = { data: { createExample: { id: "applied:1" } } };
   replaceClientGeneratedIDsInQueue(queue, op0.operation, op0Result);
   expect(op1.operation.op.variables.anotherCreateExampleInput.parentId).toBe("applied:1");
 });

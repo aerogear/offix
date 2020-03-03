@@ -44,18 +44,18 @@ export function restoreOptimisticResponse(
  * with the actual ID returned from the server.
  */
 export function replaceClientGeneratedIDsInQueue(queue: ApolloOfflineQueue, operation: ApolloQueueEntryOperation, result: FetchResult) {
-  
+
   const op = operation.op;
   const operationName = op.context.operationName as string;
   const optimisticResponse = op.optimisticResponse as {[key: string]: any};
-  
+
   if (!optimisticResponse) {
     return;
   }
 
   const idField = op.context.idField || "id";
   const optimisticId = optimisticResponse[operationName] && optimisticResponse[operationName][idField];
-  const resultId = result && result.data && result.data[operationName] && result.data[operationName][idField]
+  const resultId = result && result.data && result.data[operationName] && result.data[operationName][idField];
 
   if (!optimisticId || !resultId) {
     return;
@@ -67,9 +67,9 @@ export function replaceClientGeneratedIDsInQueue(queue: ApolloOfflineQueue, oper
       // the new id that came back from the server
       traverse(entry.operation.op.variables).forEach(function(val) {
         if (this.isLeaf && val && val.toString() === optimisticId.toString()) {
-          this.update(resultId)
+          this.update(resultId);
         }
-      })
+      });
     });
   }
 }
