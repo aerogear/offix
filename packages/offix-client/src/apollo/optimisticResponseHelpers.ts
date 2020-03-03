@@ -3,6 +3,7 @@ import { CacheUpdates, isClientGeneratedId } from "offix-cache";
 import { FetchResult } from "apollo-link";
 import ApolloClient from "apollo-client";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
+import traverse from "traverse";
 
 export function addOptimisticResponse(apolloClient: ApolloClient<NormalizedCacheObject>, { op, qid }: ApolloQueueEntryOperation) {
   apolloClient.store.markMutationInit({
@@ -55,17 +56,22 @@ export function replaceClientGeneratedIDsInQueue(queue: ApolloQueueEntry[], oper
     return;
   }
 
-  let clientId = optimisticResponse[operationName][idField];
-  if (!clientId) {
+  let optimisticId = optimisticResponse[operationName][idField];
+  let resultId = result && result.data && result.data[operationName] && result.data[operationName][idField]
+
+  if (!optimisticId || !resultId) {
     return;
   }
-  // Ensure we dealing with string
-  clientId = clientId.toString();
+
   if (isClientGeneratedId(optimisticResponse[operationName][idField])) {
     queue.forEach((entry) => {
-      if (entry.operation.op.variables && entry.operation.op.variables[idField] === clientId) {
-       entry.operation.op.variables[idField] = result.data && result.data[operationName][idField];
-      }
+      // replace all instances of the optimistic id in the queue with
+      // the new id that came back from the server
+      traverse(entry.operation.op).forEach(function(val) {
+        if (val.toString() === optimisticId.toString()) {
+          this.update(resultId)
+        }
+      })
     });
   }
 }
