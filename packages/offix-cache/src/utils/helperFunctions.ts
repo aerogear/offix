@@ -6,8 +6,8 @@ import { CacheUpdatesQuery, QueryWithVariables } from "../api/CacheUpdates";
 import { CLIENT_ID_PREFIX } from "./constants";
 
 // Returns true if ID was generated on client
-export const isClientGeneratedId = (id: string) => {
-  return id && id.startsWith(CLIENT_ID_PREFIX);
+export const isClientGeneratedId = (id: string): boolean => {
+  return typeof id === 'string' && id.startsWith(CLIENT_ID_PREFIX);
 };
 
 // Helper method for ID generation ()
