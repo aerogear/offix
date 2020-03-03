@@ -9,12 +9,19 @@ import gql from "graphql-tag";
 
 const link = new HttpLink({ uri: "http://example.com/graphql" });
 
+const fragmentMatcher = (type: any, _: any, context: any) => !!context.store.get(type.id);
+
 it("base should be correctly calculated with regular id field", async function() {
   const store = new MockStore();
   const networkStatus = new MockNetworkStatus();
   networkStatus.setOnline(false);
 
-  const cache = new InMemoryCache();
+  const cache = new InMemoryCache({
+    // https://github.com/apollographql/apollo-client/issues/3219#issuecomment-386186814
+    // workaround for heuristic fragment warning
+    fragmentMatcher: { match: fragmentMatcher }
+  });
+
   const client = new ApolloOfflineClient({ link, cache, networkStatus, offlineStorage: store });
   await client.init();
 
@@ -70,7 +77,11 @@ it("base should be correctly calculated with custom id field", async function() 
     return `${data.__typename}:${data.uuid}`;
   };
 
-  const cache = new InMemoryCache({ dataIdFromObject: customDataIdFromObject });
+  const cache = new InMemoryCache({
+    dataIdFromObject: customDataIdFromObject,
+      // https://github.com/apollographql/apollo-client/issues/3219#issuecomment-386186814
+    fragmentMatcher: { match: fragmentMatcher }
+  });
   const client = new ApolloOfflineClient({ link, cache, networkStatus, offlineStorage: store });
   await client.init();
 
@@ -127,7 +138,10 @@ it("base should be correctly calculated with if custom id is non stanard", async
     return `foo-${data.__typename}-${data.uuid}`;
   };
 
-  const cache = new InMemoryCache({ dataIdFromObject: customDataIdFromObject });
+  const cache = new InMemoryCache({
+    dataIdFromObject: customDataIdFromObject,
+    fragmentMatcher: { match: fragmentMatcher }
+  });
   const client = new ApolloOfflineClient({ link, cache, networkStatus, offlineStorage: store });
   await client.init();
 
