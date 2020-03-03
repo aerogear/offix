@@ -27,7 +27,6 @@ export type MutationUpdaterFn<TData = Record<string, any>> = (
 export interface BaseMutationHookOptions<TData, TVariables>
   extends Omit<MutationHelperOptions<TData, TVariables>, "mutation" | "update"> {
   update?: MutationUpdaterFn<TData>;
-  rethrow?: boolean;
 }
 
 export interface MutationHookOptions<TData, TVariables>
@@ -51,10 +50,7 @@ export interface MutationResult<TData> {
   error?: ApolloError;
   hasError: boolean;
   loading: boolean;
-  mutationVariables?: OperationVariables;
-  calledWhileOffline: boolean;
-  offlineChangeReplicated: boolean;
-  offlineReplicationError?: Error;
+  calledWhileOffline?: boolean;
 }
 
 const getInitialState = (): MutationResult<any> => ({
@@ -63,10 +59,7 @@ const getInitialState = (): MutationResult<any> => ({
   error: undefined,
   hasError: false,
   loading: false,
-  mutationVariables: undefined,
-  calledWhileOffline: false,
-  offlineChangeReplicated: false,
-  offlineReplicationError: undefined
+  calledWhileOffline: false
 });
 
 function isOfflineError(error: any) {
@@ -75,16 +68,14 @@ function isOfflineError(error: any) {
 
 export function useOfflineMutation<TData, TVariables = OperationVariables>(
   mutation: DocumentNode,
-  baseOptions: MutationHookOptions<TData, TVariables> = {}
+  options: MutationHookOptions<TData, TVariables> = {}
 ): [MutationFn<TData, TVariables>, MutationResult<TData>] {
 
-  const client = useApolloOfflineClient(baseOptions.client);
+  const client = useApolloOfflineClient(options.client);
 
   const [result, setResult] = React.useState<MutationResult<TData>>(
     getInitialState
   );
-
-  const { rethrow = true, ...options } = baseOptions;
 
   const mergeResult = (partialResult: Partial<MutationResult<TData>>) => {
     // A hack to get rid React warnings during tests.
@@ -123,42 +114,10 @@ export function useOfflineMutation<TData, TVariables = OperationVariables>(
       mergeResult({
         error,
         hasError: true,
-        loading: false
+        loading: false,
+        calledWhileOffline: isOfflineError(error)
       });
     }
-  };
-
-  const onOfflineError = (error: any, mutationVariables: TVariables | undefined, mutationId: number):
-    Promise<ExecutionResult<TData>> => {
-    return new Promise((resolve, reject) => {
-      if (isMostRecentMutation(mutationId)) {
-        mergeResult({
-          calledWhileOffline: true,
-          mutationVariables
-        });
-        error.watchOfflineChange().then((mutationResult: any) => {
-          mergeResult({
-            offlineChangeReplicated: true,
-            data: mutationResult.data,
-            loading: false,
-            mutationVariables: undefined
-          });
-
-          resolve({} as unknown as ExecutionResult<TData>);
-        }).catch((err: any) => {
-
-          mergeResult({
-            hasError: true,
-            error: err,
-            offlineReplicationError: err
-          });
-
-          reject(err);
-        });
-      } else {
-        resolve({} as unknown as ExecutionResult<TData>);
-      }
-    });
   };
 
   const onMutationCompleted = (
@@ -203,20 +162,12 @@ export function useOfflineMutation<TData, TVariables = OperationVariables>(
             resolve(response as ExecutionResult<TData>);
           })
           .catch(err => {
-            if (isOfflineError(err)) {
-              onOfflineError(err, mutateVariables, mutationId).then(resolve).catch(reject);
-            } else {
-              onMutationError(err, mutationId);
-              if (rethrow) {
-                reject(err);
-                return;
-              }
-              resolve(({} as unknown) as ExecutionResult<TData>);
-            }
+            onMutationError(err, mutationId);
+            reject(err);
           });
       });
     },
-    [client, mutation, objToKey(baseOptions)]
+    [client, mutation, objToKey(options)]
   );
 
   return [runMutation, result];
