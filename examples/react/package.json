@@ -41,10 +41,5 @@
     "eslint-plugin-react": "^7.18.0",
     "eslint-plugin-react-hooks": "^1.7.0",
     "parcel-bundler": "^1.12.4"
-  },
-  "alias": {
-    "react": "react",
-    "spectre.css": "spectre.css",
-    "local_module": "../../node_modules/"
   }
 }
