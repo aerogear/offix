@@ -50,5 +50,9 @@
   "dependencies": {
     "@types/mocha": "7.0.1",
     "@types/node": "12.12.25"
-  }
+  },
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ]
 }
