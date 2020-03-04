@@ -35,12 +35,12 @@
     "apollo-client": "2.6.8",
     "apollo-link": "1.2.13",
     "apollo-link-http": "1.5.16",
+    "cross-fetch": "^3.0.4",
     "fake-indexeddb": "3.0.0",
     "graphql": "14.5.8",
     "jest": "25.1.0",
     "react-test-renderer": "16.13.0",
     "ts-jest": "25.2.0",
-    "ts-node": "8.6.2",
     "typescript": "3.7.5"
   },
   "dependencies": {
