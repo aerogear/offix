@@ -1,9 +1,7 @@
-import isPlainObject from "lodash/isPlainObject";
-
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 export function objToKey<T extends Record<string, any>>(obj: T): T | string {
-  if (!isPlainObject(obj)) {
+  if (!!obj && (obj.constructor === Object)) {
     return obj;
   }
   const sortedObj = Object.keys(obj)

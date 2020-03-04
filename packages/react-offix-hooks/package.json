@@ -45,7 +45,6 @@
   },
   "dependencies": {
     "@types/lodash": "4.14.149",
-    "lodash": "4.17.15",
     "offix-client": "0.13.2"
   },
   "peerDependencies": {
