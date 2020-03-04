@@ -10,6 +10,7 @@ import {
   ConflictHandler
 } from "offix-conflicts-client";
 import { isMutation } from "../helpers";
+import { flattenObject, replaceNestedObjectById } from "../../utils/objectUtils";
 
 /**
  * Represents conflict information that was returned from server
@@ -66,11 +67,8 @@ export class ConflictLink extends ApolloLink {
     operation: Operation,
     forward: NextLink
   ): Observable<FetchResult> | null {
-    if (isMutation(operation)) {
-      if (this.stater.currentState(operation.variables) !== undefined) {
-        return this.link.request(operation, forward);
-      }
-      return forward(operation);
+    if (isMutation(operation) && this.stater.currentState(flattenObject(operation.variables)) !== undefined) {
+      return this.link.request(operation, forward);
     }
     return forward(operation);
   }
@@ -94,7 +92,9 @@ export class ConflictLink extends ApolloLink {
       });
       const resolvedConflict = conflictHandler.executeStrategy();
       if (resolvedConflict) {
-        operation.variables = resolvedConflict;
+        // map the resolvedConflict object onto operation variables
+        // even if there is some nesting
+        operation.variables = replaceNestedObjectById(operation.variables, resolvedConflict, operation.getContext().idField);
       }
     }
     return forward(operation);
