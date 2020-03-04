@@ -44,7 +44,6 @@
     "typescript": "3.7.5"
   },
   "dependencies": {
-    "@types/lodash": "4.14.149",
     "offix-client": "0.13.2"
   },
   "peerDependencies": {
