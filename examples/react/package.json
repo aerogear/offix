@@ -5,9 +5,9 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
-    "start": "parcel serve index.html",
-    "watch": "parcel watch index.html",
-    "build": "parcel build index.html",
+    "start": "NODE_PATH=../../ parcel serve index.html",
+    "watch": "NODE_PATH=../../ parcel watch index.html",
+    "build": "NODE_PATH=../../ parcel build index.html",
     "lint": "eslint src/* src/**/*"
   },
   "dependencies": {
@@ -21,7 +21,7 @@
     "graphql-tag": "^2.10.1",
     "offix-cache": "0.13.2",
     "offix-client": "0.13.2",
-    "react": "^16.12.0",
+    "react": "16.12.0",
     "react-apollo": "^3.1.3",
     "react-dom": "^16.8.0",
     "react-offix-hooks": "0.13.2",
@@ -44,6 +44,7 @@
   },
   "alias": {
     "react": "react",
-    "local-module": "../../node_modules"
+    "spectre.css": "spectre.css",
+    "local_module": "../../node_modules/"
   }
 }
