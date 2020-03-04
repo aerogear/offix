@@ -1,4 +1,4 @@
-import { ApolloQueueEntryOperation, ApolloOfflineQueue } from "./ApolloOfflineTypes";
+import { ApolloQueueEntryOperation, ApolloQueueEntry } from "./ApolloOfflineTypes";
 import { CacheUpdates, isClientGeneratedId } from "offix-cache";
 import { FetchResult } from "apollo-link";
 import ApolloClient from "apollo-client";
