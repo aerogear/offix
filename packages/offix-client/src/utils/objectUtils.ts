@@ -33,7 +33,7 @@ export function deepUpdateValueInObject(obj: any, targetValue: any, newValue: an
 // result: { input: { id: 123, a: 2, b: 3 } }
 export function replaceNestedObjectById(srcObject: any, targetObject: any, idField: any) {
   return traverse(srcObject).map(function(val) {
-    if (val && this.notLeaf && val[idField] && val[idField] === targetObject[idField]) {
+    if (val && this.notLeaf && val[idField] && val[idField].toString() === targetObject[idField].toString()) {
       this.update(targetObject, true);
     }
   });
