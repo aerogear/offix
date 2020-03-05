@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "analyze": "source-map-explorer packages/*/dist/*.js packages/*/dist/*/*.js --onlyMapped",
-    "test": "jest",
+    "test": "jest -w 1",
     "coverage": "jest --coverage",
     "cleanInstall": "lerna exec yarn install --ignore-scripts",
     "bootstrap": "lerna bootstrap --no-ci",
