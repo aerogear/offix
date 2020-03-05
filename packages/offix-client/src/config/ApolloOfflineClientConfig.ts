@@ -3,7 +3,7 @@ import {
   PersistentStore,
   createDefaultOfflineStorage
 } from "offix-scheduler";
-import { ApolloOfflineClientOptions } from "./ApolloOfflineClientOptions";
+import { ApolloOfflineClientOptions, InputMapper } from "./ApolloOfflineClientOptions";
 import { NetworkStatus } from "offix-offline";
 import {
   ConflictResolutionStrategy,
@@ -35,7 +35,7 @@ export class ApolloOfflineClientConfig implements ApolloOfflineClientOptions {
   public mutationCacheUpdates?: CacheUpdates;
   public cachePersistor?: CachePersistor<object>;
   public link?: ApolloLink;
-  public inputMapper?: (object: any) => any;
+  public inputMapper?: InputMapper;
   public cache: any;
 
   public retryOptions = {

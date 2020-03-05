@@ -6,6 +6,7 @@ import {
   ConflictResolutionData
 } from "offix-conflicts-client";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
+import { InputMapper } from "../../config/ApolloOfflineClientOptions";
 
 /**
  * Convenience interface that specifies a few extra properties found on ApolloCache
@@ -32,15 +33,15 @@ export function getBaseStateFromCache(
   cache: ApolloCacheWithData,
   objectState: ObjectState,
   mutationOptions: MutationOptions,
-  inputMapper?: (object: any) => any
+  inputMapper?: InputMapper
 ): ConflictResolutionData {
   const context = mutationOptions.context;
 
   if (!context.conflictBase) {
 
-    let mutationVariables = mutationOptions.variables as OperationVariables
+    let mutationVariables = mutationOptions.variables as OperationVariables;
     if (inputMapper) {
-      mutationVariables = inputMapper(mutationVariables)
+      mutationVariables = inputMapper.deserialize(mutationVariables);
     }
 
     const conflictBase = getObjectFromCache(cache, context.returnType, mutationVariables);

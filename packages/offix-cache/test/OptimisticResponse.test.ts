@@ -54,7 +54,10 @@ test("createOptimisticResponse works with an input mapper", () => {
         name: "test"
       }
     },
-    inputMapper: (vars) => vars.input
+    inputMapper: {
+      deserialize: (vars) => vars.input,
+      serialize: (vars) => vars
+    }
   };
   const result = createOptimisticResponse(options);
   expect(result.createItem).toStrictEqual({

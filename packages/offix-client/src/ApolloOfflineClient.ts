@@ -2,7 +2,7 @@ import ApolloClient, { MutationOptions, OperationVariables } from "apollo-client
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
 import { OffixScheduler } from "offix-scheduler";
 import { CachePersistor } from "apollo-cache-persist";
-import { MutationHelperOptions, CacheUpdates, createMutationOptions } from "offix-cache";
+import { MutationHelperOptions, CacheUpdates, createMutationOptions  } from "offix-cache";
 import { FetchResult } from "apollo-link";
 import {
   ApolloOperationSerializer,
@@ -19,7 +19,7 @@ import {
 } from "./apollo";
 import { NetworkStatus } from "offix-offline";
 import { ObjectState } from "offix-conflicts-client";
-import { ApolloOfflineClientOptions } from "./config/ApolloOfflineClientOptions";
+import { ApolloOfflineClientOptions, InputMapper } from "./config/ApolloOfflineClientOptions";
 import { ApolloOfflineClientConfig } from "./config/ApolloOfflineClientConfig";
 
 export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
@@ -40,6 +40,8 @@ export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
   public mutationCacheUpdates?: CacheUpdates;
   // true after client is initialized
   public initialized: boolean;
+  // mapper function for mapping mutation variables
+  public inputMapper?: InputMapper;
 
   constructor(options: ApolloOfflineClientOptions) {
     const config = new ApolloOfflineClientConfig(options);
@@ -48,6 +50,7 @@ export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
     this.initialized = false;
     this.mutationCacheUpdates = config.mutationCacheUpdates;
     this.conflictProvider = config.conflictProvider;
+    this.inputMapper = config.inputMapper;
 
     if (config.cachePersistor) {
       if (!(config.cachePersistor instanceof CachePersistor)) {
@@ -133,12 +136,14 @@ export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
 
   protected createOfflineMutationOptions<T = any, TVariables = OperationVariables>(
     options: MutationHelperOptions<T, TVariables>): MutationOptions<T, TVariables> {
+    options.inputMapper = this.inputMapper;
     const offlineMutationOptions = createMutationOptions<T, TVariables>(options);
 
     offlineMutationOptions.context.conflictBase = getBaseStateFromCache(
       this.cache as unknown as ApolloCacheWithData,
       this.conflictProvider,
-      offlineMutationOptions as unknown as MutationOptions
+      offlineMutationOptions as unknown as MutationOptions,
+      this.inputMapper
     );
 
     if (!offlineMutationOptions.update && this.mutationCacheUpdates) {

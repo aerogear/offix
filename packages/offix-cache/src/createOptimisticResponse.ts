@@ -3,7 +3,7 @@ import { CacheOperation } from "./api/CacheOperation";
 import { generateClientId } from "./utils";
 import { DocumentNode } from "graphql";
 import { OperationVariables } from "apollo-client";
-import traverse from "traverse";
+import { InputMapper } from "./createMutationOptions";
 
 // export type OptimisticOptions = Omit<MutationHelperOptions, keyof MutationOptions |"updateQuery" | "context">;
 
@@ -13,7 +13,7 @@ export interface OptimisticOptions {
   returnType: string;
   idField?: string;
   variables?: OperationVariables;
-  inputMapper?: (object: any) => any;
+  inputMapper?: InputMapper;
 }
 
 /**
@@ -52,10 +52,10 @@ export const createOptimisticResponse = (options: OptimisticOptions) => {
     __typename: "Mutation"
   };
 
-  let mappedVariables = variables
+  let mappedVariables = variables;
 
-  if (options.inputMapper && typeof options.inputMapper === 'function') {
-    mappedVariables = options.inputMapper(variables);
+  if (options.inputMapper) {
+    mappedVariables = options.inputMapper.deserialize(variables);
   }
 
   optimisticResponse[operation] = {
