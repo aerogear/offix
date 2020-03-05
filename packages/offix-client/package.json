@@ -38,7 +38,7 @@
     "typescript": "3.7.5"
   },
   "dependencies": {
-    "@types/traverse": "^0.6.32",
+    "@types/traverse": "0.6.32",
     "apollo-cache-inmemory": "1.6.5",
     "apollo-cache-persist": "0.1.1",
     "apollo-client": "2.6.8",
