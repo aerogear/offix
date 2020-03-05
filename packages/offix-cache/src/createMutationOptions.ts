@@ -3,7 +3,6 @@ import { CacheOperation } from "./api/CacheOperation";
 import { createOptimisticResponse } from "./createOptimisticResponse";
 import { CacheUpdatesQuery } from "./api/CacheUpdates";
 import { getOperationFieldName, deconstructQuery } from "./utils/helperFunctions";
-import { isArray } from "util";
 
 /**
  * Interface to overlay helper internals on top of mutation options.
@@ -104,7 +103,7 @@ export const createMutationOptions = <T = {
   const mutationName = getOperationFieldName(mutation);
   if (updateQuery) {
     const update: MutationUpdaterFn = (cache, { data }) => {
-      if (isArray(updateQuery)) {
+      if (Array.isArray(updateQuery)) {
         for (const query of updateQuery) {
           const updateFunction = getUpdateFunction({
             mutationName,
