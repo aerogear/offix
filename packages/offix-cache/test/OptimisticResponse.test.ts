@@ -41,7 +41,7 @@ test("check that createNewOptimisticResponse is without id", () => {
   expect(result.createItem.id).toBe(undefined);
 });
 
-test("createOptimisticResponse flattens the variables object into top level keys", () => {
+test("createOptimisticResponse works with an input mapper", () => {
   const options: OptimisticOptions = {
     mutation: CREATE_ITEM,
     operationType: CacheOperation.REFRESH,
@@ -53,13 +53,12 @@ test("createOptimisticResponse flattens the variables object into top level keys
         id: "123",
         name: "test"
       }
-    }
+    },
+    inputMapper: (vars) => vars.input
   };
   const result = createOptimisticResponse(options);
   expect(result.createItem).toStrictEqual({
     __typename: "Test",
-    a: "val1",
-    b: "val2",
     id: "123",
     name: "test",
     optimisticResponse: true

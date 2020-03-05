@@ -13,6 +13,7 @@ export interface OptimisticOptions {
   returnType: string;
   idField?: string;
   variables?: OperationVariables;
+  inputMapper?: (object: any) => any;
 }
 
 /**
@@ -51,16 +52,15 @@ export const createOptimisticResponse = (options: OptimisticOptions) => {
     __typename: "Mutation"
   };
 
-  const flattenedVariables = traverse(variables).reduce(function(acc, val) {
-    if (this.isLeaf && this.key) {
-      acc[this.key] = val;
-    }
-    return acc;
-  }, {});
+  let mappedVariables = variables
+
+  if (options.inputMapper && typeof options.inputMapper === 'function') {
+    mappedVariables = options.inputMapper(variables);
+  }
 
   optimisticResponse[operation] = {
     __typename: returnType,
-    ...flattenedVariables,
+    ...mappedVariables,
     optimisticResponse: true
   };
   if (operationType === CacheOperation.ADD) {

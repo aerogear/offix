@@ -35,6 +35,7 @@ export class ApolloOfflineClientConfig implements ApolloOfflineClientOptions {
   public mutationCacheUpdates?: CacheUpdates;
   public cachePersistor?: CachePersistor<object>;
   public link?: ApolloLink;
+  public inputMapper?: (object: any) => any;
   public cache: any;
 
   public retryOptions = {

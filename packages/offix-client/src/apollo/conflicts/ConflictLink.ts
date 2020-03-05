@@ -10,7 +10,6 @@ import {
   ConflictHandler
 } from "offix-conflicts-client";
 import { isMutation } from "../helpers";
-import { flattenObject, replaceNestedObjectById } from "../../utils/objectUtils";
 
 /**
  * Represents conflict information that was returned from server
@@ -43,6 +42,14 @@ export interface ConflictConfig {
    * The conflict resolution strategy your client should use. By default it takes client version.
    */
   conflictStrategy?: ConflictResolutionStrategy;
+
+  /**
+   * [Modifier]
+   *
+   * Maps input objects for the cases if variables are not passed to the root
+   *
+   */
+  inputMapper?: (object: any) => any;
 }
 
 /**
@@ -67,7 +74,11 @@ export class ConflictLink extends ApolloLink {
     operation: Operation,
     forward: NextLink
   ): Observable<FetchResult> | null {
-    if (isMutation(operation) && this.stater.currentState(flattenObject(operation.variables)) !== undefined) {
+    let variables = operation.variables;
+    if (this.config.inputMapper) {
+      variables = this.config.inputMapper(variables);
+    }
+    if (isMutation(operation) && this.stater.currentState(variables) !== undefined) {
       return this.link.request(operation, forward);
     }
     return forward(operation);
@@ -92,9 +103,7 @@ export class ConflictLink extends ApolloLink {
       });
       const resolvedConflict = conflictHandler.executeStrategy();
       if (resolvedConflict) {
-        // map the resolvedConflict object onto operation variables
-        // even if there is some nesting
-        operation.variables = replaceNestedObjectById(operation.variables, resolvedConflict, operation.getContext().idField);
+        operation.variables = resolvedConflict;
       }
     }
     return forward(operation);

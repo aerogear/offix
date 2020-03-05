@@ -6,7 +6,6 @@ import {
   ConflictResolutionData
 } from "offix-conflicts-client";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
-import { flattenObject } from "../../utils/objectUtils";
 
 /**
  * Convenience interface that specifies a few extra properties found on ApolloCache
@@ -32,17 +31,21 @@ export interface ApolloCacheWithData extends ApolloCache<NormalizedCacheObject> 
 export function getBaseStateFromCache(
   cache: ApolloCacheWithData,
   objectState: ObjectState,
-  mutationOptions: MutationOptions
+  mutationOptions: MutationOptions,
+  inputMapper?: (object: any) => any
 ): ConflictResolutionData {
   const context = mutationOptions.context;
 
   if (!context.conflictBase) {
-    // flatten the mutation variables first to handle input types
-    const flattenedVariables = flattenObject(mutationOptions.variables);
 
-    const conflictBase = getObjectFromCache(cache, context.returnType, flattenedVariables);
+    let mutationVariables = mutationOptions.variables as OperationVariables
+    if (inputMapper) {
+      mutationVariables = inputMapper(mutationVariables)
+    }
+
+    const conflictBase = getObjectFromCache(cache, context.returnType, mutationVariables);
     if (conflictBase && Object.keys(conflictBase).length !== 0) {
-      if (objectState.hasConflict(flattenedVariables, conflictBase)) {
+      if (objectState.hasConflict(mutationVariables, conflictBase)) {
         // 🙊 Input data is conflicted with the latest server projection
         throw new LocalConflictError(conflictBase, mutationOptions.variables);
       }

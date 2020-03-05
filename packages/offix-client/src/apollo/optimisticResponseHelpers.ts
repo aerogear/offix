@@ -3,7 +3,7 @@ import { CacheUpdates, isClientGeneratedId } from "offix-cache";
 import { FetchResult } from "apollo-link";
 import ApolloClient from "apollo-client";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
-import { deepUpdateValueInObject } from "../utils/objectUtils";
+import traverse from "traverse";
 
 export function addOptimisticResponse(apolloClient: ApolloClient<NormalizedCacheObject>, { op, qid }: ApolloQueueEntryOperation) {
   apolloClient.store.markMutationInit({
@@ -65,7 +65,11 @@ export function replaceClientGeneratedIDsInQueue(queue: ApolloQueueEntry[], oper
     queue.forEach((entry) => {
       // replace all instances of the optimistic id in the queue with
       // the new id that came back from the server
-      deepUpdateValueInObject(entry.operation.op.variables, optimisticId, resultId);
+      traverse(entry.operation.op.variables).forEach(function(val) {
+        if (this.isLeaf && val && val === optimisticId) {
+          this.update(resultId);
+        }
+      });
     });
   }
 }

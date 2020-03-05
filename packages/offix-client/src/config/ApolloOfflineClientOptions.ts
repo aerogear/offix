@@ -98,4 +98,12 @@ export interface ApolloOfflineClientOptions extends ApolloClientOptions<Normaliz
    *
    */
   retryOptions?: RetryLink.Options;
+
+  /**
+   * [Modifier]
+   *
+   * Maps input objects for the cases if variables are not passed to the root
+   *
+   */
+  inputMapper?: (object: any) => any;
 }
