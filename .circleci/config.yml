@@ -32,6 +32,9 @@ jobs:
       - run:
           name: integration test
           command: cd packages/offix-client && yarn integration-test
+      - run:
+          name: check bundle size
+          command: yarn size
       - store_artifacts:
           path: test-results.xml
           prefix: tests
