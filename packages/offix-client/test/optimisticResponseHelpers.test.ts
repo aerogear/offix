@@ -1,5 +1,6 @@
 import { replaceClientGeneratedIDsInQueue } from "../src/apollo/optimisticResponseHelpers";
 import { DocumentNode } from "graphql";
+import { ApolloOfflineQueue, ApolloQueueEntryOperation } from "../src";
 
 test("Process id without change", () => {
   const finalId = "test:1";
@@ -19,7 +20,13 @@ test("Process id without change", () => {
       qid: "someId"
     }
   };
-  const queue = [entry];
+  const queue = {
+    entries: [entry],
+    updateOperation(operation: ApolloQueueEntryOperation) {
+      //no op
+    }
+  } as any as ApolloOfflineQueue;
+
   replaceClientGeneratedIDsInQueue(queue, entry.operation, { data: { test: { id: "notApplied:1" } } });
   expect(exampleOperation.variables.id).toBe(finalId);
 });
@@ -42,7 +49,12 @@ test("Process with change", () => {
       qid: "someId"
     }
   };
-  const queue = [entry];
+  const queue = {
+    entries: [entry],
+    updateOperation(operation: ApolloQueueEntryOperation) {
+      //no op
+    }
+  } as any as ApolloOfflineQueue;
   replaceClientGeneratedIDsInQueue(queue, entry.operation, { data: { test: { id: "applied:1" } } });
   expect(exampleOperation.variables.id).toBe("applied:1");
 });
@@ -83,7 +95,12 @@ test("Can handle cases where variables is a nested object", () => {
       }
     }
   };
-  const queue = [op0, op1];
+  const queue = {
+    entries: [op0, op1],
+    updateOperation(operation: ApolloQueueEntryOperation) {
+      //no op
+    }
+  } as any as ApolloOfflineQueue;
 
   const op0Result = { data: { someOperation: { id: "applied:1" } } };
   replaceClientGeneratedIDsInQueue(queue, op0.operation, op0Result);
@@ -127,9 +144,63 @@ test("Can handle cases optimistic value is referenced in other keys (example: re
       }
     }
   };
-  const queue = [op0, op1];
+  const queue = {
+    entries: [op0, op1],
+    updateOperation(operation: ApolloQueueEntryOperation) {
+      //no op
+    }
+  } as any as ApolloOfflineQueue;
 
   const op0Result = { data: { createExample: { id: "applied:1" } } };
   replaceClientGeneratedIDsInQueue(queue, op0.operation, op0Result);
   expect(op1.operation.op.variables.anotherCreateExampleInput.parentId).toBe("applied:1");
+});
+
+test("queue.updateOperation is called for each updated item", () => {
+  const optimisticId = "client:1";
+  const op0 = {
+    operation: {
+      qid: "queue:1",
+      op: {
+        mutation: {} as DocumentNode,
+        variables: {
+          someOperationInput: {
+            id: optimisticId
+          }
+        },
+        optimisticResponse: { someOperation: { id: optimisticId } },
+        context: {
+          operationName: "someOperation"
+        }
+      }
+    }
+  };
+  const op1 = {
+    operation: {
+      qid: "queue:2",
+      op: {
+        mutation: {} as DocumentNode,
+        variables: {
+          anotherOperationInput: {
+            id: optimisticId
+          }
+        },
+        optimisticResponse: { anotherOperation: { id: optimisticId } },
+        context: {
+          operationName: "anotherOperation"
+        }
+      }
+    }
+  };
+  const updateOperation = jest.fn();
+  const queue = {
+    entries: [op0, op1],
+    updateOperation
+  } as any as ApolloOfflineQueue;
+
+  const op0Result = { data: { someOperation: { id: "applied:1" } } };
+  replaceClientGeneratedIDsInQueue(queue, op0.operation, op0Result);
+  expect(op0.operation.op.variables.someOperationInput.id).toBe("applied:1");
+  expect(op1.operation.op.variables.anotherOperationInput.id).toBe("applied:1");
+  expect(updateOperation).toHaveBeenCalledTimes(2);
 });

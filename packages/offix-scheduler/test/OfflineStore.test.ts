@@ -50,6 +50,36 @@ it("offlineStore.saveEntry stores data", async () => {
   expect(offlineData[0].operation).toEqual(entry);
 });
 
+it("offlineStore.saveEntry overwrites existing data", async () => {
+  const offlineStore = new OfflineStore(storage as PersistentStore<PersistedData>, mockSerializer);
+  await offlineStore.init();
+
+  const entry: QueueEntryOperation<any> = {
+    op: {
+      hello: "world"
+    },
+    qid: "123"
+  };
+
+  await offlineStore.saveEntry(entry);
+
+  let offlineData = await offlineStore.getOfflineData();
+  expect(offlineData.length).toBe(1);
+  expect(offlineData[0].operation).toEqual(entry);
+
+  const updatedEntry: QueueEntryOperation<any> = {
+    op: {
+      hello: "universe"
+    },
+    qid: "123"
+  };
+
+  await offlineStore.saveEntry(updatedEntry)
+  offlineData = await offlineStore.getOfflineData();
+  expect(offlineData.length).toBe(1);
+  expect(offlineData[0].operation).toEqual(updatedEntry);
+});
+
 it("offlineStore.removeEntry removes data", async () => {
   const offlineStore = new OfflineStore(storage as PersistentStore<PersistedData>, mockSerializer);
   await offlineStore.init();
