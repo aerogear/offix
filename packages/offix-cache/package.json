@@ -7,9 +7,12 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
-    "test": "jest"
+    "test": "jest",
+    "size": "size-limit",
+    "size:why": "size-limit --why"
   },
   "devDependencies": {
+    "@size-limit/preset-small-lib": "^4.0.2",
     "@types/fetch-mock": "7.3.2",
     "@types/graphql": "14.2.3",
     "@types/jest": "25.1.1",
@@ -17,6 +20,7 @@
     "graphql": "14.5.8",
     "graphql-tag": "2.10.3",
     "jest": "25.1.0",
+    "size-limit": "^4.1.1",
     "ts-jest": "25.2.0",
     "typescript": "3.7.5"
   },
@@ -32,5 +36,12 @@
     "type": "git",
     "url": "git+https://github.com/aerogear/offix.git"
   },
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "size-limit": [
+    {
+      "name": "offix cache",
+      "limit": "13kb",
+      "path": "dist/**/*.js"
+    }
+  ]
 }

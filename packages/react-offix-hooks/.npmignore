@@ -3,3 +3,4 @@ coverage/
 .nyc_output/
 node_modules/
 integration_test
+.size-limit.js

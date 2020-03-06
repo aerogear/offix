@@ -10,7 +10,9 @@
     "watch": "tsc --watch",
     "test": "jest --detectOpenHandles",
     "preintegration-test": "cd integration_test && npm install",
-    "integration-test": "cd integration_test && npm test"
+    "integration-test": "cd integration_test && npm test",
+    "size": "size-limit",
+    "size:why": "size-limit --why"
   },
   "license": "Apache-2.0",
   "repository": {
@@ -21,10 +23,12 @@
     "access": "public"
   },
   "devDependencies": {
+    "@size-limit/preset-small-lib": "^4.1.1",
     "apollo-link": "1.2.13",
     "graphql": "^14.6.0",
     "graphql-tag": "2.10.3",
     "jest": "25.1.0",
+    "size-limit": "^4.1.1",
     "ts-jest": "25.2.0",
     "typescript": "3.7.5"
   }

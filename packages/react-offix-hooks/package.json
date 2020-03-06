@@ -15,7 +15,9 @@
     "watch": "tsc --watch",
     "test": "jest",
     "preintegration-test": "cd integration_test && npm install",
-    "integration-test": "cd integration_test && npm test"
+    "integration-test": "cd integration_test && npm test",
+    "size": "size-limit",
+    "size:why": "size-limit --why"
   },
   "license": "Apache-2.0",
   "repository": {
@@ -26,6 +28,7 @@
     "access": "public"
   },
   "devDependencies": {
+    "@size-limit/preset-small-lib": "^4.1.1",
     "@testing-library/react-hooks": "3.2.1",
     "@types/jest": "25.1.1",
     "@types/react": "16.9.19",
@@ -40,6 +43,7 @@
     "graphql": "14.5.8",
     "jest": "25.1.0",
     "react-test-renderer": "16.13.0",
+    "size-limit": "^4.1.1",
     "ts-jest": "25.2.0",
     "typescript": "3.7.5"
   },
