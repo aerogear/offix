@@ -77,6 +77,52 @@ The storage can be swapped depending on the platform. For example `window.locals
 
 The options to configure how failed offline mutations are retried. See [`apollo-link-retry`](https://www.apollographql.com/docs/link/links/retry/).
 
+#### `inputMapper`
+
+If your mutation variables are not passed directly, for example if you use input types, an `inputMapper` is a set of functions that tells Offix how to read the mutation `variables`.
+
+For example, if your mutations use Input types:
+
+```js
+const CREATE_TASK = gql`
+  mutation createTask($input: TaskInput!) {
+  createTask(input: $input) {
+    id
+    title
+    description
+  }
+}`
+
+client.offlineMutate({
+  mutation: CREATE_TASK,
+  variables: {
+    input: {
+      title: 'new task title',
+      description: 'new task description'
+    }
+  },
+  returnType: 'Task'
+})
+```
+
+`ApolloOfflineClient` will need an additional `inputMapper` object with the following functions:
+
+* `deserialize` -  to know how to convert the `variables` object into a flat object that can be used to generate optimistic responses and cache update functions.
+* `serialize` - to know how to convert the serialized object back into the correct `variables` object after performing conflict resolution.
+
+```js
+import { ApolloOfflineClient, createDefaultCacheStorage } from "offix-client";
+
+const client = new ApolloOfflineClient({
+  cache: new InMemoryCache(),
+  link: new HttpLink({ uri: "http://example.com/graphql" }),
+  inputMapper: {
+    deserialize: (variables) => { return variables.input },
+    serialize: (variables) => { return { input: variables } }
+  }
+});
+```
+
 ## offix-client-boost
 
 ### `createClient`
