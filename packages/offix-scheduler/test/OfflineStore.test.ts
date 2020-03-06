@@ -74,7 +74,7 @@ it("offlineStore.saveEntry overwrites existing data", async () => {
     qid: "123"
   };
 
-  await offlineStore.saveEntry(updatedEntry)
+  await offlineStore.saveEntry(updatedEntry);
   offlineData = await offlineStore.getOfflineData();
   expect(offlineData.length).toBe(1);
   expect(offlineData[0].operation).toEqual(updatedEntry);
