@@ -1,6 +1,6 @@
 {
   "name": "offix-conflicts-client",
-  "version": "0.13.2",
+  "version": "0.14.0",
   "description": "adds client side conflict detection and resolution",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
