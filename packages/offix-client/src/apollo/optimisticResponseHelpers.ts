@@ -1,8 +1,9 @@
-import { ApolloQueueEntry, ApolloQueueEntryOperation } from "./ApolloOfflineTypes";
+import { ApolloQueueEntryOperation, ApolloOfflineQueue } from "./ApolloOfflineTypes";
 import { CacheUpdates, isClientGeneratedId } from "offix-cache";
 import { FetchResult } from "apollo-link";
 import ApolloClient from "apollo-client";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
+import traverse from "traverse";
 
 export function addOptimisticResponse(apolloClient: ApolloClient<NormalizedCacheObject>, { op, qid }: ApolloQueueEntryOperation) {
   apolloClient.store.markMutationInit({
@@ -42,30 +43,34 @@ export function restoreOptimisticResponse(
  * we need to update all references in the queue to the client generated ID
  * with the actual ID returned from the server.
  */
-export function replaceClientGeneratedIDsInQueue(queue: ApolloQueueEntry[], operation: ApolloQueueEntryOperation, result: FetchResult) {
-  if (!operation.op) {
-    return;
-  }
+export function replaceClientGeneratedIDsInQueue(queue: ApolloOfflineQueue, operation: ApolloQueueEntryOperation, result: FetchResult) {
+
   const op = operation.op;
   const operationName = op.context.operationName as string;
   const optimisticResponse = op.optimisticResponse as {[key: string]: any};
+
+  if (!optimisticResponse) {
+    return;
+  }
+
   const idField = op.context.idField || "id";
+  const optimisticId = optimisticResponse[operationName] && optimisticResponse[operationName][idField];
+  const resultId = result && result.data && result.data[operationName] && result.data[operationName][idField];
 
-  if (!result || !optimisticResponse || !optimisticResponse[operationName]) {
+  if (!optimisticId || !resultId) {
     return;
   }
 
-  let clientId = optimisticResponse[operationName][idField];
-  if (!clientId) {
-    return;
-  }
-  // Ensure we dealing with string
-  clientId = clientId.toString();
-  if (isClientGeneratedId(optimisticResponse[operationName][idField])) {
-    queue.forEach((entry) => {
-      if (entry.operation.op.variables && entry.operation.op.variables[idField] === clientId) {
-       entry.operation.op.variables[idField] = result.data && result.data[operationName][idField];
-      }
+  if (isClientGeneratedId(optimisticId)) {
+    queue.entries.forEach((entry) => {
+      // replace all instances of the optimistic id in the queue with
+      // the new id that came back from the server
+      traverse(entry.operation.op.variables).forEach(function(val) {
+        if (this.isLeaf && val && val === optimisticId) {
+          this.update(resultId);
+          queue.updateOperation(entry.operation);
+        }
+      });
     });
   }
 }

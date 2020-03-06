@@ -1,4 +1,4 @@
-import { MutationOptions } from "apollo-client";
+import { MutationOptions, OperationVariables } from "apollo-client";
 import { ApolloCache } from "apollo-cache";
 import {
   ObjectState,
@@ -6,6 +6,7 @@ import {
   ConflictResolutionData
 } from "offix-conflicts-client";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
+import { InputMapper } from "../../config/ApolloOfflineClientOptions";
 
 /**
  * Convenience interface that specifies a few extra properties found on ApolloCache
@@ -31,15 +32,21 @@ export interface ApolloCacheWithData extends ApolloCache<NormalizedCacheObject> 
 export function getBaseStateFromCache(
   cache: ApolloCacheWithData,
   objectState: ObjectState,
-  mutationOptions: MutationOptions
+  mutationOptions: MutationOptions,
+  inputMapper?: InputMapper
 ): ConflictResolutionData {
   const context = mutationOptions.context;
 
   if (!context.conflictBase) {
-    // do nothing
-    const conflictBase = getObjectFromCache(cache, context.returnType, mutationOptions);
+
+    let mutationVariables = mutationOptions.variables as OperationVariables;
+    if (inputMapper) {
+      mutationVariables = inputMapper.deserialize(mutationVariables);
+    }
+
+    const conflictBase = getObjectFromCache(cache, context.returnType, mutationVariables);
     if (conflictBase && Object.keys(conflictBase).length !== 0) {
-      if (objectState.hasConflict(mutationOptions.variables, conflictBase)) {
+      if (objectState.hasConflict(mutationVariables, conflictBase)) {
         // 🙊 Input data is conflicted with the latest server projection
         throw new LocalConflictError(conflictBase, mutationOptions.variables);
       }
@@ -48,9 +55,9 @@ export function getBaseStateFromCache(
   }
 }
 
-function getObjectFromCache(cache: ApolloCacheWithData, typename: string, mutationOptions: MutationOptions) {
+function getObjectFromCache(cache: ApolloCacheWithData, typename: string, mutationVariables: OperationVariables) {
   if (cache && cache.data) {
-    const idKey = cache.config.dataIdFromObject({ __typename: typename, ...mutationOptions.variables });
+    const idKey = cache.config.dataIdFromObject({ __typename: typename, ...mutationVariables });
 
     if (cache.optimisticData && cache.optimisticData.parent) {
       const optimisticData = cache.optimisticData.parent.data;

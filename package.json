@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "test": "jest -w 1",
     "coverage": "jest --coverage",
     "size": "size-limit",
     "cleanInstall": "lerna exec yarn install --ignore-scripts",

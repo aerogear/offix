@@ -18,7 +18,8 @@ function createDefaultLink(config: ApolloOfflineClientConfig) {
   const conflictLink = new ConflictLink({
     conflictProvider: config.conflictProvider as ObjectState,
     conflictListener: config.conflictListener,
-    conflictStrategy: config.conflictStrategy
+    conflictStrategy: config.conflictStrategy,
+    inputMapper: config.inputMapper
   });
 
   const retryLink = ApolloLink.split(isMarkedOffline, new RetryLink(config.retryOptions));

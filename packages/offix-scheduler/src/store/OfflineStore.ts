@@ -37,8 +37,11 @@ export class OfflineStore<T> {
   public async saveEntry(entry: QueueEntryOperation<T>) {
     const serialized = this.serializer.serializeForStorage(entry);
     const offlineKey = this.getOfflineKey(entry.qid);
-    this.arrayOfKeys.push(offlineKey);
-    await this.storage.setItem(this.offlineMetaKey, this.arrayOfKeys);
+    // only add the offline key to the arrray if it's not already there
+    if (!this.arrayOfKeys.includes(offlineKey)) {
+      this.arrayOfKeys.push(offlineKey);
+      await this.storage.setItem(this.offlineMetaKey, this.arrayOfKeys);
+    }
     await this.storage.setItem(offlineKey, serialized);
   }
 

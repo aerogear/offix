@@ -91,7 +91,7 @@ describe('Offline mutations', function () {
       }
       await client.offlineMutate(mutationOptions).catch(err => { });
 
-      const queue = client.queue.queue
+      const queue = client.queue.entries
       expect(queue.length).to.equal(1)
       const op = queue[0].operation.op
       expect(op.mutation).to.deep.equal(mutationOptions.mutation)
@@ -160,7 +160,7 @@ describe('Offline mutations', function () {
         });
       } catch (ignore) { }
 
-      const queue = client.queue.queue
+      const queue = client.queue.entries
       expect(queue.length).to.equal(2)
       expect(queue[0].operation.op.context.operationName).to.equal('updateTask');
       expect(queue[1].operation.op.context.operationName).to.equal('deleteTask');

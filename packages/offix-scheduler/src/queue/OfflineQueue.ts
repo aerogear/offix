@@ -49,7 +49,7 @@ export interface QueueEntryHandlers {
  * - updating client IDs with server IDs (explained below)
  */
 export class OfflineQueue<T> {
-  public queue: Array<QueueEntry<T>> = [];
+  public entries: Array<QueueEntry<T>> = [];
 
   // listeners that can be added by the user to handle various events coming from the offline queue
   public listeners: Array<OfflineQueueListener<T>> = [];
@@ -81,7 +81,7 @@ export class OfflineQueue<T> {
     };
 
     // enqueue and persist
-    this.queue.push(entry);
+    this.entries.push(entry);
     // notify listeners
     this.onOperationEnqueued(entry.operation);
 
@@ -106,7 +106,7 @@ export class OfflineQueue<T> {
   }
 
   public async dequeueOperation(entry: QueueEntry<T>) {
-    this.queue = this.queue.filter(e => e !== entry);
+    this.entries = this.entries.filter(e => e !== entry);
     if (this.store.initialized) {
       try {
         await this.store.removeEntry(entry.operation);
@@ -118,8 +118,18 @@ export class OfflineQueue<T> {
     }
   }
 
+  public async updateOperation(operation: QueueEntryOperation<T>) {
+    const { qid } = operation;
+    const index = this.entries.findIndex((entry) => { return entry.operation.qid === qid; });
+    if (index === -1) {
+      throw new Error(`error updating item in queue could not find entry for operation ${operation}`);
+    }
+    this.entries[index].operation = operation;
+    await this.store.saveEntry(operation);
+  }
+
   public async forwardOperations() {
-    for (const entry of this.queue) {
+    for (const entry of this.entries) {
       await this.forwardOperation(entry);
     }
   }
@@ -146,7 +156,7 @@ export class OfflineQueue<T> {
         for (const entry of offlineEntries) {
           this.onOperationRequeued(entry.operation);
         }
-        this.queue = offlineEntries;
+        this.entries = offlineEntries;
       } catch (error) {
         // TODO should we be logging something here?
         // TODO integration tests covering this
@@ -212,7 +222,7 @@ export class OfflineQueue<T> {
       this.onOperationSuccess(entry.operation, result);
     }
     this.dequeueOperation(entry);
-    if (this.queue.length === 0) {
+    if (this.entries.length === 0) {
       this.queueCleared();
     }
   }

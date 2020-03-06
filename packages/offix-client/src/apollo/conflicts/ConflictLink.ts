@@ -10,6 +10,7 @@ import {
   ConflictHandler
 } from "offix-conflicts-client";
 import { isMutation } from "../helpers";
+import { InputMapper } from "../../config/ApolloOfflineClientOptions";
 
 /**
  * Represents conflict information that was returned from server
@@ -42,6 +43,14 @@ export interface ConflictConfig {
    * The conflict resolution strategy your client should use. By default it takes client version.
    */
   conflictStrategy?: ConflictResolutionStrategy;
+
+  /**
+   * [Modifier]
+   *
+   * Maps input objects for the cases if variables are not passed to the root
+   *
+   */
+  inputMapper?: InputMapper;
 }
 
 /**
@@ -67,10 +76,10 @@ export class ConflictLink extends ApolloLink {
     forward: NextLink
   ): Observable<FetchResult> | null {
     if (isMutation(operation)) {
-      if (this.stater.currentState(operation.variables) !== undefined) {
+      const variables = this.config.inputMapper ? this.config.inputMapper.deserialize(operation.variables) : operation.variables;
+      if (this.stater.currentState(variables) !== undefined) {
         return this.link.request(operation, forward);
       }
-      return forward(operation);
     }
     return forward(operation);
   }
@@ -94,7 +103,7 @@ export class ConflictLink extends ApolloLink {
       });
       const resolvedConflict = conflictHandler.executeStrategy();
       if (resolvedConflict) {
-        operation.variables = resolvedConflict;
+        operation.variables = this.config.inputMapper ? this.config.inputMapper.serialize(resolvedConflict): resolvedConflict;
       }
     }
     return forward(operation);
