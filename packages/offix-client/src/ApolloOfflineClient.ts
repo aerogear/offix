@@ -96,7 +96,7 @@ export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
         addOptimisticResponse(this, operation);
       },
       onOperationSuccess: (operation: ApolloQueueEntryOperation, result: FetchResult) => {
-        replaceClientGeneratedIDsInQueue(this.scheduler.queue.queue, operation, result);
+        replaceClientGeneratedIDsInQueue(this.scheduler.queue, operation, result);
         removeOptimisticResponse(this, operation);
       },
       onOperationFailure: (operation: ApolloQueueEntryOperation, error) => {
