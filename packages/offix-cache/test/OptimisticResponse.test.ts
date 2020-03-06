@@ -40,3 +40,30 @@ test("check that createNewOptimisticResponse is without id", () => {
   const result = createOptimisticResponse(options);
   expect(result.createItem.id).toBe(undefined);
 });
+
+test("createOptimisticResponse works with an input mapper", () => {
+  const options: OptimisticOptions = {
+    mutation: CREATE_ITEM,
+    operationType: CacheOperation.REFRESH,
+    returnType: "Test",
+    variables: {
+      a: "val1",
+      b: "val2",
+      input: {
+        id: "123",
+        name: "test"
+      }
+    },
+    inputMapper: {
+      deserialize: (vars) => vars.input,
+      serialize: (vars) => vars
+    }
+  };
+  const result = createOptimisticResponse(options);
+  expect(result.createItem).toStrictEqual({
+    __typename: "Test",
+    id: "123",
+    name: "test",
+    optimisticResponse: true
+  });
+});

@@ -31,6 +31,20 @@
       // "console": "integratedTerminal",
       // "internalConsoleOptions": "neverOpen",
       "port": 9229
+    },
+    {
+      "name": "Debug Jest Tests in offix-cache",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/packages/offix-cache",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "${workspaceRoot}/packages/offix-cache/node_modules/.bin/jest",
+        "--runInBand"
+      ],
+      // "console": "integratedTerminal",
+      // "internalConsoleOptions": "neverOpen",
+      "port": 9229
     }
   ]
 }

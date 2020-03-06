@@ -14,6 +14,11 @@ import { NormalizedCacheObject } from "apollo-cache-inmemory";
 import { ApolloClientOptions } from "apollo-client";
 import { CachePersistor } from "apollo-cache-persist";
 
+export interface InputMapper {
+  deserialize: (object: any) => any;
+  serialize: (object: any) => any;
+}
+
 /**
  * Contains all configuration options required to initialize Voyager Client
  * Options marked with [Modifier] flag are used to modify behavior of client.
@@ -98,4 +103,12 @@ export interface ApolloOfflineClientOptions extends ApolloClientOptions<Normaliz
    *
    */
   retryOptions?: RetryLink.Options;
+
+  /**
+   * [Modifier]
+   *
+   * Maps input objects for the cases if variables are not passed to the root
+   *
+   */
+  inputMapper?: InputMapper;
 }

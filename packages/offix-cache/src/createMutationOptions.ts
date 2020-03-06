@@ -4,6 +4,11 @@ import { createOptimisticResponse } from "./createOptimisticResponse";
 import { CacheUpdatesQuery } from "./api/CacheUpdates";
 import { getOperationFieldName, deconstructQuery } from "./utils/helperFunctions";
 
+export interface InputMapper {
+  deserialize: (object: any) => any;
+  serialize: (object: any) => any;
+}
+
 /**
  * Interface to overlay helper internals on top of mutation options.
  */
@@ -33,6 +38,14 @@ export interface MutationHelperOptions<T = {
    * For example for `modifyObject(value: String!): Object` value will be `Object`
    */
   returnType?: string;
+
+  /**
+   * [Modifier]
+   *
+   * Maps input objects for the cases if variables are not passed to the root
+   *
+   */
+  inputMapper?: InputMapper;
 }
 
 /**
@@ -87,7 +100,8 @@ export const createMutationOptions = <T = {
     returnType,
     operationType = CacheOperation.ADD,
     idField = "id",
-    context
+    context,
+    inputMapper
   } = options;
 
   if (returnType && !options.optimisticResponse) {
@@ -96,7 +110,8 @@ export const createMutationOptions = <T = {
       variables,
       returnType,
       operationType,
-      idField
+      idField,
+      inputMapper
     });
   }
 
