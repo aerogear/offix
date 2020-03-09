@@ -1,6 +1,6 @@
 {
   "name": "offix-client-boost",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "description": "simplifies setup and usage of offix-client",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -24,8 +24,8 @@
     "apollo-link-retry": "2.2.15",
     "apollo-link-ws": "1.0.19",
     "apollo-upload-client": "12.1.0",
-    "offix-client": "0.14.0",
-    "offix-conflicts-client": "0.14.0",
+    "offix-client": "0.15.0",
+    "offix-conflicts-client": "0.15.0",
     "subscriptions-transport-ws": "0.9.16"
   },
   "devDependencies": {
