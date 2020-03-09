@@ -30,7 +30,7 @@
   "devDependencies": {
     "@size-limit/preset-small-lib": "^4.1.1",
     "@types/graphql": "14.2.3",
-    "@types/jest": "25.1.1",
+    "@types/jest": "25.1.4",
     "@typescript-eslint/eslint-plugin": "2.22.0",
     "@typescript-eslint/parser": "2.22.0",
     "del-cli": "3.0.0",
@@ -41,12 +41,12 @@
     "size-limit": "^4.1.1",
     "ts-jest": "25.2.1",
     "ts-node": "8.6.2",
-    "typescript": "3.7.5",
+    "typescript": "3.8.3",
     "pre-commit": "1.2.2"
   },
   "dependencies": {
-    "@types/mocha": "7.0.1",
-    "@types/node": "12.12.25"
+    "@types/mocha": "7.0.2",
+    "@types/node": "12.12.29"
   },
   "workspaces": [
     "packages/*",
