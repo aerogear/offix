@@ -7,7 +7,6 @@ import { ApolloOfflineClientOptions, InputMapper } from "./ApolloOfflineClientOp
 import { NetworkStatus } from "offix-offline";
 import {
   ConflictResolutionStrategy,
-  ConflictListener,
   UseClient,
   VersionedState,
   ObjectState
@@ -15,7 +14,7 @@ import {
 import { createDefaultCacheStorage } from "../cache";
 import { ApolloLink } from "apollo-link";
 import { CacheUpdates } from "offix-cache";
-import { ApolloOfflineQueueListener, createDefaultLink } from "../apollo";
+import { ApolloOfflineQueueListener, createDefaultLink, CompositeConflictListener } from "../apollo";
 import { CachePersistor } from "apollo-cache-persist";
 
 /**
@@ -31,7 +30,7 @@ export class ApolloOfflineClientConfig implements ApolloOfflineClientOptions {
   public terminatingLink: ApolloLink | undefined;
   public cacheStorage: PersistentStore<PersistedData>;
   public offlineStorage: PersistentStore<PersistedData>;
-  public conflictListener?: ConflictListener;
+  public conflictListener: CompositeConflictListener;
   public mutationCacheUpdates?: CacheUpdates;
   public cachePersistor?: CachePersistor<object>;
   public link?: ApolloLink;
@@ -56,6 +55,10 @@ export class ApolloOfflineClientConfig implements ApolloOfflineClientOptions {
     this.offlineStorage = options.offlineStorage || createDefaultOfflineStorage();
     this.conflictStrategy = options.conflictStrategy || UseClient;
     this.conflictProvider = options.conflictProvider || new VersionedState();
+    this.conflictListener = new CompositeConflictListener();
+    if (options.conflictListener) {
+      this.conflictListener.addConflictListener(options.conflictListener);
+    }
     this.link = createDefaultLink(this);
   }
 }

@@ -143,9 +143,7 @@ class ConflictLogger implements ConflictListener {
   }
 }
 
-let config = {
-...
-  conflictListener: new ConflictLogger()
-...
-}
+const listener = new ConflictLogger()
+
+client.addConflictListener(listener)
 ```

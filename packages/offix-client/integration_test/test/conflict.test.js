@@ -325,6 +325,62 @@ describe('Conflicts', function () {
 
   });
 
+  describe('all conflict listeners should be called', function() {
+    it('should succeed', async function() {
+
+      let client = await newClient({ networkStatus: newNetworkStatus(), offlineStorage: new TestStore() });
+      let conflictedClient = await newClient({ networkStatus: newNetworkStatus(), offlineStorage: new TestStore() });
+
+      const response = await client.mutate({
+        mutation: CREATE_TASK,
+        variables: newTask
+      });
+  
+      const task = response.data.createTask;
+
+      await conflictedClient.query({
+        query: FIND_ALL_TASKS
+      })
+
+      await client.offlineMutate({
+        mutation: UPDATE_TASK,
+        returnType: 'Task',
+        variables: {
+          id: task.id,
+          version: task.version,
+          description: 'updated description',
+          title: 'updated title'
+        }
+      })
+
+      let conflictListenerCallCount = 0;
+
+      conflictedClient.addConflictListener({
+        conflictOccurred() {
+          conflictListenerCallCount++
+        }
+      });
+
+      conflictedClient.addConflictListener({
+        conflictOccurred() {
+          conflictListenerCallCount++
+        }
+      })
+
+      await conflictedClient.offlineMutate({
+        mutation: UPDATE_TASK,
+        returnType: 'Task',
+        variables: {
+          id: task.id,
+          version: task.version,
+          description: 'updated description again',
+          title: 'updated title'
+        }
+      })
+      expect(conflictListenerCallCount).to.equal(2); 
+    })
+  })
+
   describe('merge should be called for mergeable conflict', function () {
 
     it('should succeed', async function () {
