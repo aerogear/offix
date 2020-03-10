@@ -29,7 +29,7 @@
     "graphql-tag": "2.10.3",
     "jest": "25.1.0",
     "size-limit": "^4.1.1",
-    "ts-jest": "25.2.0",
-    "typescript": "3.7.5"
+    "ts-jest": "25.2.1",
+    "typescript": "3.8.3"
   }
 }

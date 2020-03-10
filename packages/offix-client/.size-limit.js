@@ -3,7 +3,7 @@ const packageName = require("./package.json").name;
 
 const config = {
   "name": packageName,
-  "limit": "34kb",
+  "limit": "38kb",
   "path": path.join(__dirname, '/dist/**/*.js')
 };
 
