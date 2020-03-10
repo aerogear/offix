@@ -11,7 +11,7 @@ import { NetworkStatusChangeCallback } from "offix-client";
  */
 export function useNetworkStatus(){
   const client = useApolloOfflineClient();
-  const [isOnline, setIsOnline] = useState();
+  const [isOnline, setIsOnline] = useState<boolean>();
 
   useEffect(() => {
     async function setOnlineStatus() {
