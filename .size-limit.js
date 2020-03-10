@@ -11,7 +11,7 @@ const packageLimits = packages.map(function(p) {
 
 const overallConfig = {
   name: "offix (total)",
-  limit: "40kb",
+  limit: "60kb",
   path: [
     'packages/*/dist/**/*.js',
     '!packages/offix-client-boost/dist/**/*.js'
