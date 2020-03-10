@@ -54,7 +54,7 @@
                 };
               }
             });
-        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">Client Side Conflict Resolution</h1></header><article><div><span><p>When performing data synchronization between multiple clients it is common for remote devices to become offline for a certain amount of time. As a result of being offline, data that is modified by a client can become outdated with the server. Further operations on that record can cause a conflict (often called a collision). For more information about offline workflows, please see <a href="/docs/next/offline-client">Offline Support</a></p>
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Client Side Conflict Resolution</h1></header><article><div><span><p>When performing data synchronization between multiple clients it is common for remote devices to become offline for a certain amount of time. As a result of being offline, data that is modified by a client can become outdated with the server. Further operations on that record can cause a conflict (often called a collision). For more information about offline workflows, please see <a href="/docs/next/offline-client">Offline Support</a></p>
 <p>Offix provides a way to manage and resolve these conflicts for any GraphQL type.
 Conflict implementation will require additional elements in your application in order to work:</p>
 <ul>
@@ -123,7 +123,7 @@ This interface exist on both client and server and provides functions that help 
         client.role = <span class="hljs-string">"none"</span>
         resolvedData = <span class="hljs-built_in">Object</span>.assign(base, server, client)
         <span class="hljs-keyword">break</span>
-      <span class="hljs-keyword">default</span>:
+      <span class="hljs-attr">default</span>:
         resolvedData = <span class="hljs-built_in">Object</span>.assign(base, server, client)
     }
     <span class="hljs-keyword">return</span> resolvedData
@@ -155,10 +155,8 @@ This interface exist on both client and server and provides functions that help 
   }
 }
 
-<span class="hljs-keyword">let</span> config = {
-...
-  conflictListener: <span class="hljs-keyword">new</span> ConflictLogger()
-...
-}
+<span class="hljs-keyword">const</span> listener = <span class="hljs-keyword">new</span> ConflictLogger()
+
+client.addConflictListener(listener)
 </code></pre>
 </span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/next/offix-cache"><span class="arrow-prev">← </span><span>Client Cache</span></a><a class="docs-next button" href="/docs/next/conflict-server"><span>Conflict Server</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#working-with-conflict-resolution-on-client">Working with Conflict Resolution on Client</a></li><li><a href="#default-conflict-implementation">Default Conflict Implementation</a><ul class="toc-headings"><li><a href="#custom-conflict-implementation-by-extening-objectstate">Custom Conflict implementation by extening ObjectState</a></li></ul></li><li><a href="#conflict-resolution-strategies">Conflict Resolution Strategies</a></li><li><a href="#listening-to-conflicts">Listening to Conflicts</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020 Offix Contributors</section></footer></div></body></html>

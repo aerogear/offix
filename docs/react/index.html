@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>React - using Offix Hooks · Offix</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="`ApolloOfflineClient` is compatible with all of the official [Apollo React Hooks](https://www.apollographql.com/docs/react/api/react-hooks/) such as `useQuery`, `useMutation` and `useSubscription`."/><meta name="docsearch:version" content="0.13.0"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="React - using Offix Hooks · Offix"/><meta property="og:type" content="website"/><meta property="og:url" content="https://offix.dev/"/><meta property="og:description" content="`ApolloOfflineClient` is compatible with all of the official [Apollo React Hooks](https://www.apollographql.com/docs/react/api/react-hooks/) such as `useQuery`, `useMutation` and `useSubscription`."/><meta property="og:image" content="https://offix.dev/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://offix.dev/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/offix-logo.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/offix-logo.png" alt="Offix"/><h2 class="headerTitleWithLogo">Offix</h2></a><a href="/versions"><h3>0.13.0</h3></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/docs/getting-started" target="_self">Documentation</a></li><li class=""><a href="https://github.com/aerogear/offix" target="_self">Github</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Platforms</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Getting Started</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/getting-started">Getting Started</a></li><li class="navListItem"><a class="navItem" href="/docs/client-configuration">Client Configuration</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Offix Client</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/offline-client">Offline Client</a></li><li class="navListItem"><a class="navItem" href="/docs/offix-cache">Client Cache</a></li><li class="navListItem"><a class="navItem" href="/docs/conflict-client">Conflicts Client</a></li><li class="navListItem"><a class="navItem" href="/docs/conflict-server">Conflict Server</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Platforms</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/docs/react">React</a></li><li class="navListItem"><a class="navItem" href="/docs/react-native">React Native</a></li><li class="navListItem"><a class="navItem" href="/docs/angular">Angular</a></li><li class="navListItem"><a class="navItem" href="/docs/ionic">Ionic and Cordova</a></li><li class="navListItem"><a class="navItem" href="/docs/android">Android</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Advanced topics</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/cookbooks">Offline Cookbook</a></li><li class="navListItem"><a class="navItem" href="/docs/offix-scheduler-introduction">Introduction</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Releases</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/release-notes">Release notes</a></li></ul></div></div></section></div><script>
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>React - using Offix Hooks · Offix</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="`ApolloOfflineClient` is compatible with all of the official [Apollo React Hooks](https://www.apollographql.com/docs/react/api/react-hooks/) such as `useQuery`, `useMutation` and `useSubscription`."/><meta name="docsearch:version" content="0.15.0"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="React - using Offix Hooks · Offix"/><meta property="og:type" content="website"/><meta property="og:url" content="https://offix.dev/"/><meta property="og:description" content="`ApolloOfflineClient` is compatible with all of the official [Apollo React Hooks](https://www.apollographql.com/docs/react/api/react-hooks/) such as `useQuery`, `useMutation` and `useSubscription`."/><meta property="og:image" content="https://offix.dev/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://offix.dev/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/offix-logo.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/offix-logo.png" alt="Offix"/><h2 class="headerTitleWithLogo">Offix</h2></a><a href="/versions"><h3>0.15.0</h3></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/docs/getting-started" target="_self">Documentation</a></li><li class=""><a href="https://github.com/aerogear/offix" target="_self">Github</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Platforms</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Getting Started</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/getting-started">Getting Started</a></li><li class="navListItem"><a class="navItem" href="/docs/client-configuration">Client Configuration</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Offix Client</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/offline-client">Offline Client</a></li><li class="navListItem"><a class="navItem" href="/docs/offix-cache">Client Cache</a></li><li class="navListItem"><a class="navItem" href="/docs/conflict-client">Conflicts Client</a></li><li class="navListItem"><a class="navItem" href="/docs/conflict-server">Conflict Server</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Platforms</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/docs/react">React</a></li><li class="navListItem"><a class="navItem" href="/docs/react-native">React Native</a></li><li class="navListItem"><a class="navItem" href="/docs/angular">Angular</a></li><li class="navListItem"><a class="navItem" href="/docs/ionic">Ionic and Cordova</a></li><li class="navListItem"><a class="navItem" href="/docs/android">Android</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Advanced topics</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/cookbooks">Offline Cookbook</a></li><li class="navListItem"><a class="navItem" href="/docs/offix-scheduler-introduction">Introduction</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Releases</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/release-notes">Release notes</a></li></ul></div></div></section></div><script>
             var coll = document.getElementsByClassName('collapsible');
             var checkActiveCategory = true;
             for (var i = 0; i < coll.length; i++) {
@@ -54,7 +54,7 @@
                 };
               }
             });
-        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">React - using Offix Hooks</h1></header><article><div><span><p><code>ApolloOfflineClient</code> is compatible with all of the official <a href="https://www.apollographql.com/docs/react/api/react-hooks/">Apollo React Hooks</a> such as <code>useQuery</code>, <code>useMutation</code> and <code>useSubscription</code>.</p>
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">React - using Offix Hooks</h1></header><article><div><span><p><code>ApolloOfflineClient</code> is compatible with all of the official <a href="https://www.apollographql.com/docs/react/api/react-hooks/">Apollo React Hooks</a> such as <code>useQuery</code>, <code>useMutation</code> and <code>useSubscription</code>.</p>
 <p>The <code>react-offix-hooks</code> library provides an additional <code>useOfflineMutation</code> React hook for performing offline mutations.</p>
 <p><strong>Note:</strong> <code>react-offix-hooks</code> is experimental. Please try it and <a href="https://github.com/aerogear/offix/issues/new/choose">log any issues</a> to help us improve it.</p>
 <h2><a class="anchor" aria-hidden="true" id="app-initialization"></a><a href="#app-initialization" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>App Initialization</h2>
@@ -91,8 +91,8 @@
 }
 
 
-render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span>, document.getElementById('root'))
-</span></code></pre>
+render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span></span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'root'</span>))
+</code></pre>
 <p>In the example above, the following happens.</p>
 <ol>
 <li>An <code>ApolloOfflineClient</code> is created.</li>
@@ -101,7 +101,46 @@ render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">App<
 <li>If <code>initialized</code> is true, then the application is rendered including the <code>ApolloOfflineProvider</code> and the <code>ApolloProvider</code>. Otherwise a loading screen is shown.</li>
 </ol>
 <h2><a class="anchor" aria-hidden="true" id="useofflinemutation"></a><a href="#useofflinemutation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>useOfflineMutation</h2>
-<p><code>useOfflineMutation</code> is similar to <code>useMutation</code> but it internally calls <code>client.offlineMutate</code> and it provides additional state that can be used to build UIs that handle offline cases.</p>
+<p><code>useOfflineMutation</code> is similar to <code>useMutation</code> but it internally calls <code>client.offlineMutate</code>. <code>useOfflineMutation</code> will throw an offline error if the mutation was made while offline which needs to be handled in the client.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> gql <span class="hljs-keyword">from</span> <span class="hljs-string">'graphql-tag'</span>
+<span class="hljs-keyword">import</span> { useOfflineMutation } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-offix-hooks'</span>
+
+<span class="hljs-keyword">const</span> ADD_MESSAGE_MUTATION = gql<span class="hljs-string">`
+  mutation addMessage($chatId: String!, $content: String!) {
+    addMessage(chatId: $chatId, content: $content)
+  }
+`</span>
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addMessageForm</span>(<span class="hljs-params">{ chatId }</span>) </span>{
+  <span class="hljs-keyword">const</span> inputRef = useRef()
+
+  <span class="hljs-keyword">const</span> [addMessage] = useOfflineMutation(ADD_MESSAGE_MUTATION)
+
+  <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">handleSubmit</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">try</span> {
+      <span class="hljs-keyword">await</span> addMessage({
+        <span class="hljs-attr">variables</span>: {
+          chatId,
+          <span class="hljs-attr">content</span>: inputRef.current.value,
+        }
+      });
+    } <span class="hljs-keyword">catch</span>(error) {
+      <span class="hljs-keyword">if</span> (error.offline) {
+        error.watchOfflineChange();
+      }
+    }
+  }
+
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">form</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">{inputRef}</span> /&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{handleSubmit}</span>&gt;</span>Send Message<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></span>
+  )
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="state-properties"></a><a href="#state-properties" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>State Properties</h3>
+<p><code>useOfflineMutation</code> provides additional state that can be used to build UIs.</p>
 <pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> gql <span class="hljs-keyword">from</span> <span class="hljs-string">'graphql-tag'</span>
 <span class="hljs-keyword">import</span> { useOfflineMutation } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-offix-hooks'</span>
 
@@ -125,10 +164,10 @@ render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">App<
     <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">form</span>&gt;</span>
       <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">{inputRef}</span> /&gt;</span>
       <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{addMessage}</span>&gt;</span>Send Message<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></span>
   )
 }
-</span></code></pre>
+</code></pre>
 <p>The following properties are available on the <code>state</code> returned from <code>useOfflineMutation</code></p>
 <ul>
 <li><code>called</code> - true when the mutation was called.</li>
@@ -136,10 +175,7 @@ render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">App<
 <li><code>error</code> - error returned from the mutation (not including offline errors).</li>
 <li><code>hasError</code> - true when an error occurred.</li>
 <li><code>loading</code> - true when a mutation is in flight or when an offline mutation hasn't been fulfilled yet.</li>
-<li><code>mutationVariables</code> - the variables passed to the mutation. Only present during an offline mutation.</li>
 <li><code>calledWhileOffline</code> - true when mutation was called while offline.</li>
-<li><code>offlineChangeReplicated</code> - true when offline mutation has been successfully fulfilled.</li>
-<li><code>offlineReplicationError</code> - true when an error happened trying to fulfill an offline mutation <code>error</code> will contain the actual error.</li>
 </ul>
 <p>Example:</p>
 <pre><code class="hljs css language-js"><span class="hljs-keyword">const</span> ADD_TASK = gql<span class="hljs-string">`
@@ -160,10 +196,7 @@ mutation createTask($description: String!, $title: String!, $status: TaskStatus)
     error,
     hasError,
     loading,
-    mutationVariables,
     calledWhileOffline,
-    offlineChangeReplicated,
-    offlineReplicationError
   }] = useOfflineMutation(ADD_TASK, {
     <span class="hljs-attr">variables</span>: {
       description,
@@ -181,7 +214,6 @@ mutation createTask($description: String!, $title: String!, $status: TaskStatus)
   <span class="hljs-attr">"hasError"</span>: <span class="hljs-literal">false</span>,
   <span class="hljs-attr">"loading"</span>: <span class="hljs-literal">false</span>,
   <span class="hljs-attr">"calledWhileOffline"</span>: <span class="hljs-literal">false</span>,
-  <span class="hljs-attr">"offlineChangeReplicated"</span>: <span class="hljs-literal">false</span>
 }
 </code></pre>
 <p>After the mutation is called while online:</p>
@@ -200,65 +232,17 @@ mutation createTask($description: String!, $title: String!, $status: TaskStatus)
   <span class="hljs-attr">"hasError"</span>: <span class="hljs-literal">false</span>,
   <span class="hljs-attr">"loading"</span>: <span class="hljs-literal">false</span>,
   <span class="hljs-attr">"calledWhileOffline"</span>: <span class="hljs-literal">false</span>,
-  <span class="hljs-attr">"offlineChangeReplicated"</span>: <span class="hljs-literal">false</span>
 }
 </code></pre>
-<p>After the mutation is called while offline:</p>
-<pre><code class="hljs css language-json">{
-  <span class="hljs-attr">"called"</span>: <span class="hljs-literal">true</span>,
-  <span class="hljs-attr">"hasError"</span>: <span class="hljs-literal">false</span>,
-  <span class="hljs-attr">"loading"</span>: <span class="hljs-literal">true</span>,
-  <span class="hljs-attr">"mutationVariables"</span>: {
-    <span class="hljs-attr">"description"</span>: <span class="hljs-string">"this is a description"</span>,
-    <span class="hljs-attr">"title"</span>: <span class="hljs-string">"created while offline"</span>,
-    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"OPEN"</span>,
-    <span class="hljs-attr">"version"</span>: <span class="hljs-number">1</span>
-  },
-  <span class="hljs-attr">"calledWhileOffline"</span>: <span class="hljs-literal">true</span>,
-  <span class="hljs-attr">"offlineChangeReplicated"</span>: <span class="hljs-literal">false</span>
+<h2><a class="anchor" aria-hidden="true" id="usenetworkstatus"></a><a href="#usenetworkstatus" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>useNetworkStatus</h2>
+<p>The <code>useNetworkStatus</code> hook can be used to build components that render differently depending on the network state. The hook returns <code>true</code> when the network is online and <code>false</code> when the network is offline. The hook uses a listener to return a new value when the network status changes.</p>
+<p>Example:</p>
+<pre><code class="hljs"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+<span class="hljs-keyword">import</span> { useNetworkStatus } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-offix-hooks'</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> App = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+  <span class="hljs-keyword">const</span> isOnline = useNetworkStatus();
+  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>Network status: { isOnline }<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span>;
 }
 </code></pre>
-<p>After the offline mutation is successfully replayed</p>
-<pre><code class="hljs css language-json">{
-  <span class="hljs-attr">"called"</span>: <span class="hljs-literal">true</span>,
-  <span class="hljs-attr">"data"</span>: {
-    <span class="hljs-attr">"createTask"</span>: {
-      <span class="hljs-attr">"id"</span>: <span class="hljs-string">"135"</span>,
-      <span class="hljs-attr">"title"</span>: <span class="hljs-string">"created while offline"</span>,
-      <span class="hljs-attr">"description"</span>: <span class="hljs-string">"this is a description"</span>,
-      <span class="hljs-attr">"version"</span>: <span class="hljs-number">1</span>,
-      <span class="hljs-attr">"status"</span>: <span class="hljs-string">"OPEN"</span>,
-      <span class="hljs-attr">"__typename"</span>: <span class="hljs-string">"Task"</span>
-    }
-  },
-  <span class="hljs-attr">"hasError"</span>: <span class="hljs-literal">false</span>,
-  <span class="hljs-attr">"loading"</span>: <span class="hljs-literal">false</span>,
-  <span class="hljs-attr">"calledWhileOffline"</span>: <span class="hljs-literal">true</span>,
-  <span class="hljs-attr">"offlineChangeReplicated"</span>: <span class="hljs-literal">true</span>
-}
-</code></pre>
-<p>After the offline mutation cannot be replayed</p>
-<pre><code class="hljs css language-json">{
-  <span class="hljs-attr">"called"</span>: <span class="hljs-literal">true</span>,
-  <span class="hljs-attr">"error"</span>: {
-    <span class="hljs-attr">"graphQLErrors"</span>: [],
-    <span class="hljs-attr">"networkError"</span>: {},
-    <span class="hljs-attr">"message"</span>: <span class="hljs-string">"Network error: Failed to fetch"</span>
-  },
-  <span class="hljs-attr">"hasError"</span>: <span class="hljs-literal">true</span>,
-  <span class="hljs-attr">"loading"</span>: <span class="hljs-literal">true</span>,
-  <span class="hljs-attr">"mutationVariables"</span>: {
-    <span class="hljs-attr">"description"</span>: <span class="hljs-string">"created while offline"</span>,
-    <span class="hljs-attr">"title"</span>: <span class="hljs-string">"created while offline"</span>,
-    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"OPEN"</span>,
-    <span class="hljs-attr">"version"</span>: <span class="hljs-number">1</span>
-  },
-  <span class="hljs-attr">"calledWhileOffline"</span>: <span class="hljs-literal">true</span>,
-  <span class="hljs-attr">"offlineChangeReplicated"</span>: <span class="hljs-literal">false</span>,
-  <span class="hljs-attr">"offlineReplicationError"</span>: {
-    <span class="hljs-attr">"graphQLErrors"</span>: [],
-    <span class="hljs-attr">"networkError"</span>: {},
-    <span class="hljs-attr">"message"</span>: <span class="hljs-string">"Network error: Failed to fetch"</span>
-  }
-</code></pre>
-</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/conflict-server"><span class="arrow-prev">← </span><span>Conflict Server</span></a><a class="docs-next button" href="/docs/react-native"><span>React Native</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#app-initialization">App Initialization</a></li><li><a href="#useofflinemutation">useOfflineMutation</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020 Offix Contributors</section></footer></div></body></html>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/conflict-server"><span class="arrow-prev">← </span><span>Conflict Server</span></a><a class="docs-next button" href="/docs/react-native"><span>React Native</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#app-initialization">App Initialization</a></li><li><a href="#useofflinemutation">useOfflineMutation</a><ul class="toc-headings"><li><a href="#state-properties">State Properties</a></li></ul></li><li><a href="#usenetworkstatus">useNetworkStatus</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020 Offix Contributors</section></footer></div></body></html>
