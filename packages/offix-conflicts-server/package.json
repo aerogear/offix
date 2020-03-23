@@ -17,12 +17,12 @@
         "url": "git+https://github.com/aerogear/offix.git"
     },
     "devDependencies": {
-        "@size-limit/preset-small-lib": "4.4.0",
+        "@size-limit/preset-small-lib": "4.4.1",
         "@types/jest": "25.1.4",
         "@types/node": "12.12.30",
         "graphql": "14.6.0",
         "jest": "25.1.0",
-        "size-limit": "4.4.0",
+        "size-limit": "4.4.1",
         "ts-jest": "25.2.1",
         "typescript": "3.8.3"
     },
