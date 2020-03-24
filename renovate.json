@@ -4,6 +4,10 @@
     ":pinVersions"
   ],
   "groupName":"all",
+  "automerge": true,
+  "major": {
+    "automerge": false
+  },
   "packageRules": [
     {
       "packageNames": ["graphql"],
