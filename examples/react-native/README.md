@@ -6,13 +6,24 @@ with Offix and make use of the features in the library.
 
 ## Getting started
 
+To get started, run:
+
+```
+yarn install
+```
+
 Follow the React Native [getting started](https://reactnative.dev/docs/getting-started) guide, if you have not setup React Native already. 
 
 Note: this example app uses the React Native CLI and not Expo.
 
 ### Setting up a server
 
-For simplicity, a Graphback runtime server is available in the server folder in the examples directory. Follow the gettings started instructions there to get started quickly.
+For simplicity, a GraphQL Serve in-memory server has been provided. You can make changes to the GrapQL schema, by editing the `models/runtime.graphql` file. To start the server, run the following
+command:
+
+```
+yarn serve
+```
 
 Alternatively, you can implement your own backend server.
 
