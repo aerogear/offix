@@ -68,6 +68,8 @@ export const TODO_UPDATED_SUBSCRIPTION = gql`
 
 export const TODO_DELETED_SUBSCRIPTION = gql`
   subscription deletedTodo {
-    deletedTodo
+    deletedTodo {
+      id
+    }
   }
 `;
