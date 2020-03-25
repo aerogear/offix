@@ -20,11 +20,12 @@ export const AddTodo = ({ addTodo, cancel }) => {
   };
 
   const handleError = (error) => {
-    if (error.offline) {
-      error.watchOfflineChange();
-    } else {
-      console.log(error);
-    }
+    // if (error.offline) {
+    //   error.watchOfflineChange();
+    // } else {
+    //   console.log(error);
+    // }
+    console.log(error);
     cancel();
   }
 
