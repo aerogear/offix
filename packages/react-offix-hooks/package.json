@@ -49,7 +49,7 @@
   },
   "dependencies": {
     "offix-client": "0.15.0",
-    "react": "^16.13.1"
+    "react": "16.13.1"
   },
   "peerDependencies": {
     "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0",
