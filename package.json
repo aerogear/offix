@@ -49,8 +49,7 @@
     "@types/node": "12.12.30"
   },
   "workspaces": [
-    "packages/*",
-    "examples/*"
+    "packages/*"
   ],
   "pre-commit": [
     "lint",
