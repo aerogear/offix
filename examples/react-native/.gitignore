@@ -4,7 +4,6 @@
 
 # Xcode
 #
-ios/
 build/
 *.pbxuser
 !default.pbxuser
@@ -24,7 +23,6 @@ DerivedData
 
 # Android/IntelliJ
 #
-android/
 build/
 .idea
 .gradle
