@@ -31,7 +31,7 @@
   "devDependencies": {
     "@size-limit/preset-small-lib": "4.4.1",
     "@types/jest": "25.1.4",
-    "@types/node": "12.12.30",
+    "@types/node": "12.12.31",
     "jest": "25.1.0",
     "size-limit": "4.4.1",
     "ts-jest": "25.2.1",
