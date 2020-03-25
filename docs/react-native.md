@@ -4,7 +4,8 @@ title: React Native
 sidebar_label: React Native
 ---
 
-To integrate offix in React Native, developers need to provide custom storage and network layers.
+To integrate offix in React Native, developers need to provide custom storage and network layers,
+a working example can be found in the offix (React Native example app)[https://github.com/aerogear/offix/tree/master/examples/react-native].
 
 We recomend developers use following React Native plugins:
 
