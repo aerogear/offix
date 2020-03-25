@@ -6,9 +6,20 @@ with Offix and make use of the features in the library.
 
 ## Getting started
 
+To get started, run:
+
+```
+yarn install
+```
+
 ### Setting up a server
 
-For simplicity, a Graphback runtime server is available in the server folder in the examples directory. Follow the gettings started instructions there to get started quickly.
+For simplicity, a GraphQL Serve in-memory server has been provided. You can make changes to the GrapQL schema, by editing the `models/runtime.graphql` file. To start the server, run the following
+command:
+
+```
+yarn serve
+```
 
 Alternatively, you can implement your own backend server.
 
@@ -36,10 +47,6 @@ const httpLink = new HttpLink({
 ### Starting the client
 
 Lastly, run the following commands from the React example folder.
-
-```
-yarn install
-```
 
 ```
 yarn start

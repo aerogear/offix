@@ -6,6 +6,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
+    "serve": "gqls serve model --port=4000",
     "test": "jest",
     "lint": "eslint ."
   },
@@ -15,6 +16,7 @@
     "apollo-client": "^2.6.8",
     "apollo-link-ws": "^1.0.19",
     "graphql": "^14.6.0",
+    "graphql-serve": "^0.11.2",
     "graphql-tag": "^2.10.3",
     "offix-client": "^0.15.0",
     "react": "16.9.0",

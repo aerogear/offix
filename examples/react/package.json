@@ -8,6 +8,7 @@
     "start": "parcel serve index.html",
     "watch": "parcel watch index.html",
     "build": "parcel build index.html",
+    "serve": "gqls serve model --port=4000",
     "lint": "eslint src/* src/**/*"
   },
   "dependencies": {
@@ -18,6 +19,7 @@
     "apollo-link-http": "^1.5.16",
     "apollo-link-ws": "^1.0.19",
     "graphql": "^14.3.1",
+    "graphql-serve": "^0.11.2",
     "graphql-tag": "^2.10.1",
     "offix-cache": "0.15.0",
     "offix-client": "0.15.0",
