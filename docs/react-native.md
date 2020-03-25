@@ -83,6 +83,9 @@ const cacheStorage = {
       valueStr = JSON.stringify(value);
     }
     return AsyncStorage.setItem(key, valueStr);
+  },
+  removeItem: async (key) => {
+    return AsyncStorage.removeItem(key);
   }
 };
 
