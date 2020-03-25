@@ -6,7 +6,7 @@ sidebar_label: React
 
 `ApolloOfflineClient` is compatible with all of the official [Apollo React Hooks](https://www.apollographql.com/docs/react/api/react-hooks/) such as `useQuery`, `useMutation` and `useSubscription`. 
 
-For a quickstart, a simple [React todo app](https://github.com/aerogear/offix/tree/master/examples/react-native) can be found in the example folder.
+For a quickstart, a simple [React todo app](https://github.com/aerogear/offix/tree/master/examples/react) can be found in the example folder.
 
 The `react-offix-hooks` library provides an additional `useOfflineMutation` React hook for performing offline mutations.
 
