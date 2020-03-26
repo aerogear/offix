@@ -17,29 +17,11 @@ import { CacheUpdates } from "offix-cache";
 import { ApolloOfflineQueueListener, createDefaultLink, CompositeConflictListener } from "../apollo";
 import { CachePersistor } from "apollo-cache-persist";
 
-
-interface ApolloOfflineClientConfigIntf extends ApolloOfflineClientOptions {
-  httpUrl?: string;
-  offlineQueueListener?: ApolloOfflineQueueListener;
-  conflictStrategy: ConflictResolutionStrategy;
-  conflictProvider: ObjectState;
-  networkStatus?: NetworkStatus;
-  terminatingLink: ApolloLink | undefined;
-  cacheStorage: PersistentStore;
-  offlineStorage: PersistentStore;
-  conflictListener: CompositeConflictListener;
-  mutationCacheUpdates?: CacheUpdates;
-  cachePersistor?: CachePersistor;
-  link?: ApolloLink;
-  inputMapper?: InputMapper;
-  cache: any;
-}
-
 /**
  * Class for managing user and default configuration.
  * Default config is applied on top of user provided configuration
  */
-export class ApolloOfflineClientConfig implements ApolloOfflineClientConfigIntf {
+export class ApolloOfflineClientConfig {
   public httpUrl?: string;
   public offlineQueueListener?: ApolloOfflineQueueListener;
   public conflictStrategy: ConflictResolutionStrategy;

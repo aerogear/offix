@@ -38,7 +38,6 @@
     "graphql-tag": "2.10.3",
     "jest": "25.1.0",
     "size-limit": "4.4.0",
-    "ts-interface-builder": "^0.2.1",
     "ts-jest": "25.2.1",
     "typescript": "3.8.3"
   },
@@ -55,8 +54,7 @@
     "offix-conflicts-client": "0.15.0",
     "offix-offline": "0.15.0",
     "offix-scheduler": "0.15.0",
-    "traverse": "0.6.6",
-    "ts-interface-checker": "^0.1.10"
+    "traverse": "0.6.6"
   },
   "peerDependencies": {
     "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0"
