@@ -5,7 +5,6 @@ import { ApolloOfflineClientConfig } from "../src/config/ApolloOfflineClientConf
 import { ApolloOfflineClientOptions } from "../src/config/ApolloOfflineClientOptions";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { HttpLink } from "apollo-link-http";
-import { ConfigError } from "../src/config/ConfigError";
 
 test("ApolloOfflineClientConfig Merges defaults with user config", () => {
 
@@ -61,4 +60,4 @@ it("Should not throw for a valid config", () => {
 
 it("Should throw for invalid config", () => {
   expect(() => validateConfig({} as any)).toThrow(Error);
-}); 
+});
