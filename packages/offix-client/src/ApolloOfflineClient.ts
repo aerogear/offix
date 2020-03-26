@@ -22,10 +22,6 @@ import { NetworkStatus } from "offix-offline";
 import { ObjectState, ConflictListener } from "offix-conflicts-client";
 import { ApolloOfflineClientOptions, InputMapper } from "./config/ApolloOfflineClientOptions";
 import { ApolloOfflineClientConfig } from "./config/ApolloOfflineClientConfig";
-import ApolloOfflineClientConfigIntfTI from './config/ApolloOfflineClientConfig-ti';
-import { createCheckers } from "ts-interface-checker";
-
-const { ApolloOfflineClientConfigIntf } = createCheckers(ApolloOfflineClientConfigIntfTI);
 
 export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
 
@@ -52,7 +48,7 @@ export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
 
   constructor(options: ApolloOfflineClientOptions) {
     const config = new ApolloOfflineClientConfig(options);
-    ApolloOfflineClientConfigIntf.check(config);
+  
     super(config);
 
     this.initialized = false;
