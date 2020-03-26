@@ -1,4 +1,5 @@
 import ApolloClient, { MutationOptions, OperationVariables } from "apollo-client";
+import validateConfig from "./config/ApolloOfflineClientConfigValidator";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
 import { OffixScheduler } from "offix-scheduler";
 import { CachePersistor } from "apollo-cache-persist";
@@ -48,7 +49,7 @@ export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
 
   constructor(options: ApolloOfflineClientOptions) {
     const config = new ApolloOfflineClientConfig(options);
-  
+    validateConfig(config);
     super(config);
 
     this.initialized = false;
