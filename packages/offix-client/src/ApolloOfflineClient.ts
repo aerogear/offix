@@ -1,5 +1,4 @@
 import ApolloClient, { MutationOptions, OperationVariables } from "apollo-client";
-import validateConfig from "./config/ApolloOfflineClientConfigValidator";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
 import { OffixScheduler } from "offix-scheduler";
 import { CachePersistor } from "apollo-cache-persist";
@@ -23,6 +22,7 @@ import { NetworkStatus } from "offix-offline";
 import { ObjectState, ConflictListener } from "offix-conflicts-client";
 import { ApolloOfflineClientOptions, InputMapper } from "./config/ApolloOfflineClientOptions";
 import { ApolloOfflineClientConfig } from "./config/ApolloOfflineClientConfig";
+import { validateConfig } from "./config/ApolloOfflineClientConfigValidator";
 
 export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
 

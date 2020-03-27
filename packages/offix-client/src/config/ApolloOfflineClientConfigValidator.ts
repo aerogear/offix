@@ -1,7 +1,7 @@
 import { ApolloOfflineClientConfig } from "./ApolloOfflineClientConfig";
 import { ConfigError } from "./ConfigError";
 
-export default function(config: ApolloOfflineClientConfig) {
+export function validateConfig(config: ApolloOfflineClientConfig) {
     checkFields(config, [
         "cacheStorage", "offlineStorage", "conflictListener", "cache"
     ]);

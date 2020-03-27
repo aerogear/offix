@@ -1,10 +1,10 @@
 import "fake-indexeddb/auto";
 import "cross-fetch/polyfill";
-import validateConfig from "../src/config/ApolloOfflineClientConfigValidator";
 import { ApolloOfflineClientConfig } from "../src/config/ApolloOfflineClientConfig";
 import { ApolloOfflineClientOptions } from "../src/config/ApolloOfflineClientOptions";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { HttpLink } from "apollo-link-http";
+import { validateConfig } from "../src/config/ApolloOfflineClientConfigValidator";
 
 test("ApolloOfflineClientConfig Merges defaults with user config", () => {
 
