@@ -11,7 +11,7 @@ function checkFields(obj: any, fields: string[]) {
     fields.forEach((fieldName) => {
         if (obj[fieldName] === undefined) {
             throw new ConfigError(
-                `Offix client config error: ${fieldName} is required`, 
+                `Offix client config error: ${fieldName} is required`,
                 fieldName
             );
         }
