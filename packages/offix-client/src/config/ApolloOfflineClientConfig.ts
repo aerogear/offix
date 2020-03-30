@@ -21,7 +21,7 @@ import { CachePersistor } from "apollo-cache-persist";
  * Class for managing user and default configuration.
  * Default config is applied on top of user provided configuration
  */
-export class ApolloOfflineClientConfig implements ApolloOfflineClientOptions {
+export class ApolloOfflineClientConfig {
   public httpUrl?: string;
   public offlineQueueListener?: ApolloOfflineQueueListener;
   public conflictStrategy: ConflictResolutionStrategy;
