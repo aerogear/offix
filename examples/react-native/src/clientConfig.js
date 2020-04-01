@@ -3,11 +3,14 @@ import { split } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
+import AsyncStorage from '@react-native-community/async-storage';
+import { Platform } from 'react-native';
 import { ReactNativeNetworkStatus } from './helpers/ReactNativeNetworkStatus';
-import AsyncStorage from '@react-native-community/async-storage'
+
+const appDomain = (Platform.IOS) ? 'localhost:4000' : '192.168.1.10:4000';
 
 const wsLink = new WebSocketLink({
-  uri: 'ws://192.168.1.10:4000/graphql',
+  uri: `ws://${appDomain}/graphql`,
   options: {
     reconnect: true,
     lazy: true,
@@ -15,7 +18,7 @@ const wsLink = new WebSocketLink({
 });
 
 const httpLink = new HttpLink({
-  uri: 'http://192.168.1.10:4000/graphql',
+  uri: `http://${appDomain}/graphql`,
 });
 
 const link = split(
