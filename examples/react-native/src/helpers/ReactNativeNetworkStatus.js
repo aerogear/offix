@@ -8,6 +8,7 @@ import NetInfo from "@react-native-community/netinfo";
 export class ReactNativeNetworkStatus {
 
   listeners = [];
+  prevState = null;
 
   constructor() {
     NetInfo.addEventListener(this.handleNetworkStatusChange.bind(this));
@@ -34,8 +35,13 @@ export class ReactNativeNetworkStatus {
 
   handleNetworkStatusChange(state) {
     const online = state.isInternetReachable;
-    this.listeners.forEach((listener) => {
-      listener({ online });
-    });
+    // Workaround for Netinfo listener being
+    // called twice
+    if (online !== this.prevState) {
+      this.prevState = online;
+      this.listeners.forEach((listener) => {
+        listener({ online });
+      });
+    }
   }
 }
