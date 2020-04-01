@@ -11,13 +11,19 @@ export const TodoContent = ({ todo, editTodo, deleteTodo, toggleEdit }) => {
         ...todo,
         completed: !todo.completed,
       },
-    });
+    }).then(res => console.log(res))
+    .catch(error => console.log(error));
   };
 
   const handleDelete = (e) => {
     e.preventDefault();
     // execute mutation
-    deleteTodo({ variables: todo });
+    deleteTodo({ 
+      variables: {
+        ...todo
+      } 
+    }).then(res => console.log(res))
+    .catch(error => console.log(error));
   };
 
   return (
