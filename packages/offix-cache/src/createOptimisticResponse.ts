@@ -63,7 +63,7 @@ export const createOptimisticResponse = (options: OptimisticOptions) => {
     ...mappedVariables,
     optimisticResponse: true
   };
-  if (operationType === CacheOperation.ADD) {
+  if (operationType === CacheOperation.ADD && !optimisticResponse[operation][idField]) {
     optimisticResponse[operation][idField] = generateClientId();
   }
 
