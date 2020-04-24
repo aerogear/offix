@@ -28,6 +28,37 @@ test("check that createNewOptimisticResponse is properly composed with name prop
   expect(result.createItem.name).toBe("test");
 });
 
+test("ids are not overwritten for add operations if one is supplied", () => {
+  const options: OptimisticOptions = {
+    mutation: CREATE_ITEM,
+    operationType: CacheOperation.ADD,
+    returnType: "Test",
+    variables: {
+      id: "123",
+      name: "test"
+    }
+  };
+  const result = createOptimisticResponse(options);
+  expect(result.createItem.id).toBe("123");
+  expect(result.createItem.name).toBe("test");
+});
+
+test("ids are not overwritten for add operations if one is supplied", () => {
+  const options: OptimisticOptions = {
+    mutation: CREATE_ITEM,
+    operationType: CacheOperation.ADD,
+    idField: "customId",
+    returnType: "Test",
+    variables: {
+      customId: "123",
+      name: "test"
+    }
+  };
+  const result = createOptimisticResponse(options);
+  expect(result.createItem.customId).toBe("123");
+  expect(result.createItem.name).toBe("test");
+});
+
 test("check that createNewOptimisticResponse is without id", () => {
   const options: OptimisticOptions = {
     mutation: CREATE_ITEM,
