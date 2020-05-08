@@ -1,8 +1,7 @@
 ---
-id: version-0.12.0-angular
 title: Angular
 sidebar_label: Angular
-original_id: angular
+id: angular
 ---
 
 Offix does not provide a specific API for Angular,

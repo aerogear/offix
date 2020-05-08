@@ -1,8 +1,7 @@
 ---
-id: version-0.12.0-getting-started
 title: Getting Started
 sidebar_label: Getting Started
-original_id: getting-started
+id: getting-started
 ---
 
 Offix can be used with existing Apollo GraphQL applications as an extension to the Apollo Client.

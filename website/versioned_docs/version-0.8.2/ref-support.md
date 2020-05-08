@@ -1,8 +1,7 @@
 ---
-id: version-0.8.2-support
 title: Support
 sidebar_label: Support
-original_id: support
+id: support
 ---
 
 Following extension is supported by Apollo GraphQL community.

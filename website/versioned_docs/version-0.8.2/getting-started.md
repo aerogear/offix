@@ -1,8 +1,7 @@
 ---
-id: version-0.8.2-getting-started
 title: Getting Started
 sidebar_label: Getting Started
-original_id: getting-started
+id: getting-started
 ---
 
 ## Importing the package

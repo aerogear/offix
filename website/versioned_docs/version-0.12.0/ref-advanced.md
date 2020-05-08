@@ -1,8 +1,7 @@
 ---
-id: version-0.12.0-cookbooks
 title: Cookbooks
 sidebar_label: Offline Cookbook
-original_id: cookbooks
+id: cookbooks
 ---
 
 

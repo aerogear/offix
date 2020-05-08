@@ -1,8 +1,7 @@
 ---
-id: version-0.12.0-android
 title: Android
 sidebar_label: Android
-original_id: android
+id: android
 ---
 
 Offix supports Android platform by seprate project called Offix Android. 
