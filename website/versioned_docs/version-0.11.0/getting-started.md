@@ -1,7 +1,7 @@
 ---
+id: getting-started
 title: Getting Started
 sidebar_label: Getting Started
-id: getting-started
 ---
 
 ## Install Offix
@@ -18,15 +18,14 @@ Or [yarn](https://yarnpkg.com/en/package/offix-client):
 yarn add offix-client
 ```
 
-## Creating the Client
+## Importing the package
 
 ```javascript
 import { ApolloOfflineClient } from 'offix-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { HttpLink } from "apollo-link-http";
 
 const config = {
-  link: new HttpLink({ uri: 'http://example.com/graphql' })
+  httpUrl: 'http://localhost:4000/graphql',
   cache: new InMemoryCache()
 };
 
