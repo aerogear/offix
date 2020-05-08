@@ -6,9 +6,9 @@ module.exports = {
   tagline: 'Offix extends Apollo GraphQL for building fully featured offline experiences.',
   url: 'https://offix.dev',
   baseUrl: '/',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/offix-logo.png',
   organizationName: 'aerogear', // Usually your GitHub org/user name.
-  projectName: 'graphback', // Usually your repo name.
+  projectName: 'offix', // Usually your repo name.
   themeConfig: {
     disableDarkMode: true,
     prism: {
