@@ -1,7 +1,7 @@
 ---
+id: conflict-client
 title: Client Side Conflict Resolution
 sidebar_label: Conflicts Client
-id: conflict-client
 ---
 
 When performing data synchronization between multiple clients it is common for remote devices to become offline for a certain amount of time. As a result of being offline, data that is modified by a client can become outdated with the server. Further operations on that record can cause a conflict (often called a collision). For more information about offline workflows, please see [Offline Support](ref-offline.md)
@@ -9,17 +9,17 @@ When performing data synchronization between multiple clients it is common for r
 Offix provides a way to manage and resolve these conflicts for any GraphQL type.
 Conflict implementation will require additional elements in your application in order to work:
 
-- Mutation `returnType` added on context to any mutation
-- Additional metadata inside types (for example version field) depending on conflict implementation
+ - Mutation `returnType` added on context to any mutation
+ - Additional metadata inside types (for example version field) depending on conflict implementation 
 
 Conflict mechanism is divided between:
 
 - Conflict detection
-  Developers can detect conflicts on resolver level
-- Conflict resolution
-  Conflicts are sent back to client and resolved by resending data back to server.
+Developers can detect conflicts on resolver level
+- Conflict resolution 
+Conflicts are sent back to client and resolved by resending data back to server.
 
-Offix allows developers to detect and resolve conflict without user interactions.
+Offix allows developers to detect and resolve conflict without user interactions. 
 By default when no changes were made on the same fields, the implementation will try to resend the modified payload back to the server. When changes on the server and the client cover the same fields one of the specified conflict resolution strategies can be used. The default strategy will apply client changes on top of the server side.
 Developers can modify strategies to suit their needs.
 
@@ -29,7 +29,7 @@ To enable conflict resolution we fist need to configure our server side resolver
 
 The client will then automatically resolve them based on the current strategy and notify listeners if the developer supplied any.
 
-Conflict resolution will work out of the box with the recommended defaults and does not require any specific handling on the client.
+Conflict resolution will work out of the box with the recommended defaults and does not require any specific handling on the client. 
 
 > For advanced use cases developers may customize their conflict implementation by supplying a custom `conflictProvider` in config. See Conflict Resolution Strategies below.
 
@@ -66,7 +66,7 @@ type Mutation {
 
 ### Custom Conflict implementation by extening ObjectState
 
-Offix enables flexibility on how conflicts are detected and resolved.
+Offix enables flexibility on how conflicts are detected and resolved. 
 In many cases developers may need different ways of detecting conflits than relying on version field
 stored in database. For example if database already have `changedAt` field that is being supported by trigger it can be used as custom conflict implemementation.
 

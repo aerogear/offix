@@ -1,7 +1,7 @@
 ---
+id: offline-client
 title: Offline Support
 sidebar_label: Offline Client
-id: offline-client
 ---
 
 Offix provides first class support for performing GraphQL operations while offline. Mutations are held in a queue that is configured to hold requests while the client is offline. When the client goes offline for long periods of time they will still be able negotiate local updates with the server state thanks to powerful conflict resolution strategies.
@@ -18,7 +18,7 @@ Because of this, when mutations that can change query results are performed, the
 
 Offix makes your cache simple to manage, with out of the box cache helpers in `offix-cache` or by automatically wrapping these helpers in offix-client through the `OfflineClient` class.
 
-To use the `offlineMutate` function, we first need to create our `MutationHelperOptions` object. This is an extension of Apollo's MutationOptions.
+To use the `offlineMutation` function, we first need to create our `MutationHelperOptions` object. This is an extension of Apollo's MutationOptions.
 
 ```javascript
 const { CacheOperation } = require('offix-cache');
@@ -54,13 +54,13 @@ const mutationOptions = {
 };
 ```
 
-We then simply pass this object to `offlineMutate` and our cache is automatically kept up to date.
+We then simply pass this object to `offlineMutation` and our cache is automatically kept up to date.
 
 ```javascript
-client.offlineMutate(mutationOptions);
+client.offlineMutation(mutationOptions);
 ```
 
-If you do not wish to use the `offlineMutate` function you can also use the `createMutationOptions` function directly. This function provides an Apollo compatible `MutationOptions` object to pass to your pre-existing client.
+If you do not wish to use the `offlineMutation` function you can also use the `createMutationOptions` function directly. This function provides an Apollo compatible `MutationOptions` object to pass to your pre-existing client.
 This is shown below where `mutationOptions` is the same object shown in the above code example.
 
 ```javascript
@@ -103,11 +103,11 @@ const updateFunctions = {
   // Can contain update functions from each component
   ...ItemUpdates,
   ...TasksUpdates
-};
+}
 
 let config = {
-  mutationCacheUpdates: updateFunctions
-};
+  mutationCacheUpdates: updateFunctions,
+}
 ```
 
 ## Making modifications when offline
@@ -117,6 +117,17 @@ By default queue saves data in storage to be available after application restart
 Queue will hold requests until application will come back online.
 
 Developers can adjust how queue will process new mutations by supplying custom `NetworkStatus` implementation.
+
+### Online Only Mutations
+
+To ensure certain mutations are not queued and are always delivered to the network layer, you must make use of Graphql directives.
+To do so on your client, ensure the mutation has the annotation attached like so:
+
+```javascript
+exampleMutation(...) @onlineOnly {
+  ...
+}
+```
 
 ## Listening for Events
 
@@ -142,14 +153,10 @@ when performing queries. This policy will try to use local cache in
 situations when cache was already populated with the server side data.
 
 ```javascript
-return (
-  this.apollo.watchQuery <
-  YourType >
-  {
-    query: YOUR_QUERY,
-    fetchPolicy: 'cache-first'
-  }
-);
+    return this.apollo.watchQuery<YourType>({
+      query: YOUR_QUERY,
+      fetchPolicy: 'cache-first',
+    });
 ```
 
 Cache is going to be refueled by subscriptions, pooling or regular queries happening in UI.
