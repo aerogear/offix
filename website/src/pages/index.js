@@ -4,7 +4,8 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
 import { Hero } from '../components/Hero';
 import { Introduction } from '../components/Introduction';
-import { Features } from '../components/Features/index';
+import { Features } from '../components/Features';
+import { Highlight } from '../components/Highlight';
 import { Video } from '../components/Video';
 
 export default function Home() {
@@ -19,16 +20,7 @@ export default function Home() {
       <Hero siteConfig={siteConfig} />
       <Introduction />
       <Features />
-      <div style={{
-        height: '100vh',
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        background: '#FFA939'
-      }}>
-        <h1 className="gradient--text">Some text here</h1>
-      </div>
+      <Highlight />
       <Video />
     </Layout>
   );
