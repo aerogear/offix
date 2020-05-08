@@ -1,0 +1,155 @@
+/* stylelint-disable docusaurus/copyright-header */
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #006d8b;
+  --ifm-color-primary-dark: #008cb2;
+  --ifm-color-primary-darker: #0085a8;
+  --ifm-color-primary-darkest: #006d8b;
+  --ifm-color-primary-light: #00acda;
+  --ifm-color-primary-lighter: #00b3e4;
+  --ifm-color-primary-lightest: #02c9ff;
+  --ifm-code-font-size: 95%;
+}
+
+#__docusaurus {
+  position: relative;
+}
+
+.docusaurus-highlight-code-line {
+  background-color: rgb(72, 77, 91);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}
+
+.navbar {
+  box-shadow: none;
+}
+
+.button--rounded {
+  border-radius: 2rem;
+}
+
+.hero .hero__title {
+  opacity: 0;
+  line-height: 7rem;
+  font-weight: 900;
+  color: #fff ;
+  background: linear-gradient(60deg, #f99f37, #f47d20, #f16223);
+  font-size: 8rem;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  /* transform: translateX(-100px); */
+  /* font-size: 5rem !important; */
+}
+
+.gradient--text {
+  font-size: 8rem;
+  /* background: linear-gradient(60deg, #f99f37, #f47d20, #f16223); */
+  color: #fff;
+}
+
+.hero__subtitle {
+  opacity: 0;
+  font-size: 3rem;
+  font-weight: 600;
+  transform: translateX(50px);
+
+  /* font-size: 5rem !important; */
+}
+
+.hide-modal {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.card-anchor {
+  color: #222;
+}
+
+.card-ancher:hover {
+  text-decoration: none;
+}
+
+a.card-anchor:hover > .card-demo > .card {
+  border: transparent;
+  box-shadow: 0 1px 2px -2px rgba(0, 0, 0, 0.16), 0 3px 6px 0 rgba(0, 0, 0, 0.12), 0 5px 12px 4px rgba(0, 0, 0, 0.09);
+}
+
+.footer.footer--dark {
+  background: #00003C !important;
+}
+
+.opacity-zero {
+  opacity: 0;
+}
+
+.slideInLeft {
+  -webkit-animation: slideinleft ease-in 0.6s; /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: slideinleft ease-in 0.6s; /* Firefox < 16 */
+  -ms-animation: slideinleft ease-in 0.6s; /* Internet Explorer */
+  -o-animation: slideinleft ease-in 0.6s; /* Opera < 12.1 */
+  animation: slideinleft ease-in 0.6s;
+}
+
+.flex {
+  display: flex;
+}
+
+.v-center {
+  justify-content: center;
+}
+
+.h-center {
+  align-items: center;
+}
+
+.container-deux {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@keyframes slideinleft {
+  from { 
+    transform: translateX(-50rem);
+  }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes slideinleft {
+  from { 
+    transform: translateX(-50rem);
+  }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes slideinleft {
+  from { 
+    transform: translateX(-50rem);
+  }
+}
+
+/* Internet Explorer */
+@-ms-keyframes slideinleft {
+  from { 
+    transform: translateX(-50rem);
+  }
+}
+
+/* Opera < 12.1 */
+@-o-keyframes slideinleft {
+  from { 
+    transform: translateX(-50rem);
+  }
+}
