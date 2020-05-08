@@ -1,10 +1,9 @@
 import React, { useRef, useEffect } from 'react';
-import classnames from 'classnames';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import Link from '@docusaurus/Link';
-import styles from './styles.module.css';
 import { animations } from './animations';
-
+import { Header, HeaderImage, Title, SubTitle, CTA } from './styled.components';
+import { Container } from '../UI';
 
 export function Hero({ siteConfig }) {
   const logo = useRef();
@@ -20,30 +19,21 @@ export function Hero({ siteConfig }) {
   });
 
   return (
-    <header className={classnames('hero hero--primary', styles.heroBanner, styles.heroGraphback)}>
-      <div className="container">
-        <div className="row">
-          <div className="col col--6 col--offset-3 text--center">
-            <div>
-              <div ref={logo} className={styles.heroImage}>
-                <img src="/img/offix-logo.png" alt="logo" />
-              </div>
-              <p ref={title} className="hero__title">Offix</p>
-              <p ref={tagline} className="hero__subtitle">{siteConfig.tagline}</p>
-              <div ref={cta} className={styles.buttons}>
-                <Link
-                  className={classnames(
-                    'button button--primary button--lg button--rounded',
-                    styles.getStarted,
-                  )}
-                  to={useBaseUrl('docs/getting-started')}>
-                  Get Started
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
+    <Header>
+      <Container style={{ marginTop: '-60px' }}>
+        <HeaderImage ref={logo}>
+          <img src="/img/offix-logo.png" alt="logo" />
+        </HeaderImage>
+        <Title ref={title}>Offix</Title>
+        <SubTitle ref={tagline}>{siteConfig.tagline}</SubTitle>
+        <CTA ref={cta}>
+          <Link
+            className="button button--primary button--lg button--rounded"
+            to={useBaseUrl('docs/getting-started')}>
+            Get Started
+          </Link>
+        </CTA>
+      </Container>
+    </Header>
   );
 }
