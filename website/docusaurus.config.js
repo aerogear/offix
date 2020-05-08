@@ -2,7 +2,7 @@
 const versions = require('./versions.json');
 
 module.exports = {
-  title: 'Graphback',
+  title: 'Offix',
   tagline: 'Offix extends Apollo GraphQL for building fully featured offline experiences.',
   url: 'https://offix.dev',
   baseUrl: '/',
