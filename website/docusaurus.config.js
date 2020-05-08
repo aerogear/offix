@@ -13,7 +13,6 @@ module.exports = {
     disableDarkMode: true,
     prism: {
       theme: require('prism-react-renderer/themes/github'),
-      // darkTheme: require('prism-react-renderer/themes/dracula'),
       defaultLanguage: 'javascript',
     },
     navbar: {
@@ -56,11 +55,31 @@ module.exports = {
       ],
     },
     footer: {
-      // style: 'dark',
       links: [
         {
           title: 'Docs',
-          items: [],
+          items: [
+            {
+              label: 'Getting Started',
+              to: 'docs/getting-started',
+            },
+            {
+              label: 'Offix Client',
+              to: 'docs/offline-client',
+            },
+            {
+              label: 'Platforms',
+              to: 'docs/react',
+            },
+            {
+              label: 'Advanced Topics',
+              to: 'docs/cookbooks',
+            },
+            {
+              label: 'Releases',
+              to: 'docs/release-notes',
+            },
+          ],
         },
         {
           title: 'Community',
