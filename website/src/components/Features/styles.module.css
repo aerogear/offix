@@ -1,0 +1,117 @@
+/* stylelint-disable docusaurus/copyright-header */
+/**
+ * CSS files with the .module.css suffix will be treated as CSS modules
+ * and scoped locally.
+ */
+
+.splitContainer {
+  height: 450vh;
+  width: 100%;
+  display: block;
+}
+
+.leftSplit,
+.rightSplit {
+  padding-left: var(--ifm-spacing-horizontal);
+  padding-right: var(--ifm-spacing-horizontal);
+}
+
+.leftSplit {
+  height: 100vh;
+  width: 50%;
+  float: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1B1E59;
+  color: #fff;
+  /* padding: ; */
+}
+
+.featureSticky {
+  position: sticky;
+  top: 0;
+}
+
+.stickyContent {
+  max-width: calc(var(--ifm-container-width)/3);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.rightSplit {
+  float: right;
+  width: 50%;
+  /* background-image: linear-gradient(150deg, #686BA6, #1B1E59) */
+  background-image: linear-gradient(150deg, #e535ab, #1B1E59)
+}
+
+.splitRow {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: calc(var(--ifm-container-width)/3);
+  margin-left: auto;
+  margin-right: auto;
+  color: #fff;
+}
+
+.splitRow.before,
+.splitRow.after {
+  height: 75vh;
+}
+
+@media screen and (max-width: 966px) {
+  .splitContainer {
+    height: 100%;
+  }
+  .leftSplit, .rightSplit {
+    width: 100%;
+  }
+
+  .leftSplit, .splitRow {
+    height: 50vh;
+  }
+
+  .splitRow.before,
+  .splitRow.after {
+    display: none;
+    height: 25vh;
+  }
+
+}
+
+.circle {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* color: '#fff'; */
+  background: #f2f2f2;
+  /* border: #2a2a2a 1px solid; */
+  /* box-shadow: 
+    0 1px 2px -2px rgba(0, 0, 0, 0.16), 
+    0 1px 2px -2px rgba(0, 0, 0, 0.16), 
+    0 3px 6px 0 rgba(0, 0, 0, 0.12), 
+    0 5px 12px 4px rgba(0, 0, 0, 0.09); */
+}
+
+.featureImage {
+  height: 200px;
+  width: 200px;
+  margin-bottom: 1rem;
+}
+
+.featureTitle {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.featureContent {
+  /* padding: 1.5em; */
+  margin: 0 auto;
+  max-width: 75%;
+}
