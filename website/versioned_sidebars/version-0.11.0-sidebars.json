@@ -1,26 +1,26 @@
 {
-  "version-0.11.0-docs": {
+  "version-0.11.0/docs": {
     "Getting Started": [
-      "version-0.11.0-getting-started",
-      "version-0.11.0-client-configuration"
+      "version-0.11.0/getting-started",
+      "version-0.11.0/client-configuration"
     ],
     "OffixClient": [
-      "version-0.11.0-offline-client",
-      "version-0.11.0-offix-cache",
-      "version-0.11.0-conflict-client",
-      "version-0.11.0-conflict-server"
+      "version-0.11.0/offline-client",
+      "version-0.11.0/offix-cache",
+      "version-0.11.0/conflict-client",
+      "version-0.11.0/conflict-server"
     ],
     "Platforms": [
-      "version-0.11.0-react",
-      "version-0.11.0-react-native",
-      "version-0.11.0-ionic",
-      "version-0.11.0-android"
+      "version-0.11.0/react",
+      "version-0.11.0/react-native",
+      "version-0.11.0/ionic",
+      "version-0.11.0/android"
     ],
     "Advanced topics": [
-      "version-0.11.0-offix-scheduler-introduction"
+      "version-0.11.0/offix-scheduler-introduction"
     ],
     "Releases": [
-      "version-0.11.0-release-notes"
+      "version-0.11.0/release-notes"
     ]
   }
 }
