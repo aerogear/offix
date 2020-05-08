@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <Layout
       title={siteConfig.title}
-      description="Graphback <head />"
+      description="Offix <head />"
     > 
       <Hero siteConfig={siteConfig} />
       <Video />
