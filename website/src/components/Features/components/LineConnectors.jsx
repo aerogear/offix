@@ -1,38 +1,22 @@
 import React from 'react';
 import { gsap } from 'gsap';
 import { ScrollScene } from 'scrollscene';
+import { SVG } from './styled.components';
+import { useWindowSize } from '../../useWindowSize';
 
-const SVGLine = React.forwardRef(({ x1, x2, y1, y2 }, ref) => {
-  return (
-    <line
-      ref={ref}
-      x1={x1}
-      x2={x2}
-      y1={y1}
-      y2={y2}
-      stroke="#222"
-    />
-  );
-});
-
-export function LineConnectors({ refs, lineRefs }) {
-
-  const [allRefs, setAllRefs] = React.useState([]);
-
-  React.useEffect(() => {
-    setAllRefs(refs);
-  }); 
-
+function useLineAnimation({ lineRefs }) {
   React.useEffect(() => {
     const trigger = document.getElementById('features');
     const timeline = gsap.timeline({ paused: true, duration: 300 });
 
     lineRefs.forEach((ref, index) => {
-      timeline.from(ref.current, {
-        opacity: 0,
-        delay: index * 100,
-        duration: 250
-      });
+      if (ref && ref.current) {
+        timeline.from(ref.current, {
+          opacity: 0,
+          delay: index * 100,
+          duration: 250
+        });
+      }
     });
 
     new ScrollScene({
@@ -44,37 +28,38 @@ export function LineConnectors({ refs, lineRefs }) {
         timeline,
       },
     });
-  });
+  })
+}
+
+const Line = React.forwardRef(({ p1, p2 }, ref) => { 
+  const x1 = p1.offsetLeft + (p1.offsetWidth/2);
+  const x2 = p2.offsetLeft + (p2.offsetWidth/2);
+  const y1 = p1.offsetTop - (p1.offsetHeight/2);
+  const y2 = p2.offsetTop - (p2.offsetHeight/2);
+  return <line ref={ref} x1={x1} x2={x2} y1={y1} y2={y2} stroke="#222" />
+});
+
+export function LineConnectors({ refs, lineRefs }) {
+
+  const [allRefs, setAllRefs] = React.useState([]);
+  useLineAnimation({ lineRefs });
+  useWindowSize();
+
+  React.useEffect(() => {
+    setAllRefs(refs);
+  }); 
 
   return (
-    <svg
-      style={{ 
-        margin: '0 auto',
-        height: '100%',
-        width: '100%',
-        position: 'absolute',
-        top: '30vh',
-        left: 0,
-        zIndex: -1
-      }}
-    >
+    <SVG>
       {
         allRefs && allRefs.length && (
           allRefs.map(({ current }, index) => {
             const next = allRefs[index+1];
             if (!current || next === undefined) return null;
-            const { offsetLeft: x1, offsetTop: y1 } = current;
-            const { offsetLeft: x2, offsetTop: y2 } = next.current;
-            return <SVGLine 
-              key={index}
-              ref={lineRefs[index]}
-              x1={x1 + (current.offsetWidth/2)} 
-              x2={x2 + (next.current.offsetWidth/2)} 
-              y1={y1 - (current.offsetHeight/2)} 
-              y2={y2 - (next.current.offsetHeight/2)} />;
+            return <Line key={index} ref={lineRefs[index]} p1={current} p2={next.current}/>;
           })
         )
       }
-    </svg>
+    </SVG>
   );
 };
