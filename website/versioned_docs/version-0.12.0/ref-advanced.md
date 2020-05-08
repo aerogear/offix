@@ -1,7 +1,7 @@
 ---
+id: cookbooks
 title: Cookbooks
 sidebar_label: Offline Cookbook
-id: cookbooks
 ---
 
 

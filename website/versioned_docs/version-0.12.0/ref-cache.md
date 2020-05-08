@@ -1,7 +1,7 @@
 ---
+id: offix-cache
 title: Offix Cache
 sidebar_label: Client Cache
-id: offix-cache
 ---
 
 The `offix-cache` package helps developers to manage some of their client's state such as cache, optimistic responses and subscriptions.
