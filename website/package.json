@@ -10,15 +10,10 @@
   "dependencies": {
     "@docusaurus/core": "^2.0.0-alpha.50",
     "@docusaurus/preset-classic": "^2.0.0-alpha.50",
-    "classnames": "^2.2.6",
     "gsap": "^3.2.6",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
-    "react-gsap": "^2.0.3",
-    "react-lineto": "^3.2.0",
-    "react-scrollmagic": "^2.2.0",
-    "scrollmagic": "^2.0.7",
     "scrollscene": "^0.0.16",
-    "waypoints": "^4.0.1"
+    "styled-components": "^5.1.0"
   }
 }
