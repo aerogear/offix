@@ -1,16 +1,16 @@
 {
-  "version-0.10.0-docs": {
+  "version-0.10.0/docs": {
     "Offix Client": [
-      "version-0.10.0-getting-started",
-      "version-0.10.0-client-configuration",
-      "version-0.10.0-offline-client",
-      "version-0.10.0-offix-cache",
-      "version-0.10.0-conflict-client",
-      "version-0.10.0-conflict-server",
-      "version-0.10.0-release-notes"
+      "version-0.10.0/getting-started",
+      "version-0.10.0/client-configuration",
+      "version-0.10.0/offline-client",
+      "version-0.10.0/offix-cache",
+      "version-0.10.0/conflict-client",
+      "version-0.10.0/conflict-server",
+      "version-0.10.0/release-notes"
     ],
     "Offix Scheduler": [
-      "version-0.10.0-offix-scheduler-introduction"
+      "version-0.10.0/offix-scheduler-introduction"
     ]
   }
 }
