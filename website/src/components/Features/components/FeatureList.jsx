@@ -2,17 +2,12 @@ import React from 'react';
 import { gsap } from 'gsap';
 import { ScrollScene } from 'scrollscene';
 
-import { Flex } from '../../Flex';
-import { ImageWrapper } from './ImageWrapper';
-import { ContentWrapper } from './ContentWrapper';
+import { FeatureImage } from './FeatureImage';
+import { FeatureContent } from './FeatureContent';
+import { Row } from '../../UI';
+import { FeatureColumn } from './styled.components';
 
-const Feature = React.forwardRef((props, ref) => {
-  const { index } = props;
-
-  const left = React.useRef();
-  const right = React.useRef();
-  const trigger = React.useRef();
-
+function useFeatureAnimation({ left, right, trigger }) {
   React.useEffect(() => {
     const timeline = gsap.timeline({ paused: true });
 
@@ -31,36 +26,27 @@ const Feature = React.forwardRef((props, ref) => {
         timeline,
       },
     });
-
   });
+}
+
+const Feature = React.forwardRef((props, ref) => {
+  const { index } = props;
+
+  const left = React.useRef();
+  const right = React.useRef();
+  const trigger = React.useRef();
+
+  useFeatureAnimation({ left, right, trigger });
 
   return (
-    <>
-      <div className="row" ref={trigger}>
-        <div className="col col--6">
-          <Flex height="40vh">
-            <div ref={left} style={{ opacity: 0 }} >
-              { 
-                index%2 ==0 
-                  ? <ImageWrapper {...props} ref={ref} /> 
-                  : <ContentWrapper {...props} /> 
-              }
-            </div>
-          </Flex>
-        </div>  
-        <div className="col col--6">
-          <Flex height="40vh">
-            <div ref={right} style={{ opacity: 0 }} >
-              { 
-                index%2 !=0 
-                  ? <ImageWrapper {...props} ref={ref} /> 
-                  : <ContentWrapper {...props} /> 
-              }
-            </div>
-          </Flex>
-        </div>
-      </div>
-    </>
+    <Row ref={trigger}>
+      <FeatureColumn type="image" index={index} ref={left}>
+        <FeatureImage {...props} ref={ref} />
+      </FeatureColumn>
+      <FeatureColumn index={index} ref={right}>
+        <FeatureContent {...props} /> 
+      </FeatureColumn>
+    </Row>
   );
 });
 

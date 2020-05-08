@@ -1,6 +1,8 @@
 import React from 'react';
 
+import { Container } from '../UI';
 import { features } from './features';
+import { Section } from './styled.components';
 import { FeaturesHeader, FeatureList, LineConnectors } from './components';
 
 export function Features() {
@@ -9,17 +11,13 @@ export function Features() {
   const lineRefs = features.map(() => React.createRef());
 
   return (
-    <div style={{ 
-      position: 'relative', 
-      minHeight: '300vh', 
-      width: '100%', 
-    }}>
-      <div className="container-deux">
+    <Section>
+      <Container maxWidth="1400px">
         <FeaturesHeader />
         <div id="features"></div> {/* Scroll scene trigger point for scroll event */}
         <FeatureList refs={refs} lineRefs={lineRefs} features={features} />
         <LineConnectors refs={refs} lineRefs={lineRefs} />
-      </div>
-    </div>
+      </Container>
+    </Section>
   );
 }

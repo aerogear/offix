@@ -1,6 +1,6 @@
-export { ContentWrapper } from './ContentWrapper';
+export { FeatureContent } from './FeatureContent';
 export { FeaturesHeader } from './FeaturesHeader';
 export { FeatureList } from './FeatureList';
-export { ImageWrapper } from './ImageWrapper';
+export { FeatureImage } from './FeatureImage';
 export { LineConnectors } from './LineConnectors';
 
