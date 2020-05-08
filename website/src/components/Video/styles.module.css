@@ -1,0 +1,131 @@
+/* stylelint-disable docusaurus/copyright-header */
+/**
+ * CSS files with the .module.css suffix will be treated as CSS modules
+ * and scoped locally.
+ */
+
+.close {
+  position: fixed;
+  z-index: 13;
+  top: calc(60px + 1rem);
+  right: 1rem;
+  color: #fff !important;
+  text-decoration: underline;
+}
+
+.videoSection { 
+  height: 100vh; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background: #f5f5f5; */
+}
+
+.youtubeWrapper { 
+  position: relative; 
+  width: 75%; 
+  /* height: 100%;  */
+  padding-top: 25px; 
+  padding-bottom: 50%;
+  margin: 0 auto;
+}
+
+.youtubeIFrame {
+  border: 2px solid #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 70%;
+  width: 70%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.modalBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 11;
+  background: rgba(0,0,0,0.9);
+}
+
+.modalWindow {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  -webkit-transition: opacity 1.0s ease-in, visibility 1.0s ease-in;
+       -moz-transition: opacity 1.0s ease-in, visibility 1.0s ease-in;
+         -o-transition: opacity 1.0s ease-in, visibility 1.0s ease-in;
+            transition: opacity 1.0s ease-in, visibility 1.0s ease-in;
+}
+
+.modalContent {
+  position: sticky;
+  z-index: 12;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.videoComponent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 800px;
+  height: 500px;
+  margin: 0 auto;
+  /* background: 
+    #222,
+    url('/img/offix-background.png') cover
+  ; */
+  background:   
+    linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+    url(/img/offix-background.png);
+  border-radius: 1rem;
+  box-shadow: 
+    0 1px 2px -2px rgba(0, 0, 0, 0.16), 
+    0 3px 6px 0 rgba(0, 0, 0, 0.12), 
+    0 5px 12px 4px rgba(0, 0, 0, 0.09);
+}
+
+.play {
+  width: 35%;
+}
+
+.subtitle {
+  font-size: 3rem;
+  font-weight: 900;
+}
+
+@media screen and (max-width: 966px) {
+  .youtubeWrapper {
+    width: 90%;    
+  }
+
+  .youtubeIFrame {
+    height: 100%;
+    width: 100%;
+  }
+
+  .videoComponent {
+    width: 480px;
+    height: 300px;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .videoComponent {
+    width: 320px;
+    height: 200px;
+  }
+
+  .subtitle {
+    font-size: 1.5rem;
+  }
+}
