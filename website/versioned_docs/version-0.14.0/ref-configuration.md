@@ -1,7 +1,7 @@
 ---
+id: client-configuration
 title: Client Configuration
 sidebar_label: Client Configuration
-id: client-configuration
 ---
 
 ## offix-client
