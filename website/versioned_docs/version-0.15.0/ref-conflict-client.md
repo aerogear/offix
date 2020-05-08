@@ -1,8 +1,7 @@
 ---
-id: version-0.15.0-conflict-client
+id: conflict-client
 title: Client Side Conflict Resolution
 sidebar_label: Conflicts Client
-original_id: conflict-client
 ---
 
 When performing data synchronization between multiple clients it is common for remote devices to become offline for a certain amount of time. As a result of being offline, data that is modified by a client can become outdated with the server. Further operations on that record can cause a conflict (often called a collision). For more information about offline workflows, please see [Offline Support](ref-offline.md)
