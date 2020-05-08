@@ -1,33 +1,33 @@
 ---
+id: offix-cache
 title: Offix Cache
 sidebar_label: Client Cache
-id: offix-cache
 ---
 
 The offix-cache package helps developers to manage some of their client's state such as cache, optimistic responses and subscriptions.
 
 ## Optimistic UI
 
-In Apollo Client, mutation results are not applied to the UI until responses are received from the server. To provide a better user experience, an application may want to update the UI immediately. [Optimistic Responses](https://www.apollographql.com/docs/react/api/react-apollo.html#graphql-mutation-options-optimisticResponse 'Optimistic Responses') are an easy to way to achieve this goal. However, creating individual optimistic responses for each mutation in your application can introduce boilerplate code. offix-cache can automatically create optimistic responses for you to reduce this boilerplate.
+In Apollo Client, mutation results are not applied to the UI until responses are received from the server. To provide a better user experience, an application may want to update the UI immediately. [Optimistic Responses](https://www.apollographql.com/docs/react/api/react-apollo.html#graphql-mutation-options-optimisticResponse "Optimistic Responses") are an easy to way to achieve this goal. However, creating individual optimistic responses for each mutation in your application can introduce boilerplate code. offix-cache can automatically create optimistic responses for you to reduce this boilerplate.
 
 The `createOptimisticResponse` function returns an object which can be passed directly to Apollo Client's mutate function. `createOptimisticResponse` will help to build expected response object from input arguments.
 if your mutation returns different values you will still need to build it manually.
 
 ```javascript
-import { createOptimisticResponse } from 'offix-cache';
+import { createOptimisticResponse } from "offix-cache";
 
 const optimisticResponse = createOptimisticResponse({
   mutation: ADD_TASK,
-  variables: { some_key: 'some_value' },
-  operationType: 'add',
-  returnType: 'Task',
-  idField: 'id'
-});
+  variables: { some_key: "some_value"},
+  operationType: "add",
+  returnType: "Task",
+  idField: "id"
+})
 
 apolloClient.mutate({
   mutation: ADD_TASK,
   optimisticResponse: optimisticResponse
-});
+})
 ```
 
 ## Mutation Cache Helpers
@@ -74,9 +74,9 @@ const options = createMutationOptions(mutationOptions);
 apolloClient.mutate(options);
 ```
 
-> NOTE: Cache helpers currently support only GraphQL Queries that return arrays.
-> For example `getUsers():[User]`.
-> When working with single objects returned by Queries we usually do not need use any helper as Query will be updated automatically on every update
+> NOTE: Cache helpers currently support only GraphQL Queries that return arrays. 
+For example `getUsers():[User]`.
+When working with single objects returned by Queries we usually do not need use any helper as Query will be updated automatically on every update
 
 ## Subscription Helpers
 
@@ -91,7 +91,7 @@ const options = {
   subscriptionQuery: TASK_ADDED_SUBSCRIPTION,
   cacheUpdateQuery: GET_TASKS,
   operationType: CacheOperation.ADD
-};
+}
 ```
 
 This options object will be used to inform the subscription helper that for every data object received because of the `TASK_ADDED_SUBSCRIPTION` the `GET_TASKS` query should also be kept up to date in the cache.
@@ -107,12 +107,9 @@ const subscriptionOptions = createSubscriptionOptions(options);
 To use this helper we then pass this `subscriptionOptions` variable to the `subscribeToMore` function of our `ObservableQuery`.
 
 ```javascript
-const query =
-  apolloClient.watchQuery <
-  AllTasks >
-  {
-    query: GET_TASKS
-  };
+const query = apolloClient.watchQuery<AllTasks>({
+  query: GET_TASKS
+});
 
 query.subscribeToMore(subscriptionOptions);
 ```
@@ -130,26 +127,23 @@ const addOptions = {
   subscriptionQuery: TASK_ADDED_SUBSCRIPTION,
   cacheUpdateQuery: GET_TASKS,
   operationType: CacheOperation.ADD
-};
+}
 
 const deleteOptions = {
   subscriptionQuery: TASK_DELETED_SUBSCRIPTION,
   cacheUpdateQuery: GET_TASKS,
   operationType: CacheOperation.DELETE
-};
+}
 
 const updateOptions = {
   subscriptionQuery: TASK_UPDATED_SUBSCRIPTION,
   cacheUpdateQuery: GET_TASKS,
   operationType: CacheOperation.REFRESH
-};
+}
 
-const query =
-  client.watchQuery <
-  AllTasks >
-  {
-    query: GET_TASKS
-  };
+const query = client.watchQuery<AllTasks>({
+  query: GET_TASKS
+});
 
 subscribeToMoreHelper(query, [addOptions, deleteOptions, updateOptions]);
 ```

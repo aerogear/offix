@@ -1,13 +1,15 @@
 ---
+id: getting-started
 title: Getting Started
 sidebar_label: Getting Started
-id: getting-started
 ---
 
 ## Importing the package
 
 ```javascript
-import { OfflineClient } from 'offix-client';
+import {
+  OfflineClient
+} from 'offix-client';
 ```
 
 ## Configuration
@@ -15,10 +17,11 @@ import { OfflineClient } from 'offix-client';
 To provide custom configuration to the client, the following options are available. If you wish, these are also available by using the `OffixClientConfig` interface from the SDK.
 
 ```javascript
+
 let config = {
-  httpUrl: 'http://localhost:4000/graphql',
-  wsUrl: 'ws://localhost:4000/graphql'
-};
+  httpUrl: "http://localhost:4000/graphql",
+  wsUrl: "ws://localhost:4000/graphql",
+}
 ```
 
 ## Creating a Client
