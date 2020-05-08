@@ -1,8 +1,7 @@
 ---
-id: version-0.10.0-offix-scheduler-introduction
 title: Offix Scheduler Introduction
 sidebar_label: Introduction
-original_id: offix-scheduler-introduction
+id: offix-scheduler-introduction
 ---
 
 Offix Scheduler is the core component that delivers the offline queueing and storage in packages such as `offix-client`. The scheduler can be used in an application directly to build offline workflows, or it can be as the foundation to build new packages and clients with offline functionality.

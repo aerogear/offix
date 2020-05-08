@@ -1,8 +1,7 @@
 ---
-id: version-0.9.0-offline-client
 title: Offline Support
 sidebar_label: Offline Client
-original_id: offline-client
+id: offline-client
 ---
 
 Offix provides first class support for performing GraphQL operations while offline. Mutations are held in a queue that is configured to hold requests while the client is offline. When the client goes offline for long periods of time they will still be able negotiate local updates with the server state thanks to powerful conflict resolution strategies.

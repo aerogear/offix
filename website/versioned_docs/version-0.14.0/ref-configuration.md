@@ -1,8 +1,7 @@
 ---
-id: version-0.14.0-client-configuration
 title: Client Configuration
 sidebar_label: Client Configuration
-original_id: client-configuration
+id: client-configuration
 ---
 
 ## offix-client
