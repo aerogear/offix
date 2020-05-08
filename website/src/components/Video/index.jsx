@@ -1,17 +1,28 @@
 import React, { useState } from 'react';
-import classnames from 'classnames';
 import useBaseUrl from '@docusaurus/useBaseUrl';
-import styles from './styles.module.css';
+
+import { Flex } from '../UI';
+import { 
+  VideoComponent, 
+  Play, 
+  Title, 
+  Content,
+  Modal,
+  ModalBackground,
+  Close,
+  ModalContent,
+  YouTube,
+  IFrame
+} from './styled.components';
 
 function VideoModal({ open, close}) {
   return (
-    <div className={classnames(styles.modalWindow, { 'hide-modal': !open })}>
-      <div className={styles.modalBackground} />
-      <a href='#video' className={styles.close} onClick={close}>close</a>
-      <div className={styles.modalContent}>
-        <div className={styles.youtubeWrapper}>
-          <iframe
-            className={styles.youtubeIFrame}
+    <Modal open={open} >
+      <ModalBackground />
+      <Close href='#video' onClick={close}>Close</Close>
+      <ModalContent>
+        <YouTube>
+          <IFrame
             frameBorder="0"
             width="560"
             height="310" scrolling="no"
@@ -22,9 +33,9 @@ function VideoModal({ open, close}) {
             allowFullScreen
             align="middle"
           />
-        </div>
-      </div>
-    </div>
+        </YouTube>
+      </ModalContent>
+    </Modal>
   );
 }
 
@@ -33,22 +44,23 @@ export function Video() {
 
   const toggleModal = (event) => {
     event.preventDefault();
+    console.log('here', open);
     setOpen(!open);
   };
 
   return (
     <>
       <VideoModal open={open} close={toggleModal} />
-      <section id="video" className={styles.videoSection}>
-        <div className="text--center">
-          <h2 className={styles.subtitle}>Offix in action</h2>
-          <div className={styles.videoComponent}>
-            <a href="#" className={styles.play} onClick={toggleModal}>
+      <Flex id="video">
+        <Content>
+          <Title>Offix in action</Title>
+          <VideoComponent>
+            <Play href="#" onClick={toggleModal}>
               <img src={useBaseUrl('img/play.png')} alt=""/>
-            </a>
-          </div>
-        </div>
-      </section>
+            </Play>
+          </VideoComponent>
+        </Content>
+      </Flex>
     </>
   );
 }
