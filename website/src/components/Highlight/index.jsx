@@ -1,16 +1,12 @@
 import React from 'react';
 
+import { Flex } from '../UI';
+import { Title } from './styled.components';
+
 export function Highlight() {
   return (
-    <div style={{
-      height: '100vh',
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      background: '#FFA939'
-    }}>
-      <h1 className="gradient--text">Some text here</h1>
-    </div>
+    <Flex background="#f99f37" color="#fff">
+      <Title>Some Highlight Here</Title>
+    </Flex>
   );
 }
