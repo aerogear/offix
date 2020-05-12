@@ -28,6 +28,10 @@ export const VideoComponent = styled.div`
     0 1px 2px -2px rgba(0, 0, 0, 0.16), 
     0 3px 6px 0 rgba(0, 0, 0, 0.12), 
     0 5px 12px 4px rgba(0, 0, 0, 0.09);
+  @media(max-width:966px) {
+    width: 320px;
+    height: 200px;
+  }
 `;
 
 export const Modal = styled.div`
@@ -60,7 +64,7 @@ export const Close = styled.a`
   position: fixed;
   z-index: 13;
   top: calc(60px + 1rem);
-  right: 1rem;
+  right: 2rem;
   color: #fff !important;
   text-decoration: underline;
 `;
@@ -78,6 +82,9 @@ export const YouTube = styled.div`
   padding-top: 25px; 
   padding-bottom: 50%;
   margin: 0 auto;
+  @media(max-width:966px) {
+    width: 100%;
+  }
 `;
 
 export const IFrame = styled.iframe`
@@ -88,4 +95,8 @@ export const IFrame = styled.iframe`
   height: 70%;
   width: 70%;
   transform: translateX(-50%) translateY(-50%);
+  @media(max-width:966px) {
+    width: 90%;
+    height: 90%;
+  }
 `;
