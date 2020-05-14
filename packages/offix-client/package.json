@@ -45,7 +45,7 @@
     "@types/traverse": "0.6.32",
     "apollo-cache-inmemory": "1.6.6",
     "apollo-cache-persist": "0.1.1",
-    "apollo-client": "2.6.9",
+    "apollo-client": "2.6.10",
     "apollo-link": "1.2.14",
     "apollo-link-error": "1.1.13",
     "apollo-link-http": "1.5.17",
