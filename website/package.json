@@ -13,6 +13,7 @@
     "gsap": "^3.2.6",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
+    "scrollmagic": "^2.0.7",
     "scrollscene": "^0.0.16",
     "styled-components": "^5.1.0"
   }
