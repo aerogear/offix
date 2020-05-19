@@ -21,7 +21,7 @@ export default function Home() {
       <Introduction />
       <Features />
       <Highlight />
-      <Video />
+      {/* <Video /> */}
     </Layout>
   );
 }
