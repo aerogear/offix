@@ -11,9 +11,10 @@ export const Header = styled.div`
 
 export const HeaderImage = styled.div`
   opacity: 0;
-  max-width: 300px;
+  max-width: 200px;
   width: 60%;
   margin: 0 auto;
+  margin-bottom: 1em;
   transform: translateY(300px);
 `;
 
