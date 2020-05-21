@@ -22,7 +22,7 @@ export function Hero({ siteConfig }) {
     <Header>
       <Container style={{ marginTop: '-60px' }}>
         <HeaderImage ref={logo}>
-          <img src="/img/offix-logo.png" alt="logo" />
+          <img src="/img/offix-logo.png" style={{ maxWidth: '200px' }} alt="logo" />
         </HeaderImage>
         <Title ref={title}>Offix</Title>
         <SubTitle ref={tagline}>{siteConfig.tagline}</SubTitle>
