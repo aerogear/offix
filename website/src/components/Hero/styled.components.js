@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const Header = styled.div`
+  min-height: 100vh;
   height: 100vh;
   display: flex;
   align-items: center;
@@ -12,6 +13,7 @@ export const Header = styled.div`
 export const HeaderImage = styled.div`
   opacity: 0;
   max-width: 200px;
+  heigth: 274px;
   width: 60%;
   margin: 0 auto;
   margin-bottom: 1em;

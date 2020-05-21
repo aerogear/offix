@@ -12,16 +12,31 @@ export default function Home() {
   const context = useDocusaurusContext();
   const { siteConfig = {} } = context;
 
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  });
+
+
+  const content = (!mounted) 
+    ? <div style={{ background: '#fff', height: '120vh'}} /> 
+    : (
+      <>
+        <Hero siteConfig={siteConfig} />
+        <Introduction />
+        <Features />
+        <Highlight />
+      </>
+    );
+
   return (
     <Layout
       title={siteConfig.title}
       description="Offix <head />"
-    > 
-      <Hero siteConfig={siteConfig} />
-      <Introduction />
-      <Features />
-      <Highlight />
-      {/* <Video /> */}
+    >
+      { content }
     </Layout>
   );
 }
