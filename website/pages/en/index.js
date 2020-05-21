@@ -106,7 +106,7 @@ class Index extends React.Component {
             Offline Mutations are scheduled and persisted (across application restarts) and are replayed when server becomes available again.
           </p>
           <p>
-            Offix leveragegs the <a href="https://www.apollographql.com/">Apollo Cache</a>, allowing users to see their local changes and to perform fully offline workflows.
+            Offix leverage the <a href="https://www.apollographql.com/">Apollo Cache</a>, allowing users to see their local changes and to perform fully offline workflows.
             Fully featured conflict resolution strategies are provided, as well as interface to build custom ones, ensuring you can build seamless offline experiences.
           </p>
         </div>
