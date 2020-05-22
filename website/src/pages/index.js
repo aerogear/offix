@@ -6,7 +6,6 @@ import { Hero } from '../components/Hero';
 import { Introduction } from '../components/Introduction';
 import { Features } from '../components/Features';
 import { Highlight } from '../components/Highlight';
-import { Video } from '../components/Video';
 
 export default function Home() {
   const context = useDocusaurusContext();
