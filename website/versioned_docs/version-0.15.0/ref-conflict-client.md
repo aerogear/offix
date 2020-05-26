@@ -64,7 +64,7 @@ type Mutation {
 }
 ```
 
-### Custom Conflict implementation by extening ObjectState
+### Custom Conflict implementation by extending ObjectState
 
 Offix enables flexibility on how conflicts are detected and resolved.
 In many cases developers may need different ways of detecting conflits than relying on version field
