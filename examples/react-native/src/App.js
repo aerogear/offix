@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { useQuery } from '@apollo/react-hooks';
-import { useOfflineMutation, useNetworkStatus } from 'react-offix-hooks';
-import { AddTodo, TodoList, TodoModal, Loading, Error } from './components';
-import { GET_TODOS, ADD_TODO } from './gql/queries';
-import { mutateOptions } from './helpers';
-import { View, Text, Button } from 'react-native';
+import React, {useState} from 'react';
+import {useQuery} from '@apollo/react-hooks';
+import {useOfflineMutation, useNetworkStatus} from 'react-offix-hooks';
+import {AddTodo, TodoList, TodoModal, Loading, Error} from './components';
+import {GET_TODOS, ADD_TODO} from './gql/queries';
+import {mutateOptions} from './helpers';
+import {View, Text, Button, StyleSheet} from 'react-native';
 
 const App = () => {
-  const { loading, error, data, subscribeToMore } = useQuery(GET_TODOS);
+  const {loading, error, data, subscribeToMore} = useQuery(GET_TODOS);
   const [addTodo] = useOfflineMutation(ADD_TODO, mutateOptions.add);
   const [modalActive, setModalActive] = useState(false);
 
@@ -22,11 +22,11 @@ const App = () => {
   if (error) return <Error error={error} />;
 
   return (
-    <View>
+    <View style={styles.container}>
       <View>
-        <Text>OFFIX TODO</Text>
-        <Text>A simple todo app using offix & graphback</Text>
-        <Text>Network status: {(isOnline) ? 'Online' : 'Offline'}</Text>
+        <Text>OFFIX TODO React</Text>
+        <Text>A simple todo app using offix and graphback</Text>
+        <Text>Network status: {isOnline ? 'Online' : 'Offline'}</Text>
       </View>
 
       <TodoModal
@@ -47,5 +47,12 @@ const App = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 75,
+    alignItems: 'center',
+  }
+});
 
 export default App;
