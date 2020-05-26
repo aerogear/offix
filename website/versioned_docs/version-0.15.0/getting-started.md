@@ -57,8 +57,8 @@ The `ApolloOfflineClient` is a full `ApolloClient` but with some additional feat
 
 ## Offix Client Boost
 
-The `offix-client-boost` is a convenient way to create a client already bundled with all you nead to work with GraphQL. 
-Mainly an cache and [Apollo Links](https://www.apollographql.com/docs/link/) subscriptions and file uploads.
+The `offix-client-boost` is a convenient way to create a client already bundled with all you need to work with GraphQL. 
+Mainly a cache and [Apollo Links](https://www.apollographql.com/docs/link/) subscriptions and file uploads.
 Offix Boost is recomended if you trying to build your first GraphQL application and want to have seamless experience.
 
 ```js
@@ -119,7 +119,7 @@ try {
 
 ## Non Offline realated API
 
-`ApolloOfflineClient` is and extension of the Apollo GraphQL client and can be used with various web and mobile frameworks.
+`ApolloOfflineClient` is an extension of the Apollo GraphQL client and can be used with various web and mobile frameworks.
 For basic concepts about Apollo GraphQL please refer to the documentation for your own platform.
 
 For React:
