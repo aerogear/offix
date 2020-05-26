@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { View, Button, TextInput } from 'react-native';
+import React, {useState} from 'react';
+import {View, Button, TextInput, StyleSheet} from 'react-native';
 
-export const AddTodo = ({ addTodo, cancel }) => {
+export const AddTodo = ({addTodo, cancel}) => {
   const [title, setTitle] = useState();
   const [description, setDescription] = useState();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
 
     addTodo({
@@ -15,11 +15,12 @@ export const AddTodo = ({ addTodo, cancel }) => {
         version: 1,
         completed: false,
       },
-    }).then(cancel)
-    .catch(handleError);
+    })
+      .then(cancel)
+      .catch(handleError);
   };
 
-  const handleError = (error) => {
+  const handleError = error => {
     // if (error.offline) {
     //   error.watchOfflineChange();
     // } else {
@@ -27,10 +28,10 @@ export const AddTodo = ({ addTodo, cancel }) => {
     // }
     console.log(error);
     cancel();
-  }
+  };
 
   return (
-    <View>
+    <View style={styles.container}>
       <TextInput
         type="text"
         name="title"
@@ -42,13 +43,17 @@ export const AddTodo = ({ addTodo, cancel }) => {
         placeholder="Description"
         onChangeText={text => setDescription(text)}
       />
-      <Button
-        title="Close"
-        onPress={cancel}
-      />
+      <Button title="Close" onPress={cancel} />
       {/* <i className="icon icon-cross" /> */}
       <Button title="Submit" onPress={handleSubmit} />
       {/* <i className="icon icon-check" /> */}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 75,
+    alignItems: 'center',
+  },
+});
