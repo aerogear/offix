@@ -25,7 +25,7 @@ Developers can modify strategies to suit their needs.
 
 ## Working with Conflict Resolution on Client
 
-To enable conflict resolution we fist need to configure our server side resolvers to perform conflict detection. Detection can rely on many different implementations and return the conflict error back to the client. For more information about how to do this, please see [Server Side Conflict Resolution](ref-conflict-server.md)
+To enable conflict resolution we first need to configure our server side resolvers to perform conflict detection. Detection can rely on many different implementations and return the conflict error back to the client. For more information about how to do this, please see [Server Side Conflict Resolution](ref-conflict-server.md)
 
 The client will then automatically resolve them based on the current strategy and notify listeners if the developer supplied any.
 
