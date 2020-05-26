@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { Platform } from 'react-native';
 import { ReactNativeNetworkStatus } from './helpers/ReactNativeNetworkStatus';
 
-const appDomain = (Platform.IOS) ? 'localhost:4000' : '192.168.1.10:4000';
+const appDomain = (Platform.OS === 'ios') ? 'localhost:4000' : '192.168.1.10:4000';
 
 const wsLink = new WebSocketLink({
   uri: `ws://${appDomain}/graphql`,
