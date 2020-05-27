@@ -12,9 +12,9 @@ function useFeatureAnimation({ left, right, trigger }) {
     const timeline = gsap.timeline({ paused: true });
 
     timeline.to(left.current, {
-      opacity: 1
+      opacity: 1,
     }).to(right.current, {
-      opacity: 1
+      opacity: 1,
     });
 
     new ScrollScene({

@@ -61,6 +61,7 @@ export const FeatureColumn = styled.div`
   order: ${getOrder};
   opacity: 0;
   @media (max-width: 966px) {
-    width: 100%;
+    width: 90%;
+    margin: 0 auto;
   }
 `;
