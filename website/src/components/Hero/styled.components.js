@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Header = styled.div`
   min-height: 100vh;
-  height: 100vh;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,6 +18,9 @@ export const HeaderImage = styled.div`
   margin: 0 auto;
   margin-bottom: 1em;
   transform: translateY(300px);
+  @media (max-width: 966px) {
+    width: 40%;
+  }
 `;
 
 export const Title = styled.h1`
@@ -36,7 +39,7 @@ export const SubTitle = styled.h2`
   opacity: 0;
   font-size: 1.5rem;
   font-weight: 600;
-  transform: translateX(50px);
+  transform: translateX(-50px);
 `;
 
 export const CTA = styled.div`
