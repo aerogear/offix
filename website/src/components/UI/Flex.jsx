@@ -12,6 +12,7 @@ export const Flex = styled.div`
   background: ${props => props.background};
   color: ${props => props.color};
   order: ${props => props.order};
+  ${props => props.overrides}
 `;
 
 Flex.defaultProps = {
