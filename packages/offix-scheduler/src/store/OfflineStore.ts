@@ -1,6 +1,7 @@
 import { PersistentStore, PersistedData } from "./PersistentStore";
 import { QueueEntryOperation, QueueEntry } from "../queue";
 import { OfflineStoreSerializer, DefaultOfflineSerializer } from "./OfflineStoreSerializer";
+
 import Debug from "debug";
 const debug = Debug("Store: ");
 /**
