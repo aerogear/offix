@@ -41,8 +41,7 @@
     "size-limit": "4.4.1",
     "ts-jest": "25.2.1",
     "ts-node": "8.8.1",
-    "typescript": "3.8.3",
-    "pre-commit": "1.2.2"
+    "typescript": "3.8.3"
   },
   "dependencies": {
     "@types/mocha": "7.0.2",
@@ -50,9 +49,5 @@
   },
   "workspaces": [
     "packages/*"
-  ],
-  "pre-commit": [
-    "lint",
-    "test"
   ]
 }
