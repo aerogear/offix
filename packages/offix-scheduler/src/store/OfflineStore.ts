@@ -36,37 +36,30 @@ export class OfflineStore<T> {
    * @param entry - the entry to be saved
    */
   public async saveEntry(entry: QueueEntryOperation<T>) {
-    try{
+    
       const serialized = this.serializer.serializeForStorage(entry);
       const offlineKey = this.getOfflineKey(entry.qid);
       // only add the offline key to the arrray if it's not already there
       if (!this.arrayOfKeys.includes(offlineKey)) {
         this.arrayOfKeys.push(offlineKey);
         await this.storage.setItem(this.offlineMetaKey, this.arrayOfKeys);
-      }
+      
       await this.storage.setItem(offlineKey, serialized);
-      }catch(error){
-        debug("Error Occured while Saving");
-        return;
-      }
-    debug("Saved Item");
+      debug("Saved Item");
   }
-
+}
   /**
    * Remove an entry from the store
    *
    * @param queue - the entry to be removed
    */
   public async removeEntry(entry: QueueEntryOperation<T>) {
-    try{
+    
         this.arrayOfKeys.splice(this.arrayOfKeys.indexOf(entry.qid), 1);
         this.storage.setItem(this.offlineMetaKey, this.arrayOfKeys);
         const offlineKey = this.getOfflineKey(entry.qid);
         await this.storage.removeItem(offlineKey);
-        }catch(error){
-            debug("Error Occured while removing");
-            return;
-    }
+    
     debug("Removed Item");
   }
 
@@ -75,7 +68,7 @@ export class OfflineStore<T> {
    */
   public async getOfflineData(): Promise<Array<QueueEntry<T>>> {
     const offlineItems: Array<QueueEntry<T>> = [];
-    try {
+    
       for (const key of this.arrayOfKeys) {
         const keyVersion = key.split(":")[0];
         if (keyVersion === this.storageVersion) {
@@ -89,9 +82,7 @@ export class OfflineStore<T> {
           });
         }
       }
-    }catch(error){
-        debug("Error Occured while fetching");
-    }
+    
   debug("Fetched Data");
       // should we log that the item couldm't be loaded?
       return offlineItems;
