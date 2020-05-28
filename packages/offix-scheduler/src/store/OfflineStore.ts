@@ -1,7 +1,8 @@
 import { PersistentStore, PersistedData } from "./PersistentStore";
 import { QueueEntryOperation, QueueEntry } from "../queue";
 import { OfflineStoreSerializer, DefaultOfflineSerializer } from "./OfflineStoreSerializer";
-
+import Debug from "debug";
+const debug = Debug("Store: ");
 /**
  * Abstract Offline storage
  */
@@ -35,14 +36,20 @@ export class OfflineStore<T> {
    * @param entry - the entry to be saved
    */
   public async saveEntry(entry: QueueEntryOperation<T>) {
-    const serialized = this.serializer.serializeForStorage(entry);
-    const offlineKey = this.getOfflineKey(entry.qid);
-    // only add the offline key to the arrray if it's not already there
-    if (!this.arrayOfKeys.includes(offlineKey)) {
-      this.arrayOfKeys.push(offlineKey);
-      await this.storage.setItem(this.offlineMetaKey, this.arrayOfKeys);
-    }
-    await this.storage.setItem(offlineKey, serialized);
+    try{
+      const serialized = this.serializer.serializeForStorage(entry);
+      const offlineKey = this.getOfflineKey(entry.qid);
+      // only add the offline key to the arrray if it's not already there
+      if (!this.arrayOfKeys.includes(offlineKey)) {
+        this.arrayOfKeys.push(offlineKey);
+        await this.storage.setItem(this.offlineMetaKey, this.arrayOfKeys);
+      }
+      await this.storage.setItem(offlineKey, serialized);
+      }catch(error){
+        debug("Error Occured while Saving");
+        return;
+      }
+    debug("Saved Item");
   }
 
   /**
@@ -51,10 +58,16 @@ export class OfflineStore<T> {
    * @param queue - the entry to be removed
    */
   public async removeEntry(entry: QueueEntryOperation<T>) {
-    this.arrayOfKeys.splice(this.arrayOfKeys.indexOf(entry.qid), 1);
-    this.storage.setItem(this.offlineMetaKey, this.arrayOfKeys);
-    const offlineKey = this.getOfflineKey(entry.qid);
-    await this.storage.removeItem(offlineKey);
+    try{
+        this.arrayOfKeys.splice(this.arrayOfKeys.indexOf(entry.qid), 1);
+        this.storage.setItem(this.offlineMetaKey, this.arrayOfKeys);
+        const offlineKey = this.getOfflineKey(entry.qid);
+        await this.storage.removeItem(offlineKey);
+        }catch(error){
+            debug("Error Occured while removing");
+            return;
+    }
+    debug("Removed Item");
   }
 
   /**
@@ -62,23 +75,27 @@ export class OfflineStore<T> {
    */
   public async getOfflineData(): Promise<Array<QueueEntry<T>>> {
     const offlineItems: Array<QueueEntry<T>> = [];
-    for (const key of this.arrayOfKeys) {
-      const keyVersion = key.split(":")[0];
-      if (keyVersion === this.storageVersion) {
-        const item = await this.storage.getItem(key);
-        const deserializedItem = this.serializer.deserializeFromStorage(item);
-        offlineItems.push({
-          operation: {
-            op: deserializedItem as unknown as T,
-            qid: key.slice(this.storageVersion.length + 1) // remove the 'v1:' from the key when we put it back in the queue
-          }
-        });
+    try {
+      for (const key of this.arrayOfKeys) {
+        const keyVersion = key.split(":")[0];
+        if (keyVersion === this.storageVersion) {
+          const item = await this.storage.getItem(key);
+          const deserializedItem = this.serializer.deserializeFromStorage(item);
+          offlineItems.push({
+            operation: {
+              op: deserializedItem as unknown as T,
+              qid: key.slice(this.storageVersion.length + 1) // remove the 'v1:' from the key when we put it back in the queue
+            }
+          });
+        }
       }
-      // should we log that the item couldm't be loaded?
+    }catch(error){
+        debug("Error Occured while fetching");
     }
-    return offlineItems;
-  }
-
+  debug("Fetched Data");
+      // should we log that the item couldm't be loaded?
+      return offlineItems;
+    }
   private getOfflineKey(id: string): string {
     return `${this.storageVersion}:${id}`;
   }
