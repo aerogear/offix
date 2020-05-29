@@ -56,7 +56,7 @@ it("offlineStore.saveEntry overwrites existing data", async () => {
 
   const entry: QueueEntryOperation<any> = {
     op: {
-      hello: "world"
+      hello: "universe"
     },
     qid: "123"
   };

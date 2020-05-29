@@ -1,27 +1,23 @@
 import { PersistentStore, PersistedData } from "./PersistentStore";
 import { QueueEntryOperation, QueueEntry } from "../queue";
 import { OfflineStoreSerializer, DefaultOfflineSerializer } from "./OfflineStoreSerializer";
-
-import Debug from "debug";
-const debug = Debug("Store: ");
+import debug from "debug";
+const Debug = debug("datasync:store:");
 /**
  * Abstract Offline storage
  */
 export class OfflineStore<T> {
-
   public initialized: boolean = false;
   private storage: PersistentStore<PersistedData>;
   private offlineMetaKey: string = "offline-meta-data";
   private storageVersion: string = "v1";
   private arrayOfKeys: string[];
   private serializer: OfflineStoreSerializer<T>;
-
   constructor(storage: PersistentStore<PersistedData>, serializer?: OfflineStoreSerializer<T>) {
     this.arrayOfKeys = [];
     this.storage = storage;
     this.serializer = serializer || new DefaultOfflineSerializer();
   }
-
   /**
    * Init store
    */
@@ -30,23 +26,21 @@ export class OfflineStore<T> {
     this.arrayOfKeys = keys || [];
     this.initialized = true;
   }
-
-  /**
+   /**
    * Save an entry to store
    *
    * @param entry - the entry to be saved
    */
   public async saveEntry(entry: QueueEntryOperation<T>) {
-    
+
       const serialized = this.serializer.serializeForStorage(entry);
       const offlineKey = this.getOfflineKey(entry.qid);
       // only add the offline key to the arrray if it's not already there
       if (!this.arrayOfKeys.includes(offlineKey)) {
         this.arrayOfKeys.push(offlineKey);
         await this.storage.setItem(this.offlineMetaKey, this.arrayOfKeys);
-      
       await this.storage.setItem(offlineKey, serialized);
-      debug("Saved Item");
+      Debug("serialized:item");
   }
 }
   /**
@@ -55,21 +49,19 @@ export class OfflineStore<T> {
    * @param queue - the entry to be removed
    */
   public async removeEntry(entry: QueueEntryOperation<T>) {
-    
+
         this.arrayOfKeys.splice(this.arrayOfKeys.indexOf(entry.qid), 1);
         this.storage.setItem(this.offlineMetaKey, this.arrayOfKeys);
         const offlineKey = this.getOfflineKey(entry.qid);
         await this.storage.removeItem(offlineKey);
-    
-    debug("Removed Item");
+    Debug("deserialized:item");
   }
-
   /**
    * Fetch data from the offline store
    */
   public async getOfflineData(): Promise<Array<QueueEntry<T>>> {
     const offlineItems: Array<QueueEntry<T>> = [];
-    
+
       for (const key of this.arrayOfKeys) {
         const keyVersion = key.split(":")[0];
         if (keyVersion === this.storageVersion) {
@@ -83,8 +75,7 @@ export class OfflineStore<T> {
           });
         }
       }
-    
-  debug("Fetched Data");
+  Debug("fetched:data");
       // should we log that the item couldm't be loaded?
       return offlineItems;
     }
