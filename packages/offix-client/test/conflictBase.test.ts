@@ -63,7 +63,7 @@ it("base should be correctly calculated with regular id field", async function()
     });
   } catch (e) {
     const operationInQueue = client.queue.entries[0].operation.op;
-    expect(operationInQueue.context.conflictBase).toEqual(newTask);
+    expect(operationInQueue.context.base).toEqual(newTask);
   }
 });
 
@@ -124,11 +124,11 @@ it("base should be correctly calculated with custom id field", async function() 
     });
   } catch (e) {
     const operationInQueue = client.queue.entries[0].operation.op;
-    expect(operationInQueue.context.conflictBase).toEqual(newTask);
+    expect(operationInQueue.context.base).toEqual(newTask);
   }
 });
 
-it("base should be correctly calculated with if custom id is non stanard", async function() {
+it("base should be correctly calculated with if custom id is non standard", async function() {
   const store = new MockStore();
   const networkStatus = new MockNetworkStatus();
   networkStatus.setOnline(false);
@@ -184,6 +184,6 @@ it("base should be correctly calculated with if custom id is non stanard", async
     });
   } catch (e) {
     const operationInQueue = client.queue.entries[0].operation.op;
-    expect(operationInQueue.context.conflictBase).toEqual(newTask);
+    expect(operationInQueue.context.base).toEqual(newTask);
   }
 });

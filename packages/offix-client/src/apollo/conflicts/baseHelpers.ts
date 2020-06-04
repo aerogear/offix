@@ -1,10 +1,5 @@
 import { MutationOptions, OperationVariables } from "apollo-client";
 import { ApolloCache } from "apollo-cache";
-import {
-  ObjectState,
-  LocalConflictError,
-  ConflictResolutionData
-} from "offix-conflicts-client";
 import { NormalizedCacheObject } from "apollo-cache-inmemory";
 import { InputMapper } from "../../config/ApolloOfflineClientOptions";
 
@@ -21,37 +16,22 @@ export interface ApolloCacheWithData extends ApolloCache<NormalizedCacheObject> 
  * BaseProcessor takes an outgoing GraphQL operation and it checks if it
  * is a mutation on an object we already know about in our local cache
  * If it is, then we need to get the 'base' which is the original object we are trying to mutate
- *
- * We first check for a 'local conflict' which happens when the base from the cache is different from
- * the 'version' the operation is trying to mutate.
- * this can happen when the mutation is in flight but the cache was updated by subscriptions
- *
- * If we have no local conflict, we add the original base to the operation's context,
- * which can then be used for conflict resolution later on.
  */
 export function getBaseStateFromCache(
   cache: ApolloCacheWithData,
-  objectState: ObjectState,
   mutationOptions: MutationOptions,
   inputMapper?: InputMapper
-): ConflictResolutionData {
+): any {
   const context = mutationOptions.context;
 
-  if (!context.conflictBase) {
+  if (!context.base) {
 
     let mutationVariables = mutationOptions.variables as OperationVariables;
     if (inputMapper) {
       mutationVariables = inputMapper.deserialize(mutationVariables);
     }
 
-    const conflictBase = getObjectFromCache(cache, context.returnType, mutationVariables);
-    if (conflictBase && Object.keys(conflictBase).length !== 0) {
-      if (objectState.hasConflict(mutationVariables, conflictBase)) {
-        // 🙊 Input data is conflicted with the latest server projection
-        throw new LocalConflictError(conflictBase, mutationOptions.variables);
-      }
-      return conflictBase;
-    }
+    return getObjectFromCache(cache, context.returnType, mutationVariables);
   }
 }
 
@@ -72,7 +52,7 @@ function getObjectFromCache(cache: ApolloCacheWithData, typename: string, mutati
       return Object.assign({}, cacheData[idKey]);
     }
   } else {
-    console.warn("Client is missing cache implementation. Conflict features will not work properly");
+    console.warn("Client is missing cache implementation");
   }
   return {};
 }

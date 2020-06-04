@@ -3,7 +3,7 @@ import { ConfigError } from "./ConfigError";
 
 export function validateConfig(config: ApolloOfflineClientConfig) {
     checkFields(config, [
-        "cacheStorage", "offlineStorage", "conflictListener", "cache"
+        "cacheStorage", "offlineStorage", "cache"
     ]);
 }
 

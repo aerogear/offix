@@ -2,11 +2,6 @@ import { PersistedData, PersistentStore } from "offix-scheduler";
 import {
   NetworkStatus
  } from "offix-offline";
- import {
-  ConflictResolutionStrategy,
-  ObjectState,
-  ConflictListener
- } from "offix-conflicts-client";
 import { CacheUpdates } from "offix-cache";
 import { RetryLink } from "apollo-link-retry";
 import { ApolloOfflineQueueListener } from "../apollo";
@@ -65,28 +60,6 @@ export interface ApolloOfflineClientOptions extends ApolloClientOptions<Normaliz
    * when operations were added to queue
    */
   offlineQueueListener?: ApolloOfflineQueueListener;
-
-  /**
-   * [Modifier]
-   *
-   * Interface that defines how object state is progressed
-   * This interface needs to match state provider supplied on server.
-   */
-  conflictProvider?: ObjectState;
-
-  /**
-   * Interface that can be implemented to receive information about the data conflict
-   *
-   * @deprecated see OfflineClient.registerOfflineEventListener
-   */
-  conflictListener?: ConflictListener;
-
-  /**
-   * [Modifier]
-   *
-   * The conflict resolution strategy your client should use. By default it takes client version.
-   */
-  conflictStrategy?: ConflictResolutionStrategy;
 
   /**
    * [Modifier]

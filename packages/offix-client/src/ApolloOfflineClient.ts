@@ -14,12 +14,10 @@ import {
   replaceClientGeneratedIDsInQueue,
   ApolloQueueEntryOperation,
   ApolloOfflineQueueListener,
-  getBaseStateFromCache,
   ApolloCacheWithData,
-  CompositeConflictListener
+  getBaseStateFromCache,
 } from "./apollo";
 import { NetworkStatus } from "offix-offline";
-import { ObjectState, ConflictListener } from "offix-conflicts-client";
 import { ApolloOfflineClientOptions, InputMapper } from "./config/ApolloOfflineClientOptions";
 import { ApolloOfflineClientConfig } from "./config/ApolloOfflineClientConfig";
 import { validateConfig } from "./config/ApolloOfflineClientConfigValidator";
@@ -32,10 +30,6 @@ export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
   public scheduler: OffixScheduler<MutationOptions>;
   // the offline storage interface that persists offline data across restarts
   public offlineStore?: ApolloOfflineStore;
-  // interface that performs conflict detection and resolution
-  public conflictProvider: ObjectState;
-  // composite conflict listener object that calls all listeners provided by users
-  public conflictListener: CompositeConflictListener;
   // the network status interface that determines online/offline state
   public networkStatus: NetworkStatus;
   // the in memory queue that holds offline data
@@ -53,9 +47,7 @@ export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
     super(config);
 
     this.initialized = false;
-    this.conflictListener = config.conflictListener;
     this.mutationCacheUpdates = config.mutationCacheUpdates;
-    this.conflictProvider = config.conflictProvider;
     this.inputMapper = config.inputMapper;
 
     if (config.cachePersistor) {
@@ -140,32 +132,13 @@ export class ApolloOfflineClient extends ApolloClient<NormalizedCacheObject> {
     this.scheduler.registerOfflineQueueListener(listener);
   }
 
-  /**
-   * Add new listener for conflict related events
-   *
-   * @param listener
-   */
-  public addConflictListener(listener: ConflictListener){
-    this.conflictListener.addConflictListener(listener);
-  }
-
-  /**
-   * remove a conflict listener
-   *
-   * @param listener
-   */
-  public removeConflictListener(listener: ConflictListener) {
-    this.conflictListener.removeConflictListener(listener);
-  }
-
   protected createOfflineMutationOptions<T = any, TVariables = OperationVariables>(
     options: MutationHelperOptions<T, TVariables>): MutationOptions<T, TVariables> {
     options.inputMapper = this.inputMapper;
     const offlineMutationOptions = createMutationOptions<T, TVariables>(options);
 
-    offlineMutationOptions.context.conflictBase = getBaseStateFromCache(
+    offlineMutationOptions.context.base = getBaseStateFromCache(
       this.cache as unknown as ApolloCacheWithData,
-      this.conflictProvider,
       offlineMutationOptions as unknown as MutationOptions,
       this.inputMapper
     );
