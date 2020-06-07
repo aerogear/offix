@@ -14,8 +14,7 @@
       "react",
       "react-native",
       "angular",
-      "ionic",
-      "android"
+      "ionic"
     ],
     "Advanced topics": [
       "cookbooks",
