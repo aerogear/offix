@@ -1,9 +1,10 @@
 {
   "extends": "../../tsconfig.json",
   "include": [
-    "./src/**/*.ts"
+    "./src/**/*.ts", "*.d.ts"
   ],
   "compilerOptions": {
+    "esModuleInterop": true,
     "outDir": "./dist/",
     "declarationDir": "./types",
     "lib": [
