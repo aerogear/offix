@@ -21,5 +21,10 @@
     "jest": "^26.0.1",
     "ts-jest": "^26.1.0",
     "typescript": "^3.9.5"
+  },
+  "dependencies": {
+    "@graphql-toolkit/common": "^0.10.7",
+    "graphql": "^15.1.0",
+    "graphql-metadata": "^0.6.2"
   }
 }
