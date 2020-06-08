@@ -10,7 +10,15 @@ export class IndexedDBStorage implements Storage {
         this.indexedDB = new Promise((resolve, reject) => {
             const openreq = indexedDB.open(DB_NAME, 1);
             openreq.onerror = () => reject(openreq.error);
-            openreq.onsuccess = () => resolve(openreq.result);
+            openreq.onsuccess = () => {
+                const db = openreq.result;
+                db.onversionchange = function () {
+                    db.close();
+                    alert("Please reload the page.")
+                };
+
+                resolve(db);
+            };
 
             openreq.onupgradeneeded = () => {
                 models.forEach(({ storeName }: Model) => {
