@@ -27,7 +27,7 @@
     "apollo-link": "1.2.14",
     "graphql": "^14.6.0 || ^15.0.0",
     "graphql-tag": "2.10.3",
-    "jest": "25.5.4",
+    "jest": "26.0.1",
     "size-limit": "4.4.1",
     "ts-jest": "26.1.0",
     "typescript": "3.8.3"
