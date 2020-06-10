@@ -5,6 +5,7 @@
 import "fake-indexeddb/auto";
 
 import { configure, save } from "../src/DataStore";
+import { createDefaultStorage } from "../src/storage";
 
 function getIndexedDB() {
     return new Promise<IDBDatabase>((resolve, reject) => {
@@ -41,6 +42,14 @@ test("Setup client db with provided schema", async () => {
     expect(db.objectStoreNames).toContain("user_Note");
     expect(db.objectStoreNames).toContain("user_Comment");
     db.close();
+});
+
+test("Store Schema update", async () => {
+    const idbStorage = createDefaultStorage([ { __typename: "Test" } ], 2);
+    const db = await idbStorage.indexedDB;
+    expect(db.objectStoreNames).toContain("user_Test");
+    expect(db.objectStoreNames).not.toContain("user_Note");
+    expect(db.objectStoreNames).not.toContain("user_Comment");
 });
 
 test("Save Note to local store", async () => {
