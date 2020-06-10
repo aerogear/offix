@@ -3,7 +3,11 @@ import { parseMarker } from "graphql-metadata";
 import { getUserTypesFromSchema } from "@graphql-toolkit/common";
 
 export interface Model {
-    storeName: string
+    __typename: string;
+}
+
+export interface PersistedModel {
+    id: string;
 }
 
 export function extractModelsFromSchema(schema: GraphQLSchema): Model[] {
@@ -11,7 +15,7 @@ export function extractModelsFromSchema(schema: GraphQLSchema): Model[] {
     const userTypes = types.filter((modelType: GraphQLObjectType) => parseMarker('model', modelType.description))
     return userTypes.map((value) => {
         return { 
-            storeName: `user_${value.name}`
+            __typename: value.name
         };
     });
 }
