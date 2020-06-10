@@ -1,6 +1,7 @@
 import { Model, PersistedModel } from "../models";
 import { Storage } from "./Storage";
 import { getStoreNameFromModelName, generateId } from "./core";
+import { PredicateFunction } from "../predicates";
 
 const DB_NAME = "offix-datastore";
 
@@ -57,9 +58,12 @@ export class IndexedDBStorage implements Storage {
         return this.convertToPromise<PersistedModel>(store.get(key));
     }
 
-    async query(modelName: string) {
+    async query(modelName: string, predicate?: PredicateFunction) {
         const store = await this.getStore(modelName);
-        return await this.convertToPromise<PersistedModel[]>(store.getAll());
+        const all = await this.convertToPromise<PersistedModel[]>(store.getAll());
+
+        if (!predicate) return all;
+        return predicate.filter(all);
     }
 
     private convertToPromise<T>(request: IDBRequest) {
