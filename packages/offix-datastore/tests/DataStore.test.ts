@@ -62,7 +62,7 @@ test("Save Note to local store", async () => {
 test("Query from local store", async () => {
     const note = { title: "test", description: "description", __typename: "Note" };
     const savedNote = (await save(note) as any);
-    const results = (await query("Note") as any);
+    const results = (await query(savedNote, (p: any) => p.title("eq", note.title)) as any);
     expect(results[0]).toHaveProperty("id", savedNote.id);
 });
 
