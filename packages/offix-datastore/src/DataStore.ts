@@ -15,3 +15,7 @@ export function configure(schemaLocation: string, schemaVersion: number = 1) {
 export function save(model: Model): Promise<PersistedModel> {
     return storage.save(model);
 }
+
+export function query(modelName: string) {
+    return storage.query(modelName);
+}

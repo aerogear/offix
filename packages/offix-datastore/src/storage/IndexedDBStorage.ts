@@ -57,6 +57,11 @@ export class IndexedDBStorage implements Storage {
         return this.convertToPromise<PersistedModel>(store.get(key));
     }
 
+    async query(modelName: string) {
+        const store = await this.getStore(modelName);
+        return await this.convertToPromise<PersistedModel[]>(store.getAll());
+    }
+
     private convertToPromise<T>(request: IDBRequest) {
         return new Promise<T>((resolve, reject) => {
             request.onsuccess = (event) => {
