@@ -4,7 +4,7 @@
 
 import "fake-indexeddb/auto";
 
-import { configure, save } from "../src/DataStore";
+import { configure, save, query } from "../src/DataStore";
 import { createDefaultStorage } from "../src/storage";
 
 function getIndexedDB() {
@@ -58,3 +58,14 @@ test("Save Note to local store", async () => {
     expect(savedNote.id).toBeDefined();
     expect(savedNote.title).toBe(note.title);
 });
+
+test("Query from local store", async () => {
+    const note = { title: "test", description: "description", __typename: "Note" };
+    const savedNote = (await save(note) as any);
+    const results = (await query("Note") as any);
+    expect(results[0]).toHaveProperty("id", savedNote.id);
+});
+
+test.todo("Observe local store events");
+
+test.todo("Sync with server");
