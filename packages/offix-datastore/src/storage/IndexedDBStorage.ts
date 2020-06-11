@@ -14,7 +14,7 @@ export class IndexedDBStorage implements Storage {
             openreq.onerror = () => reject(openreq.error);
             openreq.onsuccess = () => {
                 const db = openreq.result;
-                db.onversionchange = function () {
+                db.onversionchange = function() {
                     this.close();
                     // alert("Please reload the page.");
                 };
@@ -30,25 +30,18 @@ export class IndexedDBStorage implements Storage {
                     const modelStore = models.find(({ __typename }) => (
                         getStoreNameFromModelName(__typename) === storeName
                     ));
-                    if (modelStore) return;
+                    if (modelStore) {return;}
 
                     // model has been removed, remove it's store
                     db.deleteObjectStore(storeName);
                 }
                 models.forEach(({ __typename }: Model) => {
                     const storeName = getStoreNameFromModelName(__typename);
-                    if (storeNames.contains(storeName)) return;
+                    if (storeNames.contains(storeName)) {return;}
                     db.createObjectStore(storeName, { keyPath: "id" });
                 });
             };
         });
-    }
-
-    private async getStore(modelName: string) {
-        const db = await this.indexedDB;
-        const storeName = getStoreNameFromModelName(modelName);
-        return db.transaction(storeName, "readwrite")
-            .objectStore(storeName);
     }
 
     async save(model: Model) {
@@ -62,19 +55,26 @@ export class IndexedDBStorage implements Storage {
         const store = await this.getStore(modelName);
         const all = await this.convertToPromise<PersistedModel[]>(store.getAll());
 
-        if (!predicate) return all;
+        if (!predicate) {return all;}
         return predicate.filter(all);
+    }
+
+    private async getStore(modelName: string) {
+        const db = await this.indexedDB;
+        const storeName = getStoreNameFromModelName(modelName);
+        return db.transaction(storeName, "readwrite")
+            .objectStore(storeName);
     }
 
     private convertToPromise<T>(request: IDBRequest) {
         return new Promise<T>((resolve, reject) => {
             request.onsuccess = (event) => {
                 resolve(request.result);
-            }
+            };
 
             request.onerror = (event) => {
                 reject(request.error);
-            }
+            };
         });
     }
 }

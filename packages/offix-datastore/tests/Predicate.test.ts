@@ -35,7 +35,7 @@ test("'or' filter group ", () => {
     );
     const list = [
         firstNote, secondNote, { numberOfTasks: 3, __typename: "Note" }
-    ]; 
+    ];
     expect(predicateFunction.filter(list)).toEqual([firstNote, secondNote]);
 });
 
@@ -52,11 +52,11 @@ test("'and' filter group ", () => {
     const predicate = createPredicate(firstNote);
     const predicateFunction = predicate.and(
         predicate.numberOfTasks("eq", firstNote.numberOfTasks),
-        predicate.numberOfTasks("eq", secondNote.numberOfTasks),
+        predicate.numberOfTasks("eq", secondNote.numberOfTasks)
     );
     const list = [
         firstNote, secondNote
-    ]; 
+    ];
     expect(predicateFunction.filter(list)).toEqual([]);
 });
 
@@ -76,7 +76,7 @@ test("'not' filter group ", () => {
     );
     const list = [
         firstNote, secondNote
-    ]; 
+    ];
     expect(predicateFunction.filter(list)).toEqual([secondNote]);
 });
 
