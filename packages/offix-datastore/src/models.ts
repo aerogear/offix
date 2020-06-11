@@ -12,9 +12,9 @@ export interface PersistedModel {
 
 export function extractModelsFromSchema(schema: GraphQLSchema): Model[] {
     const types = getUserTypesFromSchema(schema);
-    const userTypes = types.filter((modelType: GraphQLObjectType) => parseMarker('model', modelType.description))
+    const userTypes = types.filter((modelType: GraphQLObjectType) => parseMarker("model", modelType.description));
     return userTypes.map((value) => {
-        return { 
+        return {
             __typename: value.name
         };
     });

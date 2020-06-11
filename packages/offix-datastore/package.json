@@ -13,6 +13,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "lint-fix": "eslint \"./src/**/*.ts\" \"./tests/**/*.ts\" --fix",
     "test": "jest"
   },
   "devDependencies": {

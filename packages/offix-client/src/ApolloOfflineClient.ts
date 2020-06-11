@@ -15,7 +15,7 @@ import {
   ApolloQueueEntryOperation,
   ApolloOfflineQueueListener,
   ApolloCacheWithData,
-  getBaseStateFromCache,
+  getBaseStateFromCache
 } from "./apollo";
 import { NetworkStatus } from "offix-offline";
 import { ApolloOfflineClientOptions, InputMapper } from "./config/ApolloOfflineClientOptions";
