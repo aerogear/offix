@@ -7,7 +7,7 @@ import { createPredicate } from "./predicates";
 let storage: Storage;
 
 export function configure(schemaLocation: string, schemaVersion: number = 1) {
-    const schemaText = readFileSync(schemaLocation, 'utf8');
+    const schemaText = readFileSync(schemaLocation, "utf8");
     const schema = buildSchema(schemaText);
     const models = extractModelsFromSchema(schema);
     storage = createDefaultStorage(models, schemaVersion);
@@ -18,9 +18,9 @@ export function save(model: Model): Promise<PersistedModel> {
 }
 
 export function query(model: Model, predicateFunction?: Function) {
-    if (!predicateFunction) return storage.query(model.__typename);
-    
+    if (!predicateFunction) {return storage.query(model.__typename);}
+
     const modelPredicate = createPredicate(model);
-    const predicate = predicateFunction(modelPredicate)
+    const predicate = predicateFunction(modelPredicate);
     return storage.query(model.__typename, predicate);
 }

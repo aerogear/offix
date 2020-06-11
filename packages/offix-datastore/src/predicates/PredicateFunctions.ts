@@ -1,9 +1,9 @@
 export abstract class PredicateFunction {
-    public abstract evaluate(model: any): boolean;
-
     public filter(models: any[]) {
         return models.filter((m) => this.evaluate(m));
     }
+
+    public abstract evaluate(model: any): boolean;
 }
 
 export class ModelFieldPredicate extends PredicateFunction {
@@ -40,11 +40,11 @@ export const ExpressionOperators = {
             return !currentResult;
         }
     }
-}
+};
 
 export class PredicateExpression extends PredicateFunction {
     constructor(
-        private predicates: PredicateFunction[], 
+        private predicates: PredicateFunction[],
         private operator: ExpressionOperator
     ) {
         super();
@@ -55,7 +55,7 @@ export class PredicateExpression extends PredicateFunction {
 
         this.predicates.forEach((value) => {
             result = this.operator.operate(result, value.evaluate(model));
-        })
+        });
 
         return result;
     }

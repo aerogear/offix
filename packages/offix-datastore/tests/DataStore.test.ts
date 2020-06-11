@@ -15,18 +15,6 @@ function getIndexedDB() {
     });
 }
 
-function convertToPromise(request: IDBRequest) {
-    return new Promise((resolve, reject) => {
-        request.onsuccess = (event) => {
-            resolve(request.result);
-        }
-
-        request.onerror = (event) => {
-            reject(request.error);
-        }
-    });
-}
-
 beforeEach(() => {
     configure(`${__dirname}/mock.graphql`);
 });
