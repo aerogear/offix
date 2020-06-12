@@ -4,7 +4,7 @@
 
 import "fake-indexeddb/auto";
 
-import { configure, save, query } from "../src/DataStore";
+import { configure, remove, save, query, update } from "../src/DataStore";
 import { createDefaultStorage } from "../src/storage";
 
 function getIndexedDB() {
@@ -52,6 +52,32 @@ test("Query from local store", async () => {
     const savedNote = (await save(note) as any);
     const results = (await query(savedNote, (p: any) => p.title("eq", note.title)) as any);
     expect(results[0]).toHaveProperty("id", savedNote.id);
+});
+
+test("Update single entity in local store", async () => {
+    const note = { title: "test", description: "description", __typename: "Note" };
+    const savedNote = (await save(note) as any);
+    savedNote.title = "update note";
+    await update(savedNote);
+    const updatedNote = (await query(savedNote, (p: any) => p.id("eq", savedNote.id)) as any[])[0];
+    expect(updatedNote.title).toEqual(savedNote.title);
+});
+
+test("Remove single entity from local store", async () => {
+    const note = { title: "test", description: "description", __typename: "Note" };
+    const savedNote = (await save(note) as any);
+    await remove(savedNote);
+    const results = (await query(savedNote, (p: any) => p.id("eq", savedNote.id)) as any[]);
+    expect(results.length).toEqual(0);
+});
+
+test("Remove all entities matching predicate from local store", async () => {
+    const note = { title: "test", description: "description", __typename: "Note" };
+    const savedNote = (await save(note) as any);
+    const predicate = (p: any) => p.id("eq", savedNote.id);
+    await remove(savedNote, predicate);
+    const results = (await query(savedNote, predicate) as any[]);
+    expect(results.length).toEqual(0);
 });
 
 test.todo("Observe local store events");

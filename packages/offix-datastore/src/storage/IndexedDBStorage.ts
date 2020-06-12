@@ -30,14 +30,14 @@ export class IndexedDBStorage implements Storage {
                     const modelStore = models.find(({ __typename }) => (
                         getStoreNameFromModelName(__typename) === storeName
                     ));
-                    if (modelStore) {return;}
+                    if (modelStore) { return; }
 
                     // model has been removed, remove it's store
                     db.deleteObjectStore(storeName);
                 }
                 models.forEach(({ __typename }: Model) => {
                     const storeName = getStoreNameFromModelName(__typename);
-                    if (storeNames.contains(storeName)) {return;}
+                    if (storeNames.contains(storeName)) { return; }
                     db.createObjectStore(storeName, { keyPath: "id" });
                 });
             };
@@ -55,8 +55,30 @@ export class IndexedDBStorage implements Storage {
         const store = await this.getStore(modelName);
         const all = await this.convertToPromise<PersistedModel[]>(store.getAll());
 
-        if (!predicate) {return all;}
+        if (!predicate) { return all; }
         return predicate.filter(all);
+    }
+
+    async update(model: PersistedModel) {
+        const store = await this.getStore(model.__typename);
+        const key = await this.convertToPromise<IDBValidKey>(store.put(model));
+        return this.convertToPromise<PersistedModel>(store.get(key));
+    }
+
+    async remove(model: PersistedModel, predicate?: PredicateFunction) {
+        const store = await this.getStore(model.__typename);
+
+        if (!predicate) {
+            await this.convertToPromise(store.delete(model.id));
+            return model;
+        }
+
+        const all = await this.convertToPromise<PersistedModel[]>(store.getAll());
+        const targets = predicate.filter(all);
+        await Promise.all(
+            targets.map((t) => this.convertToPromise(store.delete(t.id)))
+        );
+        return targets;
     }
 
     private async getStore(modelName: string) {
