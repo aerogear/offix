@@ -6,7 +6,7 @@ export interface Model {
     __typename: string;
 }
 
-export interface PersistedModel {
+export interface PersistedModel extends Model {
     id: string;
 }
 
