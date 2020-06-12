@@ -24,3 +24,16 @@ export function query(model: Model, predicateFunction?: Function) {
     const predicate = predicateFunction(modelPredicate);
     return storage.query(model.__typename, predicate);
 }
+
+export function update(model: PersistedModel) {
+    return storage.update(model);
+}
+
+// TODO delete all?
+export function remove(model: PersistedModel, predicateFunction?: Function) {
+    if (!predicateFunction) {return storage.remove(model);}
+
+    const modelPredicate = createPredicate(model);
+    const predicate = predicateFunction(modelPredicate);
+    return storage.remove(model, predicate);
+}
