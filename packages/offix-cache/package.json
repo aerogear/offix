@@ -12,17 +12,17 @@
     "size:why": "size-limit --why"
   },
   "devDependencies": {
-    "@size-limit/preset-small-lib": "4.4.1",
+    "@size-limit/preset-small-lib": "4.5.0",
     "@types/fetch-mock": "7.3.2",
     "@types/graphql": "14.2.3",
     "@types/jest": "26.0.0",
-    "@types/node": "12.12.31",
+    "@types/node": "12.12.47",
     "graphql": "15.1.0",
     "graphql-tag": "2.10.3",
     "jest": "26.0.1",
-    "size-limit": "4.4.1",
+    "size-limit": "4.5.0",
     "ts-jest": "26.1.0",
-    "typescript": "3.8.3"
+    "typescript": "3.9.5"
   },
   "dependencies": {
     "apollo-client": "2.6.10",
