@@ -158,7 +158,7 @@ export function useOfflineMutation<TData, TVariables = OperationVariables>(
             variables: mutateVariables
           })
           .then(response => {
-            onMutationCompleted(response, mutationId);
+            onMutationCompleted(response as ExecutionResult<TData>, mutationId);
             resolve(response as ExecutionResult<TData>);
           })
           .catch(err => {
