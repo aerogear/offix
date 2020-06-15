@@ -1,6 +1,6 @@
 {
   "name": "offix-client",
-  "version": "0.15.1",
+  "version": "0.15.2",
   "description": "Offix GraphQL Offline Client",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
