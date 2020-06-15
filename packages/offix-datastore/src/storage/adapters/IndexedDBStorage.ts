@@ -1,11 +1,11 @@
-import { Model, PersistedModel } from "../models";
-import { Storage } from "./Storage";
-import { getStoreNameFromModelName, generateId } from "./core";
-import { PredicateFunction } from "../predicates";
+import { Model, PersistedModel } from "../../models";
+import { IStorageAdapter } from "../Storage";
+import { getStoreNameFromModelName } from "../core";
+import { PredicateFunction } from "../../predicates";
 
 const DB_NAME = "offix-datastore";
 
-export class IndexedDBStorage implements Storage {
+export class IndexedDBStorage implements IStorageAdapter {
     public readonly indexedDB: Promise<IDBDatabase>;
 
     constructor(models: Model[], schemaVersion: number) {
@@ -44,10 +44,9 @@ export class IndexedDBStorage implements Storage {
         });
     }
 
-    async save(model: Model) {
+    async save(model: PersistedModel) {
         const store = await this.getStore(model.__typename);
-        const persistedModel = { ...model, id: generateId() };
-        const key = await this.convertToPromise<IDBValidKey>(store.add(persistedModel));
+        const key = await this.convertToPromise<IDBValidKey>(store.add(model));
         return this.convertToPromise<PersistedModel>(store.get(key));
     }
 

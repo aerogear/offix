@@ -28,6 +28,7 @@
     "@graphql-toolkit/common": "^0.10.7",
     "graphql": "^15.1.0",
     "graphql-metadata": "^0.6.2",
-    "uuid": "^8.1.0"
+    "uuid": "^8.1.0",
+    "zen-observable": "^0.8.15"
   }
 }

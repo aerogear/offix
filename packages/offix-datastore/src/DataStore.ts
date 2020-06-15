@@ -1,6 +1,6 @@
 import { buildSchema } from "graphql";
 import { readFileSync } from "fs";
-import { createDefaultStorage, Storage } from "./storage";
+import { Storage, StoreChangeEvent } from "./storage";
 import { extractModelsFromSchema, Model, PersistedModel } from "./models";
 import { createPredicate } from "./predicates";
 
@@ -10,7 +10,7 @@ export function configure(schemaLocation: string, schemaVersion: number = 1) {
     const schemaText = readFileSync(schemaLocation, "utf8");
     const schema = buildSchema(schemaText);
     const models = extractModelsFromSchema(schema);
-    storage = createDefaultStorage(models, schemaVersion);
+    storage = new Storage(models, schemaVersion);
 }
 
 export function save(model: Model): Promise<PersistedModel> {
@@ -36,4 +36,8 @@ export function remove(model: PersistedModel, predicateFunction?: Function) {
     const modelPredicate = createPredicate(model);
     const predicate = predicateFunction(modelPredicate);
     return storage.remove(model, predicate);
+}
+
+export function observe(model: Model, listener: (event: StoreChangeEvent) => void) {
+    return storage.storeChangeEventStream.subscribe(listener);
 }
