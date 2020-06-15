@@ -1,7 +1,8 @@
 {
   "name": "offix-datastore",
   "version": "0.1.0",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "types/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aerogear/offix.git"
