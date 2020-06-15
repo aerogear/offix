@@ -9,13 +9,13 @@
     "docs": "docusaurus docs:version"
   },
   "dependencies": {
-    "@docusaurus/core": "2.0.0-alpha.55",
-    "@docusaurus/preset-classic": "2.0.0-alpha.55",
-    "gsap": "3.2.6",
+    "@docusaurus/core": "2.0.0-alpha.56",
+    "@docusaurus/preset-classic": "2.0.0-alpha.56",
+    "gsap": "3.3.3",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "scrollmagic": "2.0.7",
-    "scrollscene": "0.0.16",
+    "scrollscene": "0.0.20",
     "styled-components": "5.1.1"
   }
 }
