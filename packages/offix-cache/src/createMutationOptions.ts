@@ -75,7 +75,7 @@ interface CacheUpdateHelperOptions {
  * Set of parameters used to generate the update function to
  * update the cache for a given operation and query.
  */
-interface CacheUpdateOptions extends CacheUpdateHelperOptions{
+interface CacheUpdateOptions extends CacheUpdateHelperOptions {
   /**
    * Defines operation type used to make appropriate changes in cache
    *
@@ -159,14 +159,14 @@ export const getUpdateFunction = (options: CacheUpdateOptions): MutationUpdaterF
   const { operationType = CacheOperation.ADD, ...cacheHelperOptions } = options;
 
   if (operationType === CacheOperation.ADD) {
-   return addItemToQuery(cacheHelperOptions);
+    return addItemToQuery(cacheHelperOptions);
   }
   if (operationType === CacheOperation.DELETE) {
     return deleteItemFromQuery(cacheHelperOptions);
   }
   // this default catches the REFRESH case and returns an empty update function which does nothing
   // eslint-disable-next-line
-  return () => {};
+  return () => { };
 };
 
 /**
@@ -190,10 +190,21 @@ function addItemToQuery({ mutationName, updateQuery, idField = "id" }: CacheUpda
       if (result && operationData) {
         // FIXME deduplication should happen on subscriptions
         // We do that every time no matter if we have subscription
-        if (!result.find((item: any) => {
-          return item[idField] === operationData[idField];
-        })) {
-          result.push(operationData);
+        if (result.find) {
+          const foundItem = !result.find((item: any) => {
+            return item[idField] === operationData[idField];
+          });
+          if (foundItem) {
+            result.push(operationData);
+          }
+
+        } else if (result.items && result.items.find) {
+          const foundItem = !result.items.find((item: any) => {
+            return item[idField] === operationData[idField];
+          });
+          if (foundItem) {
+            result.items.push(operationData);
+          }
         }
       } else {
         queryResult[queryField] = [operationData];
@@ -230,9 +241,21 @@ function deleteItemFromQuery({ mutationName, updateQuery, idField = "id" }: Cach
           } else {
             toBeRemoved = operationData;
           }
-          const newData = queryResult[queryField].filter((item: any) => {
-            return toBeRemoved[idField] !== item[idField];
-          });
+          let newData: any;
+          if (typeof queryResult[queryField].filter === "function") {
+            newData = queryResult[queryField].filter((item: any) => {
+              return toBeRemoved[idField] !== item[idField];
+            });
+          } else if (queryResult[queryField].items) {
+            const newItems = queryResult[queryField].items.filter((item: any) => {
+              return toBeRemoved[idField] !== item[idField];
+            });
+            newData = queryResult[queryField];
+            newData.items = newItems;
+          } else {
+            newData = queryResult[queryField];
+          }
+
           queryResult[queryField] = newData;
           cache.writeQuery({
             query,
