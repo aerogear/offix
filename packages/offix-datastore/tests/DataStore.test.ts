@@ -4,8 +4,15 @@
 
 import "fake-indexeddb/auto";
 
-import { configure, remove, save, query, update } from "../src/DataStore";
-import { createDefaultStorage } from "../src/storage";
+import {
+    configure,
+    observe,
+    remove,
+    save,
+    query,
+    update
+} from "../src/DataStore";
+import { createDefaultStorage } from "../src/storage/adapters/defaultStorage";
 
 function getIndexedDB() {
     return new Promise<IDBDatabase>((resolve, reject) => {
@@ -80,6 +87,15 @@ test("Remove all entities matching predicate from local store", async () => {
     expect(results.length).toEqual(0);
 });
 
-test.todo("Observe local store events");
+test("Observe local store events", async () => {
+    const note = { title: "test", description: "description", __typename: "Note" };
+    expect.assertions(2);
+
+    observe(note, (event) => {
+        expect(event.operationType).toEqual("ADD");
+        expect(event.data.title).toEqual(note.title);
+    });
+    await save(note);
+});
 
 test.todo("Sync with server");
