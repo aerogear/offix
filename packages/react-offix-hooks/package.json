@@ -1,6 +1,6 @@
 {
   "name": "react-offix-hooks",
-  "version": "0.15.3",
+  "version": "0.15.4",
   "description": "Use offix-client in react hooks",
   "keywords": [
     "offix",
@@ -48,7 +48,7 @@
     "typescript": "3.9.5"
   },
   "dependencies": {
-    "offix-client": "0.15.1",
+    "offix-client": "0.15.4",
     "react": "16.13.1"
   },
   "peerDependencies": {
