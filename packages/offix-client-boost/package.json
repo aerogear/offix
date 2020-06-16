@@ -1,6 +1,6 @@
 {
   "name": "offix-client-boost",
-  "version": "0.15.2",
+  "version": "0.15.3",
   "description": "simplifies setup and usage of offix-client",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
