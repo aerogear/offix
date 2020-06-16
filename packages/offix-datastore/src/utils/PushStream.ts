@@ -17,7 +17,7 @@ export class ObservablePushStream<T> implements PushStream<T> {
         this.observable = new Observable(observer => {
             this.observer = observer;
         });
-        // disable @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         this.observable.subscribe((e) => {});
     }
 
