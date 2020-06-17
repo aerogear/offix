@@ -23,7 +23,10 @@ function getIndexedDB() {
 }
 
 beforeEach(() => {
-    configure(`${__dirname}/mock.graphql`);
+    configure([
+        { __typename: "Note" },
+        { __typename: "Comment" }
+    ]);
 });
 
 afterEach(async () => {

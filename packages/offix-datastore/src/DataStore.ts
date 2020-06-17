@@ -1,16 +1,16 @@
-import { buildSchema } from "graphql";
-import { readFileSync } from "fs";
 import { Storage, StoreChangeEvent } from "./storage";
-import { extractModelsFromSchema, Model, PersistedModel } from "./models";
+import { Model, PersistedModel } from "./models";
 import { createPredicate } from "./predicates";
 
 let storage: Storage;
 
-export function configure(schemaLocation: string, schemaVersion: number = 1) {
-    const schemaText = readFileSync(schemaLocation, "utf8");
-    const schema = buildSchema(schemaText);
-    const models = extractModelsFromSchema(schema);
+function updateServer(event: StoreChangeEvent) {
+    // send to server
+}
+
+export function configure(models: Model[], schemaVersion: number = 1) {
     storage = new Storage(models, schemaVersion);
+    storage.storeChangeEventStream.subscribe(updateServer);
 }
 
 export function save(model: Model): Promise<PersistedModel> {
