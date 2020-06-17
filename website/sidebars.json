@@ -10,6 +10,11 @@
       "conflict-client",
       "conflict-server"
     ],
+    "Offix DataStore": [
+      "datastore-getting-started",
+      "datastore-manipulating-data",
+      "datastore-observing-changes"
+    ],
     "Platforms": [
       "react",
       "react-native",
