@@ -31,7 +31,9 @@ beforeEach(() => {
 
 afterEach(async () => {
     await new Promise((resolve, reject) => {
-        indexedDB.deleteDatabase("offix-datastore").onsuccess = event => resolve();
+        const del = indexedDB.deleteDatabase("offix-datastore");
+        del.onsuccess = event => resolve();
+        del.onblocked = event => resolve();
     });
 });
 
