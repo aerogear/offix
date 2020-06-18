@@ -23,12 +23,12 @@
     "access": "public"
   },
   "devDependencies": {
-    "@size-limit/preset-small-lib": "4.5.0",
+    "@size-limit/preset-small-lib": "4.5.1",
     "apollo-link": "1.2.14",
     "graphql": "^14.6.0 || ^15.0.0",
     "graphql-tag": "2.10.3",
     "jest": "26.0.1",
-    "size-limit": "4.5.0",
+    "size-limit": "4.5.1",
     "ts-jest": "26.1.0",
     "typescript": "3.9.5"
   }
