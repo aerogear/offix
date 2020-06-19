@@ -14,13 +14,16 @@ if [ ! "$CI" = true ]; then
 fi
 
 if [[ "$(echo $TAG | grep -E $RELEASE_SYNTAX)" == "$TAG" ]]; then
+  TAG=$TAG npm run release:validate
   echo "publishing a new release: $TAG"
   lerna --no-private exec npm publish
 elif [[ "$(echo $TAG | grep -E $PRERELEASE_SYNTAX)" == "$TAG" ]]; then
-  echo "publishing a new pre release: $TAG"
+  lerna version $TAG --no-push --no-push --no-git-tag-version --exact --ignore-changes -y 
+  echo "publishing a new pre release: $TAG" 
   lerna --no-private exec "npm publish --tag next"
 else
   echo "Error: the tag $TAG is not valid. exiting..."
   exit 1
 fi
+
  
