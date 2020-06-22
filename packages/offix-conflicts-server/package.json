@@ -23,7 +23,7 @@
         "graphql": "15.1.0",
         "jest": "26.0.1",
         "size-limit": "4.5.1",
-        "ts-jest": "26.1.0",
+        "ts-jest": "26.1.1",
         "typescript": "3.9.5"
     },
     "peerDependencies": {
