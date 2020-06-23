@@ -201,7 +201,7 @@ function addItemToQuery({ mutationName, updateQuery, idField = "id", returnField
       if (result && operationData) {
         // FIXME deduplication should happen on subscriptions
         // We do that every time no matter if we have subscription
-        if (result.find) {
+        if (result instanceof Array) {
           const foundItem = !result.find((item: any) => {
             return item[idField] === operationData[idField];
           });
@@ -255,7 +255,7 @@ function deleteItemFromQuery({ mutationName, updateQuery, idField = "id", return
             ? queryResult[queryField][returnField]
             : queryResult[queryField];
 
-          if (typeof prev.filter === "function") {
+          if (prev instanceof Array) {
             newData = prev.filter((item: any) => {
               return toBeRemoved[idField] !== item[idField];
             });
