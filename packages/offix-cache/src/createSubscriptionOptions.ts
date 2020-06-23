@@ -10,7 +10,7 @@ export interface SubscriptionHelperOptions {
   cacheUpdateQuery: CacheUpdatesQuery;
   operationType: CacheOperation;
   idField?: string;
-  fieldName?: string;
+  returnField?: string;
 }
 
 /**
@@ -36,7 +36,7 @@ export const createSubscriptionOptions = (options: SubscriptionHelperOptions): S
     cacheUpdateQuery,
     operationType,
     idField = "id",
-    fieldName = null
+    returnField = null
   } = options;
   const document = (subscriptionQuery && (subscriptionQuery as QueryWithVariables).query)
     || (subscriptionQuery as DocumentNode);
@@ -58,14 +58,14 @@ export const createSubscriptionOptions = (options: SubscriptionHelperOptions): S
 
       // necessary for relationships
       // i.e. comments on a task field
-      const obj = (fieldName)
-        ? prev[queryField][fieldName]
+      const obj = (returnField)
+        ? prev[queryField][returnField]
         : prev[queryField];
 
       const updater = getUpdateQueryFunction(optype, idField);
       const result = updater(obj, mutadedItem);
 
-      if (!fieldName) {
+      if (!returnField) {
         return {
           [queryField]: result
         };
@@ -74,7 +74,7 @@ export const createSubscriptionOptions = (options: SubscriptionHelperOptions): S
       return {
         [queryField]: {
           ...prev[queryField],
-          [fieldName]: result
+          [returnField]: result
         }
       };
     }
