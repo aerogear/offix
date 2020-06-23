@@ -69,6 +69,14 @@ interface CacheUpdateHelperOptions {
    * @default uses `id` field on the type
    */
   idField?: string;
+
+  /**
+   * String value for possible nested return type, primarily used
+   * with pagination or relationships.
+   *
+   * @default uses null
+   */
+  returnField?: string | null;
 }
 
 /**
@@ -173,7 +181,7 @@ export const getUpdateFunction = (options: CacheUpdateOptions): MutationUpdaterF
  * Generic cache update function that adds an item to a query that contains a list of items
  * Might be exported in the future
  */
-function addItemToQuery({ mutationName, updateQuery, idField = "id" }: CacheUpdateHelperOptions): MutationUpdaterFn {
+function addItemToQuery({ mutationName, updateQuery, idField = "id", returnField = null }: CacheUpdateHelperOptions): MutationUpdaterFn {
   return (cache, { data }) => {
     const { query, variables } = deconstructQuery(updateQuery);
     const queryField = getOperationFieldName(query);
@@ -186,29 +194,29 @@ function addItemToQuery({ mutationName, updateQuery, idField = "id" }: CacheUpda
         queryResult = {};
       }
 
-      const result = queryResult[queryField];
+      const result = (returnField)
+        ? queryResult[queryField][returnField]
+        : queryResult[queryField];
+
       if (result && operationData) {
         // FIXME deduplication should happen on subscriptions
         // We do that every time no matter if we have subscription
-        if (result.find) {
+        if (result instanceof Array) {
           const foundItem = !result.find((item: any) => {
             return item[idField] === operationData[idField];
           });
           if (foundItem) {
             result.push(operationData);
           }
-
-        } else if (result.items && result.items.find) {
-          const foundItem = !result.items.find((item: any) => {
-            return item[idField] === operationData[idField];
-          });
-          if (foundItem) {
-            result.items.push(operationData);
-          }
         }
       } else {
-        queryResult[queryField] = [operationData];
+        if (!returnField) {
+          queryResult[queryField] = [operationData];
+        } else {
+          queryResult[queryField][returnField] = [operationData];
+        }
       }
+
       try {
         cache.writeQuery({
           query,
@@ -226,7 +234,7 @@ function addItemToQuery({ mutationName, updateQuery, idField = "id" }: CacheUpda
  * Generic cache update function that removes an item from a query that contains a list of items
  * Might be exported in the future
  */
-function deleteItemFromQuery({ mutationName, updateQuery, idField = "id" }: CacheUpdateHelperOptions): MutationUpdaterFn {
+function deleteItemFromQuery({ mutationName, updateQuery, idField = "id", returnField = null }: CacheUpdateHelperOptions): MutationUpdaterFn {
   return (cache, { data }) => {
     const { query, variables } = deconstructQuery(updateQuery);
     const queryField = getOperationFieldName(query);
@@ -242,18 +250,21 @@ function deleteItemFromQuery({ mutationName, updateQuery, idField = "id" }: Cach
             toBeRemoved = operationData;
           }
           let newData: any;
-          if (typeof queryResult[queryField].filter === "function") {
-            newData = queryResult[queryField].filter((item: any) => {
+
+          const prev = (returnField)
+            ? queryResult[queryField][returnField]
+            : queryResult[queryField];
+
+          if (prev instanceof Array) {
+            newData = prev.filter((item: any) => {
               return toBeRemoved[idField] !== item[idField];
             });
-          } else if (queryResult[queryField].items) {
-            const newItems = queryResult[queryField].items.filter((item: any) => {
-              return toBeRemoved[idField] !== item[idField];
-            });
-            newData = queryResult[queryField];
-            newData.items = newItems;
           } else {
-            newData = queryResult[queryField];
+            if (!returnField) {
+              newData = queryResult[queryField];
+            } else {
+              newData = queryResult[queryField][returnField];
+            }
           }
 
           queryResult[queryField] = newData;

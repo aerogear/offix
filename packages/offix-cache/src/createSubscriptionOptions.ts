@@ -10,6 +10,7 @@ export interface SubscriptionHelperOptions {
   cacheUpdateQuery: CacheUpdatesQuery;
   operationType: CacheOperation;
   idField?: string;
+  returnField?: string;
 }
 
 /**
@@ -34,7 +35,8 @@ export const createSubscriptionOptions = (options: SubscriptionHelperOptions): S
     subscriptionQuery,
     cacheUpdateQuery,
     operationType,
-    idField = "id"
+    idField = "id",
+    returnField = null
   } = options;
   const document = (subscriptionQuery && (subscriptionQuery as QueryWithVariables).query)
     || (subscriptionQuery as DocumentNode);
@@ -53,12 +55,27 @@ export const createSubscriptionOptions = (options: SubscriptionHelperOptions): S
       const mutadedItem = data[key];
 
       const optype = operationType;
-      const obj = prev[queryField];
+
+      // necessary for relationships
+      // i.e. comments on a task field
+      const obj = (returnField)
+        ? prev[queryField][returnField]
+        : prev[queryField];
 
       const updater = getUpdateQueryFunction(optype, idField);
       const result = updater(obj, mutadedItem);
+
+      if (!returnField) {
+        return {
+          [queryField]: result
+        };
+      }
+
       return {
-        [queryField]: result
+        [queryField]: {
+          ...prev[queryField],
+          [returnField]: result
+        }
       };
     }
   };
@@ -91,12 +108,11 @@ const getUpdateQueryFunction = (operationType: CacheOperation, idField = "id"): 
 function addSubscriptionItem({ idField }: { idField: string }) {
   return (prev: [CacheItem], newItem: CacheItem | undefined) => {
     if (!newItem) {
-      return [...prev];
-    } else {
-      return [...prev.filter(item => {
-        return item[idField] !== newItem[idField];
-      }), newItem];
+      return prev;
     }
+    return [...prev.filter(item => {
+      return item[idField] !== newItem[idField];
+    }), newItem];
   };
 };
 
@@ -108,9 +124,8 @@ function deleteSubscriptionItem({ idField }: { idField: string }) {
   return (prev: [CacheItem], newItem: CacheItem | undefined) => {
     if (!newItem) {
       return [];
-    } else {
-      return prev.filter((item: any) => item[idField] !== newItem[idField]);
     }
+    return prev.filter((item: any) => item[idField] !== newItem[idField]);
   };
 };
 
@@ -121,9 +136,8 @@ function deleteSubscriptionItem({ idField }: { idField: string }) {
 function updateSubscriptionItem({ idField }: { idField: string }) {
   return (prev: [CacheItem], newItem: CacheItem | undefined) => {
     if (!newItem) {
-      return [...prev];
-    } else {
-      return prev.map((item: any) => item[idField] === newItem[idField] ? newItem : item);
+      return prev;
     }
+    return prev.map((item: any) => item[idField] === newItem[idField] ? newItem : item);
   };
 };

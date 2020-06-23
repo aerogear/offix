@@ -76,9 +76,30 @@ const options = createMutationOptions(mutationOptions);
 apolloClient.mutate(options);
 ```
 
-> NOTE: Cache helpers currently support only GraphQL Queries that return arrays.
-> For example `getUsers():[User]`.
-> When working with single objects returned by Queries we usually do not need use any helper as Query will be updated automatically on every update
+### Pagination and relationships
+
+Offix by default assumes that the object returned by mutations contains just your data. In situations when you need to wrap your data into some container to provide pagination and other information, Offix will require an additional parameter. For example when the API returns TaskPage etc. the actual data might be returned over `items`.
+
+When this query is cached, it may be necessary to update a field within the query and not the entire query, for example with relationships. In order to do this, it is necessary to provide the name of the field being updated with the `returnField` parameter.
+
+```javascript
+const mutationOptions = {
+  mutation: ADD_COMMENT,
+  variables: {
+    title: 'comment title'
+  },
+  updateQuery: {
+    query: GET_TASK,
+    variables: {
+      filterBy: 'some filter'
+    }
+  },
+  returnType: 'Comment',
+  operationType: CacheOperation.ADD,
+  idField: 'id',
+  returnField: 'comments
+};
+```
 
 ## Subscription Helpers
 
@@ -120,6 +141,20 @@ query.subscribeToMore(subscriptionOptions);
 ```
 
 The cache will now be kept up to date with automatic data deduplication being performed.
+
+### Pagination and relationships
+
+Similarly to the mutation cache update helpers, it is necessary to provide the `returnField` parameter to specify the name of the field to update within the query.
+
+```javascript
+export const editSubscriptionOptions = createSubscriptionOptions({
+  subscriptionQuery: NEW_COMMENT,
+  cacheUpdateQuery: GET_TASK,
+  operationType: CacheOperation.ADD,
+  idField: 'id',
+  returnField: 'comments'
+});
+```
 
 ### Multiple Subscriptions
 
