@@ -15,7 +15,7 @@
     "@size-limit/preset-small-lib": "4.5.1",
     "@types/jest": "26.0.0",
     "@types/node": "12.12.47",
-    "jest": "26.0.1",
+    "jest": "26.1.0",
     "size-limit": "4.5.1",
     "ts-jest": "26.1.1",
     "typescript": "3.9.5"
