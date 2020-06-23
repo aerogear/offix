@@ -78,7 +78,9 @@ apolloClient.mutate(options);
 
 ### Pagination and relationships
 
-It may be necessary to update a field within the query and not the entire query, for example with relationships. In order to do this, it is necessary to provide the name of the field being updated with the `returnField` parameter.
+Offix by default assumes that the object returned by mutations contains just your data. In situations when you need to wrap your data into some container to provide pagination and other information, Offix will require an additional parameter. For example when the API returns TaskPage etc. the actual data might be returned over `items`.
+
+When this query is cached, it may be necessary to update a field within the query and not the entire query, for example with relationships. In order to do this, it is necessary to provide the name of the field being updated with the `returnField` parameter.
 
 ```javascript
 const mutationOptions = {
