@@ -1,8 +1,7 @@
 import { ExpressionOperators, ModelFieldPredicate, PredicateExpression } from "./PredicateFunctions";
 import { AllOperators } from "./Operators";
-import { Model } from "../models";
 
-export function createPredicate(model: Model) {
+export function createPredicate(model: any) {
     const modelPredicate: any = {};
 
     Object.keys(model).forEach((key) => {
