@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "4.5.2",
-    "@types/jest": "26.0.0",
+    "@types/jest": "26.0.2",
     "@types/json-server": "0.14.2",
     "@types/node-fetch": "2.5.7",
     "fake-indexeddb": "3.0.2",
