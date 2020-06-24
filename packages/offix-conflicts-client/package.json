@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "4.5.2",
-    "@types/jest": "26.0.2",
+    "@types/jest": "26.0.3",
     "@types/node": "12.12.47",
     "jest": "26.1.0",
     "size-limit": "4.5.2",
