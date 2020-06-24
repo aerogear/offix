@@ -12,7 +12,7 @@ import { generateId } from "./core";
 export interface IStorageAdapter {
     save(storeName: string, input: any): Promise<any>;
     query(storeName: string, predicate?: PredicateFunction): Promise<any | any[]>;
-    update(storeName: string, input: any): Promise<any>;
+    update(storeName: string, input: any, predicate?: PredicateFunction): Promise<any>;
     remove(storeName: string, predicate?: PredicateFunction): Promise<any | any[]>;
 }
 
@@ -54,8 +54,8 @@ export class Storage {
         return this.adapter.query(storeName, predicate);
     }
 
-    public async update(storeName: string, input: any): Promise<any> {
-        const result = await this.adapter.update(storeName, input);
+    public async update(storeName: string, input: any, predicate?: PredicateFunction): Promise<any> {
+        const result = await this.adapter.update(storeName, input, predicate);
         this.storeChangeEventStream.push({
             eventType: "UPDATE",
             data: result

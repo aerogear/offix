@@ -56,10 +56,15 @@ export class IndexedDBStorage implements IStorageAdapter {
         return predicate.filter(all);
     }
 
-    public async update(storeName: string, input: any) {
+    public async update(storeName: string, input: any, predicate?: PredicateFunction) {
+        const targets = await this.query(storeName, predicate);
         const store = await this.getStore(storeName);
-        const key = await this.convertToPromise<IDBValidKey>(store.put(input));
-        return this.convertToPromise<any>(store.get(key));
+
+        const promises = targets.map((data) => this.convertToPromise<IDBValidKey>(
+            store.put({ ...data, ...input }))
+        );
+        await Promise.all(promises);
+        return this.query(storeName, predicate);
     }
 
     public async remove(storeName: string, predicate?: PredicateFunction) {

@@ -82,24 +82,30 @@ test("Save Note to local store", async () => {
 test("Query from local store", async () => {
     const note = { title: "test", description: "description" };
     const savedNote = (await NoteModel.save(note) as any);
-    const results = (await NoteModel.query((p: any) => p.title("eq", note.title)) as any);
+    const results = (await NoteModel.query((p: any) => p.title("eq", note.title)));
     expect(results[0]).toHaveProperty("id", savedNote.id);
 });
 
 test("Update single entity in local store", async () => {
     const note = { title: "test", description: "description" };
     const savedNote = (await NoteModel.save(note) as any);
-    savedNote.title = "update note";
-    await NoteModel.update(savedNote);
-    const updatedNote = (await NoteModel.query((p: any) => p.id("eq", savedNote.id)) as any[])[0];
-    expect(updatedNote.title).toEqual(savedNote.title);
+    const newTitle = "updated note";
+
+    await NoteModel.update({
+        ...savedNote,
+        title: newTitle
+    }, (p: any) => p.id("eq", savedNote.id));
+
+    const updatedNote = (await NoteModel.query((p: any) => p.id("eq", savedNote.id)))[0];
+
+    expect(updatedNote.title).toEqual(newTitle);
 });
 
 test("Remove single entity from local store", async () => {
     const note = { title: "test", description: "description" };
     const savedNote = (await NoteModel.save(note) as any);
     await NoteModel.remove();
-    const results = (await NoteModel.query((p: any) => p.id("eq", savedNote.id)) as any[]);
+    const results = (await NoteModel.query((p: any) => p.id("eq", savedNote.id)));
     expect(results.length).toEqual(0);
 });
 
@@ -108,7 +114,7 @@ test("Remove all entities matching predicate from local store", async () => {
     const savedNote = (await NoteModel.save(note) as any);
     const predicate = (p: any) => p.id("eq", savedNote.id);
     await NoteModel.remove(predicate);
-    const results = (await NoteModel.query(predicate) as any[]);
+    const results = (await NoteModel.query(predicate));
     expect(results.length).toEqual(0);
 });
 

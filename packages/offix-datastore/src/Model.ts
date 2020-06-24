@@ -31,8 +31,14 @@ export class Model<T> {
         return this.getStorage().query(this.storeName, predicate);
     }
 
-    public update(input: Partial<T>) {
-        return this.getStorage().update(this.storeName, input);
+    public update(input: Partial<T>, predicateFunction?: Function) {
+        if (!predicateFunction) {
+            return this.getStorage().update(this.storeName, input);
+        }
+
+        const modelPredicate = createPredicate(this.fields);
+        const predicate = predicateFunction(modelPredicate);
+        return this.getStorage().update(this.storeName, input, predicate);
     }
 
     public remove(predicateFunction?: Function) {
