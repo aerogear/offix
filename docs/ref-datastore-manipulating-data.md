@@ -9,34 +9,28 @@ All interaction is done with the on-device storage.
 ## Saving data
 
 ```typescript
-import { save } from 'offix-datastore';
+import { TaskModel } from 'datastoreConfig';
 
-save({
+TaskModel.save({
     title: "Write Docs",
     description: "Write Offix Docs",
-    __typename: "Task"
 }).then((data) => {
-    console.log(data); // { id: '...', title, description, __typename  }
+    console.log(data); // { id: '...', title, description }
 })
 ```
 
 ## Querying data
 
 ```typescript
-import { query } from 'offix-datastore;
+import { TaskModel } from 'datastoreConfig';
 
-query({
-    __typename: "Task"
-}).then((data) => {}) // Retrieves all tasks
+TaskModel.query().then((data) => {}) // Retrieves all tasks
 ```
 
 Predicate functions are used to filter data
 
 ```typescript
-query({ 
-    title: "",
-    __typename: "Task"
-}, (p: any) => p.title("eq", "test"))
+TaskModel.query((p: any) => p.title("eq", "test"))
 .then((data) => {}) // Retrieves all tasks where title matches "test"
 ```
 
@@ -47,11 +41,7 @@ Currently supported operators(more coming soon)
 You can also create predicate expressions
 
 ```typescript
-query({ 
-    title: "",
-    numberOfDaysLeft: ""
-    __typename: "Task"
-}, (p: any) => p.or(
+TaskModel.query((p: any) => p.or(
     p.title("eq", "test"),
     p.not(p.numberOfDaysLeft("gt", 4))
 )
@@ -61,14 +51,11 @@ You can create `and`, `or` and `not` expressions
 ## Updating data
 
 ```typescript
-import { update } from 'offix-datastore';
+import { TaskModel } from 'datastoreConfig';
 
-update({
-    id: "..."
-    title: "Write Docs",
-    description: "Write Offix Docs",
-    __typename: "Task"
-})
+TaskModel.update({
+    title: "Offix Test"
+}, (p: any) => p.title("eq", "test"))
 .then((data) => {
     console.log(data); // updated data
 })
@@ -77,14 +64,7 @@ update({
 ## Deleting data
 
 ```typescript
-import { query, remove } from 'offix-datastore';
+import { TaskModel } from 'datastoreConfig';
 
-const task = (await query({ ...selectors }, predicate))[0];
-await remove(task);
-```
-
-You can also delete data matching predicates
-
-```typescript
-await remove({ ...selectors }, (p) => p.numberOfDaysLeft("gt", 4));
+await TaskModel.remove((p) => p.numberOfDaysLeft("gt", 4));
 ```

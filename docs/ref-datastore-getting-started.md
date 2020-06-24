@@ -11,24 +11,51 @@ Currently, Offix DataStore can only be used locally with support for synchroniza
 
 ## Installing Offix DataStore
 
-Not published yet!
+Using [npm](https://www.npmjs.com/package/offix-datastore):
+
+```shell
+npm install offix-datastore
+```
+
+Or [yarn](https://yarnpkg.com/en/package/offix-datastore):
+
+```shell
+yarn add offix-datastore
+```
 
 ## Using the DataStore inside your application
 
-To work with DataStore, you need to pass your models to DataStore and allow it setup stores for each model.
+To work with DataStore, you need to pass your models to DataStore.
 
-```typescript
-import { configure } from 'offix-datastore';
+```typescript title="/src/datastoreConfig.ts"
+import { DataStore } from 'offix-datastore';
 
-configure([
-    { __typename: "Task" }
-]);
+export interface Task {
+    id?: string;
+    title: string;
+    description: string;
+    numberOfDaysLeft: number;
+}
+
+const datastore = new DataStore(DB_NAME);
+export const TaskModel = datastore.create<Task>(TASK_STORE_NAME, {
+    id: "string",
+    title: "string",
+    description: "string",
+    numberOfDaysLeft: "number"
+});
+datastore.init();
 ```
 
-`configure` also takes a schema version parameter(defaults to 1). When pushing a new version of your app increment the schema version. This will allow DataStore to removed outdated stores and add new ones.
+## Schema Upgrades
+
+DataStore internally creates a store for each model on the device. 
+When you push a new version of your app with new models or you have removed some models.
+The stores for the new models won't be create on the client device and the now unused stores(for removed models)
+won't be deleted. To make DataStore acknowledge these changes, you need to increment the schema version.
+
+`DataStore` takes a schema version parameter(defaults to 1). 
 
 ```typescript
-configure([
-    { __typename: "Task" }
-], 2);
+const dataStore = new DataStore(DB_NAME, 2);
 ```

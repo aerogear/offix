@@ -7,7 +7,7 @@ import { generateId } from "./core";
  * This interface defines the API that is required
  * from any Device specific Storage implementation
  * It defines a CRUD interface that a
- * Device Specific Implementation must follow
+ * Device Specific Implementation must support
 */
 export interface IStorageAdapter {
     save(storeName: string, input: any): Promise<any>;
@@ -17,7 +17,11 @@ export interface IStorageAdapter {
 }
 
 /**
- * The various change events that can occur on Storage
+ * The various change events that can occur on Store
+ * 
+ * "ADD" - data was added to the Store  
+ * "UPDATE" - data was updated in the Store  
+ * "DELETE" - data was deleted from the Store
  */
 export type EventTypes = "ADD" | "UPDATE" | "DELETE";
 
