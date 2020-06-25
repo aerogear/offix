@@ -13,8 +13,8 @@ export const GET_TODOS = gql`
 `;
 
 export const ADD_TODO = gql`
-  mutation createTodo($description: String, $file: FileUpload, $title: String, $version: Int!, $completed: Boolean){
-    createTodo(input: {title: $title, description: $description, file: $file, version: $version, completed: $completed}) {
+  mutation createTodo($description: String, $title: String, $version: Int!, $completed: Boolean){
+    createTodo(input: {title: $title, description: $description, version: $version, completed: $completed}) {
       id
       title
       description

@@ -3,13 +3,11 @@ import React, { useRef } from 'react';
 export const AddTodo = ({ addTodo, cancel }) => {
   const titleRef = useRef();
   const descriptionRef = useRef();
-  const fileRef = useRef();
 
   const close = () => {
     // clear the form
     titleRef.current.value = '';
     descriptionRef.current.value = '';
-    fileRef.current.value = '';
     cancel();
   };
 
@@ -20,7 +18,6 @@ export const AddTodo = ({ addTodo, cancel }) => {
       variables: {
         title: titleRef.current.value,
         description: descriptionRef.current.value,
-        file: fileRef.current.value,
         version: 1,
         completed: false,
       },
@@ -44,10 +41,6 @@ export const AddTodo = ({ addTodo, cancel }) => {
         className="form-input mb-4"
         ref={descriptionRef}
       />
-      <input type="file"
-        name="file"
-        className="form-input mb-4"
-        ref={descriptionRef}/>
 
       <button
         type="button"
