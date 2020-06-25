@@ -1,6 +1,6 @@
 {
   "name": "offix-react-example",
-  "version": "0.15.4",
+  "version": "0.16.0-alpha",
   "main": "index.js",
   "license": "Apache-2.0",
   "private": true,
@@ -21,11 +21,11 @@
     "graphql": "^14.3.1",
     "graphql-serve": "^0.11.2",
     "graphql-tag": "^2.10.1",
-    "offix-cache": "0.15.4",
-    "offix-client-boost": "0.15.4",
+    "offix-cache": "0.16.0-alpha",
+    "offix-client-boost": "0.16.0-alpha",
     "react": "^16.13.0",
     "react-dom": "^16.8.0",
-    "react-offix-hooks": "0.15.4",
+    "react-offix-hooks": "0.16.0-alpha",
     "spectre.css": "^0.5.8",
     "subscriptions-transport-ws": "^0.9.16"
   },
