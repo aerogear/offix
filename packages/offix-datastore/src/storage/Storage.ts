@@ -5,9 +5,9 @@ import { generateId } from "./core";
 
 /**
  * This interface defines the API that is required
- * from any Device specific Storage implementation
+ * from any device specific storage implementation.
  * It defines a CRUD interface that a
- * Device Specific Implementation must support
+ * device specific implementation must support.
 */
 export interface IStorageAdapter {
     /**

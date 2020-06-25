@@ -2,9 +2,9 @@ import { Storage, StoreChangeEvent, EventTypes } from "./storage";
 import { createPredicate, Predicate } from "./predicates";
 
 export interface FieldOptions {
-    // GraphQL type
+    /** GraphQL type */
     type: string;
-    // GraphQL key
+    /** GraphQL key */
     key: string;
     // TODO
     format?: {  };

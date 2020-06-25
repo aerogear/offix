@@ -4,12 +4,12 @@ title: Manipulating Data
 sidebar_label: Manipulating Data
 ---
 
-All interaction is done with the on-device storage.
+All interactions are done with the on-device storage.
 
 ## Saving data
 
 ```typescript
-import { TaskModel } from 'datastoreConfig';
+import { TaskModel } from './datastoreConfig';
 
 TaskModel.save({
     title: "Write Docs",
@@ -22,12 +22,12 @@ TaskModel.save({
 ## Querying data
 
 ```typescript
-import { TaskModel } from 'datastoreConfig';
+import { TaskModel } from './datastoreConfig';
 
 TaskModel.query().then((data) => {}) // Retrieves all tasks
 ```
 
-Predicate functions are used to filter data
+You can use predicate functions to filter data using the schema fields defined in the model
 
 ```typescript
 TaskModel.query((p) => p.title("eq", "test"))
@@ -38,7 +38,8 @@ Currently supported operators(more coming soon)
 - eq  equality operator
 - gt  greater than operator
 
-You can also create predicate expressions
+You can also create expressions with the following logical operators  
+`and | or | not`
 
 ```typescript
 TaskModel.query((p) => p.or(
@@ -46,13 +47,13 @@ TaskModel.query((p) => p.or(
     p.not(p.numberOfDaysLeft("gt", 4))
 )
 ```
-You can create `and`, `or` and `not` expressions
 
 ## Updating data
 
 ```typescript
-import { TaskModel } from 'datastoreConfig';
+import { TaskModel } from './datastoreConfig';
 
+// change update the title of all tasks with title = "test" to "Offix Test"
 TaskModel.update({
     title: "Offix Test"
 }, (p) => p.title("eq", "test"))
@@ -64,7 +65,8 @@ TaskModel.update({
 ## Deleting data
 
 ```typescript
-import { TaskModel } from 'datastoreConfig';
+import { TaskModel } from './datastoreConfig';
 
+// delete all tasks with numberOfDaysLeft greater than 4
 await TaskModel.remove((p) => p.numberOfDaysLeft("gt", 4));
 ```
