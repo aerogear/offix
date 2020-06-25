@@ -10,9 +10,43 @@ import { generateId } from "./core";
  * Device Specific Implementation must support
 */
 export interface IStorageAdapter {
+    /**
+     * Saves data to the Store
+     *
+     * @param storeName The name of the store
+     * @param input The data to be saved
+     * @returns A Promise of the saved data
+     */
     save(storeName: string, input: any): Promise<any>;
+
+    /**
+     * Queries data from the store matching the predicate.
+     * Returns all the data if predicate is not specified
+     *
+     * @param storeName The name of the store
+     * @param predicate A PredicateFunction to filter data
+     * @returns A Promise of the query results
+     */
     query(storeName: string, predicate?: PredicateFunction): Promise<any | any[]>;
+
+    /**
+     * Update data matching predicate or all data if predicate is not specified
+     * with input.
+     *
+     * @param storeName The name of the store
+     * @param input The update to be made
+     * @param predicate A PredicateFunction to filter data
+     * @returns A Promise of the updated data
+     */
     update(storeName: string, input: any, predicate?: PredicateFunction): Promise<any>;
+
+    /**
+     * Deletes data matching predicate or all from the store
+     *
+     * @param storeName The name of the store
+     * @param predicate A PredicateFunction to filter data
+     * @returns A Promise of the deleted data
+     */
     remove(storeName: string, predicate?: PredicateFunction): Promise<any | any[]>;
 }
 
@@ -30,9 +64,14 @@ export type EventTypes = "ADD" | "UPDATE" | "DELETE";
  * a change has occurred on the local store
 */
 export interface StoreChangeEvent {
-    // the type of change event that just occurred
+    /**
+     * The type of change event that just occurred
+     */
     eventType: EventTypes;
-    // the data that was affected by the change
+
+    /**
+     * The data that was affected by the change
+     */
     data: any;
 }
 
