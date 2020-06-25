@@ -1,5 +1,5 @@
 import { Storage } from "./storage";
-import { Model } from "./Model";
+import { Model, Fields } from "./Model";
 
 export class DataStore {
     private dbName: string;
@@ -13,7 +13,7 @@ export class DataStore {
         this.storeNames = [];
     }
 
-    public create<T>(storeName: string, fields: any) {
+    public create<T>(storeName: string, fields: Fields<T>) {
         this.storeNames.push(storeName);
         return new Model<T>(storeName, fields, () => {
             if (this.storage) {return this.storage;}

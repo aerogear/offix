@@ -1,17 +1,33 @@
 import { Storage, StoreChangeEvent, EventTypes } from "./storage";
-import { createPredicate } from "./predicates";
+import { createPredicate, Predicate } from "./predicates";
+
+export interface FieldOptions {
+    // GraphQL type
+    type: string;
+    // GraphQL key
+    key: string;
+    // TODO
+    format?: {  };
+}
+
+/**
+ * Defines the properties expected in the Fields object for a model
+ */
+export type Fields<T> = {
+    [P in keyof T]: FieldOptions
+};
 
 /**
  * Provides CRUD capabilities for a model
  */
 export class Model<T> {
     private storeName: string;
-    private fields: any;
+    private fields: Fields<T>;
     private getStorage: () => Storage;
 
     constructor(
         storeName: string,
-        fields: any,
+        fields: Fields<T>,
         getStorage: () => Storage
     ) {
         this.storeName = storeName;
@@ -23,7 +39,7 @@ export class Model<T> {
         return this.getStorage().save(this.storeName, input);
     }
 
-    public query(predicateFunction?: Function) {
+    public query(predicateFunction?: Predicate<T>) {
         if (!predicateFunction) {return this.getStorage().query(this.storeName);}
 
         const modelPredicate = createPredicate(this.fields);
@@ -31,7 +47,7 @@ export class Model<T> {
         return this.getStorage().query(this.storeName, predicate);
     }
 
-    public update(input: Partial<T>, predicateFunction?: Function) {
+    public update(input: Partial<T>, predicateFunction?: Predicate<T>) {
         if (!predicateFunction) {
             return this.getStorage().update(this.storeName, input);
         }
@@ -41,7 +57,7 @@ export class Model<T> {
         return this.getStorage().update(this.storeName, input, predicate);
     }
 
-    public remove(predicateFunction?: Function) {
+    public remove(predicateFunction?: Predicate<T>) {
         if (!predicateFunction) {return this.getStorage().remove(this.storeName);}
 
         const modelPredicate = createPredicate(this.fields);

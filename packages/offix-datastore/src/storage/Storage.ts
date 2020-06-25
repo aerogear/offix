@@ -18,9 +18,9 @@ export interface IStorageAdapter {
 
 /**
  * The various change events that can occur on Store
- * 
- * "ADD" - data was added to the Store  
- * "UPDATE" - data was updated in the Store  
+ *
+ * "ADD" - data was added to the Store
+ * "UPDATE" - data was updated in the Store
  * "DELETE" - data was deleted from the Store
  */
 export type EventTypes = "ADD" | "UPDATE" | "DELETE";

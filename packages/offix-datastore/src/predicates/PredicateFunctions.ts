@@ -9,7 +9,7 @@ export abstract class PredicateFunction {
 export class ModelFieldPredicate extends PredicateFunction {
     constructor(
         private key: string,
-        private value: string,
+        private value: any,
         private operator: Function
     ) {
         super();

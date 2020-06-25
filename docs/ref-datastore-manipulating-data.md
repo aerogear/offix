@@ -30,7 +30,7 @@ TaskModel.query().then((data) => {}) // Retrieves all tasks
 Predicate functions are used to filter data
 
 ```typescript
-TaskModel.query((p: any) => p.title("eq", "test"))
+TaskModel.query((p) => p.title("eq", "test"))
 .then((data) => {}) // Retrieves all tasks where title matches "test"
 ```
 
@@ -41,7 +41,7 @@ Currently supported operators(more coming soon)
 You can also create predicate expressions
 
 ```typescript
-TaskModel.query((p: any) => p.or(
+TaskModel.query((p) => p.or(
     p.title("eq", "test"),
     p.not(p.numberOfDaysLeft("gt", 4))
 )
@@ -55,7 +55,7 @@ import { TaskModel } from 'datastoreConfig';
 
 TaskModel.update({
     title: "Offix Test"
-}, (p: any) => p.title("eq", "test"))
+}, (p) => p.title("eq", "test"))
 .then((data) => {
     console.log(data); // updated data
 })

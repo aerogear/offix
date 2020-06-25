@@ -39,10 +39,13 @@ export interface Task {
 
 const datastore = new DataStore(DB_NAME);
 export const TaskModel = datastore.create<Task>(TASK_STORE_NAME, {
-    id: "string",
-    title: "string",
-    description: "string",
-    numberOfDaysLeft: "number"
+    id: {
+        type: "ID", // GraphQL Type
+        key: "id" // GraphQL key
+    },
+    title: { type: "String", key: "title" },
+    description: { type: "String", key: "description" },
+    numberOfDaysLeft: { type: "Number", key: "numberOfDaysLeft" }
 });
 datastore.init();
 ```

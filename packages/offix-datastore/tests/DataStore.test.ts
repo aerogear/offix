@@ -4,11 +4,10 @@
 
 import "fake-indexeddb/auto";
 
-import {
-    DataStore
-} from "../src/DataStore";
+import { DataStore } from "../src/DataStore";
 import { createDefaultStorage } from "../src/storage/adapters/defaultStorage";
 import { Model } from "../src/Model";
+import { Predicate } from "../src/predicates";
 
 const DB_NAME = "offix-datastore";
 
@@ -37,14 +36,32 @@ let NoteModel: Model<Note>;
 beforeEach(() => {
     const dataStore = new DataStore(DB_NAME);
     NoteModel = dataStore.create<Note>("user_Note", {
-        id: "string",
-        title: "string",
-        description: "string"
+        id: {
+            type: "ID",
+            key: "id"
+        },
+        title: {
+            type: "String",
+            key: "title"
+        },
+        description: {
+            type: "String",
+            key: "description"
+        }
     });
     dataStore.create<Comment>("user_Comment", {
-        id: "string",
-        title: "string",
-        noteId: "string"
+        id: {
+            type: "ID",
+            key: "id"
+        },
+        title: {
+            type: "String",
+            key: "title"
+        },
+        noteId: {
+            type: "ID",
+            key: "noteId"
+        }
     });
     dataStore.init();
 });
@@ -81,38 +98,38 @@ test("Save Note to local store", async () => {
 
 test("Query from local store", async () => {
     const note = { title: "test", description: "description" };
-    const savedNote = (await NoteModel.save(note) as any);
-    const results = (await NoteModel.query((p: any) => p.title("eq", note.title)));
+    const savedNote = await NoteModel.save(note);
+    const results = (await NoteModel.query((p) => p.title("eq", note.title)));
     expect(results[0]).toHaveProperty("id", savedNote.id);
 });
 
 test("Update single entity in local store", async () => {
     const note = { title: "test", description: "description" };
-    const savedNote = (await NoteModel.save(note) as any);
+    const savedNote = await NoteModel.save(note);
     const newTitle = "updated note";
 
     await NoteModel.update({
         ...savedNote,
         title: newTitle
-    }, (p: any) => p.id("eq", savedNote.id));
+    }, (p) => p.id("eq", savedNote.id));
 
-    const updatedNote = (await NoteModel.query((p: any) => p.id("eq", savedNote.id)))[0];
+    const updatedNote = (await NoteModel.query((p) => p.id("eq", savedNote.id)))[0];
 
     expect(updatedNote.title).toEqual(newTitle);
 });
 
 test("Remove single entity from local store", async () => {
     const note = { title: "test", description: "description" };
-    const savedNote = (await NoteModel.save(note) as any);
+    const savedNote = await NoteModel.save(note);
     await NoteModel.remove();
-    const results = (await NoteModel.query((p: any) => p.id("eq", savedNote.id)));
+    const results = (await NoteModel.query((p) => p.id("eq", savedNote.id)));
     expect(results.length).toEqual(0);
 });
 
 test("Remove all entities matching predicate from local store", async () => {
     const note = { title: "test", description: "description" };
-    const savedNote = (await NoteModel.save(note) as any);
-    const predicate = (p: any) => p.id("eq", savedNote.id);
+    const savedNote = await NoteModel.save(note);
+    const predicate: Predicate<Note> = (p) => p.id("eq", savedNote.id);
     await NoteModel.remove(predicate);
     const results = (await NoteModel.query(predicate));
     expect(results.length).toEqual(0);
