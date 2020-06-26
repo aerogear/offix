@@ -1,43 +1,28 @@
-import { Storage, StoreChangeEvent } from "./storage";
-import { Model, PersistedModel } from "./models";
-import { createPredicate } from "./predicates";
+import { Storage } from "./storage";
+import { Model, Fields } from "./Model";
 
-let storage: Storage;
+export class DataStore {
+    private dbName: string;
+    private schemaVersion: number;
+    private storeNames: string[];
+    private storage?: Storage;
 
-function updateServer(event: StoreChangeEvent) {
-    // send to server
-}
+    constructor(dbName: string, schemaVersion: number = 1) {
+        this.dbName = dbName;
+        this.schemaVersion = schemaVersion;
+        this.storeNames = [];
+    }
 
-export function configure(models: Model[], schemaVersion: number = 1) {
-    storage = new Storage(models, schemaVersion);
-    storage.storeChangeEventStream.subscribe(updateServer);
-}
+    public create<T>(storeName: string, fields: Fields<T>) {
+        this.storeNames.push(storeName);
+        return new Model<T>(storeName, fields, () => {
+            if (this.storage) {return this.storage;}
+            throw new Error("DataStore has not been initialised");
+        });
+    }
 
-export function save(model: Model): Promise<PersistedModel> {
-    return storage.save(model);
-}
-
-export function query(model: Model, predicateFunction?: Function) {
-    if (!predicateFunction) {return storage.query(model.__typename);}
-
-    const modelPredicate = createPredicate(model);
-    const predicate = predicateFunction(modelPredicate);
-    return storage.query(model.__typename, predicate);
-}
-
-export function update(model: PersistedModel) {
-    return storage.update(model);
-}
-
-// TODO delete all?
-export function remove(model: PersistedModel, predicateFunction?: Function) {
-    if (!predicateFunction) {return storage.remove(model);}
-
-    const modelPredicate = createPredicate(model);
-    const predicate = predicateFunction(modelPredicate);
-    return storage.remove(model, predicate);
-}
-
-export function observe(model: Model, listener: (event: StoreChangeEvent) => void) {
-    return storage.storeChangeEventStream.subscribe(listener);
+    public init() {
+        this.storage = new Storage(this.dbName, this.storeNames, this.schemaVersion);
+        // storage.storeChangeEventStream.subscribe(updateServer);
+    }
 }

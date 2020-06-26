@@ -4,10 +4,20 @@ title: Observing Changes
 sidebar_label: Observing Changes
 ---
 
-```typescript
-import { observe } from 'offix-datastore';
+## Change Events
 
-observe({ __typename: "Task" }, (event) => {
-    console.log(event); // { operationType, data }
+You can listen for change events on your local store.
+Each event carries a type and data changed by the event.
+
+The change events that can occur are;
+- `ADD` data is added to the Store. This event carries the saved data
+- `UPDATE` data is updated in the Store. The event carries the updated data
+- `DELETE` data is removed from the Store. The event contains the removed data
+
+```typescript
+import { TaskModel } from 'datastoreConfig';
+
+TaskModel.on("ADD", (event) => {
+    console.log(event); // { eventType, data }
 });
 ```

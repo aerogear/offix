@@ -1,12 +1,32 @@
-import { ExpressionOperators, ModelFieldPredicate, PredicateExpression } from "./PredicateFunctions";
+import { ExpressionOperators, ModelFieldPredicate, PredicateExpression, PredicateFunction } from "./PredicateFunctions";
 import { AllOperators } from "./Operators";
-import { Model } from "../models";
+import { Fields } from "../Model";
 
-export function createPredicate(model: Model) {
+/**
+ * Defines the fields that can be used for filtering in a predicate for a given type
+ */
+export type ModelPredicate<T> = {
+    [P in keyof Required<T>]: (op: string, value: T[P]) => ModelFieldPredicate
+} & {
+    or: (...predicates: PredicateFunction[]) => PredicateExpression;
+    and: (...predicates: PredicateFunction[]) => PredicateExpression;
+    not: (...predicates: PredicateFunction[]) => PredicateExpression;
+};
+
+/**
+ * Defines the predicate function type for a given type
+ */
+export type Predicate<T> = (p: ModelPredicate<T>) => PredicateFunction;
+
+/**
+ * Creates the ModelPredicate object for the given fields
+ *
+ * @param fields the fields to be used for filtering
+ */
+export function createPredicate<T>(fields: Fields<T>): ModelPredicate<T> {
     const modelPredicate: any = {};
 
-    Object.keys(model).forEach((key) => {
-        if (key.startsWith("__")) {return;}
+    Object.keys(fields).forEach((key: string) => {
         modelPredicate[key] = (op: string, value: any) => new ModelFieldPredicate(key, value, AllOperators[op]);
     });
 

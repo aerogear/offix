@@ -1,16 +1,15 @@
-import { Model, PersistedModel } from "../../models";
 import { IStorageAdapter } from "../Storage";
-import { getStoreNameFromModelName } from "../core";
 import { PredicateFunction } from "../../predicates";
 
-const DB_NAME = "offix-datastore";
-
+/**
+ * Web Storage Implementation for DataStore using IndexedDB
+ */
 export class IndexedDBStorage implements IStorageAdapter {
-    public readonly indexedDB: Promise<IDBDatabase>;
+    private indexedDB: Promise<IDBDatabase>;
 
-    constructor(models: Model[], schemaVersion: number) {
+    constructor(dbName: string, storeNames: string[], schemaVersion: number) {
         this.indexedDB = new Promise((resolve, reject) => {
-            const openreq = indexedDB.open(DB_NAME, schemaVersion);
+            const openreq = indexedDB.open(dbName, schemaVersion);
             openreq.onerror = () => reject(openreq.error);
             openreq.onsuccess = () => {
                 const db = openreq.result;
@@ -23,66 +22,70 @@ export class IndexedDBStorage implements IStorageAdapter {
 
             openreq.onupgradeneeded = () => {
                 const db = openreq.result;
-                const storeNames = db.objectStoreNames;
+                const existingStoreNames = db.objectStoreNames;
 
-                for (let i = 0; i < storeNames.length; i++) {
-                    const storeName = (storeNames.item(i) as string);
-                    const modelStore = models.find(({ __typename }) => (
-                        getStoreNameFromModelName(__typename) === storeName
+                for (let i = 0; i < existingStoreNames.length; i++) {
+                    const storeName = (existingStoreNames.item(i) as string);
+                    const existingModelStoreName = storeNames.find((modelStoreName) => (
+                        modelStoreName === storeName
                     ));
-                    if (modelStore) { return; }
+                    if (existingModelStoreName) { return; }
 
                     // model has been removed, remove it's store
                     db.deleteObjectStore(storeName);
                 }
-                models.forEach(({ __typename }: Model) => {
-                    const storeName = getStoreNameFromModelName(__typename);
-                    if (storeNames.contains(storeName)) { return; }
+                storeNames.forEach((storeName) => {
+                    if (existingStoreNames.contains(storeName)) { return; }
                     db.createObjectStore(storeName, { keyPath: "id" });
                 });
             };
         });
     }
 
-    async save(model: PersistedModel) {
-        const store = await this.getStore(model.__typename);
-        const key = await this.convertToPromise<IDBValidKey>(store.add(model));
-        return this.convertToPromise<PersistedModel>(store.get(key));
+    public async save(storeName: string, input: any) {
+        const store = await this.getStore(storeName);
+        const key = await this.convertToPromise<IDBValidKey>(store.add(input));
+        return this.convertToPromise<any>(store.get(key));
     }
 
-    async query(modelName: string, predicate?: PredicateFunction) {
-        const store = await this.getStore(modelName);
-        const all = await this.convertToPromise<PersistedModel[]>(store.getAll());
+    public async query(storeName: string, predicate?: PredicateFunction) {
+        const store = await this.getStore(storeName);
+        const all = await this.convertToPromise<any[]>(store.getAll());
 
         if (!predicate) { return all; }
         return predicate.filter(all);
     }
 
-    async update(model: PersistedModel) {
-        const store = await this.getStore(model.__typename);
-        const key = await this.convertToPromise<IDBValidKey>(store.put(model));
-        return this.convertToPromise<PersistedModel>(store.get(key));
+    public async update(storeName: string, input: any, predicate?: PredicateFunction) {
+        const targets = await this.query(storeName, predicate);
+        const store = await this.getStore(storeName);
+
+        const promises = targets.map((data) => this.convertToPromise<IDBValidKey>(
+            store.put({ ...data, ...input }))
+        );
+        await Promise.all(promises);
+        return this.query(storeName, predicate);
     }
 
-    async remove(model: PersistedModel, predicate?: PredicateFunction) {
-        const store = await this.getStore(model.__typename);
-
-        if (!predicate) {
-            await this.convertToPromise(store.delete(model.id));
-            return model;
+    public async remove(storeName: string, predicate?: PredicateFunction) {
+        const store = await this.getStore(storeName);
+        const all = await this.convertToPromise<any[]>(store.getAll());
+        let targets = all;
+        if (predicate) {
+            targets = predicate.filter(all);
         }
-
-        const all = await this.convertToPromise<PersistedModel[]>(store.getAll());
-        const targets = predicate.filter(all);
         await Promise.all(
             targets.map((t) => this.convertToPromise(store.delete(t.id)))
         );
         return targets;
     }
 
-    private async getStore(modelName: string) {
+    public getIndexedDBInstance() {
+        return this.indexedDB;
+    }
+
+    private async getStore(storeName: string) {
         const db = await this.indexedDB;
-        const storeName = getStoreNameFromModelName(modelName);
         return db.transaction(storeName, "readwrite")
             .objectStore(storeName);
     }
