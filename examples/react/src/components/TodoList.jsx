@@ -1,19 +1,11 @@
-import React, { useEffect } from 'react';
-import { useOfflineMutation } from 'react-offix-hooks';
+import React from 'react';
+import { useEditTodo, useDeleteTodo } from '../hooks';
 import { Empty } from './Empty';
 import { Todo } from './Todo/Todo';
-import { EDIT_TODO, DELETE_TODO } from '../gql/queries';
-import { mutateOptions, subscriptionOptions } from '../helpers';
 
-export const TodoList = ({ todos, subscribeToMore }) => {
-  const [editTodo] = useOfflineMutation(EDIT_TODO, mutateOptions.edit);
-  const [deleteTodo] = useOfflineMutation(DELETE_TODO, mutateOptions.remove);
-
-  useEffect(() => {
-    subscribeToMore(subscriptionOptions.add);
-    subscribeToMore(subscriptionOptions.edit);
-    subscribeToMore(subscriptionOptions.remove);
-  }, []);
+export const TodoList = ({ todos }) => {
+  const { editTodo } = useEditTodo();
+  const { deleteTodo } = useDeleteTodo();
 
   if (todos.length === 0) return <Empty />;
 
@@ -30,7 +22,6 @@ export const TodoList = ({ todos, subscribeToMore }) => {
                   todo={todo}
                   editTodo={editTodo}
                   deleteTodo={deleteTodo}
-                  subscribeToMore={subscribeToMore}
                 />
               </div>
             </div>
