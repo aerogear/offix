@@ -7,7 +7,7 @@ export interface FieldOptions {
     /** GraphQL key */
     key: string;
     // TODO
-    format?: {  };
+    format?: {};
 }
 
 /**
@@ -40,7 +40,7 @@ export class Model<T> {
     }
 
     public query(predicateFunction?: Predicate<T>) {
-        if (!predicateFunction) {return this.getStorage().query(this.storeName);}
+        if (!predicateFunction) { return this.getStorage().query(this.storeName); }
 
         const modelPredicate = createPredicate(this.fields);
         const predicate = predicateFunction(modelPredicate);
@@ -58,15 +58,18 @@ export class Model<T> {
     }
 
     public remove(predicateFunction?: Predicate<T>) {
-        if (!predicateFunction) {return this.getStorage().remove(this.storeName);}
+        if (!predicateFunction) { return this.getStorage().remove(this.storeName); }
 
         const modelPredicate = createPredicate(this.fields);
         const predicate = predicateFunction(modelPredicate);
         return this.getStorage().remove(this.storeName, predicate);
     }
 
-    // TODO fix event listening
-    public on(event: EventTypes, listener: (event: StoreChangeEvent) => void) {
-        return this.getStorage().storeChangeEventStream.subscribe(listener);
+    public on(eventType: EventTypes, listener: (event: StoreChangeEvent) => void) {
+        return this.getStorage()
+            .storeChangeEventStream.subscribe((event) => {
+                if (event.eventType !== eventType) { return; }
+                listener(event);
+            });
     }
 }
