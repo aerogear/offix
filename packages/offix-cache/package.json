@@ -17,7 +17,7 @@
     "@types/graphql": "14.2.3",
     "@types/jest": "26.0.3",
     "@types/node": "12.12.47",
-    "graphql": "15.1.0",
+    "graphql": "15.2.0",
     "graphql-tag": "2.10.3",
     "jest": "26.1.0",
     "size-limit": "4.5.2",
