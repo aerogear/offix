@@ -30,6 +30,7 @@
     "typescript": "^3.9.5"
   },
   "dependencies": {
+    "offix-scheduler": "^0.15.5",
     "uuid": "^8.1.0",
     "zen-observable": "^0.8.15"
   }
