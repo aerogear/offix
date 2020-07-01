@@ -5,7 +5,7 @@ import { StoreChangeEvent } from "../storage";
 import { Model } from "../Model";
 
 /**
- * GraphQL mutations for create, update and delete 
+ * GraphQL mutations for create, update and delete
  */
 export interface Mutations {
     /**
@@ -41,8 +41,8 @@ export interface GraphQLQueries {
 export interface GraphQLClient {
     /**
      * mutates a graphql query to the server
-     * @param query 
-     * @param variables 
+     * @param query
+     * @param variables
      */
     mutate(query: string | DocumentNode, variables?: any): Promise<IReplicationResponse>;
 }
@@ -86,7 +86,7 @@ export class GraphQLReplicator implements IReplicator {
 
             case "DELETE":
                 return this.client.mutate(mutations.delete, { input: event.data });
-        
+
             default:
                 throw new Error("Invalid store event received");
         }
