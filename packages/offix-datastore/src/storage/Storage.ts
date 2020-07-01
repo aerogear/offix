@@ -2,6 +2,7 @@ import { PushStream, ObservablePushStream } from "../utils/PushStream";
 import { PredicateFunction } from "../predicates";
 import { createDefaultStorage } from "./adapters/defaultStorage";
 import { generateId } from "./core";
+import { Model } from "../Model";
 
 /**
  * This interface defines the API that is required
@@ -84,9 +85,9 @@ export class Storage {
     public readonly storeChangeEventStream: PushStream<StoreChangeEvent>;
     private adapter: IStorageAdapter;
 
-    constructor(dbName: string, storeNames: string[], schemaVersion: number) {
+    constructor(dbName: string, models: Model<any>[], schemaVersion: number) {
         this.storeChangeEventStream = new ObservablePushStream();
-        this.adapter = createDefaultStorage(dbName, storeNames, schemaVersion);
+        this.adapter = createDefaultStorage(dbName, models, schemaVersion);
     }
 
     public async save(storeName: string, input: any): Promise<any> {

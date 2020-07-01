@@ -40,11 +40,11 @@ export interface GraphQLQueries {
  */
 export interface GraphQLClient {
     /**
-     * Sends a graphql query to the server
+     * mutates a graphql query to the server
      * @param query 
      * @param variables 
      */
-    send(query: string | DocumentNode, variables?: any): Promise<IReplicationResponse>;
+    mutate(query: string | DocumentNode, variables?: any): Promise<IReplicationResponse>;
 }
 
 /**
@@ -78,7 +78,14 @@ export class GraphQLReplicator implements IReplicator {
 
         switch (event.eventType) {
             case "ADD":
-                return this.client.send(mutations.create, { input: event.data });
+                return this.client.mutate(mutations.create, { input: event.data });
+
+            // TODO handle filter cases
+            case "UPDATE":
+                return this.client.mutate(mutations.update, { input: event.data });
+
+            case "DELETE":
+                return this.client.mutate(mutations.delete, { input: event.data });
         
             default:
                 throw new Error("Invalid store event received");
