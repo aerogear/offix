@@ -7,7 +7,7 @@ let queries: Map<string, GraphQLQueries>;
 let modelQueries: GraphQLQueries;
 
 beforeAll(() => {
-    const dataStore = new DataStore("test");
+    const dataStore = new DataStore({ dbName: "test", url: "" });
     model = dataStore.create<any>("Test", "test", {
         id: {
             type: "ID",
@@ -31,7 +31,7 @@ test("Push mutation to GraphQL Server", (done) => {
     const data = { title: "test" };
 
     const graphQLReplicaionAPI = new GraphQLReplicator({
-        send: async (query, variables: any) => {
+        mutate: async (query, variables: any) => {
             expect(query).toEqual(modelQueries.mutations.create);
             expect(variables.input).toEqual(data);
             done();

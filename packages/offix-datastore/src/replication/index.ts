@@ -2,3 +2,4 @@ export * from "./ReplicationEngine";
 export * from "./Replicator";
 export * from "./GraphQLReplicator";
 export * from "./GraphQLCrudQueryBuilder";
+export * from "./UrqlGraphQLClient";

@@ -15,9 +15,7 @@ export class GraphQLCrudQueryBuilder implements GraphQLQueryBuilder {
             const fields = model.getFields();
             const fieldsBuilder: string[] = Object.keys(fields).map((key) => {
                 const graphQLKey = fields[key].key;
-                const graphQLType = fields[key].type;
-
-                return `${graphQLKey}: ${graphQLType}`;
+                return graphQLKey;
             });
             const graphQLFields = fieldsBuilder.join("\n");
             const modelName = model.getName();

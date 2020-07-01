@@ -1,5 +1,6 @@
 import { IStorageAdapter } from "../Storage";
 import { PredicateFunction } from "../../predicates";
+import { Model } from "../../Model";
 
 /**
  * Web Storage Implementation for DataStore using IndexedDB
@@ -7,7 +8,7 @@ import { PredicateFunction } from "../../predicates";
 export class IndexedDBStorage implements IStorageAdapter {
     private indexedDB: Promise<IDBDatabase>;
 
-    constructor(dbName: string, storeNames: string[], schemaVersion: number) {
+    constructor(dbName: string, models: Model<any>[], schemaVersion: number) {
         this.indexedDB = new Promise((resolve, reject) => {
             const openreq = indexedDB.open(dbName, schemaVersion);
             openreq.onerror = () => reject(openreq.error);
@@ -26,15 +27,17 @@ export class IndexedDBStorage implements IStorageAdapter {
 
                 for (let i = 0; i < existingStoreNames.length; i++) {
                     const storeName = (existingStoreNames.item(i) as string);
-                    const existingModelStoreName = storeNames.find((modelStoreName) => (
-                        modelStoreName === storeName
+                    const existingModelStoreName = models.find((model) => (
+                        model.getStoreName() === storeName
                     ));
                     if (existingModelStoreName) { return; }
 
                     // model has been removed, remove it's store
                     db.deleteObjectStore(storeName);
                 }
-                storeNames.forEach((storeName) => {
+                models.forEach((model) => {
+                    const storeName = model.getStoreName();
+                    
                     if (existingStoreNames.contains(storeName)) { return; }
                     db.createObjectStore(storeName, { keyPath: "id" });
                 });
