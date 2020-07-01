@@ -21,18 +21,29 @@ export type Fields<T> = {
  * Provides CRUD capabilities for a model
  */
 export class Model<T> {
+    private name: string;
     private storeName: string;
     private fields: Fields<T>;
     private getStorage: () => Storage;
 
     constructor(
+        name: string,
         storeName: string,
         fields: Fields<T>,
         getStorage: () => Storage
     ) {
+        this.name = name;
         this.storeName = storeName;
         this.fields = fields;
         this.getStorage = getStorage;
+    }
+
+    public getFields() {
+        return this.fields;
+    }
+
+    public getName() {
+        return this.name;
     }
 
     public save(input: T): Promise<T> {
