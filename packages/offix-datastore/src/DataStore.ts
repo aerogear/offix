@@ -13,9 +13,9 @@ export class DataStore {
         this.storeNames = [];
     }
 
-    public create<T>(storeName: string, fields: Fields<T>) {
+    public create<T>(name: string, storeName: string, fields: Fields<T>) {
         this.storeNames.push(storeName);
-        return new Model<T>(storeName, fields, () => {
+        return new Model<T>(name, storeName, fields, () => {
             if (this.storage) {return this.storage;}
             throw new Error("DataStore has not been initialised");
         });
