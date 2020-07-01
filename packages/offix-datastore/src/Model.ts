@@ -46,6 +46,10 @@ export class Model<T> {
         return this.name;
     }
 
+    public getStoreName() {
+        return this.storeName;
+    }
+
     public save(input: T): Promise<T> {
         return this.getStorage().save(this.storeName, input);
     }

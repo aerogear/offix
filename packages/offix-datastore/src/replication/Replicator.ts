@@ -6,9 +6,9 @@ export interface IReplicationResponse {
 }
 
 /**
- * Defines the 
+ * Push and pulls changes to and from server
  */
-export interface IReplicationAPI {
+export interface IReplicator {
     /**
      * Push changes to server with replication support
      * 
