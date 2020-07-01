@@ -143,7 +143,7 @@ Object {
                 "kind": "Field",
                 "name": Object {
                   "kind": "Name",
-                  "value": "createTest",
+                  "value": "deleteTest",
                 },
                 "selectionSet": Object {
                   "kind": "SelectionSet",
@@ -248,7 +248,7 @@ Object {
                 "kind": "Field",
                 "name": Object {
                   "kind": "Name",
-                  "value": "createTest",
+                  "value": "updateTest",
                 },
                 "selectionSet": Object {
                   "kind": "SelectionSet",

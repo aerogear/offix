@@ -4,13 +4,13 @@
 
 import "fake-indexeddb/auto";
 
-import { ReplicationEngine, IReplicationAPI } from "../src/replication";
+import { ReplicationEngine, IReplicator } from "../src/replication";
 import { Storage } from "../src/storage";
 
 const DB_NAME = "offix-datastore";
 
 test("Push modified data to server", (done) => {
-    const api: IReplicationAPI = {
+    const api: IReplicator = {
         push: async (event) => {
             expect(event.eventType).toEqual("ADD");
             expect(event.data).toHaveProperty("title", "test");

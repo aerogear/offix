@@ -1,11 +1,11 @@
 import { OffixScheduler } from "offix-scheduler";
 
-import { IReplicationAPI } from "./ReplicationAPI";
+import { IReplicator } from "./Replicator";
 import { Model } from "../Model";
 import { Storage, StoreChangeEvent } from "../storage";
 
 export class ReplicationEngine {
-    private api: IReplicationAPI;
+    private api: IReplicator;
     /**
      * The time between syncs
      */
@@ -13,7 +13,7 @@ export class ReplicationEngine {
     private storage: Storage;
 
     constructor(
-        api: IReplicationAPI,
+        api: IReplicator,
         storage: Storage,
     ) {
         this.api = api;

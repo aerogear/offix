@@ -1,4 +1,4 @@
 export * from "./ReplicationEngine";
-export * from "./ReplicationAPI";
-export * from "./GraphQLReplicationAPI";
+export * from "./Replicator";
+export * from "./GraphQLReplicator";
 export * from "./GraphQLCrudQueryBuilder";
