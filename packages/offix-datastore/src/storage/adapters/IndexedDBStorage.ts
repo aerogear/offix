@@ -37,7 +37,7 @@ export class IndexedDBStorage implements IStorageAdapter {
                 }
                 models.forEach((model) => {
                     const storeName = model.getStoreName();
-                    
+
                     if (existingStoreNames.contains(storeName)) { return; }
                     db.createObjectStore(storeName, { keyPath: "id" });
                 });

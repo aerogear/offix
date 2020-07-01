@@ -1,20 +1,19 @@
 import { OffixScheduler } from "offix-scheduler";
 
 import { IReplicator } from "./Replicator";
-import { Model } from "../Model";
 import { Storage, StoreChangeEvent } from "../storage";
 
+/**
+ * Schedules replication events and handles replication errors
+ */
 export class ReplicationEngine {
     private api: IReplicator;
-    /**
-     * The time between syncs
-     */
     private scheduler: Promise<OffixScheduler<StoreChangeEvent>>;
     private storage: Storage;
 
     constructor(
         api: IReplicator,
-        storage: Storage,
+        storage: Storage
     ) {
         this.api = api;
         this.storage = storage;
@@ -36,8 +35,8 @@ export class ReplicationEngine {
     }
 
     public start() {
-        this.storage.storeChangeEventStream.subscribe(async (event) => {
-            (await this.scheduler).execute(event);
+        this.storage.storeChangeEventStream.subscribe((event) => {
+            this.scheduler.then((scheduler) => scheduler.execute(event));
         });
     }
 }

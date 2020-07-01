@@ -16,7 +16,7 @@ export class UrqlGraphQLClient implements GraphQLClient {
             return {
                 data: result.data,
                 errors: [result.error] // TODO define proper errors for error handling
-            }
+            };
         } catch (error) {
             throw error;
         }
@@ -28,7 +28,7 @@ export class UrqlGraphQLClient implements GraphQLClient {
             return {
                 data: result.data,
                 errors: [result.error] // TODO define proper errors for error handling
-            }
+            };
         } catch (error) {
             throw error;
         }
