@@ -35,7 +35,7 @@ let NoteModel: Model<Note>;
 
 beforeEach(() => {
     const dataStore = new DataStore(DB_NAME);
-    NoteModel = dataStore.create<Note>("user_Note", {
+    NoteModel = dataStore.create<Note>("Note", "user_Note", {
         id: {
             type: "ID",
             key: "id"
@@ -49,7 +49,7 @@ beforeEach(() => {
             key: "description"
         }
     });
-    dataStore.create<Comment>("user_Comment", {
+    dataStore.create<Comment>("Comment", "user_Comment", {
         id: {
             type: "ID",
             key: "id"
