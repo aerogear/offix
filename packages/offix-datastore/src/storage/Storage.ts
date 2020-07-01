@@ -73,6 +73,11 @@ export interface StoreChangeEvent {
      * The data that was affected by the change
      */
     data: any;
+    
+    /**
+     * The name store that was changed
+     */
+    storeName: string;
 }
 
 export class Storage {
@@ -88,7 +93,8 @@ export class Storage {
         const result = await this.adapter.save(storeName, { ...input, id: generateId() });
         this.storeChangeEventStream.push({
             eventType: "ADD",
-            data: result
+            data: result,
+            storeName
         });
         return result;
     }
@@ -101,7 +107,8 @@ export class Storage {
         const result = await this.adapter.update(storeName, input, predicate);
         this.storeChangeEventStream.push({
             eventType: "UPDATE",
-            data: result
+            data: result,
+            storeName
         });
         return result;
     }
@@ -110,7 +117,8 @@ export class Storage {
         const result = await this.adapter.remove(storeName, predicate);
         this.storeChangeEventStream.push({
             eventType: "DELETE",
-            data: result
+            data: result,
+            storeName
         });
         return result;
     }
