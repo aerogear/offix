@@ -2,7 +2,9 @@
  * @jest-environment jsdom
  */
 
+import "isomorphic-unfetch";
 import "fake-indexeddb/auto";
+import { ApolloServer } from "apollo-server";
 
 import { DataStore } from "../src/DataStore";
 import { createDefaultStorage } from "../src/storage/adapters/defaultStorage";
@@ -34,7 +36,10 @@ interface Comment {
 let NoteModel: Model<Note>;
 
 beforeEach(() => {
-    const dataStore = new DataStore(DB_NAME);
+    const dataStore = new DataStore({
+        dbName: DB_NAME,
+        url: "http://localhost:4000/"
+    });
     NoteModel = dataStore.create<Note>("Note", "user_Note", {
         id: {
             type: "ID",
@@ -82,7 +87,9 @@ test("Setup client db with provided models", async () => {
 });
 
 test("Store Schema update", async () => {
-    const idbStorage = createDefaultStorage(DB_NAME, [ "user_Test" ], 2);
+    const idbStorage = createDefaultStorage(DB_NAME, [
+        new Model("Test", "user_Test", {},  () => (null as any))
+    ], 2);
     const db = await idbStorage.getIndexedDBInstance();
     expect(db.objectStoreNames).toContain("user_Test");
     expect(db.objectStoreNames).not.toContain("user_Note");
@@ -146,4 +153,45 @@ test("Observe local store events", async () => {
     await NoteModel.save(note);
 });
 
-test.todo("Sync with server");
+test("Push local change to server", (done) => {
+    const typeDefs = `
+    type Note {
+        id: ID
+        title: String
+        description: String
+    }
+
+    input CreateNoteInput {
+        id: ID
+        title: String
+        description: String
+    }
+
+    type Query {
+        dummy: String
+    }
+
+    type Mutation {
+        createNote(input: CreateNoteInput!): Note
+    }
+    `;
+    const note: Note = {
+        title: "test",
+        description: "test"
+    };
+
+    const server = new ApolloServer({
+        typeDefs,
+        resolvers: {
+            Mutation: {
+                createNote: (_, { input }) => {
+                    expect(input).toHaveProperty("title", note.title);
+                    expect(input).toHaveProperty("description", note.description);
+                    server.stop().finally(() => done());
+                }                
+            }
+        }
+    });
+    server.listen();
+    NoteModel.save(note);
+});
