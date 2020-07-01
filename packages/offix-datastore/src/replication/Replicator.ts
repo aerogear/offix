@@ -11,9 +11,9 @@ export interface IReplicationResponse {
 export interface IReplicator {
     /**
      * Push changes to server with replication support
-     * 
+     *
      * @param event
-     * @param modelName 
+     * @param modelName
      */
-    push(event: StoreChangeEvent): Promise<IReplicationResponse>
+    push(event: StoreChangeEvent): Promise<IReplicationResponse>;
 }

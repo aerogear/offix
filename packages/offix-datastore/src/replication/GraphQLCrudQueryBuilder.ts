@@ -5,7 +5,7 @@ import { Model } from "../Model";
 
 /**
  * Builds GraphQL queries for models following
- * the GraphQLCRUD specification
+ * the [GraphQLCRUD specification]{@link https://graphqlcrud.org/}
  */
 export class GraphQLCrudQueryBuilder implements GraphQLQueryBuilder {
     build(models: Model<any>[]): Map<string, GraphQLQueries> {
@@ -38,8 +38,8 @@ export class GraphQLCrudQueryBuilder implements GraphQLQueryBuilder {
                     delete${modelName}(input: $input) {
                         ${graphQLFields}
                     }
-                }`,
-            }
+                }`
+            };
 
             queriesMap.set(model.getStoreName(), { mutations });
         });

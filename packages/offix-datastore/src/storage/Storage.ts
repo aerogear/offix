@@ -74,7 +74,7 @@ export interface StoreChangeEvent {
      * The data that was affected by the change
      */
     data: any;
-    
+
     /**
      * The name store that was changed
      */
