@@ -29,11 +29,11 @@
     "subscriptions-transport-ws": "0.9.16"
   },
   "devDependencies": {
-    "@size-limit/preset-small-lib": "4.5.2",
+    "@size-limit/preset-small-lib": "4.5.3",
     "@types/jest": "26.0.3",
     "@types/node": "12.12.47",
     "jest": "26.1.0",
-    "size-limit": "4.5.2",
+    "size-limit": "4.5.3",
     "ts-jest": "26.1.1",
     "typescript": "3.9.6"
   },
