@@ -15,7 +15,7 @@
     "chai": "4.2.0",
     "cors": "2.8.5",
     "express": "4.17.1",
-    "graphql": "15.2.0",
+    "graphql": "15.3.0",
     "graphql-subscriptions": "1.1.0",
     "graphql-tag": "2.10.3",
     "karma": "5.1.0",
