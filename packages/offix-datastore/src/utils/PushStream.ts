@@ -11,18 +11,16 @@ export interface PushStream<T> {
 
 export class ObservablePushStream<T> implements PushStream<T> {
     private observable: Observable<T>;
-    private observer: any;
+    private observers: any[] = [];
 
     constructor() {
         this.observable = new Observable(observer => {
-            this.observer = observer;
+            this.observers.push(observer);
         });
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        this.observable.subscribe((e) => {});
     }
 
     public push(message: T) {
-        this.observer.next(message);
+        this.observers.forEach(o => o.next(message));
     }
 
     public subscribe(listener: (message: T) => void) {

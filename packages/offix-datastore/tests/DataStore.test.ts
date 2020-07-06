@@ -144,13 +144,18 @@ test("Remove all entities matching predicate from local store", async () => {
 
 test("Observe local store events", async () => {
     const note = { title: "test", description: "description" };
-    expect.assertions(2);
+    expect.assertions(3);
 
     NoteModel.on("ADD", (event) => {
         expect(event.eventType).toEqual("ADD");
         expect(event.data.title).toEqual(note.title);
     });
+    NoteModel.on("UPDATE", (event) => {
+        expect(event.eventType).toEqual("UPDATE");
+    });
+
     await NoteModel.save(note);
+    await NoteModel.update({ title: "changed" }, (p) => p.title("eq", "test"));
 });
 
 test("Push local change to server", (done) => {
