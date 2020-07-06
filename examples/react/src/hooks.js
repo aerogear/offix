@@ -29,16 +29,29 @@ const initialState = {
 export const useFindTodos = () => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
+    const refreshState = async () => {
+        const result = await TodoModel.query();
+        dispatch({ type: Actions.REQ_SUCCESS, payload: result });
+    }
+
     useEffect(() => {
-        (async function () {
+        (function () {
             dispatch({ type: Actions.REQ_START });
             try {
-                const result = await TodoModel.query();
-                dispatch({ type: Actions.REQ_SUCCESS, payload: result });
+                refreshState();
             } catch (error) {
                 dispatch({ type: Actions.REQ_FAILED, payload: error });
             }
         })();
+
+        const subscriptions = [];
+        subscriptions.push(TodoModel.on("ADD", refreshState));
+        subscriptions.push(TodoModel.on("UPDATE", refreshState));
+        subscriptions.push(TodoModel.on("DELETE", refreshState));
+
+        return () => {
+            subscriptions.forEach((sub) => sub.unsubscribe());
+        }
     }, []);
 
     return {
@@ -75,7 +88,7 @@ export const useEditTodo = () => {
         }
     }
 
-    return  { editTodo, ...state };
+    return { editTodo, ...state };
 }
 
 export const useDeleteTodo = () => {
