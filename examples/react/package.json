@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@types/react": "^16.8.0",
-    "graphql": "^14.3.1",
     "graphql-serve": "0.14.0-alpha11",
     "graphql-tag": "^2.10.1",
     "offix-datastore": "^0.1.0",
