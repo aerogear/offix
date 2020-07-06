@@ -1,8 +1,11 @@
 import { DataStore } from 'offix-datastore';
 
-const datastore = new DataStore("offix-datastore");
+const datastore = new DataStore({
+    dbName: "offix-datastore",
+    url: "http://localhost:4000/"
+});
 
-export const TodoModel = datastore.create("user_Todo", {
+export const TodoModel = datastore.create("Todo", "user_Todo", {
     id: {
         type: "ID",
         key: "id"
