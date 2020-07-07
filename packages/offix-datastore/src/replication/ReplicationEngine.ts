@@ -1,6 +1,6 @@
 import { OffixScheduler } from "offix-scheduler";
 
-import { IReplicator } from "./Replicator";
+import { IReplicator, IOperation } from "./Replicator";
 import { Storage, StoreChangeEvent } from "../storage";
 
 /**
@@ -8,7 +8,7 @@ import { Storage, StoreChangeEvent } from "../storage";
  */
 export class ReplicationEngine {
     private api: IReplicator;
-    private scheduler: Promise<OffixScheduler<StoreChangeEvent>>;
+    private scheduler: Promise<OffixScheduler<IOperation>>;
     private storage: Storage;
 
     constructor(
@@ -18,10 +18,10 @@ export class ReplicationEngine {
         this.api = api;
         this.storage = storage;
         this.scheduler = new Promise((resolve, reject) => {
-            const scheduler = new OffixScheduler<StoreChangeEvent>({
+            const scheduler = new OffixScheduler<IOperation>({
                 executor: {
-                    execute: async (event: StoreChangeEvent) => {
-                        const result = await this.api.push(event);
+                    execute: async (operation: IOperation) => {
+                        const result = await this.api.push(operation);
                         if (result.errors.length > 0) {
                             // TODO handle errors
                         }
@@ -36,7 +36,21 @@ export class ReplicationEngine {
 
     public start() {
         this.storage.storeChangeEventStream.subscribe((event) => {
-            this.scheduler.then((scheduler) => scheduler.execute(event));
+            const { eventType, data, storeName } = event;
+
+            if (eventType === "ADD") {
+                this.scheduler.then((scheduler) => scheduler.execute({
+                    eventType, input: data, storeName
+                }));
+                return;
+            }
+
+            // updates and deletes are in batches
+            (data as Array<any>).forEach((input) => {
+                this.scheduler.then((scheduler) => scheduler.execute({
+                    eventType, input, storeName
+                }));
+            });
         });
     }
 }

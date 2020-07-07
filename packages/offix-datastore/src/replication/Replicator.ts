@@ -1,8 +1,17 @@
-import { StoreChangeEvent } from "../storage";
+import { EventTypes } from "../storage";
 
 export interface IReplicationResponse {
     data: unknown;
     errors: unknown[];
+}
+
+/**
+ * Operation to be pushed to Server
+ */
+export interface IOperation {
+    eventType: EventTypes;
+    input: any;
+    storeName: string;
 }
 
 /**
@@ -12,8 +21,7 @@ export interface IReplicator {
     /**
      * Push changes to server with replication support
      *
-     * @param event
-     * @param modelName
+     * @param operation
      */
-    push(event: StoreChangeEvent): Promise<IReplicationResponse>;
+    push(operation: IOperation): Promise<IReplicationResponse>;
 }
