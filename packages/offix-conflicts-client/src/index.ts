@@ -7,3 +7,4 @@ export * from "./state/VersionedState";
 export * from "./strategies/ConflictResolutionData";
 export * from "./handler/ConflictHandler";
 export * from "./LocalConflictError";
+export * from "./state/LastUpdatedState";
