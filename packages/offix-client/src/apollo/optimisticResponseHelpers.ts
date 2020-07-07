@@ -29,7 +29,7 @@ export function restoreOptimisticResponse(
   apolloClient: ApolloClient<NormalizedCacheObject>,
   mutationCacheUpdates: CacheUpdates,
   { op, qid }: ApolloQueueEntryOperation) {
-  if (op.context.operationName && mutationCacheUpdates[op.context.operationName]) {
+  if (op?.context?.operationName && mutationCacheUpdates[op.context.operationName]) {
     op.update = mutationCacheUpdates[op.context.operationName];
     addOptimisticResponse(apolloClient, { op, qid });
   }
