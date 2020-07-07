@@ -28,12 +28,12 @@ test("Test Query generation", () => {
 });
 
 test("Push mutation to GraphQL Server", (done) => {
-    const data = { title: "test" };
+    const input = { title: "test" };
 
     const graphQLReplicaionAPI = new GraphQLReplicator({
         mutate: async (query, variables: any) => {
             expect(query).toEqual(modelQueries.mutations.create);
-            expect(variables.input).toEqual(data);
+            expect(variables.input).toEqual(input);
             done();
             return { data: null, errors: [] }
         }
@@ -41,7 +41,7 @@ test("Push mutation to GraphQL Server", (done) => {
 
     graphQLReplicaionAPI.push({
         eventType: "ADD",
-        data,
+        input,
         storeName: model.getStoreName()
     })
 });
