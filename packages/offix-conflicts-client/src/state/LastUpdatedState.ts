@@ -1,5 +1,4 @@
-
-import { ObjectState, ConflictResolutionData } from "offix-client";
+import { ObjectState, ConflictResolutionData } from "..";
 
 export class TimeStampState implements ObjectState {
 
