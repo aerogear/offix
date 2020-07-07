@@ -1,7 +1,6 @@
 import { DocumentNode } from "graphql";
 
-import { IReplicator, IReplicationResponse } from "./Replicator";
-import { StoreChangeEvent } from "../storage";
+import { IReplicator, IOperation, IReplicationResponse } from "./Replicator";
 import { Model } from "../Model";
 
 /**
@@ -69,23 +68,23 @@ export class GraphQLReplicator implements IReplicator {
         this.queries = queries;
     }
 
-    public push(event: StoreChangeEvent) {
-        const mutations = this.queries.get(event.storeName)?.mutations;
+    public push(operation: IOperation) {
+        const { storeName, input, eventType } = operation;
+        const mutations = this.queries.get(storeName)?.mutations;
 
         if (!mutations) {
-            throw new Error(`GraphQL Mutations not found for ${event.storeName}`);
+            throw new Error(`GraphQL Mutations not found for ${storeName}`);
         }
 
-        switch (event.eventType) {
+        switch (eventType) {
             case "ADD":
-                return this.client.mutate(mutations.create, { input: event.data });
+                return this.client.mutate(mutations.create, { input });
 
-            // TODO handle filter cases
             case "UPDATE":
-                return this.client.mutate(mutations.update, { input: event.data });
+                return this.client.mutate(mutations.update, { input });
 
             case "DELETE":
-                return this.client.mutate(mutations.delete, { input: event.data });
+                return this.client.mutate(mutations.delete, { input });
 
             default:
                 throw new Error("Invalid store event received");

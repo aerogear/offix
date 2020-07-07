@@ -9,26 +9,53 @@ import { Storage } from "../src/storage";
 import { Model } from "../src/Model";
 
 const DB_NAME = "offix-datastore";
+const storeName = "user_Note";
+let storage: Storage;
 
-test("Push modified data to server", (done) => {
+beforeAll(() => {
+    storage = new Storage(DB_NAME, [
+        new Model("Note", storeName, {}, () => (null as any))
+    ], 1);
+});
+
+test("Push ADD operation data to server", (done) => {
     const api: IReplicator = {
-        push: async (event) => {
-            expect(event.eventType).toEqual("ADD");
-            expect(event.data).toHaveProperty("title", "test");
+        push: (op) => {
+            expect(op.eventType).toEqual("ADD");
+            expect(op.input).toHaveProperty("title", "test");
             done();
-            return {
+            return Promise.resolve({
                 data: null,
                 errors: [],
-            }
+            })
         }
     };
 
-    const storage = new Storage(DB_NAME, [
-        new Model("Note", "user_Note", {},  () => (null as any))
-    ], 1);
     const engine = new ReplicationEngine(api, storage);
     engine.start();
-    storage.save("user_Note", { title: "test" });
+    storage.save(storeName, { title: "test" });
+});
+
+test("Push UPDATE operation data to server", (done) => {
+    const api: IReplicator = {
+        push: (op) => {
+            expect(op.eventType).toEqual("UPDATE");
+            expect(op.input).toHaveProperty("id");
+            expect(op.input).toHaveProperty("title", "test update");
+            done();
+            return Promise.resolve({
+                data: null,
+                errors: [],
+            })
+        }
+    };
+
+    storage.save(storeName, { title: "test" })
+        .then((r) => {
+            const engine = new ReplicationEngine(api, storage);
+            engine.start();
+            storage.update(storeName, { title: "test update" });
+        });
 });
 
 test.todo("Pull and merge delta from server");
