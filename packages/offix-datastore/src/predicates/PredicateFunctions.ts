@@ -1,3 +1,6 @@
+// TODO evaluate how SQL Lite can be supported.
+// Capacitor or ReactNative or WebSQLLite
+
 /**
  * A PredicateFunction filters data that match its conditions.
  * The conditions for any PredicateFunction is specified by overriding the evaluate method

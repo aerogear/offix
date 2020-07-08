@@ -81,6 +81,7 @@ export interface StoreChangeEvent {
     storeName: string;
 }
 
+// TODO rename - to generic name
 export class Storage {
     public readonly storeChangeEventStream: PushStream<StoreChangeEvent>;
     private adapter: IStorageAdapter;
@@ -93,6 +94,7 @@ export class Storage {
     public async save(storeName: string, input: any): Promise<any> {
         const result = await this.adapter.save(storeName, { ...input, id: generateId() });
         this.storeChangeEventStream.push({
+            // TODO replace for enums
             eventType: "ADD",
             data: result,
             storeName
