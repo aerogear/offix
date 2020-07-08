@@ -35,7 +35,7 @@ export class DataStore {
         this.url = config.url;
         this.models = [];
     }
-
+    // TODO create model
     public create<T>(name: string, storeName: string, fields: Fields<T>) {
         const model = new Model<T>(name, storeName, fields, () => {
             if (this.storage) { return this.storage; }
@@ -47,7 +47,7 @@ export class DataStore {
 
     public init() {
         this.storage = new Storage(this.dbName, this.models, this.schemaVersion);
-
+        // TODO use https://github.com/prisma-labs/graphql-request by default
         const gqlClient = new UrqlGraphQLClient(this.url);
         const queryBuilder = new GraphQLCrudQueryBuilder();
         const queries = queryBuilder.build(this.models);
