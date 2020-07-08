@@ -5,7 +5,7 @@ const datastore = new DataStore({
     url: "http://localhost:4000/graphql"
 });
 
-export const TodoModel = datastore.create("Todo", "user_Todo", {
+export const TodoModel = datastore.createModel("Todo", "user_Todo", {
     id: {
         type: "ID",
         key: "id"
