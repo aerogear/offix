@@ -1,0 +1,45 @@
+{
+  "name": "offix-react-example",
+  "version": "0.15.5",
+  "main": "index.js",
+  "license": "Apache-2.0",
+  "private": true,
+  "scripts": {
+    "start": "parcel serve index.html",
+    "watch": "parcel watch index.html",
+    "build": "parcel build index.html",
+    "serve": "gqls serve model --port=4000",
+    "lint": "eslint src/* src/**/*"
+  },
+  "dependencies": {
+    "@types/react": "^16.8.0",
+    "graphql-serve": "0.14.0-alpha11",
+    "graphql-tag": "^2.10.1",
+    "offix-cache": "0.15.5",
+    "offix-client-boost": "0.15.5",
+    "offix-datastore": "^0.1.0",
+    "react": "^16.13.0",
+    "react-dom": "^16.8.0",
+    "react-offix-hooks": "0.15.5",
+    "spectre.css": "^0.5.8",
+    "subscriptions-transport-ws": "^0.9.16"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "@babel/preset-react": "^7.8.3",
+    "@babel/runtime": "^7.8.3",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.18.0",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "parcel-bundler": "^1.12.4"
+  },
+  "alias": {
+    "react": "react",
+    "local_modules": "../../node_modules"
+  }
+}
