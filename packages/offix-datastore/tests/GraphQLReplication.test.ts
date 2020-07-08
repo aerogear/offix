@@ -1,6 +1,7 @@
 import { GraphQLCrudQueryBuilder, GraphQLReplicator, GraphQLQueries } from "../src/replication";
 import { DataStore } from "../src/DataStore";
 import { Model } from "../src/Model";
+import { DatabaseEvents } from "../src/storage";
 
 let model: Model<any>;
 let queries: Map<string, GraphQLQueries>;
@@ -40,7 +41,7 @@ test("Push mutation to GraphQL Server", (done) => {
   }, queries);
 
   graphQLReplicaionAPI.push({
-    eventType: "ADD",
+    eventType: DatabaseEvents.ADD,
     input,
     storeName: model.getStoreName()
   });

@@ -5,7 +5,7 @@
 import "fake-indexeddb/auto";
 
 import { ReplicationEngine, IReplicator } from "../src/replication";
-import { Storage } from "../src/storage";
+import { Storage, DatabaseEvents } from "../src/storage";
 import { Model } from "../src/Model";
 
 const DB_NAME = "offix-datastore";
@@ -21,7 +21,7 @@ beforeAll(() => {
 test("Push ADD operation data to server", (done) => {
   const api: IReplicator = {
     push: (op) => {
-      expect(op.eventType).toEqual("ADD");
+      expect(op.eventType).toEqual(DatabaseEvents.ADD);
       expect(op.input).toHaveProperty("title", "test");
       done();
       return Promise.resolve({
@@ -39,7 +39,7 @@ test("Push ADD operation data to server", (done) => {
 test("Push UPDATE operation data to server", (done) => {
   const api: IReplicator = {
     push: (op) => {
-      expect(op.eventType).toEqual("UPDATE");
+      expect(op.eventType).toEqual(DatabaseEvents.UPDATE);
       expect(op.input).toHaveProperty("id");
       expect(op.input).toHaveProperty("title", "test update");
       done();
