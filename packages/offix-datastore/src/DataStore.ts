@@ -35,8 +35,8 @@ export class DataStore {
         this.url = config.url;
         this.models = [];
     }
-    // TODO rename createModel
-    public create<T>(name: string, storeName: string, fields: Fields<T>) {
+
+    public createModel<T>(name: string, storeName: string, fields: Fields<T>) {
         const model = new Model<T>(name, storeName, fields, () => {
             if (this.storage) { return this.storage; }
             throw new Error("DataStore has not been initialised");

@@ -9,7 +9,7 @@ let modelQueries: GraphQLQueries;
 
 beforeAll(() => {
   const dataStore = new DataStore({ dbName: "test", url: "" });
-  model = dataStore.create<any>("Test", "test", {
+  model = dataStore.createModel<any>("Test", "test", {
     id: {
       type: "ID",
       key: "id"
