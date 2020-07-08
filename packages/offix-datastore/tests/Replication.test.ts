@@ -13,49 +13,49 @@ const storeName = "user_Note";
 let storage: Storage;
 
 beforeAll(() => {
-    storage = new Storage(DB_NAME, [
-        new Model("Note", storeName, {}, () => (null as any))
-    ], 1);
+  storage = new Storage(DB_NAME, [
+    new Model("Note", storeName, {}, () => (null as any))
+  ], 1);
 });
 
 test("Push ADD operation data to server", (done) => {
-    const api: IReplicator = {
-        push: (op) => {
-            expect(op.eventType).toEqual("ADD");
-            expect(op.input).toHaveProperty("title", "test");
-            done();
-            return Promise.resolve({
-                data: null,
-                errors: [],
-            })
-        }
-    };
+  const api: IReplicator = {
+    push: (op) => {
+      expect(op.eventType).toEqual("ADD");
+      expect(op.input).toHaveProperty("title", "test");
+      done();
+      return Promise.resolve({
+        data: null,
+        errors: [],
+      })
+    }
+  };
 
-    const engine = new ReplicationEngine(api, storage);
-    engine.start();
-    storage.save(storeName, { title: "test" });
+  const engine = new ReplicationEngine(api, storage);
+  engine.start();
+  storage.save(storeName, { title: "test" });
 });
 
 test("Push UPDATE operation data to server", (done) => {
-    const api: IReplicator = {
-        push: (op) => {
-            expect(op.eventType).toEqual("UPDATE");
-            expect(op.input).toHaveProperty("id");
-            expect(op.input).toHaveProperty("title", "test update");
-            done();
-            return Promise.resolve({
-                data: null,
-                errors: [],
-            })
-        }
-    };
+  const api: IReplicator = {
+    push: (op) => {
+      expect(op.eventType).toEqual("UPDATE");
+      expect(op.input).toHaveProperty("id");
+      expect(op.input).toHaveProperty("title", "test update");
+      done();
+      return Promise.resolve({
+        data: null,
+        errors: [],
+      })
+    }
+  };
 
-    storage.save(storeName, { title: "test" })
-        .then((r) => {
-            const engine = new ReplicationEngine(api, storage);
-            engine.start();
-            storage.update(storeName, { title: "test update" });
-        });
+  storage.save(storeName, { title: "test" })
+    .then((r) => {
+      const engine = new ReplicationEngine(api, storage);
+      engine.start();
+      storage.update(storeName, { title: "test update" });
+    });
 });
 
 test.todo("Pull and merge delta from server");
