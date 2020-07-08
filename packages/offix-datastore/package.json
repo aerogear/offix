@@ -20,22 +20,22 @@
     "size:why": "size-limit --why"
   },
   "devDependencies": {
-    "@size-limit/preset-small-lib": "^4.5.2",
-    "@types/jest": "^25.2.3",
-    "@types/uuid": "^8.0.0",
-    "apollo-server": "^2.15.1",
-    "fake-indexeddb": "^3.0.1",
-    "isomorphic-unfetch": "^3.0.0",
-    "jest": "^26.0.1",
-    "size-limit": "^4.5.2",
-    "ts-jest": "^26.1.0",
-    "typescript": "^3.9.5"
+    "@size-limit/preset-small-lib": "4.5.3",
+    "@types/jest": "25.2.3",
+    "@types/uuid": "8.0.0",
+    "apollo-server": "2.15.1",
+    "fake-indexeddb": "3.1.0",
+    "isomorphic-unfetch": "3.0.0",
+    "jest": "26.1.0",
+    "size-limit": "4.5.3",
+    "ts-jest": "26.1.1",
+    "typescript": "3.9.6"
   },
   "dependencies": {
-    "graphql-tag": "^2.10.3",
+    "graphql-tag": "2.10.3",
     "offix-scheduler": "^0.15.5",
-    "urql": "^1.9.8",
-    "uuid": "^8.1.0",
-    "zen-observable": "^0.8.15"
+    "urql": "1.9.8",
+    "uuid": "8.2.0",
+    "zen-observable": "0.8.15"
   }
 }
