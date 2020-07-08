@@ -2,6 +2,7 @@ import { DocumentNode } from "graphql";
 
 import { IReplicator, IOperation, IReplicationResponse } from "./Replicator";
 import { Model } from "../Model";
+import { DatabaseEvents } from "../storage";
 
 /**
  * GraphQL mutations for create, update and delete
@@ -77,13 +78,13 @@ export class GraphQLReplicator implements IReplicator {
         }
 
         switch (eventType) {
-            case "ADD":
+            case DatabaseEvents.ADD:
                 return this.client.mutate(mutations.create, { input });
 
-            case "UPDATE":
+            case DatabaseEvents.UPDATE:
                 return this.client.mutate(mutations.update, { input });
 
-            case "DELETE":
+            case DatabaseEvents.DELETE:
                 return this.client.mutate(mutations.delete, { input });
 
             default:

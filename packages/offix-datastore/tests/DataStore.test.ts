@@ -10,6 +10,7 @@ import { DataStore } from "../src/DataStore";
 import { createDefaultStorage } from "../src/storage/adapters/defaultStorage";
 import { Model } from "../src/Model";
 import { Predicate } from "../src/predicates";
+import { DatabaseEvents } from "../src/storage";
 
 const DB_NAME = "offix-datastore";
 
@@ -146,12 +147,12 @@ test("Observe local store events", async () => {
   const note = { title: "test", description: "description" };
   expect.assertions(3);
 
-  NoteModel.on("ADD", (event) => {
-    expect(event.eventType).toEqual("ADD");
+  NoteModel.on(DatabaseEvents.ADD, (event) => {
+    expect(event.eventType).toEqual(DatabaseEvents.ADD);
     expect(event.data.title).toEqual(note.title);
   });
-  NoteModel.on("UPDATE", (event) => {
-    expect(event.eventType).toEqual("UPDATE");
+  NoteModel.on(DatabaseEvents.UPDATE, (event) => {
+    expect(event.eventType).toEqual(DatabaseEvents.UPDATE);
   });
 
   await NoteModel.save(note);

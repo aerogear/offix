@@ -1,7 +1,7 @@
 import { OffixScheduler } from "offix-scheduler";
 
 import { IReplicator, IOperation } from "./Replicator";
-import { Storage } from "../storage";
+import { Storage, DatabaseEvents } from "../storage";
 
 /**
  * Schedules replication events and handles replication errors
@@ -38,7 +38,7 @@ export class ReplicationEngine {
     this.storage.storeChangeEventStream.subscribe((event) => {
       const { eventType, data, storeName } = event;
 
-      if (eventType === "ADD") {
+      if (eventType === DatabaseEvents.ADD) {
         this.scheduler.then((scheduler) => scheduler.execute({
           eventType, input: data, storeName
         }));

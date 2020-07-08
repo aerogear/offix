@@ -1,4 +1,4 @@
-import { Storage, StoreChangeEvent, EventTypes } from "./storage";
+import { Storage, StoreChangeEvent, DatabaseEvents } from "./storage";
 import { createPredicate, Predicate } from "./predicates";
 
 export interface FieldOptions {
@@ -82,7 +82,7 @@ export class Model<T> {
 
     // TODO add seed and reset - investigate.
 
-    public on(eventType: EventTypes, listener: (event: StoreChangeEvent) => void) {
+    public on(eventType: DatabaseEvents, listener: (event: StoreChangeEvent) => void) {
         return this.getStorage()
             .storeChangeEventStream.subscribe((event) => {
                 if (event.eventType !== eventType) { return; }
