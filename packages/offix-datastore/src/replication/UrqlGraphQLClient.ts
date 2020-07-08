@@ -24,7 +24,7 @@ export class UrqlGraphQLClient implements GraphQLClient {
 
     async mutate(query: string | DocumentNode, variables?: any) {
         try {
-            const result = await this.client.query(query, variables).toPromise();
+            const result = await this.client.mutation(query, variables).toPromise();
             return {
                 data: result.data,
                 errors: [result.error] // TODO define proper errors for error handling
