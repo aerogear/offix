@@ -35,7 +35,7 @@ export class DataStore {
         this.url = config.url;
         this.models = [];
     }
-    // TODO create model
+    // TODO rename createModel
     public create<T>(name: string, storeName: string, fields: Fields<T>) {
         const model = new Model<T>(name, storeName, fields, () => {
             if (this.storage) { return this.storage; }

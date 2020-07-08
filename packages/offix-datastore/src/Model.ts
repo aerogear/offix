@@ -80,6 +80,8 @@ export class Model<T> {
         return this.getStorage().remove(this.storeName, predicate);
     }
 
+    // TODO add seed and reset - investigate.
+
     public on(eventType: EventTypes, listener: (event: StoreChangeEvent) => void) {
         return this.getStorage()
             .storeChangeEventStream.subscribe((event) => {
