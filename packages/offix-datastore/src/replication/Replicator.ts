@@ -1,4 +1,4 @@
-import { EventTypes } from "../storage";
+import { DatabaseEvents } from "../storage";
 
 export interface IReplicationResponse {
     data: unknown;
@@ -9,7 +9,7 @@ export interface IReplicationResponse {
  * Operation to be pushed to Server
  */
 export interface IOperation {
-    eventType: EventTypes;
+    eventType: DatabaseEvents;
     input: any;
     storeName: string;
 }

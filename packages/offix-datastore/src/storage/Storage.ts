@@ -52,13 +52,24 @@ export interface IStorageAdapter {
 }
 
 /**
- * The various change events that can occur on Store
- *
- * "ADD" - data was added to the Store
- * "UPDATE" - data was updated in the Store
- * "DELETE" - data was deleted from the Store
+ * The various change events that can occur on Local Database
  */
-export type EventTypes = "ADD" | "UPDATE" | "DELETE";
+export enum DatabaseEvents {
+    /**
+     * Data was added to the local database
+     */
+    ADD = "ADD",
+
+    /**
+     * Data was updated in the local database
+     */
+    UPDATE = "UPDATE",
+
+    /**
+     * Data was deleted from local database
+     */
+    DELETE = "DELETE"
+}
 
 /**
  * StoreChangeEvent is an event emitted whenever
@@ -68,7 +79,7 @@ export interface StoreChangeEvent {
     /**
      * The type of change event that just occurred
      */
-    eventType: EventTypes;
+    eventType: DatabaseEvents;
 
     /**
      * The data that was affected by the change
@@ -95,7 +106,7 @@ export class Storage {
         const result = await this.adapter.save(storeName, { ...input, id: generateId() });
         this.storeChangeEventStream.push({
             // TODO replace for enums
-            eventType: "ADD",
+            eventType: DatabaseEvents.ADD,
             data: result,
             storeName
         });
@@ -109,7 +120,7 @@ export class Storage {
     public async update(storeName: string, input: any, predicate?: PredicateFunction): Promise<any> {
         const result = await this.adapter.update(storeName, input, predicate);
         this.storeChangeEventStream.push({
-            eventType: "UPDATE",
+            eventType: DatabaseEvents.UPDATE,
             data: result,
             storeName
         });
@@ -119,7 +130,7 @@ export class Storage {
     public async remove(storeName: string, predicate?: PredicateFunction): Promise<any | any[]> {
         const result = await this.adapter.remove(storeName, predicate);
         this.storeChangeEventStream.push({
-            eventType: "DELETE",
+            eventType: DatabaseEvents.DELETE,
             data: result,
             storeName
         });
