@@ -41,7 +41,7 @@ beforeEach(() => {
     dbName: DB_NAME,
     url: "http://localhost:4000/"
   });
-  NoteModel = dataStore.create<Note>("Note", "user_Note", {
+  NoteModel = dataStore.createModel<Note>("Note", "user_Note", {
     id: {
       type: "ID",
       key: "id"
@@ -55,7 +55,7 @@ beforeEach(() => {
       key: "description"
     }
   });
-  dataStore.create<Comment>("Comment", "user_Comment", {
+  dataStore.createModel<Comment>("Comment", "user_Comment", {
     id: {
       type: "ID",
       key: "id"

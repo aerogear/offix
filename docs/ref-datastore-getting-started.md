@@ -67,7 +67,7 @@ const DB_NAME = "offix-datastore";
 const TASK_TABLE_NAME = "user_Task";
 
 const datastore = new DataStore(DB_NAME);
-export const TaskModel = datastore.create<Task>(TASK_TABLE_NAME, {
+export const TaskModel = datastore.createModel<Task>(TASK_TABLE_NAME, {
     id: {
         type: "ID", // GraphQL Type
         key: "id" // GraphQL key
