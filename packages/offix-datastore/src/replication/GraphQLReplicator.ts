@@ -7,7 +7,7 @@ import { DatabaseEvents } from "../storage";
 /**
  * GraphQL mutations for create, update and delete
  */
-export interface Mutations {
+export interface ReplicatorMutations {
     /**
      * GraphQL create mutation document.
      * It takes an input variable which is the entity to be created
@@ -29,10 +29,45 @@ export interface Mutations {
     delete: string | DocumentNode;
 }
 
+/**
+ * GraphQL mutations for create, update and delete
+ */
+export interface ReplicatorSubscriptions {
+  /**
+   * GraphQL create subscription document.
+   */
+  new: string | DocumentNode;
+
+  /**
+   * GraphQL update subscription document.
+   */
+  updated: string | DocumentNode;
+
+  /**
+   * GraphQL delete subscription document.
+   */
+  deleted: string | DocumentNode;
+}
+
+/**
+ * GraphQL mutations for create, update and delete
+ */
+export interface ReplicatorQueries {
+  /**
+   * FindQuery used to fetch data
+   */
+  find: string | DocumentNode;
+
+  /**
+   * GraphQL get operation
+   */
+  get: string | DocumentNode;
+}
+
 export interface GraphQLQueries {
-    // TODO queries;
-    mutations: Mutations;
-    // TODO subsrciptions
+    queries: ReplicatorQueries;
+    mutations: ReplicatorMutations;
+    subscriptions: ReplicatorSubscriptions;
 }
 /**
  * A GraphQLClient to communicate with the GraphQLAPI
