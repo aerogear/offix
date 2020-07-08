@@ -67,7 +67,7 @@ export function replaceClientGeneratedIDsInQueue(queue: ApolloOfflineQueue, oper
     queue.entries.forEach((entry) => {
       // replace all instances of the optimistic id in the queue with
       // the new id that came back from the server
-      traverse(entry.operation.op.variables).forEach(function (val) {
+      traverse(entry.operation.op.variables).forEach(function(val) {
         if (this.isLeaf && val && val === optimisticId) {
           this.update(resultId);
           queue.updateOperation(entry.operation);
