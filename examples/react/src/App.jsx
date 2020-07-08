@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
+import { useQuery } from '@apollo/react-hooks';
+import { useOfflineMutation, useNetworkStatus } from 'react-offix-hooks';
 import { AddTodo, TodoList, Modal, Loading, Error } from './components';
-import { useFindTodos, useAddTodo } from './hooks';
+import { GET_TODOS, ADD_TODO } from './gql/queries';
+import { mutateOptions } from './helpers';
 
 const App = () => {
-  const  { loading, error, data } = useFindTodos();
-  const { addTodo } = useAddTodo();
+  const { loading, error, data, subscribeToMore } = useQuery(GET_TODOS);
+  const [addTodo] = useOfflineMutation(ADD_TODO, mutateOptions.add);
   const [modalActive, setModalActive] = useState(false);
+
+  const isOnline = useNetworkStatus();
 
   const toggleModal = () => {
     setModalActive(!modalActive);
@@ -21,10 +26,10 @@ const App = () => {
         <div className="hero-body">
           <div className="contain">
             <h1 className="mb-0">OFFIX TODO</h1>
-            <p>A simple todo app using offix-datastore & graphback</p>
-            {/* <span type="text" className="btn btn-outline">
+            <p>A simple todo app using offix & graphback</p>
+            <span type="text" className="btn btn-outline">
               {(isOnline) ? 'Online' : 'Offline'}
-            </span> */}
+            </span>
           </div>
         </div>
       </div>
@@ -46,7 +51,7 @@ const App = () => {
       </section>
 
       <section className="contain mt-4em">
-        <TodoList todos={data} />
+        <TodoList todos={data.findAllTodos} subscribeToMore={subscribeToMore} />
       </section>
     </>
   );
