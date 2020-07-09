@@ -1,8 +1,8 @@
-type CommonOperators = 'ne' | 'eq' | 'le' | 'lt' | 'ge' | 'gt';
+type CommonOperators = "ne" | "eq" | "le" | "lt" | "ge" | "gt";
 
 /**
  * All Operators
- * 
+ *
  * 'ne' - Is value not equal to input
  * 'eq' - Is value equal to input
  * 'le' - Is value less than or equal to input
@@ -14,15 +14,15 @@ type CommonOperators = 'ne' | 'eq' | 'le' | 'lt' | 'ge' | 'gt';
  * 'startsWith' - Does value start with input string
  * 'endsWith' - Does value end with input string
  */
-export type AllOperators = CommonOperators | 'in' | 'contains' | 'startsWith' | 'endsWith';
+export type AllOperators = CommonOperators | "in" | "contains" | "startsWith" | "endsWith";
 
 /**
  * Maps data type to allowed operators
  */
-export type TypeOperatorMap<T> = 
+export type TypeOperatorMap<T> =
     T extends string ? AllOperators :
     T extends number ? CommonOperators :
-    T extends boolean ? 'ne' | 'eq' :
+    T extends boolean ? "ne" | "eq" :
     T extends Date ? CommonOperators :
     AllOperators;
 

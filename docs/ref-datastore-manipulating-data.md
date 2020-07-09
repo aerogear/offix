@@ -34,7 +34,7 @@ TaskModel.query((p) => p.title("eq", "test"))
 .then((data) => {}) // Retrieves all tasks where title matches "test"
 ```
 
-Supported operators
+All supported operators
 - 'ne' - Is value not equal to input
 - 'eq' - Is value equal to input
 - 'le' - Is value less than or equal to input
@@ -42,9 +42,16 @@ Supported operators
 - 'ge' - Is value greater than or equal to input
 - 'gt' - Is value strictly greater than input
 - 'in' - Does input array or string contain value
-- 'contains' - Is the input contained in value(array or string)
-- 'startsWith' - Does value start with input string
-- 'endsWith' - Does value end with input string
+- 'contains' - Is the input contained in value
+- 'startsWith' - Does value start with input
+- 'endsWith' - Does value end with input
+
+String Operators: "ne" | "eq" | "le" | "lt" | "ge" | "gt" | "in" | "contains" | "startsWith" | "endsWith"
+Number Operators "ne" | "eq" | "le" | "lt" | "ge" | "gt" | "in"
+Boolean Operators: "ne" | "eq" | "in"
+Date Operators: "ne" | "eq" | "le" | "lt" | "ge" | "gt" | "in"
+
+All array types also support the "contains" operator.
 
 You can also create expressions with the following logical operators  
 `and | or | not`
