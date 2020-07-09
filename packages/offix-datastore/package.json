@@ -32,7 +32,7 @@
     "typescript": "3.9.6"
   },
   "dependencies": {
-    "graphql-tag": "2.10.3",
+    "graphql-tag": "2.10.4",
     "offix-scheduler": "^0.15.5",
     "urql": "1.9.8",
     "uuid": "8.2.0",
