@@ -1,31 +1,24 @@
 import { useEffect, useReducer } from "react";
 import { DatabaseEvents } from 'offix-datastore';
 import { TodoModel } from '../config/datastoreConfig';
-import { ITodo } from "../types";
+import { ITodo, HookState, ActionType, ReducerAction, ITodoModel } from "../types";
 import { Predicate } from "offix-datastore/types/predicates";
 import { Subscription } from "offix-datastore/types/utils/PushStream";
 
-const Actions = {
-  REQ_START: 0,
-  REQ_SUCCESS: 1,
-  REQ_FAILED: 2
-}
-
-// @ts-ignore
-function reducer(state, action) {
+function reducer(state: HookState, action: ReducerAction) {
   switch (action.type) {
-    case Actions.REQ_START:
+    case ActionType.REQ_START:
       return { ...state, loading: true, data: null, error: null };
-    case Actions.REQ_SUCCESS:
+    case ActionType.REQ_SUCCESS:
       return { ...state, loading: false, data: action.payload, error: null };
-    case Actions.REQ_FAILED:
+    case ActionType.REQ_FAILED:
       return { ...state, loading: false, data: null, error: action.payload };
     default:
       throw new Error("Invalid action");
   }
 }
 
-const initialState = {
+const initialState: HookState = {
   data: null,
   loading: false,
   error: null
@@ -36,16 +29,16 @@ export const useFindTodos = () => {
 
   const refreshState = async () => {
     const result = await TodoModel.query();
-    dispatch({ type: Actions.REQ_SUCCESS, payload: result });
+    dispatch({ type: ActionType.REQ_SUCCESS, payload: result });
   }
 
   useEffect(() => {
     (function () {
-      dispatch({ type: Actions.REQ_START });
+      dispatch({ type: ActionType.REQ_START });
       try {
         refreshState();
       } catch (error) {
-        dispatch({ type: Actions.REQ_FAILED, payload: error });
+        dispatch({ type: ActionType.REQ_FAILED, payload: error });
       }
     })();
 
@@ -66,14 +59,14 @@ export const useFindTodos = () => {
 
 export const useAddTodo = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const addTodo = async (todo: ITodo) => {
-    dispatch({ type: Actions.REQ_START });
+  const addTodo = async (todo: ITodoModel) => {
+    dispatch({ type: ActionType.REQ_START });
     try {
       const result = await TodoModel.save(todo);
-      dispatch({ type: Actions.REQ_SUCCESS, payload: result });
+      dispatch({ type: ActionType.REQ_SUCCESS, payload: result });
       return result;
     } catch (error) {
-      dispatch({ type: Actions.REQ_FAILED, payload: error });
+      dispatch({ type: ActionType.REQ_FAILED, payload: error });
     }
   }
 
@@ -83,13 +76,13 @@ export const useAddTodo = () => {
 export const useEditTodo = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const editTodo = async (todo: ITodo, predicate: Predicate<ITodo>) => {
-    dispatch({ type: Actions.REQ_START });
+    dispatch({ type: ActionType.REQ_START });
     try {
       const result = await TodoModel.update(todo, predicate);
-      dispatch({ type: Actions.REQ_SUCCESS, payload: result });
+      dispatch({ type: ActionType.REQ_SUCCESS, payload: result });
       return result;
     } catch (error) {
-      dispatch({ type: Actions.REQ_FAILED, payload: error });
+      dispatch({ type: ActionType.REQ_FAILED, payload: error });
     }
   }
 
@@ -99,13 +92,13 @@ export const useEditTodo = () => {
 export const useDeleteTodo = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const deleteTodo = async (predicate: Predicate<ITodo>) => {
-    dispatch({ type: Actions.REQ_START });
+    dispatch({ type: ActionType.REQ_START });
     try {
       const result = await TodoModel.remove(predicate);
-      dispatch({ type: Actions.REQ_SUCCESS, payload: result });
+      dispatch({ type: ActionType.REQ_SUCCESS, payload: result });
       return result;
     } catch (error) {
-      dispatch({ type: Actions.REQ_FAILED, payload: error });
+      dispatch({ type: ActionType.REQ_FAILED, payload: error });
     }
   }
 
