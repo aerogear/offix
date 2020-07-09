@@ -97,7 +97,7 @@ export class Storage {
     public readonly storeChangeEventStream: PushStream<StoreChangeEvent>;
     private adapter: IStorageAdapter;
 
-    constructor(dbName: string, models: Model<any>[], schemaVersion: number) {
+    constructor(dbName: string, models: Model[], schemaVersion: number) {
         this.storeChangeEventStream = new ObservablePushStream();
         this.adapter = createDefaultStorage(dbName, models, schemaVersion);
     }

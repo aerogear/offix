@@ -8,7 +8,7 @@ import { Model } from "../../Model";
 export class IndexedDBStorage implements IStorageAdapter {
     private indexedDB: Promise<IDBDatabase>;
 
-    constructor(dbName: string, models: Model<any>[], schemaVersion: number) {
+    constructor(dbName: string, models: Model[], schemaVersion: number) {
         this.indexedDB = new Promise((resolve, reject) => {
             const openreq = indexedDB.open(dbName, schemaVersion);
             openreq.onerror = () => reject(openreq.error);
