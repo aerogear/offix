@@ -18,7 +18,7 @@ For simplicity, a GraphQL Serve in-memory server has been provided. You can make
 command:
 
 ```
-yarn serve
+npx graphql-serve serve --port=<PORT-NUMBER>
 ```
 
 Alternatively, you can implement your own backend server.
