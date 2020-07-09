@@ -12,12 +12,12 @@ export const EditTodo = ({ todo, toggleEdit }: EditTodoProps) => {
   
   const [editTodo] = useOfflineMutation(EDIT_TODO, mutateOptions.edit);
 
-  const handleUpdate = ({ title, description }: ITodo) => {
+  const handleUpdate = (todo: ITodo) => {
     editTodo({
       variables: {
         ...todo,
-        title,
-        description,
+        title: todo.title,
+        description: todo.description,
       },
     })
     .then(() => toggleEdit())
