@@ -6,6 +6,7 @@ import {
   TODO_UPDATED_SUBSCRIPTION,
   TODO_DELETED_SUBSCRIPTION,
 } from '../gql/queries';
+import { ITodo } from '../types';
 
 // use offix-client helpers to create the required
 // subscription options for an `add` event
@@ -28,7 +29,7 @@ export const edit = createSubscriptionOptions({
 // be the full object on not id only
 export const remove = {
   document: TODO_DELETED_SUBSCRIPTION,
-  updateQuery: (prev, { subscriptionData }) => {
+  updateQuery: (prev: any, { subscriptionData }: any) => {
     if (!subscriptionData.data) return prev;
 
     const { data } = subscriptionData;
@@ -46,7 +47,7 @@ export const remove = {
     // filtered todo list
     return {
       ...prev,
-      [queryField]: prev[queryField].filter((todo) => todo.id !== data[key]),
+      [queryField]: prev[queryField].filter((todo: ITodo) => todo.id !== data[key]),
     };
   },
 };
