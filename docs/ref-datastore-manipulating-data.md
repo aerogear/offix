@@ -50,8 +50,7 @@ String Operators: "ne" | "eq" | "le" | "lt" | "ge" | "gt" | "in" | "contains" | 
 Number Operators "ne" | "eq" | "le" | "lt" | "ge" | "gt" | "in"
 Boolean Operators: "ne" | "eq" | "in"
 Date Operators: "ne" | "eq" | "le" | "lt" | "ge" | "gt" | "in"
-
-All array types also support the "contains" operator.
+Arrays: "ne" | "eq" | "in" | "contains"
 
 You can also create expressions with the following logical operators  
 `and | or | not`

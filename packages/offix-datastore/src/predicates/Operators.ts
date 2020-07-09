@@ -1,4 +1,5 @@
-type CommonOperators = "ne" | "eq" | "le" | "lt" | "ge" | "gt" | "in";
+type ArrayOperators = "ne" | "eq" | "in" | "contains";
+type MathematicalOperators = "ne" | "eq" | "le" | "lt" | "ge" | "gt" | "in";
 
 /**
  * All Operators
@@ -14,19 +15,17 @@ type CommonOperators = "ne" | "eq" | "le" | "lt" | "ge" | "gt" | "in";
  * 'startsWith' - Does value start with input string
  * 'endsWith' - Does value end with input string
  */
-export type AllOperators = CommonOperators | "contains" | "startsWith" | "endsWith";
+export type AllOperators = MathematicalOperators | "contains" | "startsWith" | "endsWith";
 
 /**
  * Maps data type to allowed operators
  */
 export type TypeOperatorMap<T> =
+    T extends Array<any> ? ArrayOperators :
     T extends string ? AllOperators :
-    T extends number[] ? CommonOperators | "contains" :
-    T extends number ? CommonOperators :
-    T extends boolean[] ? "ne" | "eq" | "in" | "contains" :
+    T extends number ? MathematicalOperators :
     T extends boolean ? "ne" | "eq" | "in" :
-    T extends Date[] ? CommonOperators | "contains" :
-    T extends Date ? CommonOperators :
+    T extends Date ? MathematicalOperators :
     AllOperators;
 
 export const OperatorFunctionMap = {
