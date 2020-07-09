@@ -25,7 +25,7 @@ export interface DataStoreConfig {
 export class DataStore {
     private dbName: string;
     private schemaVersion: number;
-    private models: Model<any>[];
+    private models: Model<unknown>[];
     private storage?: Storage;
     private url: string;
 

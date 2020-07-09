@@ -20,7 +20,7 @@ export type Fields<T> = {
 /**
  * Provides CRUD capabilities for a model
  */
-export class Model<T> {
+export class Model<T = unknown> {
     private name: string;
     private storeName: string;
     private fields: Fields<T>;

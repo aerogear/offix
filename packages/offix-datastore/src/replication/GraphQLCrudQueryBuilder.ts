@@ -10,17 +10,17 @@ import { Model } from "../Model";
 // TODO add deltaqueries/subscriptions
 // TODO have static/precompiled gql queries instead of processing all at runtime
 export class GraphQLCrudQueryBuilder implements GraphQLQueryBuilder {
-  build(models: Model<any>[]): Map<string, GraphQLQueries> {
-    const queriesMap: Map<string, GraphQLQueries> = new Map();
+    build(models: Model[]): Map<string, GraphQLQueries> {
+        const queriesMap: Map<string, GraphQLQueries> = new Map();
 
-    models.forEach((model) => {
-      const fields = model.getFields();
-      const fieldsBuilder: string[] = Object.keys(fields).map((key) => {
-        const graphQLKey = fields[key].key;
-        return graphQLKey;
-      });
-      const graphQLFields = fieldsBuilder.join("\n");
-      const modelName = model.getName();
+        models.forEach((model) => {
+            const fields: any = model.getFields();
+            const fieldsBuilder: string[] = Object.keys(fields).map((key) => {
+                const graphQLKey = fields[key].key;
+                return graphQLKey;
+            });
+            const graphQLFields = fieldsBuilder.join("\n");
+            const modelName = model.getName();
 
       const mutations = {
         create: gql`

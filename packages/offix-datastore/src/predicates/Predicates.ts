@@ -5,7 +5,7 @@ import { Fields } from "../Model";
 /**
  * Defines the fields that can be used for filtering in a predicate for a given type
  */
-export type ModelPredicate<T> = {
+export type ModelPredicate<T = any> = {
     [P in keyof Required<T>]: (op: TypeOperatorMap<T[P]>, input: T[P] | T[P][]) => ModelFieldPredicate
 } & {
     or: (...predicates: PredicateFunction[]) => PredicateExpression;
