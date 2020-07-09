@@ -34,9 +34,17 @@ TaskModel.query((p) => p.title("eq", "test"))
 .then((data) => {}) // Retrieves all tasks where title matches "test"
 ```
 
-Currently supported operators(more coming soon)
-- eq  equality operator
-- gt  greater than operator
+Supported operators
+- 'ne' - Is value not equal to input
+- 'eq' - Is value equal to input
+- 'le' - Is value less than or equal to input
+- 'lt' - Is value strictly less than input
+- 'ge' - Is value greater than or equal to input
+- 'gt' - Is value strictly greater than input
+- 'in' - Does input array or string contain value
+- 'contains' - Is the input contained in value(array or string)
+- 'startsWith' - Does value start with input string
+- 'endsWith' - Does value end with input string
 
 You can also create expressions with the following logical operators  
 `and | or | not`
