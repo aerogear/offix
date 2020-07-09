@@ -12,12 +12,9 @@ export const EditTodo = ({ todo, toggleEdit }: EditTodoProps) => {
 
   const handleUpdate = (todo: ITodo) => {
     editTodo({
-      variables: {
-        ...todo,
-        title: todo.title,
-        description: todo.description,
-      },
-    })
+      title: todo.title,
+      description: todo.description,
+    }, (t) => t.id('eq', todo.id))
     .then(() => toggleEdit())
     .catch((error: any) => {
       console.log(error);
