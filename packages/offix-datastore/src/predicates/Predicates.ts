@@ -1,12 +1,12 @@
 import { ExpressionOperators, ModelFieldPredicate, PredicateExpression, PredicateFunction } from "./PredicateFunctions";
-import { AllOperators } from "./Operators";
+import { OperatorFunctionMap, TypeOperatorMap, AllOperators } from "./Operators";
 import { Fields } from "../Model";
 
 /**
  * Defines the fields that can be used for filtering in a predicate for a given type
  */
 export type ModelPredicate<T> = {
-    [P in keyof Required<T>]: (op: string, value: T[P]) => ModelFieldPredicate
+    [P in keyof Required<T>]: (op: TypeOperatorMap<T[P]>, input: T[P] | T[P][]) => ModelFieldPredicate
 } & {
     or: (...predicates: PredicateFunction[]) => PredicateExpression;
     and: (...predicates: PredicateFunction[]) => PredicateExpression;
@@ -27,7 +27,7 @@ export function createPredicate<T>(fields: Fields<T>): ModelPredicate<T> {
     const modelPredicate: any = {};
 
     Object.keys(fields).forEach((key: string) => {
-        modelPredicate[key] = (op: string, value: any) => new ModelFieldPredicate(key, value, AllOperators[op]);
+        modelPredicate[key] = (op: AllOperators, input: any) => new ModelFieldPredicate(key, input, OperatorFunctionMap[op]);
     });
 
     modelPredicate.or = (...predicates: any[]) => {
