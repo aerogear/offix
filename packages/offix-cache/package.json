@@ -16,7 +16,7 @@
     "@types/fetch-mock": "7.3.2",
     "@types/graphql": "14.2.3",
     "@types/jest": "26.0.4",
-    "@types/node": "12.12.48",
+    "@types/node": "12.12.49",
     "graphql": "15.3.0",
     "graphql-tag": "2.10.4",
     "jest": "26.1.0",
