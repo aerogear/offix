@@ -27,7 +27,7 @@
     "mocha": "8.0.1",
     "offix-cache": "0.15.5",
     "offix-server-conflicts": "0.6.0",
-    "subscriptions-transport-ws": "0.9.16",
+    "subscriptions-transport-ws": "0.9.17",
     "webpack": "4.43.0"
   },
   "devDependencies": {}
