@@ -116,9 +116,10 @@ export class Model<T = unknown> {
             });
     }
 
-    private async doDeltaSync(replicator: IReplicator, matcher: (d: T) => Predicate<T>, predicate?: Predicate<T>,) {
+    private async doDeltaSync(replicator: IReplicator, matcher: (d: T) => Predicate<T>, predicate?: Predicate<T>) {
         // TODO limit the size of data returned
-        const data = await replicator.pullDelta(this.name, "", predicate);
+        // TODO get lastSync for model for metadata store and pass to pullDelta
+        const data = await replicator.pullDelta(this.getStoreName(), "", predicate);
 
         data
         .filter((d: any) => (d._deleted))
@@ -127,7 +128,6 @@ export class Model<T = unknown> {
         data
         .filter((d: any) => (!d._deleted))
         .forEach(async (d: any) => {
-            // TODO Predicate Matcher should be defined in config by user
             const results = await this.update(d, matcher(d));
             if (results.length === 0) {
                 // no update was made, save the data instead
@@ -135,6 +135,7 @@ export class Model<T = unknown> {
                 return;
             }
         });
+        // TODO replicator.pullDelta should return lastSync and write to metadata store for model
         // TODO consider removing older data if local db surpasses size limit
     }
 }

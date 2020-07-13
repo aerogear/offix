@@ -2,8 +2,8 @@ import { DatabaseEvents } from "../storage";
 import { Predicate } from "../predicates";
 
 export interface IReplicationResponse {
-    data: unknown;
-    errors: unknown[];
+    data: any;
+    errors: any[];
 }
 
 /**
@@ -29,5 +29,5 @@ export interface IReplicator {
     /**
      * Pull changes from server since lastSync
      */
-    pullDelta<T>(modelName: string, lastSync: string, predicate?: Predicate<T>): Promise<T[]>;
+    pullDelta<T>(storeName: string, lastSync: string, predicate?: Predicate<T>): Promise<T[]>;
 }

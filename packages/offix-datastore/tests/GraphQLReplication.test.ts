@@ -41,7 +41,7 @@ test("Push mutation to GraphQL Server", (done) => {
       done();
       return { data: null, errors: [] };
     }
-  }, queries);
+  } as any, queries);
 
   graphQLReplicaionAPI.push({
     eventType: DatabaseEvents.ADD,
