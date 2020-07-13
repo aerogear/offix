@@ -3,6 +3,7 @@ import { DocumentNode } from "graphql";
 import { IReplicator, IOperation, IReplicationResponse } from "./Replicator";
 import { Model } from "../Model";
 import { DatabaseEvents } from "../storage";
+import { Predicate } from "../predicates";
 
 /**
  * GraphQL mutations for create, update and delete
@@ -125,5 +126,9 @@ export class GraphQLReplicator implements IReplicator {
             default:
                 throw new Error("Invalid store event received");
         }
+    }
+
+    public async pullDelta<T>(modelName: string, lastSync: string, predicate?: Predicate<T>) {
+        return [{}] as T[];
     }
 }

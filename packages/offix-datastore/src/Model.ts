@@ -1,5 +1,6 @@
 import { Storage, StoreChangeEvent, DatabaseEvents } from "./storage";
 import { createPredicate, Predicate } from "./predicates";
+import { IReplicator } from "./replication";
 
 export interface FieldOptions {
     /** GraphQL type */
@@ -23,7 +24,8 @@ export type Fields<T> = {
 export interface ModelConfig<T = unknown> {
     name: string,
     storeName?: string,
-    fields: Fields<T>
+    fields: Fields<T>,
+    predicate?: Predicate<T>,
 }
 
 /**
@@ -37,12 +39,17 @@ export class Model<T = unknown> {
 
     constructor(
         config: ModelConfig<T>,
-        getStorage: () => Storage
+        getStorage: () => Storage,
+        replicator?: IReplicator
     ) {
         this.name = config.name;
         this.storeName = config.storeName || `user_${config.name}`;
         this.fields = config.fields;
         this.getStorage = getStorage;
+
+        if(replicator) { this.getDelta(replicator, config.predicate); }
+        // TODO remove ReplicationEngine 
+        // and push changes to replicator from change methods(CUD) here instead
     }
 
     public getFields() {
@@ -95,5 +102,27 @@ export class Model<T = unknown> {
                 if (event.eventType !== eventType) { return; }
                 listener(event);
             });
+    }
+
+    private async getDelta(replicator: IReplicator, predicate?: Predicate<T>) {
+        // TODO limit the size of data returned
+        const data = await replicator.pullDelta(this.name, "", predicate);
+
+        data
+        .filter((d: any) => (d._deleted))
+        .forEach((d: any) => this.remove((p: any) => p.id("eq", d.id)))
+
+        data
+        .filter((d: any) => (!d._deleted))
+        .forEach(async (d: any) => {
+            // TODO Predicate Matcher should be defined in config by user
+            const results = await this.update(d, (p: any) => p.id("eq", d.id));
+            if (results.length === 0) {
+                // no update was made, save the data instead
+                this.save(d);
+                return;
+            }
+        });
+        // TODO consider removing older data if local db surpasses size limit
     }
 }

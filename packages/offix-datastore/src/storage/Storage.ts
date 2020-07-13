@@ -103,7 +103,7 @@ export class Storage {
     }
 
     public async save(storeName: string, input: any): Promise<any> {
-        const result = await this.adapter.save(storeName, { ...input, id: generateId() });
+        const result = await this.adapter.save(storeName, { id: generateId(), ...input });
         this.storeChangeEventStream.push({
             // TODO replace for enums
             eventType: DatabaseEvents.ADD,

@@ -1,4 +1,5 @@
 import { DatabaseEvents } from "../storage";
+import { Predicate } from "../predicates";
 
 export interface IReplicationResponse {
     data: unknown;
@@ -24,4 +25,9 @@ export interface IReplicator {
      * @param operation
      */
     push(operation: IOperation): Promise<IReplicationResponse>;
+
+    /**
+     * Pull changes from server since lastSync
+     */
+    pullDelta<T>(modelName: string, lastSync: string, predicate?: Predicate<T>): Promise<T[]>;
 }
