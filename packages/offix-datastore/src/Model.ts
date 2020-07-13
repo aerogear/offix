@@ -58,7 +58,7 @@ export class Model<T = unknown> {
 
         // TODO set default matcher
         if(replicator && config.matcher) {
-            this.getDelta(replicator, config.matcher, config.predicate,);
+            this.doDeltaSync(replicator, config.matcher, config.predicate,);
         }
         // TODO remove ReplicationEngine 
         // and push changes to replicator from change methods(CUD) here instead
@@ -116,7 +116,7 @@ export class Model<T = unknown> {
             });
     }
 
-    private async getDelta(replicator: IReplicator, matcher: (d: T) => Predicate<T>, predicate?: Predicate<T>,) {
+    private async doDeltaSync(replicator: IReplicator, matcher: (d: T) => Predicate<T>, predicate?: Predicate<T>,) {
         // TODO limit the size of data returned
         const data = await replicator.pullDelta(this.name, "", predicate);
 
