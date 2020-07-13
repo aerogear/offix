@@ -14,7 +14,7 @@ let storage: Storage;
 
 beforeAll(() => {
   storage = new Storage(DB_NAME, [
-    new Model("Note", storeName, {}, () => (null as any))
+    new Model({ name: "Test", fields: {} }, () => (null as any))
   ], 1);
 });
 

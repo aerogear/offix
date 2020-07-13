@@ -5,6 +5,7 @@
 import "isomorphic-unfetch";
 import "fake-indexeddb/auto";
 import { ApolloServer } from "apollo-server";
+import { readFileSync } from "fs";
 
 import { DataStore } from "../src/DataStore";
 import { createDefaultStorage } from "../src/storage/adapters/defaultStorage";
@@ -13,6 +14,7 @@ import { Predicate } from "../src/predicates";
 import { DatabaseEvents } from "../src/storage";
 
 const DB_NAME = "offix-datastore";
+const schema = JSON.parse(readFileSync(`${__dirname}/schema.json`).toString());
 
 function getIndexedDB() {
   return new Promise<IDBDatabase>((resolve, reject) => {
@@ -41,33 +43,13 @@ beforeEach(() => {
     dbName: DB_NAME,
     url: "http://localhost:4000/"
   });
-  NoteModel = dataStore.createModel<Note>("Note", "user_Note", {
-    id: {
-      type: "ID",
-      key: "id"
-    },
-    title: {
-      type: "String",
-      key: "title"
-    },
-    description: {
-      type: "String",
-      key: "description"
-    }
+  NoteModel = dataStore.createModel<Note>({
+    name: "Note",
+    fields: schema.Note
   });
-  dataStore.createModel<Comment>("Comment", "user_Comment", {
-    id: {
-      type: "ID",
-      key: "id"
-    },
-    title: {
-      type: "String",
-      key: "title"
-    },
-    noteId: {
-      type: "ID",
-      key: "noteId"
-    }
+  dataStore.createModel<Comment>({
+    name: "Comment",
+    fields: schema.Comment
   });
   dataStore.init();
 });
@@ -89,7 +71,7 @@ test("Setup client db with provided models", async () => {
 
 test("Store Schema update", async () => {
   const idbStorage = createDefaultStorage(DB_NAME, [
-    new Model("Test", "user_Test", {}, () => (null as any))
+    new Model({ name: "Test", fields: {} }, () => (null as any))
   ], 2);
   const db = await idbStorage.getIndexedDBInstance();
   expect(db.objectStoreNames).toContain("user_Test");
@@ -159,8 +141,8 @@ test("Observe local store events", async () => {
   await NoteModel.update({ title: "changed" }, (p) => p.title("eq", "test"));
 });
 
-test("Push local change to server", (done) => {
-  const typeDefs = `
+
+const typeDefs = `
     type Note {
         id: ID
         title: String
@@ -181,11 +163,12 @@ test("Push local change to server", (done) => {
         createNote(input: CreateNoteInput!): Note
     }
     `;
-  const note: Note = {
-    title: "test",
-    description: "test"
-  };
+const note: Note = {
+  title: "test",
+  description: "test"
+};
 
+test("Push local change to server", (done) => {
   const server = new ApolloServer({
     typeDefs,
     resolvers: {
@@ -194,6 +177,21 @@ test("Push local change to server", (done) => {
           expect(input).toHaveProperty("title", note.title);
           expect(input).toHaveProperty("description", note.description);
           server.stop().finally(() => done());
+        }
+      }
+    }
+  });
+  server.listen();
+  NoteModel.save(note);
+});
+
+test.todo("Subscribe to changes from server", (done) => {
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers: {
+      Mutation: {
+        createNote: (_, { input }) => {
+          
         }
       }
     }

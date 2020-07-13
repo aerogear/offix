@@ -18,6 +18,15 @@ export type Fields<T> = {
 };
 
 /**
+ * Model Config options
+ */
+export interface ModelConfig<T = unknown> {
+    name: string,
+    storeName?: string,
+    fields: Fields<T>
+}
+
+/**
  * Provides CRUD capabilities for a model
  */
 export class Model<T = unknown> {
@@ -27,14 +36,12 @@ export class Model<T = unknown> {
     private getStorage: () => Storage;
 
     constructor(
-        name: string,
-        storeName: string,
-        fields: Fields<T>,
+        config: ModelConfig<T>,
         getStorage: () => Storage
     ) {
-        this.name = name;
-        this.storeName = storeName;
-        this.fields = fields;
+        this.name = config.name;
+        this.storeName = config.storeName || `user_${config.name}`;
+        this.fields = config.fields;
         this.getStorage = getStorage;
     }
 
