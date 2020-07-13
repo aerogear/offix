@@ -22,9 +22,24 @@ export type Fields<T> = {
  * Model Config options
  */
 export interface ModelConfig<T = unknown> {
+    /**
+     * Model name
+     */
     name: string,
+
+    /**
+     * Model store name, defualts to `user_${name}`
+     */
     storeName?: string,
+
+    /**
+     * Model fields
+     */
     fields: Fields<T>,
+
+    /**
+     * Delta Query and Subscription filter
+     */
     predicate?: Predicate<T>,
 
     /**
@@ -56,9 +71,12 @@ export class Model<T = unknown> {
         this.fields = config.fields;
         this.getStorage = getStorage;
 
+        // Model has access to replicator so there is possibility of model specific replicator config
+        // We can control Model specific replication here
         // TODO set default matcher
-        if(replicator && config.matcher) {
-            this.doDeltaSync(replicator, config.matcher, config.predicate,);
+        if (replicator && config.matcher) {
+            this.subscribeForServerEvents(replicator);
+            this.doDeltaSync(replicator, config.matcher, config.predicate);
         }
         // TODO remove ReplicationEngine 
         // and push changes to replicator from change methods(CUD) here instead
@@ -116,25 +134,30 @@ export class Model<T = unknown> {
             });
     }
 
+    private async subscribeForServerEvents(replicator: IReplicator) {
+        // TODO replicator.subscribe
+        // handle subscription events here
+    }
+
     private async doDeltaSync(replicator: IReplicator, matcher: (d: T) => Predicate<T>, predicate?: Predicate<T>) {
         // TODO limit the size of data returned
         // TODO get lastSync for model for metadata store and pass to pullDelta
         const data = await replicator.pullDelta(this.getStoreName(), "", predicate);
 
         data
-        .filter((d: any) => (d._deleted))
-        .forEach((d: any) => this.remove(matcher(d)))
+            .filter((d: any) => (d._deleted))
+            .forEach((d: any) => this.remove(matcher(d)))
 
         data
-        .filter((d: any) => (!d._deleted))
-        .forEach(async (d: any) => {
-            const results = await this.update(d, matcher(d));
-            if (results.length === 0) {
-                // no update was made, save the data instead
-                this.save(d);
-                return;
-            }
-        });
+            .filter((d: any) => (!d._deleted))
+            .forEach(async (d: any) => {
+                const results = await this.update(d, matcher(d));
+                if (results.length === 0) {
+                    // no update was made, save the data instead
+                    this.save(d);
+                    return;
+                }
+            });
         // TODO replicator.pullDelta should return lastSync and write to metadata store for model
         // TODO consider removing older data if local db surpasses size limit
     }
