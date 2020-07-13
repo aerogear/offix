@@ -4,7 +4,7 @@
 
 import "fake-indexeddb/auto";
 
-import { ReplicationEngine, IReplicator } from "../src/replication";
+import { ReplicationEngine } from "../src/replication";
 import { Storage, DatabaseEvents } from "../src/storage";
 import { Model } from "../src/Model";
 
@@ -17,6 +17,7 @@ const testFields = {
     key: "id"
   }
 };
+const testMatcher = (d: any) => (p: any) => p.id("eq", d.id);
 
 beforeAll(() => {
   storage = new Storage(DB_NAME, [
@@ -80,6 +81,7 @@ test("Pull and save new data from server", (done) => {
     name: "Test",
     fields: testFields,
     predicate: (p) => (p.name("eq", "Test")),
+    matcher: testMatcher
   }, () => (storage), replicator);
 
   testModel.on(DatabaseEvents.ADD, (event) => {
@@ -105,6 +107,7 @@ test("Pull and merge update from server", (done) => {
       name: "Test",
       fields: testFields,
       predicate: (p) => (p.name("eq", "Test")),
+      matcher: testMatcher
     }, () => (storage), replicator);
 
     testModel.on(DatabaseEvents.UPDATE, (event) => {
@@ -130,6 +133,7 @@ test("Pull and apply soft deletes from server", (done) => {
       name: "Test",
       fields: testFields,
       predicate: (p) => (p.name("eq", "Test")),
+      matcher: testMatcher
     }, () => (storage), replicator);
 
     testModel.on(DatabaseEvents.DELETE, (event) => {
