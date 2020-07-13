@@ -1,5 +1,5 @@
 import { Storage } from "./storage";
-import { Model, Fields, ModelConfig } from "./Model";
+import { Model, ModelConfig } from "./Model";
 import { ReplicationEngine, GraphQLReplicator, UrqlGraphQLClient, GraphQLCrudQueryBuilder } from "./replication";
 
 /**

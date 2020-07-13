@@ -146,17 +146,19 @@ export class Model<T = unknown> {
 
         data
             .filter((d: any) => (d._deleted))
-            .forEach((d: any) => this.remove(matcher(d)));
+            .forEach((d: any) => { this.remove(matcher(d)); });
 
         data
             .filter((d: any) => (!d._deleted))
-            .forEach(async (d: any) => {
-                const results = await this.update(d, matcher(d));
-                if (results.length === 0) {
-                    // no update was made, save the data instead
-                    this.save(d);
-                    return;
-                }
+            .forEach((d: any) => {
+                (async () => {
+                    const results = await this.update(d, matcher(d));
+                    if (results.length === 0) {
+                        // no update was made, save the data instead
+                        this.save(d);
+                        return;
+                    }
+                })();
             });
         // TODO replicator.pullDelta should return lastSync and write to metadata store for model
         // TODO consider removing older data if local db surpasses size limit
