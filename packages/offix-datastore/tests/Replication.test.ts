@@ -29,7 +29,7 @@ afterEach(() => {
   storage.storeChangeEventStream.clearSubscriptions();
 });
 
-test.skip("Push ADD operation data to server", (done) => {
+test("Push ADD operation data to server", (done) => {
   const api: any = {
     push: (op: any) => {
       expect(op.eventType).toEqual(DatabaseEvents.ADD);
@@ -47,7 +47,7 @@ test.skip("Push ADD operation data to server", (done) => {
   storage.save(storeName, { title: "test" });
 });
 
-test.skip("Push UPDATE operation data to server", (done) => {
+test("Push UPDATE operation data to server", (done) => {
   const api: any = {
     push: (op: any) => {
       expect(op.eventType).toEqual(DatabaseEvents.UPDATE);

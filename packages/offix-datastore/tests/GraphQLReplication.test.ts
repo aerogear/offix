@@ -35,7 +35,7 @@ test("Push mutation to GraphQL Server", (done) => {
   const input = { title: "test" };
 
   const graphQLReplicaionAPI = new GraphQLReplicator({
-    mutate: async (query, variables: any) => {
+    mutate: async (query: any, variables: any) => {
       expect(query).toEqual(modelQueries.mutations.create);
       expect(variables.input).toEqual(input);
       done();

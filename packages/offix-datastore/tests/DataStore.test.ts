@@ -185,7 +185,7 @@ test("Push local change to server", (done) => {
   NoteModel.save(note);
 });
 
-test.todo("Subscribe to changes from server", (done) => {
+test.skip("Subscribe to changes from server", (done) => {
   const server = new ApolloServer({
     typeDefs,
     resolvers: {

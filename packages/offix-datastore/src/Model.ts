@@ -25,31 +25,31 @@ export interface ModelConfig<T = unknown> {
     /**
      * Model name
      */
-    name: string,
+    name: string;
 
     /**
      * Model store name, defualts to `user_${name}`
      */
-    storeName?: string,
+    storeName?: string;
 
     /**
      * Model fields
      */
-    fields: Fields<T>,
+    fields: Fields<T>;
 
     /**
      * Delta Query and Subscription filter
      */
-    predicate?: Predicate<T>,
+    predicate?: Predicate<T>;
 
     /**
      * Associate server version of entities with local version.
      * It returns a predicate used to determine which entities
      * get changed given the data from the server
-     * 
+     *
      * @param data is the version from the server
      */
-    matcher?: (data: T) => Predicate<T>,
+    matcher?: (data: T) => Predicate<T>;
 }
 
 /**
@@ -78,7 +78,7 @@ export class Model<T = unknown> {
             this.subscribeForServerEvents(replicator);
             this.doDeltaSync(replicator, config.matcher, config.predicate);
         }
-        // TODO remove ReplicationEngine 
+        // TODO remove ReplicationEngine
         // and push changes to replicator from change methods(CUD) here instead
     }
 
@@ -146,7 +146,7 @@ export class Model<T = unknown> {
 
         data
             .filter((d: any) => (d._deleted))
-            .forEach((d: any) => this.remove(matcher(d)))
+            .forEach((d: any) => this.remove(matcher(d)));
 
         data
             .filter((d: any) => (!d._deleted))

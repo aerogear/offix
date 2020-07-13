@@ -52,16 +52,16 @@ export interface ReplicatorSubscriptions {
 
 // TODO add predicateToFilter
 interface ReplicatorQuery {
-    query: string | DocumentNode,
+    query: string | DocumentNode;
 
     /**
      * Return result of query
      */
-    getData(reponse: IReplicationResponse): any[],
+    getData(reponse: IReplicationResponse): any[];
 }
 
 interface ReplicatorSyncQuery extends ReplicatorQuery {
-    getLastSync(response: IReplicationResponse): string
+    getLastSync(response: IReplicationResponse): string;
 }
 
 /**
@@ -82,7 +82,7 @@ export interface ReplicatorQueries {
     /**
      * GraphQL sync operation
      */
-    sync: ReplicatorSyncQuery
+    sync: ReplicatorSyncQuery;
 }
 
 export interface GraphQLQueries {
