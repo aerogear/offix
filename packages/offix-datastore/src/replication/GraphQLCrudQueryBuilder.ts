@@ -74,19 +74,19 @@ export class GraphQLCrudQueryBuilder implements GraphQLQueryBuilder {
 
       const subscriptions = {
         new: gql`
-            mutation new${modelName}($input: ${modelName}SubscriptionFilter) {
+            subscription new${modelName}($input: ${modelName}SubscriptionFilter) {
                 new${modelName}(input: $input) {
                     ${graphQLFields}
                 }
             }`,
         updated: gql`
-            mutation updated${modelName}($input: ${modelName}SubscriptionFilter) {
+            subscription updated${modelName}($input: ${modelName}SubscriptionFilter) {
               updated${modelName}(input: $input) {
                     ${graphQLFields}
                 }
             }`,
         deleted: gql`
-            mutation deleted${modelName}($input: ${modelName}SubscriptionFilter) {
+            subscription deleted${modelName}($input: ${modelName}SubscriptionFilter) {
                 delete${modelName}(input: $input) {
                     ${graphQLFields}
                 }
