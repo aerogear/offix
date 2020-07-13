@@ -5,6 +5,7 @@ export interface Subscription {
 }
 
 export interface PushStream<T> {
+    clearSubscriptions(): void;
     push(message: T): void;
     subscribe(listener: (message: T) => void): Subscription;
 }
@@ -17,6 +18,10 @@ export class ObservablePushStream<T> implements PushStream<T> {
         this.observable = new Observable(observer => {
             this.observers.push(observer);
         });
+    }
+
+    public clearSubscriptions() {
+        this.observers.forEach((o) => o.complete());
     }
 
     public push(message: T) {

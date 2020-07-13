@@ -24,6 +24,10 @@ beforeAll(() => {
   ], 1);
 });
 
+afterEach(() => {
+  storage.storeChangeEventStream.clearSubscriptions();
+});
+
 test.skip("Push ADD operation data to server", (done) => {
   const api: any = {
     push: (op: any) => {
