@@ -20,16 +20,35 @@ export abstract class PredicateFunction {
  * specified by the operator.
  */
 export class ModelFieldPredicate extends PredicateFunction {
+    private key: string;
+    private value: any;
+    private operator: Function;
+
     constructor(
-        private key: string,
-        private value: any,
-        private operator: Function
+        key: string,
+        value: any,
+        operator: Function
     ) {
         super();
+        this.key = key;
+        this.value = value;
+        this.operator = operator;
     }
 
     public evaluate(model: any) {
         return this.operator(model[this.key], this.value);
+    }
+
+    public getKey() {
+        return this.key;
+    }
+
+    public getValue() {
+        return this.value;
+    }
+
+    public getOperator() {
+        return this.operator;
     }
 }
 
@@ -71,11 +90,16 @@ export const ExpressionOperators = {
  * logical operation on two or more PredicateFunctions
  */
 export class PredicateExpression extends PredicateFunction {
+    private predicates: PredicateFunction[];
+    private operator: ExpressionOperator;
+
     constructor(
-        private predicates: PredicateFunction[],
-        private operator: ExpressionOperator
+        predicates: PredicateFunction[],
+        operator: ExpressionOperator
     ) {
         super();
+        this.predicates = predicates;
+        this.operator = operator;
     }
 
     public evaluate(model: any) {
@@ -86,5 +110,13 @@ export class PredicateExpression extends PredicateFunction {
         });
 
         return result;
+    }
+
+    public getPredicates() {
+        return this.predicates;
+    }
+
+    public getOperator() {
+        return this.operator;
     }
 }
