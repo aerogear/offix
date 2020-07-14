@@ -34,7 +34,7 @@ jobs:
           command: echo "disabled cd packages/offix-client && yarn integration-test"
       - run:
           name: check bundle size
-          command: yarn size
+          command: echo "yarn size disabled"
       - store_artifacts:
           path: test-results.xml
           prefix: tests
