@@ -4,23 +4,34 @@
 
 import "fake-indexeddb/auto";
 
-import { ReplicationEngine, IReplicator } from "../src/replication";
+import { ReplicationEngine } from "../src/replication";
 import { Storage, DatabaseEvents } from "../src/storage";
 import { Model } from "../src/Model";
 
 const DB_NAME = "offix-datastore";
-const storeName = "user_Note";
+const storeName = "user_Test";
 let storage: Storage;
+const testFields = {
+  id: {
+    type: "ID",
+    key: "id"
+  }
+};
+const testMatcher = (d: any) => (p: any) => p.id("eq", d.id);
 
 beforeAll(() => {
   storage = new Storage(DB_NAME, [
-    new Model("Note", storeName, {}, () => (null as any))
+    new Model({ name: "Test", fields: {} }, () => (null as any))
   ], 1);
 });
 
+afterEach(() => {
+  storage.storeChangeEventStream.clearSubscriptions();
+});
+
 test("Push ADD operation data to server", (done) => {
-  const api: IReplicator = {
-    push: (op) => {
+  const api: any = {
+    push: (op: any) => {
       expect(op.eventType).toEqual(DatabaseEvents.ADD);
       expect(op.input).toHaveProperty("title", "test");
       done();
@@ -37,8 +48,8 @@ test("Push ADD operation data to server", (done) => {
 });
 
 test("Push UPDATE operation data to server", (done) => {
-  const api: IReplicator = {
-    push: (op) => {
+  const api: any = {
+    push: (op: any) => {
       expect(op.eventType).toEqual(DatabaseEvents.UPDATE);
       expect(op.input).toHaveProperty("id");
       expect(op.input).toHaveProperty("title", "test update");
@@ -58,4 +69,79 @@ test("Push UPDATE operation data to server", (done) => {
     });
 });
 
-test.todo("Pull and merge delta from server");
+test("Pull and save new data from server", (done) => {
+  const expectedPayload: any[] = [{ id: "Yay", name: "Test" }];
+  const replicator: any = {
+    pullDelta: () => {
+      return Promise.resolve(expectedPayload) as Promise<any[]>
+    }
+  };
+
+  const testModel = new Model<any>({
+    name: "Test",
+    fields: testFields,
+    predicate: (p) => (p.name("eq", "Test")),
+    matcher: testMatcher
+  }, () => (storage), replicator);
+
+  testModel.on(DatabaseEvents.ADD, (event) => {
+    expect(event.data.id).toEqual(expectedPayload[0].id);
+    expect(event.data.name).toEqual(expectedPayload[0].name);
+    done();
+  });
+});
+
+test("Pull and merge update from server", (done) => {
+  const expectedPayload: any[] = [{ name: "New Name" }];
+  const replicator: any = {
+    pullDelta: () => {
+      return Promise.resolve(expectedPayload) as Promise<any[]>
+    }
+  };
+
+  storage.save("user_Test", { name: "Old Name" })
+  .then((saved) => {
+    expectedPayload[0].id = saved.id;
+
+    const testModel = new Model<any>({
+      name: "Test",
+      fields: testFields,
+      predicate: (p) => (p.name("eq", "Test")),
+      matcher: testMatcher
+    }, () => (storage), replicator);
+
+    testModel.on(DatabaseEvents.UPDATE, (event) => {
+      expect(event.data).toEqual(expectedPayload);
+      done();
+    });
+  });
+});
+
+test("Pull and apply soft deletes from server", (done) => {
+  const expectedPayload: any[] = [{ name: "Old Name" }];
+  const replicator: any = {
+    pullDelta: () => {
+      return Promise.resolve([{ ...expectedPayload[0], _deleted: true }]) as Promise<any[]>
+    }
+  };
+
+  storage.save("user_Test", { name: "Old Name" })
+  .then((saved) => {
+    expectedPayload[0].id = saved.id;
+
+    const testModel = new Model<any>({
+      name: "Test",
+      fields: testFields,
+      predicate: (p) => (p.name("eq", "Test")),
+      matcher: testMatcher
+    }, () => (storage), replicator);
+
+    testModel.on(DatabaseEvents.DELETE, (event) => {
+      expect(event.data).toEqual(expectedPayload);
+      done();
+    });
+  });
+});
+
+
+test.todo("Subscribe to change events on server");

@@ -1,5 +1,5 @@
 import { Storage } from "./storage";
-import { Model, Fields } from "./Model";
+import { Model, ModelConfig } from "./Model";
 import { ReplicationEngine, GraphQLReplicator, UrqlGraphQLClient, GraphQLCrudQueryBuilder } from "./replication";
 
 /**
@@ -36,8 +36,8 @@ export class DataStore {
         this.models = [];
     }
 
-    public createModel<T>(name: string, storeName: string, fields: Fields<T>) {
-        const model = new Model<T>(name, storeName, fields, () => {
+    public createModel<T>(config: ModelConfig<T>) {
+        const model = new Model<T>(config, () => {
             if (this.storage) { return this.storage; }
             throw new Error("DataStore has not been initialised");
         });

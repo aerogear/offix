@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-import { GraphQLQueryBuilder, GraphQLQueries } from "./GraphQLReplicator";
+import { GraphQLQueryBuilder, GraphQLQueries, ReplicatorQueries } from "./GraphQLReplicator";
 import { Model } from "../Model";
 
 /**
@@ -43,7 +43,9 @@ export class GraphQLCrudQueryBuilder implements GraphQLQueryBuilder {
                 }`
       };
 
-      const queries = {
+      const queries: ReplicatorQueries = {
+        // TODO create a GraphQLCrudQuery class implementing ReplicatorQuery
+        // these fields should be instances of said class
         // TODO this requires using pluralize as plural form will not always be the same.
         find: gql`
             query find${modelName}($filter: ${modelName}Filter, $page: PageRequest, $orderBy: OrderByInput) {
@@ -55,15 +57,19 @@ export class GraphQLCrudQueryBuilder implements GraphQLQueryBuilder {
                   limit
               }
             }`,
-        sync: gql`
-                query sync${modelName}($lastChanged: String!, $filter: ${modelName}Filter) {
-                  find${modelName}s(lastChanged: $lastChanged, filter: $filter) {
-                      items {
-                        ${graphQLFields}
-                      }
-                      lastChanged
+        sync: {
+            query: gql`
+            query sync${modelName}($lastChanged: String!, $filter: ${modelName}Filter) {
+              find${modelName}s(lastChanged: $lastChanged, filter: $filter) {
+                  items {
+                    ${graphQLFields}
                   }
-                }`,
+                  lastChanged
+              }
+            }`,
+            getData: (response) => (response.data.items),
+            getLastSync: (response) => (response.data.lastChanged)
+        },
         get: gql`
             query get${modelName}($input: Mutate${modelName}Input!) {
                 update${modelName}(input: $input) {

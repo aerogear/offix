@@ -10,7 +10,7 @@ Object {
           "kind": "OperationDefinition",
           "name": Object {
             "kind": "Name",
-            "value": "createTest",
+            "value": "createNote",
           },
           "operation": "mutation",
           "selectionSet": Object {
@@ -38,7 +38,7 @@ Object {
                 "kind": "Field",
                 "name": Object {
                   "kind": "Name",
-                  "value": "createTest",
+                  "value": "createNote",
                 },
                 "selectionSet": Object {
                   "kind": "SelectionSet",
@@ -81,7 +81,7 @@ Object {
                   "kind": "NamedType",
                   "name": Object {
                     "kind": "Name",
-                    "value": "CreateTestInput",
+                    "value": "CreateNoteInput",
                   },
                 },
               },
@@ -109,7 +109,7 @@ Object {
           "kind": "OperationDefinition",
           "name": Object {
             "kind": "Name",
-            "value": "deleteTest",
+            "value": "deleteNote",
           },
           "operation": "mutation",
           "selectionSet": Object {
@@ -137,7 +137,7 @@ Object {
                 "kind": "Field",
                 "name": Object {
                   "kind": "Name",
-                  "value": "deleteTest",
+                  "value": "deleteNote",
                 },
                 "selectionSet": Object {
                   "kind": "SelectionSet",
@@ -180,7 +180,7 @@ Object {
                   "kind": "NamedType",
                   "name": Object {
                     "kind": "Name",
-                    "value": "MutateTestInput",
+                    "value": "MutateNoteInput",
                   },
                 },
               },
@@ -208,7 +208,7 @@ Object {
           "kind": "OperationDefinition",
           "name": Object {
             "kind": "Name",
-            "value": "updateTest",
+            "value": "updateNote",
           },
           "operation": "mutation",
           "selectionSet": Object {
@@ -236,7 +236,7 @@ Object {
                 "kind": "Field",
                 "name": Object {
                   "kind": "Name",
-                  "value": "updateTest",
+                  "value": "updateNote",
                 },
                 "selectionSet": Object {
                   "kind": "SelectionSet",
@@ -279,7 +279,7 @@ Object {
                   "kind": "NamedType",
                   "name": Object {
                     "kind": "Name",
-                    "value": "MutateTestInput",
+                    "value": "MutateNoteInput",
                   },
                 },
               },
@@ -309,7 +309,7 @@ Object {
           "kind": "OperationDefinition",
           "name": Object {
             "kind": "Name",
-            "value": "findTest",
+            "value": "findNote",
           },
           "operation": "query",
           "selectionSet": Object {
@@ -365,7 +365,7 @@ Object {
                 "kind": "Field",
                 "name": Object {
                   "kind": "Name",
-                  "value": "findTests",
+                  "value": "findNotes",
                 },
                 "selectionSet": Object {
                   "kind": "SelectionSet",
@@ -443,7 +443,7 @@ Object {
                 "kind": "NamedType",
                 "name": Object {
                   "kind": "Name",
-                  "value": "TestFilter",
+                  "value": "NoteFilter",
                 },
               },
               "variable": Object {
@@ -508,7 +508,7 @@ Object {
           "kind": "OperationDefinition",
           "name": Object {
             "kind": "Name",
-            "value": "getTest",
+            "value": "getNote",
           },
           "operation": "query",
           "selectionSet": Object {
@@ -536,7 +536,7 @@ Object {
                 "kind": "Field",
                 "name": Object {
                   "kind": "Name",
-                  "value": "updateTest",
+                  "value": "updateNote",
                 },
                 "selectionSet": Object {
                   "kind": "SelectionSet",
@@ -579,7 +579,7 @@ Object {
                   "kind": "NamedType",
                   "name": Object {
                     "kind": "Name",
-                    "value": "MutateTestInput",
+                    "value": "MutateNoteInput",
                   },
                 },
               },
@@ -601,161 +601,165 @@ Object {
       },
     },
     "sync": Object {
-      "definitions": Array [
-        Object {
-          "directives": Array [],
-          "kind": "OperationDefinition",
-          "name": Object {
-            "kind": "Name",
-            "value": "syncTest",
-          },
-          "operation": "query",
-          "selectionSet": Object {
-            "kind": "SelectionSet",
-            "selections": Array [
-              Object {
-                "alias": undefined,
-                "arguments": Array [
-                  Object {
-                    "kind": "Argument",
-                    "name": Object {
-                      "kind": "Name",
-                      "value": "lastChanged",
-                    },
-                    "value": Object {
-                      "kind": "Variable",
+      "getData": [Function],
+      "getLastSync": [Function],
+      "query": Object {
+        "definitions": Array [
+          Object {
+            "directives": Array [],
+            "kind": "OperationDefinition",
+            "name": Object {
+              "kind": "Name",
+              "value": "syncNote",
+            },
+            "operation": "query",
+            "selectionSet": Object {
+              "kind": "SelectionSet",
+              "selections": Array [
+                Object {
+                  "alias": undefined,
+                  "arguments": Array [
+                    Object {
+                      "kind": "Argument",
                       "name": Object {
                         "kind": "Name",
                         "value": "lastChanged",
                       },
+                      "value": Object {
+                        "kind": "Variable",
+                        "name": Object {
+                          "kind": "Name",
+                          "value": "lastChanged",
+                        },
+                      },
                     },
-                  },
-                  Object {
-                    "kind": "Argument",
-                    "name": Object {
-                      "kind": "Name",
-                      "value": "filter",
-                    },
-                    "value": Object {
-                      "kind": "Variable",
+                    Object {
+                      "kind": "Argument",
                       "name": Object {
                         "kind": "Name",
                         "value": "filter",
                       },
-                    },
-                  },
-                ],
-                "directives": Array [],
-                "kind": "Field",
-                "name": Object {
-                  "kind": "Name",
-                  "value": "findTests",
-                },
-                "selectionSet": Object {
-                  "kind": "SelectionSet",
-                  "selections": Array [
-                    Object {
-                      "alias": undefined,
-                      "arguments": Array [],
-                      "directives": Array [],
-                      "kind": "Field",
-                      "name": Object {
-                        "kind": "Name",
-                        "value": "items",
+                      "value": Object {
+                        "kind": "Variable",
+                        "name": Object {
+                          "kind": "Name",
+                          "value": "filter",
+                        },
                       },
-                      "selectionSet": Object {
-                        "kind": "SelectionSet",
-                        "selections": Array [
-                          Object {
-                            "alias": undefined,
-                            "arguments": Array [],
-                            "directives": Array [],
-                            "kind": "Field",
-                            "name": Object {
-                              "kind": "Name",
-                              "value": "id",
-                            },
-                            "selectionSet": undefined,
-                          },
-                          Object {
-                            "alias": undefined,
-                            "arguments": Array [],
-                            "directives": Array [],
-                            "kind": "Field",
-                            "name": Object {
-                              "kind": "Name",
-                              "value": "title",
-                            },
-                            "selectionSet": undefined,
-                          },
-                        ],
-                      },
-                    },
-                    Object {
-                      "alias": undefined,
-                      "arguments": Array [],
-                      "directives": Array [],
-                      "kind": "Field",
-                      "name": Object {
-                        "kind": "Name",
-                        "value": "lastChanged",
-                      },
-                      "selectionSet": undefined,
                     },
                   ],
+                  "directives": Array [],
+                  "kind": "Field",
+                  "name": Object {
+                    "kind": "Name",
+                    "value": "findNotes",
+                  },
+                  "selectionSet": Object {
+                    "kind": "SelectionSet",
+                    "selections": Array [
+                      Object {
+                        "alias": undefined,
+                        "arguments": Array [],
+                        "directives": Array [],
+                        "kind": "Field",
+                        "name": Object {
+                          "kind": "Name",
+                          "value": "items",
+                        },
+                        "selectionSet": Object {
+                          "kind": "SelectionSet",
+                          "selections": Array [
+                            Object {
+                              "alias": undefined,
+                              "arguments": Array [],
+                              "directives": Array [],
+                              "kind": "Field",
+                              "name": Object {
+                                "kind": "Name",
+                                "value": "id",
+                              },
+                              "selectionSet": undefined,
+                            },
+                            Object {
+                              "alias": undefined,
+                              "arguments": Array [],
+                              "directives": Array [],
+                              "kind": "Field",
+                              "name": Object {
+                                "kind": "Name",
+                                "value": "title",
+                              },
+                              "selectionSet": undefined,
+                            },
+                          ],
+                        },
+                      },
+                      Object {
+                        "alias": undefined,
+                        "arguments": Array [],
+                        "directives": Array [],
+                        "kind": "Field",
+                        "name": Object {
+                          "kind": "Name",
+                          "value": "lastChanged",
+                        },
+                        "selectionSet": undefined,
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+            "variableDefinitions": Array [
+              Object {
+                "defaultValue": undefined,
+                "directives": Array [],
+                "kind": "VariableDefinition",
+                "type": Object {
+                  "kind": "NonNullType",
+                  "type": Object {
+                    "kind": "NamedType",
+                    "name": Object {
+                      "kind": "Name",
+                      "value": "String",
+                    },
+                  },
+                },
+                "variable": Object {
+                  "kind": "Variable",
+                  "name": Object {
+                    "kind": "Name",
+                    "value": "lastChanged",
+                  },
                 },
               },
-            ],
-          },
-          "variableDefinitions": Array [
-            Object {
-              "defaultValue": undefined,
-              "directives": Array [],
-              "kind": "VariableDefinition",
-              "type": Object {
-                "kind": "NonNullType",
+              Object {
+                "defaultValue": undefined,
+                "directives": Array [],
+                "kind": "VariableDefinition",
                 "type": Object {
                   "kind": "NamedType",
                   "name": Object {
                     "kind": "Name",
-                    "value": "String",
+                    "value": "NoteFilter",
+                  },
+                },
+                "variable": Object {
+                  "kind": "Variable",
+                  "name": Object {
+                    "kind": "Name",
+                    "value": "filter",
                   },
                 },
               },
-              "variable": Object {
-                "kind": "Variable",
-                "name": Object {
-                  "kind": "Name",
-                  "value": "lastChanged",
-                },
-              },
-            },
-            Object {
-              "defaultValue": undefined,
-              "directives": Array [],
-              "kind": "VariableDefinition",
-              "type": Object {
-                "kind": "NamedType",
-                "name": Object {
-                  "kind": "Name",
-                  "value": "TestFilter",
-                },
-              },
-              "variable": Object {
-                "kind": "Variable",
-                "name": Object {
-                  "kind": "Name",
-                  "value": "filter",
-                },
-              },
-            },
-          ],
+            ],
+          },
+        ],
+        "kind": "Document",
+        "loc": Object {
+          "end": 278,
+          "start": 0,
         },
-      ],
-      "kind": "Document",
-      "loc": Object {
-        "end": 310,
-        "start": 0,
       },
     },
   },
@@ -767,7 +771,7 @@ Object {
           "kind": "OperationDefinition",
           "name": Object {
             "kind": "Name",
-            "value": "deletedTest",
+            "value": "deletedNote",
           },
           "operation": "subscription",
           "selectionSet": Object {
@@ -795,7 +799,7 @@ Object {
                 "kind": "Field",
                 "name": Object {
                   "kind": "Name",
-                  "value": "deleteTest",
+                  "value": "deleteNote",
                 },
                 "selectionSet": Object {
                   "kind": "SelectionSet",
@@ -836,7 +840,7 @@ Object {
                 "kind": "NamedType",
                 "name": Object {
                   "kind": "Name",
-                  "value": "TestSubscriptionFilter",
+                  "value": "NoteSubscriptionFilter",
                 },
               },
               "variable": Object {
@@ -863,7 +867,7 @@ Object {
           "kind": "OperationDefinition",
           "name": Object {
             "kind": "Name",
-            "value": "newTest",
+            "value": "newNote",
           },
           "operation": "subscription",
           "selectionSet": Object {
@@ -891,7 +895,7 @@ Object {
                 "kind": "Field",
                 "name": Object {
                   "kind": "Name",
-                  "value": "newTest",
+                  "value": "newNote",
                 },
                 "selectionSet": Object {
                   "kind": "SelectionSet",
@@ -932,7 +936,7 @@ Object {
                 "kind": "NamedType",
                 "name": Object {
                   "kind": "Name",
-                  "value": "TestSubscriptionFilter",
+                  "value": "NoteSubscriptionFilter",
                 },
               },
               "variable": Object {
@@ -959,7 +963,7 @@ Object {
           "kind": "OperationDefinition",
           "name": Object {
             "kind": "Name",
-            "value": "updatedTest",
+            "value": "updatedNote",
           },
           "operation": "subscription",
           "selectionSet": Object {
@@ -987,7 +991,7 @@ Object {
                 "kind": "Field",
                 "name": Object {
                   "kind": "Name",
-                  "value": "updatedTest",
+                  "value": "updatedNote",
                 },
                 "selectionSet": Object {
                   "kind": "SelectionSet",
@@ -1028,7 +1032,7 @@ Object {
                 "kind": "NamedType",
                 "name": Object {
                   "kind": "Name",
-                  "value": "TestSubscriptionFilter",
+                  "value": "NoteSubscriptionFilter",
                 },
               },
               "variable": Object {

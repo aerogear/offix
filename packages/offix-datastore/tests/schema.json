@@ -1,0 +1,30 @@
+{
+  "Note": {
+    "id": {
+      "type": "ID",
+      "key": "id"
+    },
+    "title": {
+      "type": "String",
+      "key": "title"
+    },
+    "description": {
+      "type": "String",
+      "key": "description"
+    }
+  },
+  "Comment": {
+    "id": {
+      "type": "ID",
+      "key": "id"
+    },
+    "title": {
+      "type": "String",
+      "key": "title"
+    },
+    "noteId": {
+      "type": "ID",
+      "key": "noteId"
+    }
+  }
+}

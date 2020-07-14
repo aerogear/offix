@@ -1,5 +1,6 @@
 import { Storage, StoreChangeEvent, DatabaseEvents } from "./storage";
 import { createPredicate, Predicate } from "./predicates";
+import { IReplicator } from "./replication";
 
 export interface FieldOptions {
     /** GraphQL type */
@@ -18,6 +19,40 @@ export type Fields<T> = {
 };
 
 /**
+ * Model Config options
+ */
+export interface ModelConfig<T = unknown> {
+    /**
+     * Model name
+     */
+    name: string;
+
+    /**
+     * Model store name, defualts to `user_${name}`
+     */
+    storeName?: string;
+
+    /**
+     * Model fields
+     */
+    fields: Fields<T>;
+
+    /**
+     * Delta Query and Subscription filter
+     */
+    predicate?: Predicate<T>;
+
+    /**
+     * Associate server version of entities with local version.
+     * It returns a predicate used to determine which entities
+     * get changed given the data from the server
+     *
+     * @param data is the version from the server
+     */
+    matcher?: (data: T) => Predicate<T>;
+}
+
+/**
  * Provides CRUD capabilities for a model
  */
 export class Model<T = unknown> {
@@ -27,15 +62,24 @@ export class Model<T = unknown> {
     private getStorage: () => Storage;
 
     constructor(
-        name: string,
-        storeName: string,
-        fields: Fields<T>,
-        getStorage: () => Storage
+        config: ModelConfig<T>,
+        getStorage: () => Storage,
+        replicator?: IReplicator
     ) {
-        this.name = name;
-        this.storeName = storeName;
-        this.fields = fields;
+        this.name = config.name;
+        this.storeName = config.storeName || `user_${config.name}`;
+        this.fields = config.fields;
         this.getStorage = getStorage;
+
+        // Model has access to replicator so there is possibility of model specific replicator config
+        // We can control Model specific replication here
+        // TODO set default matcher
+        if (replicator && config.matcher) {
+            this.subscribeForServerEvents(replicator);
+            this.doDeltaSync(replicator, config.matcher, config.predicate);
+        }
+        // TODO remove ReplicationEngine
+        // and push changes to replicator from change methods(CUD) here instead
     }
 
     public getFields() {
@@ -88,5 +132,35 @@ export class Model<T = unknown> {
                 if (event.eventType !== eventType) { return; }
                 listener(event);
             });
+    }
+
+    private async subscribeForServerEvents(replicator: IReplicator) {
+        // TODO replicator.subscribe
+        // handle subscription events here
+    }
+
+    private async doDeltaSync(replicator: IReplicator, matcher: (d: T) => Predicate<T>, predicate?: Predicate<T>) {
+        // TODO limit the size of data returned
+        // TODO get lastSync for model for metadata store and pass to pullDelta
+        const data = await replicator.pullDelta(this.getStoreName(), "", predicate);
+
+        data
+            .filter((d: any) => (d._deleted))
+            .forEach((d: any) => { this.remove(matcher(d)); });
+
+        data
+            .filter((d: any) => (!d._deleted))
+            .forEach((d: any) => {
+                (async () => {
+                    const results = await this.update(d, matcher(d));
+                    if (results.length === 0) {
+                        // no update was made, save the data instead
+                        this.save(d);
+                        return;
+                    }
+                })();
+            });
+        // TODO replicator.pullDelta should return lastSync and write to metadata store for model
+        // TODO consider removing older data if local db surpasses size limit
     }
 }
