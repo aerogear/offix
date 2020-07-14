@@ -1,10 +1,10 @@
 import React from 'react';
 import { Button } from 'antd';
-import { 
-  AutoForm, 
-  TextField, 
-  LongTextField, 
-  SubmitField 
+import {
+  AutoForm,
+  TextField,
+  LongTextField,
+  SubmitField
 } from 'uniforms-antd';
 
 import { AddTodoProps, ITodo } from '../../types';
@@ -17,6 +17,7 @@ export const AddTodo = ({ cancel }: AddTodoProps) => {
 
   const handleSubmit = ({ title, description }: ITodo) => {
     addTodo({
+      id: "whatever",
       title,
       description,
       completed: false,
