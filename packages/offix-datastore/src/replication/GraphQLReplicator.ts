@@ -4,6 +4,7 @@ import { IReplicator, IOperation, IReplicationResponse } from "./Replicator";
 import { Model } from "../Model";
 import { DatabaseEvents } from "../storage";
 import { Predicate } from "../predicates";
+import { Observable } from "subscriptions-transport-ws";
 
 /**
  * GraphQL mutations for create, update and delete
@@ -108,6 +109,12 @@ export interface GraphQLClient {
      * @param variables
      */
     query(query: string | DocumentNode, variables?: any): Promise<IReplicationResponse>;
+
+    /**
+     * Subscriptions to a graphql server
+     * @param query
+     */
+    subscribe(query: string | DocumentNode): Observable<IReplicationResponse>;
 }
 
 /**
@@ -169,5 +176,23 @@ export class GraphQLReplicator implements IReplicator {
         });
         // TODO return lastSync
         return syncQuery.getData(response);
+    }
+
+    public subscribe<T>(storeName: string, eventType: string | DocumentNode) {
+      const subscriptions = this.queries.get(storeName)?.subscriptions;
+      if (!subscriptions) {
+          throw new Error(`GraphQL Sync Queries not found for ${storeName}`);
+      }
+
+      switch(eventType) {
+        case "new":
+            return this.client.subscribe(subscriptions.new);
+        case "updated":
+            return this.client.subscribe(subscriptions.updated);
+        case "deleted":
+            return this.client.subscribe(subscriptions.deleted);
+        default:
+            throw new Error("Invalid subscription type received");
+      }
     }
 }

@@ -1,5 +1,6 @@
 import { DatabaseEvents } from "../storage";
 import { Predicate } from "../predicates";
+import { Observable } from "subscriptions-transport-ws";
 
 export interface IReplicationResponse {
     data: any;
@@ -30,4 +31,9 @@ export interface IReplicator {
      * Pull changes from server since lastSync
      */
     pullDelta<T>(storeName: string, lastSync: string, predicate?: Predicate<T>): Promise<T[]>;
+
+    /**
+     * Pull changes from server since lastSync
+     */
+    subscribe<T>(storeName: string, eventType: string): Observable<T>;
 }
