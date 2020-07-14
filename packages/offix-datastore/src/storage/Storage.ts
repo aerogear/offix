@@ -54,6 +54,7 @@ export interface IStorageAdapter {
 /**
  * The various change events that can occur on Local Database
  */
+// TODO rename this to CrudEvents
 export enum DatabaseEvents {
     /**
      * Data was added to the local database
