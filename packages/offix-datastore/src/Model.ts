@@ -134,9 +134,15 @@ export class Model<T = unknown> {
             });
     }
 
-    private async subscribeForServerEvents(replicator: IReplicator) {
+    // TODO this method should be public
+    // so we can then specify the type of subscription event
+    // the replicator in this case should not be passed as a variable
+    private subscribeForServerEvents(replicator: IReplicator) {
         // TODO replicator.subscribe
         // handle subscription events here
+        // for now the 'new' subscription
+        // item is hardcoded in
+        return replicator.subscribe(this.getStoreName(), "new");
     }
 
     private async doDeltaSync(replicator: IReplicator, matcher: (d: T) => Predicate<T>, predicate?: Predicate<T>) {
