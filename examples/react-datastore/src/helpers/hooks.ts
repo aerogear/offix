@@ -4,6 +4,7 @@ import { TodoModel } from '../config/datastoreConfig';
 import { ITodo, HookState, ActionType, ReducerAction, ITodoModel } from "../types";
 import { Predicate } from "offix-datastore/types/predicates";
 import { Subscription } from "offix-datastore/types/utils/PushStream";
+import { uuid } from "uuidv4"
 
 function reducer(state: HookState, action: ReducerAction) {
   switch (action.type) {
@@ -59,10 +60,12 @@ export const useFindTodos = () => {
 
 export const useAddTodo = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const addTodo = async (todo: ITodoModel) => {
+  const addTodo = async (todo: ITodo) => {
     dispatch({ type: ActionType.REQ_START });
     try {
-      const result = await TodoModel.save(todo);
+      todo.id = uuid();
+      // TODO temp hack to get thru typing issue (no support for optionals)
+      const result = await TodoModel.save(todo as any);
       dispatch({ type: ActionType.REQ_SUCCESS, payload: result });
       return result;
     } catch (error) {

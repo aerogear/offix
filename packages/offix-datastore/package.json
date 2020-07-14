@@ -16,6 +16,7 @@
     "build": "tsc",
     "lint-fix": "eslint \"./src/**/*.ts\" \"./tests/**/*.ts\" --fix",
     "test": "jest",
+    "watch": "tsc --watch",
     "size": "size-limit",
     "size:why": "size-limit --why"
   },

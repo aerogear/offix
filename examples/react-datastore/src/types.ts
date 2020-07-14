@@ -5,11 +5,8 @@ export interface ITodo {
   completed?: boolean,
 };
 
-export interface ITodoModel {
-  id: string,
-  title: string,
-  description: string,
-  completed: boolean,
+export interface ITodoModel extends ITodo {
+  id: string
 };
 
 export type TodoProps = {
