@@ -17,6 +17,11 @@ export interface DataStoreConfig {
     url: string;
 
     /**
+     * The GraphQL endpoint for subscriptions
+     */
+    wsUrl: string;
+
+    /**
      * The Schema Version number. Used to trigger a Schema upgrade
      */
     schemaVersion?: number;
@@ -28,11 +33,14 @@ export class DataStore {
     private models: Model<unknown>[];
     private storage?: Storage;
     private url: string;
+    private wsUrl?: string | undefined;
+    private client: any;
 
     constructor(config: DataStoreConfig) {
         this.dbName = config.dbName;
         this.schemaVersion = config.schemaVersion || 1; // return 1 is schemaVersion is undefined or 0
         this.url = config.url;
+        this.wsUrl = config.wsUrl || undefined;
         this.models = [];
     }
 
@@ -47,8 +55,8 @@ export class DataStore {
 
     public init() {
         this.storage = new Storage(this.dbName, this.models, this.schemaVersion);
-        // TODO use https://github.com/prisma-labs/graphql-request by default
-        const gqlClient = new UrqlGraphQLClient(this.url);
+        const gqlClient = new UrqlGraphQLClient(this.url, this.wsUrl);
+        this.client = gqlClient;
         const queryBuilder = new GraphQLCrudQueryBuilder();
         const queries = queryBuilder.build(this.models);
         const gqlReplicator = new GraphQLReplicator(gqlClient, queries);
