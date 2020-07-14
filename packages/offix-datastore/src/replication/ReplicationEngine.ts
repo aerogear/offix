@@ -21,14 +21,23 @@ export class ReplicationEngine {
     // TODO replication engine should be not based on the events itself.
     this.storage.storeChangeEventStream.subscribe((event) => {
       const { eventType, data, storeName } = event;
+
+
       // TODO transform operation into replication event
       if (eventType === DatabaseEvents.ADD) {
         this.api.push({
           eventType, input: data, storeName
         });
-
       }
 
+      if (typeof data.forEach !== "function") {
+        // eslint-disable-next-line no-console
+        console.log(data);
+        this.api.push({
+          eventType, input: data, storeName
+        });
+        return;
+      }
       // TODO updates and deletes are in batches
       // TODO queue those changes
       (data as Array<any>).forEach((input) => {
