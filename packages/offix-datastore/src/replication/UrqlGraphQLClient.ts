@@ -9,6 +9,7 @@ export class UrqlGraphQLClient implements GraphQLClient {
     private client: Client;
 
     constructor(url: string, wsUrl: string | undefined) {
+        // TODO refactor this as it is just a very rough implementation
         if (!wsUrl) {
           this.client = createClient({ url });
         } else {
