@@ -98,3 +98,6 @@ testfile.txt
 .prettierrc
 
 website/build
+
+amplify-datastore
+datasync
