@@ -34,7 +34,6 @@ export class DataStore {
     private storage?: Storage;
     private url: string;
     private wsUrl?: string | undefined;
-    private client: any;
 
     constructor(config: DataStoreConfig) {
         this.dbName = config.dbName;
@@ -56,7 +55,6 @@ export class DataStore {
     public init() {
         this.storage = new Storage(this.dbName, this.models, this.schemaVersion);
         const gqlClient = new UrqlGraphQLClient(this.url, this.wsUrl);
-        this.client = gqlClient;
         const queryBuilder = new GraphQLCrudQueryBuilder();
         const queries = queryBuilder.build(this.models);
         const gqlReplicator = new GraphQLReplicator(gqlClient, queries);
