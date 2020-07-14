@@ -16,7 +16,7 @@
     "graphql.macro": "^1.4.2",
     "offix-client": "^0.15.5",
     "offix-client-boost": "^0.15.5",
-    "offix-datastore": "^0.1.0",
+    "offix-datastore": "0.1.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-offix-hooks": "^0.15.5",
