@@ -76,6 +76,7 @@ export class Model<T = unknown> {
     // TODO set default matcher
     if (replicator && config.matcher) {
       this.subscribeForServerEvents(replicator);
+      // TODO this should be moved
       this.doDeltaSync(replicator, config.matcher, config.predicate);
     }
     // TODO remove ReplicationEngine

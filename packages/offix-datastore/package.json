@@ -34,7 +34,6 @@
   },
   "dependencies": {
     "graphql-tag": "2.10.4",
-    "offix-scheduler": "^0.15.5",
     "subscriptions-transport-ws": "^0.9.17",
     "urql": "1.9.8",
     "uuid": "8.2.0",
