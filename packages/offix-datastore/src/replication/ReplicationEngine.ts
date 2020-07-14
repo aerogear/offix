@@ -1,6 +1,5 @@
-import { OffixScheduler } from "offix-scheduler";
 
-import { IReplicator, IOperation } from "./Replicator";
+import { IReplicator } from "./api/Replicator";
 import { Storage, DatabaseEvents } from "../storage";
 
 /**
@@ -8,7 +7,6 @@ import { Storage, DatabaseEvents } from "../storage";
  */
 export class ReplicationEngine {
   private api: IReplicator;
-  private scheduler: Promise<OffixScheduler<IOperation>>;
   private storage: Storage;
 
   constructor(
@@ -17,39 +15,26 @@ export class ReplicationEngine {
   ) {
     this.api = api;
     this.storage = storage;
-    this.scheduler = new Promise((resolve, reject) => {
-      const scheduler = new OffixScheduler<IOperation>({
-        executor: {
-          execute: async (operation: IOperation) => {
-            const result = await this.api.push(operation);
-            if (result.errors.length > 0) {
-              // TODO handle errors
-            }
-          }
-        }
-      });
-      scheduler.init()
-        .then(() => resolve(scheduler))
-        .catch((err) => reject(err));
-    });
   }
 
   public start() {
+    // TODO replication engine should be not based on the events itself.
     this.storage.storeChangeEventStream.subscribe((event) => {
       const { eventType, data, storeName } = event;
-
+      // TODO transform operation into replication event
       if (eventType === DatabaseEvents.ADD) {
-        this.scheduler.then((scheduler) => scheduler.execute({
+        this.api.push({
           eventType, input: data, storeName
-        }));
-        return;
+        });
+
       }
 
-      // updates and deletes are in batches
+      // TODO updates and deletes are in batches
+      // TODO queue those changes
       (data as Array<any>).forEach((input) => {
-        this.scheduler.then((scheduler) => scheduler.execute({
+        this.api.push({
           eventType, input, storeName
-        }));
+        });
       });
     });
   }

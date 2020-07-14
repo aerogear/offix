@@ -37,8 +37,8 @@ test("Push ADD operation data to server", (done) => {
       done();
       return Promise.resolve({
         data: null,
-        errors: [],
-      })
+        errors: []
+      });
     }
   };
 
@@ -56,8 +56,8 @@ test("Push UPDATE operation data to server", (done) => {
       done();
       return Promise.resolve({
         data: null,
-        errors: [],
-      })
+        errors: []
+      });
     }
   };
 
@@ -73,7 +73,7 @@ test("Pull and save new data from server", (done) => {
   const expectedPayload: any[] = [{ id: "Yay", name: "Test" }];
   const replicator: any = {
     pullDelta: () => {
-      return Promise.resolve(expectedPayload) as Promise<any[]>
+      return Promise.resolve(expectedPayload) as Promise<any[]>;
     }
   };
 
@@ -95,52 +95,52 @@ test("Pull and merge update from server", (done) => {
   const expectedPayload: any[] = [{ name: "New Name" }];
   const replicator: any = {
     pullDelta: () => {
-      return Promise.resolve(expectedPayload) as Promise<any[]>
+      return Promise.resolve(expectedPayload) as Promise<any[]>;
     }
   };
 
   storage.save("user_Test", { name: "Old Name" })
-  .then((saved) => {
-    expectedPayload[0].id = saved.id;
+    .then((saved) => {
+      expectedPayload[0].id = saved.id;
 
-    const testModel = new Model<any>({
-      name: "Test",
-      fields: testFields,
-      predicate: (p) => (p.name("eq", "Test")),
-      matcher: testMatcher
-    }, () => (storage), replicator);
+      const testModel = new Model<any>({
+        name: "Test",
+        fields: testFields,
+        predicate: (p) => (p.name("eq", "Test")),
+        matcher: testMatcher
+      }, () => (storage), replicator);
 
-    testModel.on(DatabaseEvents.UPDATE, (event) => {
-      expect(event.data).toEqual(expectedPayload);
-      done();
+      testModel.on(DatabaseEvents.UPDATE, (event) => {
+        expect(event.data).toEqual(expectedPayload);
+        done();
+      });
     });
-  });
 });
 
 test("Pull and apply soft deletes from server", (done) => {
   const expectedPayload: any[] = [{ name: "Old Name" }];
   const replicator: any = {
     pullDelta: () => {
-      return Promise.resolve([{ ...expectedPayload[0], _deleted: true }]) as Promise<any[]>
+      return Promise.resolve([{ ...expectedPayload[0], _deleted: true }]) as Promise<any[]>;
     }
   };
 
   storage.save("user_Test", { name: "Old Name" })
-  .then((saved) => {
-    expectedPayload[0].id = saved.id;
+    .then((saved) => {
+      expectedPayload[0].id = saved.id;
 
-    const testModel = new Model<any>({
-      name: "Test",
-      fields: testFields,
-      predicate: (p) => (p.name("eq", "Test")),
-      matcher: testMatcher
-    }, () => (storage), replicator);
+      const testModel = new Model<any>({
+        name: "Test",
+        fields: testFields,
+        predicate: (p) => (p.name("eq", "Test")),
+        matcher: testMatcher
+      }, () => (storage), replicator);
 
-    testModel.on(DatabaseEvents.DELETE, (event) => {
-      expect(event.data).toEqual(expectedPayload);
-      done();
+      testModel.on(DatabaseEvents.DELETE, (event) => {
+        expect(event.data).toEqual(expectedPayload);
+        done();
+      });
     });
-  });
 });
 
 

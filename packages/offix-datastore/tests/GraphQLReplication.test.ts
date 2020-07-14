@@ -1,11 +1,12 @@
-import { GraphQLCrudQueryBuilder, GraphQLReplicator, GraphQLQueries } from "../src/replication";
 import { DataStore } from "../src/DataStore";
 import { Model } from "../src/Model";
 import { DatabaseEvents } from "../src/storage";
+import { GraphQLDocuments } from "../src/replication/api/Documents";
+import { buildGraphQLCRUDQueries, GraphQLCRUDReplicator } from "../src/replication";
 
 let model: Model<any>;
-let queries: Map<string, GraphQLQueries>;
-let modelQueries: GraphQLQueries;
+let queries: Map<string, GraphQLDocuments>;
+let modelQueries: GraphQLDocuments;
 
 beforeAll(() => {
   const dataStore = new DataStore({ dbName: "test", url: "" });
@@ -22,9 +23,9 @@ beforeAll(() => {
       }
     }
   });
-  const queryBuilder = new GraphQLCrudQueryBuilder();
-  queries = queryBuilder.build([model]);
-  modelQueries = (queries.get(model.getStoreName()) as GraphQLQueries);
+
+  queries = buildGraphQLCRUDQueries([model]);
+  modelQueries = (queries.get(model.getStoreName()) as GraphQLDocuments);
 });
 
 test("Test Query generation", () => {
@@ -34,7 +35,7 @@ test("Test Query generation", () => {
 test("Push mutation to GraphQL Server", (done) => {
   const input = { title: "test" };
 
-  const graphQLReplicaionAPI = new GraphQLReplicator({
+  const graphQLReplicaionAPI = new GraphQLCRUDReplicator({
     mutate: async (query: any, variables: any) => {
       expect(query).toEqual(modelQueries.mutations.create);
       expect(variables.input).toEqual(input);
