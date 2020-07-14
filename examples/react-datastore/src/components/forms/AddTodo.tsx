@@ -17,7 +17,6 @@ export const AddTodo = ({ cancel }: AddTodoProps) => {
 
   const handleSubmit = ({ title, description }: ITodo) => {
     addTodo({
-      id: "whatever",
       title,
       description,
       completed: false,

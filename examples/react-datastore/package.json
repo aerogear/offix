@@ -24,13 +24,15 @@
     "typescript": "~3.7.2",
     "uniforms": "3.0.0-alpha.5",
     "uniforms-antd": "3.0.0-alpha.5",
-    "uniforms-bridge-graphql": "3.0.0-alpha.5"
+    "uniforms-bridge-graphql": "3.0.0-alpha.5",
+    "uuidv4": "^6.1.1"
   },
   "scripts": {
     "start": "SKIP_PREFLIGHT_CHECK=true react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "linkdatastore": "cd ../../packages/offix-datastore && npm link . && cd - && npm link offix-datastore"
   },
   "eslintConfig": {
     "extends": "react-app"

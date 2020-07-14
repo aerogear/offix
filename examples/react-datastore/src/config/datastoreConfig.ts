@@ -5,8 +5,11 @@ const datastore = new DataStore({
   url: "http://localhost:4000/graphql"
 });
 
+
 export const TodoModel = datastore.createModel({
-  name: "Todo", storeName: "user_Todo", fields: {
+  name: "Todo",
+  storeName: "user_Todo",
+  fields: {
     id: {
       type: "ID",
       key: "id"
@@ -23,8 +26,8 @@ export const TodoModel = datastore.createModel({
       type: "Boolean",
       key: "completed"
     }
+
   }
-}
-);
+});
 
 datastore.init();
