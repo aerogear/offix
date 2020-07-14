@@ -50,6 +50,9 @@ export class UrqlGraphQLClient implements GraphQLClient {
         }
     }
 
+    // TODO fix this type error, since
+    // this is currently returning a wonka observable
+    // and not a zen-observable
     public subscribe(query: DocumentNode) {
       return pipe(
         this.client.subscription(query),
