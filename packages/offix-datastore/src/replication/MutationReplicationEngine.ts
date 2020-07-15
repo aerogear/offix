@@ -15,7 +15,7 @@ export class MutationReplicationEngine {
     api: IReplicator,
     storage: LocalStorage
   ) {
-    this.queue = new MutationsReplicationQueue(storage)
+    this.queue = new MutationsReplicationQueue(storage, api);
     // TODO connect network interface/subscriotion status
     this.storage = storage;
     this.queue.start();
@@ -26,10 +26,11 @@ export class MutationReplicationEngine {
     this.storage.storeChangeEventStream.subscribe((event) => {
       const { eventType, data, storeName, eventSource } = event;
 
-      if(eventSource === "user"){
+      if (eventSource === "user") {
         this.queue.createMutationEvent({
-          eventType, input: data, storeName
+          eventType, data, storeName
         });
       }
+    });
   }
 }

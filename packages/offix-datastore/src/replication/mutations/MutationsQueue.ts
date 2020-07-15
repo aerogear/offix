@@ -66,14 +66,15 @@ export class MutationsReplicationQueue {
       }
       // TODO updates and deletes are in batches
       // TODO queue those changes
-      (data as Array<any>).forEach((input) => {
-        await this.api.push({
-          eventType, input, storeName
-        });
-      });
+      if (data instanceof Array) {
+        for (const element of data) {
+          await this.api.push({
+            eventType, input: element, storeName
+          });
+        }
+      }
       // TODO save after finished replication
       await this.storage.writeMetadata(this.queueName, this.items);
     }
-
   }
 }
