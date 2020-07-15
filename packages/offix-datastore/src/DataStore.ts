@@ -1,6 +1,10 @@
 import { Model, ModelConfig } from "./Model";
-import { ReplicationEngine, UrqlGraphQLClient, GraphQLCRUDReplicator, buildGraphQLCRUDQueries } from "./replication";
 import { LocalStorage } from "./storage";
+import { ReplicationEngine } from "./replication";
+import { UrqlGraphQLClient } from "./replication/client/UrqlGraphQLClient";
+import { GraphQLCRUDReplicator } from "./replication/graphqlcrud/GraphQLCRUDReplicator";
+import { buildGraphQLCRUDQueries } from "./replication/graphqlcrud/buildGraphQLCRUDQueries";
+import { IReplicator } from "./replication/api/Replicator";
 
 /**
  * Configuration Options for DataStore
@@ -57,8 +61,15 @@ export class DataStore {
     const gqlClient = new UrqlGraphQLClient(this.url, this.wsUrl);
     const queries = buildGraphQLCRUDQueries(this.models);
     const gqlReplicator = new GraphQLCRUDReplicator(gqlClient, queries);
-
     const engine = new ReplicationEngine(gqlReplicator, (this.storage as LocalStorage));
+    this.pushReplicator(gqlReplicator);
     engine.start();
   }
+
+  private pushReplicator(replicator: IReplicator) {
+    this.models.forEach((model) => {
+      model.setReplicator(replicator);
+    });
+  }
+
 }
