@@ -1,6 +1,6 @@
 
 import { IReplicator, IOperation, } from "../api/Replicator";
-import { DatabaseEvents } from "../../storage";
+import { CRUDEvents } from "../../storage";
 import { Predicate } from "../../predicates";
 import { GraphQLClient } from "../api/GraphQLClient";
 import { GraphQLDocuments } from "../api/Documents";
@@ -26,13 +26,13 @@ export class GraphQLCRUDReplicator implements IReplicator {
     }
 
     switch (eventType) {
-      case DatabaseEvents.ADD:
+      case CRUDEvents.ADD:
         return this.client.mutate<T>(mutations.create, { input });
 
-      case DatabaseEvents.UPDATE:
+      case CRUDEvents.UPDATE:
         return this.client.mutate<T>(mutations.update, { input });
 
-      case DatabaseEvents.DELETE:
+      case CRUDEvents.DELETE:
         return this.client.mutate<T>(mutations.delete, { input });
 
       default:
@@ -54,18 +54,18 @@ export class GraphQLCRUDReplicator implements IReplicator {
     });
   }
 
-  public subscribe<T>(storeName: string, eventType: DatabaseEvents, predicate?: Predicate<T>) {
+  public subscribe<T>(storeName: string, eventType: CRUDEvents, predicate?: Predicate<T>) {
     const subscriptions = this.queries.get(storeName)?.subscriptions;
     if (!subscriptions) {
       throw new Error(`GraphQL Sync Queries not found for ${storeName}`);
     }
 
     switch (eventType) {
-      case DatabaseEvents.ADD:
+      case CRUDEvents.ADD:
         return this.client.subscribe<T>(subscriptions.new);
-      case DatabaseEvents.UPDATE:
+      case CRUDEvents.UPDATE:
         return this.client.subscribe<T>(subscriptions.updated);
-      case DatabaseEvents.DELETE:
+      case CRUDEvents.DELETE:
         return this.client.subscribe<T>(subscriptions.deleted);
       default:
         throw new Error("Invalid subscription type received");

@@ -1,6 +1,6 @@
 
 import { IReplicator } from "./api/Replicator";
-import { Storage, DatabaseEvents } from "../storage";
+import { Storage, CRUDEvents } from "../storage";
 
 /**
  * Schedules replication events and handles replication errors
@@ -24,7 +24,7 @@ export class ReplicationEngine {
 
 
       // TODO transform operation into replication event
-      if (eventType === DatabaseEvents.ADD) {
+      if (eventType === CRUDEvents.ADD) {
         this.api.push({
           eventType, input: data, storeName
         });

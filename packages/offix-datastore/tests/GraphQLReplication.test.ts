@@ -1,6 +1,6 @@
 import { DataStore } from "../src/DataStore";
 import { Model } from "../src/Model";
-import { DatabaseEvents } from "../src/storage";
+import { CRUDEvents } from "../src/storage";
 import { GraphQLDocuments } from "../src/replication/api/Documents";
 import { buildGraphQLCRUDQueries, GraphQLCRUDReplicator } from "../src/replication";
 
@@ -45,7 +45,7 @@ test("Push mutation to GraphQL Server", (done) => {
   } as any, queries);
 
   graphQLReplicaionAPI.push({
-    eventType: DatabaseEvents.ADD,
+    eventType: CRUDEvents.ADD,
     input,
     storeName: model.getStoreName()
   });

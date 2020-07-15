@@ -64,6 +64,7 @@ export const buildGraphQLCRUDQueries = (models: Model[]): Map<string, GraphQLDoc
                   lastChanged
               }
             }`,
+      // TODO validate if get is needed.
       get: gql`
             query get${modelName}($input: Mutate${modelName}Input!) {
                 update${modelName}(input: $input) {
@@ -72,6 +73,7 @@ export const buildGraphQLCRUDQueries = (models: Model[]): Map<string, GraphQLDoc
             }`
     };
 
+    // TODO do not build subscriptions if not needed.
     const subscriptions = {
       new: gql`
             subscription new${modelName}($input: ${modelName}SubscriptionFilter) {

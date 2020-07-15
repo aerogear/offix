@@ -15,9 +15,9 @@ The change events that can occur are;
 - `DELETE` data is removed from the Store. The event contains the removed data
 
 ```typescript
-import { TaskModel, DatabaseEvents } from 'datastoreConfig';
+import { TaskModel, CRUDEvents } from 'datastoreConfig';
 
-TaskModel.on(DatabaseEvents.ADD, (event) => {
+TaskModel.on(CRUDEvents.ADD, (event) => {
     console.log(event); // { eventType, data }
 });
 ```

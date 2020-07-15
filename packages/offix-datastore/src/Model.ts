@@ -1,4 +1,4 @@
-import { Storage, StoreChangeEvent, DatabaseEvents } from "./storage";
+import { Storage, StoreChangeEvent, CRUDEvents } from "./storage";
 import { createPredicate, Predicate } from "./predicates";
 import { IReplicator } from "./replication";
 
@@ -127,7 +127,7 @@ export class Model<T = unknown> {
 
   // TODO add seed and reset - investigate.
 
-  public on(eventType: DatabaseEvents, listener: (event: StoreChangeEvent) => void) {
+  public on(eventType: CRUDEvents, listener: (event: StoreChangeEvent) => void) {
     return this.getStorage()
       .storeChangeEventStream.subscribe((event) => {
         if (event.eventType !== eventType) { return; }
@@ -143,7 +143,7 @@ export class Model<T = unknown> {
     // handle subscription events here
     // for now the 'new' subscription
     // item is hardcoded in
-    return replicator.subscribe(this.getStoreName(), DatabaseEvents.ADD);
+    return replicator.subscribe(this.getStoreName(), CRUDEvents.ADD);
   }
 
   // TODO remove this from here and move to replicator
