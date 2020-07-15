@@ -1,17 +1,17 @@
 
 import { IReplicator } from "./api/Replicator";
-import { Storage, CRUDEvents } from "../storage";
+import { LocalStorage, CRUDEvents } from "../storage";
 
 /**
  * Schedules replication events and handles replication errors
  */
 export class ReplicationEngine {
   private api: IReplicator;
-  private storage: Storage;
+  private storage: LocalStorage;
 
   constructor(
     api: IReplicator,
-    storage: Storage
+    storage: LocalStorage
   ) {
     this.api = api;
     this.storage = storage;
