@@ -1,9 +1,21 @@
 
 import { IReplicator, IOperation } from "../api/Replicator";
 import { CRUDEvents } from "../../storage";
-import { Predicate } from "../../predicates";
+import { PredicateFunction, ModelFieldPredicate, PredicateExpression } from "../../predicates";
 import { GraphQLClient } from "../api/GraphQLClient";
 import { GraphQLDocuments } from "../api/Documents";
+
+export function convertPredicateToFilter(predicate: PredicateFunction): any {
+  if (predicate instanceof ModelFieldPredicate) {
+    return {
+      [predicate.getKey()]: { [predicate.getOperator().op]: predicate.getValue() }
+    };
+  }
+  const expression: PredicateExpression = predicate as PredicateExpression;
+  return {
+    [expression.getOperator().op]: expression.getPredicates().map((p) => convertPredicateToFilter(p))
+  };
+}
 
 /**
  * Performs replication using GraphQL
@@ -40,33 +52,37 @@ export class GraphQLCRUDReplicator implements IReplicator {
     }
   }
 
-  public async pullDelta<T>(storeName: string, lastSync: string, predicate?: Predicate<T>) {
+  public async pullDelta<T>(storeName: string, lastSync: string, predicate?: PredicateFunction) {
     const syncQuery = this.queries.get(storeName)?.queries.sync;
     if (!syncQuery) {
       throw new Error(`GraphQL Sync Queries not found for ${storeName}`);
     }
-    /**
-     * TODO convert predicate to filter here.
-     * The syncQuery object should do this conversion as it is from the GraphQLCrud Layer
-     */
-    return await this.client.query<T>(syncQuery, {
-      lastSync
-    });
+
+    const variables: any = { lastSync };
+    if (predicate) {
+      variables.filter = convertPredicateToFilter(predicate);
+    }
+    return await this.client.query<T>(syncQuery, variables);
   }
 
-  public subscribe<T>(storeName: string, eventType: CRUDEvents, predicate?: Predicate<T>) {
+  public subscribe<T>(storeName: string, eventType: CRUDEvents, predicate?: PredicateFunction) {
     const subscriptions = this.queries.get(storeName)?.subscriptions;
     if (!subscriptions) {
       throw new Error(`GraphQL Sync Queries not found for ${storeName}`);
     }
 
+    const variables: any = {};
+    if (predicate) {
+      variables.filter = convertPredicateToFilter(predicate);
+    }
+
     switch (eventType) {
       case CRUDEvents.ADD:
-        return this.client.subscribe<T>(subscriptions.new);
+        return this.client.subscribe<T>(subscriptions.new, variables);
       case CRUDEvents.UPDATE:
-        return this.client.subscribe<T>(subscriptions.updated);
+        return this.client.subscribe<T>(subscriptions.updated, variables);
       case CRUDEvents.DELETE:
-        return this.client.subscribe<T>(subscriptions.deleted);
+        return this.client.subscribe<T>(subscriptions.deleted, variables);
       default:
         throw new Error("Invalid subscription type received");
     }

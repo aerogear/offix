@@ -1,5 +1,5 @@
 import { CRUDEvents } from "../../storage";
-import { Predicate } from "../../predicates";
+import { PredicateFunction } from "../../predicates";
 import Observable from "zen-observable";
 import { GraphQLClientReponse } from "./GraphQLClient";
 
@@ -26,10 +26,10 @@ export interface IReplicator {
     /**
      * Pull changes from server since lastSync
      */
-    pullDelta<T>(storeName: string, lastSync: string, predicate?: Predicate<T>): Promise<GraphQLClientReponse<T>>;
+    pullDelta<T>(storeName: string, lastSync: string, predicate?: PredicateFunction): Promise<GraphQLClientReponse<T>>;
 
     /**
      * Subscribe to the changes on the server
      */
-    subscribe<T>(storeName: string, eventType: CRUDEvents,  predicate?: Predicate<T>): Observable<T>;
+    subscribe<T>(storeName: string, eventType: CRUDEvents,  predicate?: PredicateFunction): Observable<T>;
 }
