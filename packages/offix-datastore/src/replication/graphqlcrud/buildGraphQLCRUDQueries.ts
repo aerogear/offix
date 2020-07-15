@@ -76,20 +76,20 @@ export const buildGraphQLCRUDQueries = (models: Model[]): Map<string, GraphQLDoc
     // TODO do not build subscriptions if not needed.
     const subscriptions = {
       new: gql`
-            subscription new${modelName}($input: ${modelName}SubscriptionFilter) {
-                new${modelName}(input: $input) {
+            subscription new${modelName}($filter: ${modelName}SubscriptionFilter) {
+                new${modelName}(filter: $filter) {
                     ${graphQLFields}
                 }
             }`,
       updated: gql`
-            subscription updated${modelName}($input: ${modelName}SubscriptionFilter) {
-              updated${modelName}(input: $input) {
+            subscription updated${modelName}($filter: ${modelName}SubscriptionFilter) {
+              updated${modelName}(filter: $filter) {
                     ${graphQLFields}
                 }
             }`,
       deleted: gql`
-            subscription deleted${modelName}($input: ${modelName}SubscriptionFilter) {
-                delete${modelName}(input: $input) {
+            subscription deleted${modelName}($filter: ${modelName}SubscriptionFilter) {
+                delete${modelName}(filter: $filter) {
                     ${graphQLFields}
                 }
             }`
