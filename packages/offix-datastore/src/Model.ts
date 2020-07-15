@@ -162,7 +162,7 @@ export class Model<T = unknown> {
 
     // TODO this code makes no sense!
     // Trigers replication mutation event for data that is already on server
-    if (data.data) {
+    if (data.data && data.data.length > 0) {
       data.data
         .filter((d: any) => (d._deleted))
         .forEach((d: any) => { this.remove(matcher(d)); });
@@ -180,6 +180,8 @@ export class Model<T = unknown> {
           })();
         });
 
+    } else {
+      console.info("No data returned by delta query");
     }
 
     // TODO replicator.pullDelta should return lastSync and write to metadata store for model
