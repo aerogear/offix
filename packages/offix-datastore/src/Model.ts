@@ -153,7 +153,12 @@ export class Model<T = unknown> {
   private async doDeltaSync(replicator: IReplicator, matcher: (d: T) => Predicate<T>, predicate?: Predicate<T>) {
     // TODO limit the size of data returned
     // TODO get lastSync for model for metadata store and pass to pullDelta
-    const data = await replicator.pullDelta(this.getStoreName(), "", predicate);
+    const modelPredicate = createPredicate(this.fields);
+    const data = await replicator.pullDelta(
+      this.getStoreName(),
+      "",
+      (predicate ? predicate(modelPredicate) : undefined)
+    );
     if (data.errors) {
       // TODO handle errors;
       // eslint-disable-next-line no-console
