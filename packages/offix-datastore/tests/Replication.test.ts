@@ -5,12 +5,12 @@
 import "fake-indexeddb/auto";
 
 import { ReplicationEngine } from "../src/replication";
-import { Storage, CRUDEvents } from "../src/storage";
 import { Model } from "../src/Model";
+import { LocalStorage, CRUDEvents } from "../src/storage";
 
 const DB_NAME = "offix-datastore";
 const storeName = "user_Test";
-let storage: Storage;
+let storage: LocalStorage;
 const testFields = {
   id: {
     type: "ID",
@@ -20,7 +20,7 @@ const testFields = {
 const testMatcher = (d: any) => (p: any) => p.id("eq", d.id);
 
 beforeAll(() => {
-  storage = new Storage(DB_NAME, [
+  storage = new LocalStorage(DB_NAME, [
     new Model({ name: "Test", fields: {} }, () => (null as any))
   ], 1);
 });
