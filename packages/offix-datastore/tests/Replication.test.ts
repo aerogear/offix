@@ -95,7 +95,7 @@ test("Pull and merge update from server", (done) => {
   const expectedPayload: any[] = [{ name: "New Name" }];
   const replicator: any = {
     pullDelta: () => {
-      return Promise.resolve(expectedPayload) as Promise<any[]>;
+      return Promise.resolve({ data: expectedPayload });
     }
   };
 
@@ -121,7 +121,7 @@ test("Pull and apply soft deletes from server", (done) => {
   const expectedPayload: any[] = [{ name: "Old Name" }];
   const replicator: any = {
     pullDelta: () => {
-      return Promise.resolve([{ ...expectedPayload[0], _deleted: true }]) as Promise<any[]>;
+      return Promise.resolve({ data: [{ ...expectedPayload[0], _deleted: true }] });
     }
   };
 
