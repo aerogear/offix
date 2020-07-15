@@ -5,7 +5,7 @@ import 'antd/dist/antd.css';
 import { TodoModel } from './config/datastoreConfig';
 import { useFindTodos } from './helpers/hooks';
 import { TodoList, AddTodo, Loading, Error, Header } from './components';
-import { DatabaseEvents } from 'offix-datastore';
+import { CRUDEvents } from 'offix-datastore';
 
 function App() {
 
@@ -14,7 +14,7 @@ function App() {
   const  { loading, error, data } = useFindTodos();
 
   useEffect(() => {
-    TodoModel.subscribeForServerEvents(DatabaseEvents.ADD)
+    TodoModel.subscribeForServerEvents(CRUDEvents.Add)
       .subscribe((res: any) => console.log(res));
     // TODO unsubscribe method
   })
