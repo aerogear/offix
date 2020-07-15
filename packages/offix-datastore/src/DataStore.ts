@@ -1,6 +1,6 @@
-import { Storage } from "./storage";
 import { Model, ModelConfig } from "./Model";
 import { ReplicationEngine, UrqlGraphQLClient, GraphQLCRUDReplicator, buildGraphQLCRUDQueries } from "./replication";
+import { LocalStorage } from "./storage";
 
 /**
  * Configuration Options for DataStore
@@ -31,7 +31,7 @@ export class DataStore {
   private dbName: string;
   private schemaVersion: number;
   private models: Model<unknown>[];
-  private storage?: Storage;
+  private storage?: LocalStorage;
   private url: string;
   private wsUrl?: string | undefined;
 
@@ -53,12 +53,12 @@ export class DataStore {
   }
 
   public init() {
-    this.storage = new Storage(this.dbName, this.models, this.schemaVersion);
+    this.storage = new LocalStorage(this.dbName, this.models, this.schemaVersion);
     const gqlClient = new UrqlGraphQLClient(this.url, this.wsUrl);
     const queries = buildGraphQLCRUDQueries(this.models);
     const gqlReplicator = new GraphQLCRUDReplicator(gqlClient, queries);
 
-    const engine = new ReplicationEngine(gqlReplicator, (this.storage as Storage));
+    const engine = new ReplicationEngine(gqlReplicator, (this.storage as LocalStorage));
     engine.start();
   }
 }

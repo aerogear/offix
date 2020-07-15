@@ -1,6 +1,7 @@
-import { Storage, StoreChangeEvent, CRUDEvents } from "./storage";
+import { CRUDEvents, LocalStorage } from "./storage";
 import { createPredicate, Predicate } from "./predicates";
 import { IReplicator } from "./replication";
+import { StoreChangeEvent } from "./storage";
 
 export interface FieldOptions {
   /** GraphQL type */
@@ -59,11 +60,11 @@ export class Model<T = unknown> {
   private name: string;
   private storeName: string;
   private fields: Fields<T>;
-  private getStorage: () => Storage;
+  private getStorage: () => LocalStorage;
 
   constructor(
     config: ModelConfig<T>,
-    getStorage: () => Storage,
+    getStorage: () => LocalStorage,
     replicator?: IReplicator
   ) {
     this.name = config.name;
@@ -129,7 +130,7 @@ export class Model<T = unknown> {
 
   public on(eventType: CRUDEvents, listener: (event: StoreChangeEvent) => void) {
     return this.getStorage()
-      .storeChangeEventStream.subscribe((event) => {
+      .storeChangeEventStream.subscribe((event: StoreChangeEvent) => {
         if (event.eventType !== eventType) { return; }
         listener(event);
       });
