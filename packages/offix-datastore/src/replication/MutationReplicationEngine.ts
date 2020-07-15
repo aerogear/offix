@@ -1,7 +1,6 @@
 
 import { IReplicator } from "./api/Replicator";
-import { LocalStorage, CRUDEvents } from "../storage";
-import { ReplicatorQueries } from "./api/Documents";
+import { LocalStorage } from "../storage";
 import { MutationsReplicationQueue } from "./mutations/MutationsQueue";
 
 /**
