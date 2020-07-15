@@ -4,12 +4,12 @@ import { createDefaultStorage } from "./adapters/defaultStorage";
 import { Model } from "../Model";
 import { CRUDEvents } from "./api/CRUDEvents";
 import { StorageAdapter } from "./api/StorageAdapter";
-import { StoreChangeEvent } from "./api/StoreChangeEvent";
+import { StoreChangeEvent, StoreEventSource } from "./api/StoreChangeEvent";
 
 import { v1 as uuidv1 } from "uuid";
 
 export function generateId() {
-    return uuidv1();
+  return uuidv1();
 }
 
 
@@ -26,13 +26,14 @@ export class LocalStorage {
     this.adapter = createDefaultStorage(dbName, models, schemaVersion);
   }
 
-  public async save(storeName: string, input: any): Promise<any> {
+  public async save(storeName: string, input: any, eventSource: StoreEventSource = "user"): Promise<any> {
     const result = await this.adapter.save(storeName, { id: generateId(), ...input });
     this.storeChangeEventStream.push({
       // TODO replace for enums
       eventType: CRUDEvents.ADD,
       data: result,
-      storeName
+      storeName,
+      eventSource
     });
     return result;
   }
@@ -41,22 +42,24 @@ export class LocalStorage {
     return this.adapter.query(storeName, predicate);
   }
 
-  public async update(storeName: string, input: any, predicate?: PredicateFunction): Promise<any> {
+  public async update(storeName: string, input: any, predicate?: PredicateFunction, eventSource: StoreEventSource = "user"): Promise<any> {
     const result = await this.adapter.update(storeName, input, predicate);
     this.storeChangeEventStream.push({
       eventType: CRUDEvents.UPDATE,
       data: result,
-      storeName
+      storeName,
+      eventSource
     });
     return result;
   }
 
-  public async remove(storeName: string, predicate?: PredicateFunction): Promise<any | any[]> {
+  public async remove(storeName: string, predicate?: PredicateFunction, eventSource: StoreEventSource = "user"): Promise<any | any[]> {
     const result = await this.adapter.remove(storeName, predicate);
     this.storeChangeEventStream.push({
       eventType: CRUDEvents.DELETE,
       data: result,
-      storeName
+      storeName,
+      eventSource
     });
     return result;
   }
