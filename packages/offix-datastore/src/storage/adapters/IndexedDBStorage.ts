@@ -1,11 +1,11 @@
-import { IStorageAdapter } from "../Storage";
+import { StorageAdapter } from "../api/StorageAdapter";
 import { PredicateFunction } from "../../predicates";
 import { Model } from "../../Model";
 
 /**
  * Web Storage Implementation for DataStore using IndexedDB
  */
-export class IndexedDBStorage implements IStorageAdapter {
+export class IndexedDBStorage implements StorageAdapter {
     private indexedDB: Promise<IDBDatabase>;
 
     constructor(dbName: string, models: Model[], schemaVersion: number) {

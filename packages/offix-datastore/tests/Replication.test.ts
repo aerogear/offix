@@ -5,7 +5,7 @@
 import "fake-indexeddb/auto";
 
 import { ReplicationEngine } from "../src/replication";
-import { Storage, DatabaseEvents } from "../src/storage";
+import { Storage, CRUDEvents } from "../src/storage";
 import { Model } from "../src/Model";
 
 const DB_NAME = "offix-datastore";
@@ -32,7 +32,7 @@ afterEach(() => {
 test("Push ADD operation data to server", (done) => {
   const api: any = {
     push: (op: any) => {
-      expect(op.eventType).toEqual(DatabaseEvents.ADD);
+      expect(op.eventType).toEqual(CRUDEvents.ADD);
       expect(op.input).toHaveProperty("title", "test");
       done();
       return Promise.resolve({
@@ -50,7 +50,7 @@ test("Push ADD operation data to server", (done) => {
 test("Push UPDATE operation data to server", (done) => {
   const api: any = {
     push: (op: any) => {
-      expect(op.eventType).toEqual(DatabaseEvents.UPDATE);
+      expect(op.eventType).toEqual(CRUDEvents.UPDATE);
       expect(op.input).toHaveProperty("id");
       expect(op.input).toHaveProperty("title", "test update");
       done();
@@ -84,7 +84,7 @@ test("Pull and save new data from server", (done) => {
     matcher: testMatcher
   }, () => (storage), replicator);
 
-  testModel.on(DatabaseEvents.ADD, (event) => {
+  testModel.on(CRUDEvents.ADD, (event) => {
     expect(event.data.id).toEqual(expectedPayload[0].id);
     expect(event.data.name).toEqual(expectedPayload[0].name);
     done();
@@ -110,7 +110,7 @@ test("Pull and merge update from server", (done) => {
         matcher: testMatcher
       }, () => (storage), replicator);
 
-      testModel.on(DatabaseEvents.UPDATE, (event) => {
+      testModel.on(CRUDEvents.UPDATE, (event) => {
         expect(event.data).toEqual(expectedPayload);
         done();
       });
@@ -136,7 +136,7 @@ test("Pull and apply soft deletes from server", (done) => {
         matcher: testMatcher
       }, () => (storage), replicator);
 
-      testModel.on(DatabaseEvents.DELETE, (event) => {
+      testModel.on(CRUDEvents.DELETE, (event) => {
         expect(event.data).toEqual(expectedPayload);
         done();
       });

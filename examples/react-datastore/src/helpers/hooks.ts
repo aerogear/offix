@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from "react";
-import { DatabaseEvents } from 'offix-datastore';
+import { CRUDEvents } from 'offix-datastore';
 import { TodoModel } from '../config/datastoreConfig';
 import { ITodo, HookState, ActionType, ReducerAction, ITodoModel } from "../types";
 import { Predicate } from "offix-datastore/types/predicates";
@@ -44,9 +44,9 @@ export const useFindTodos = () => {
     })();
 
     const subscriptions: Array<Subscription> = [];
-    subscriptions.push(TodoModel.on(DatabaseEvents.ADD, refreshState));
-    subscriptions.push(TodoModel.on(DatabaseEvents.UPDATE, refreshState));
-    subscriptions.push(TodoModel.on(DatabaseEvents.DELETE, refreshState));
+    subscriptions.push(TodoModel.on(CRUDEvents.ADD, refreshState));
+    subscriptions.push(TodoModel.on(CRUDEvents.UPDATE, refreshState));
+    subscriptions.push(TodoModel.on(CRUDEvents.DELETE, refreshState));
 
     return () => {
       subscriptions.forEach((sub) => sub.unsubscribe());

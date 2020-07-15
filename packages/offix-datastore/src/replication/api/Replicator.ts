@@ -1,4 +1,4 @@
-import { DatabaseEvents } from "../../storage";
+import { CRUDEvents } from "../../storage";
 import { Predicate } from "../../predicates";
 import Observable from "zen-observable";
 import { GraphQLClientReponse } from "./GraphQLClient";
@@ -7,7 +7,7 @@ import { GraphQLClientReponse } from "./GraphQLClient";
  * Operation to be pushed to Server
  */
 export interface IOperation {
-    eventType: DatabaseEvents;
+    eventType: CRUDEvents;
     input: any;
     storeName: string;
 }
@@ -31,5 +31,5 @@ export interface IReplicator {
     /**
      * Subscribe to the changes on the server
      */
-    subscribe<T>(storeName: string, eventType: DatabaseEvents,  predicate?: Predicate<T>): Observable<T>;
+    subscribe<T>(storeName: string, eventType: CRUDEvents,  predicate?: Predicate<T>): Observable<T>;
 }

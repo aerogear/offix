@@ -1,2 +1,2 @@
-export { DatabaseEvents } from "./storage";
+export { CRUDEvents } from "./storage";
 export * from "./DataStore";

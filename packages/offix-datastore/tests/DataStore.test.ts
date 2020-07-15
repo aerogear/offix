@@ -11,7 +11,7 @@ import { DataStore } from "../src/DataStore";
 import { createDefaultStorage } from "../src/storage/adapters/defaultStorage";
 import { Model } from "../src/Model";
 import { Predicate } from "../src/predicates";
-import { DatabaseEvents } from "../src/storage";
+import { CRUDEvents } from "../src/storage";
 
 const DB_NAME = "offix-datastore";
 const schema = JSON.parse(readFileSync(`${__dirname}/schema.json`).toString());
@@ -129,12 +129,12 @@ test("Observe local store events", async () => {
   const note = { title: "test", description: "description" };
   expect.assertions(3);
 
-  NoteModel.on(DatabaseEvents.ADD, (event) => {
-    expect(event.eventType).toEqual(DatabaseEvents.ADD);
+  NoteModel.on(CRUDEvents.ADD, (event) => {
+    expect(event.eventType).toEqual(CRUDEvents.ADD);
     expect(event.data.title).toEqual(note.title);
   });
-  NoteModel.on(DatabaseEvents.UPDATE, (event) => {
-    expect(event.eventType).toEqual(DatabaseEvents.UPDATE);
+  NoteModel.on(CRUDEvents.UPDATE, (event) => {
+    expect(event.eventType).toEqual(CRUDEvents.UPDATE);
   });
 
   await NoteModel.save(note);
@@ -191,7 +191,7 @@ test.skip("Subscribe to changes from server", (done) => {
     resolvers: {
       Mutation: {
         createNote: (_, { input }) => {
-          
+
         }
       }
     }
