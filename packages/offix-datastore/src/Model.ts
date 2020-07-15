@@ -2,6 +2,7 @@ import { CRUDEvents, LocalStorage } from "./storage";
 import { createPredicate, Predicate } from "./predicates";
 import { IReplicator } from "./replication";
 import { StoreChangeEvent } from "./storage";
+import { PushStream, ObservablePushStream } from "./utils/PushStream";
 
 export interface FieldOptions {
   /** GraphQL type */
@@ -60,6 +61,8 @@ export class Model<T = unknown> {
   private name: string;
   private storeName: string;
   private fields: Fields<T>;
+  private readonly changeEventStream: PushStream<StoreChangeEvent>;
+
   private getStorage: () => LocalStorage;
   private replicator: IReplicator | undefined;
 
@@ -72,6 +75,7 @@ export class Model<T = unknown> {
     this.storeName = config.storeName || `user_${config.name}`;
     this.fields = config.fields;
     this.getStorage = getStorage;
+    this.changeEventStream = new ObservablePushStream();
 
     // Model has access to replicator so there is possibility of model specific replicator config
     // We can control Model specific replication here
@@ -103,7 +107,13 @@ export class Model<T = unknown> {
   }
 
   public save(input: T): Promise<T> {
-    return this.getStorage().save(this.storeName, input);
+    const result = this.getStorage().save(this.storeName, input);
+    this.changeEventStream.push({
+      eventType: CRUDEvents.ADD,
+      data: result,
+      storeName: this.storeName
+    });
+    return result;
   }
 
   public query(predicateFunction?: Predicate<T>) {
@@ -121,7 +131,15 @@ export class Model<T = unknown> {
 
     const modelPredicate = createPredicate(this.fields);
     const predicate = predicateFunction(modelPredicate);
-    return this.getStorage().update(this.storeName, input, predicate);
+    const result = this.getStorage().update(this.storeName, input, predicate);
+    this.changeEventStream.push({
+      eventType: CRUDEvents.UPDATE,
+      data: result,
+      storeName: this.storeName
+    });
+
+    return result;
+
   }
 
   public remove(predicateFunction?: Predicate<T>) {
@@ -129,14 +147,20 @@ export class Model<T = unknown> {
 
     const modelPredicate = createPredicate(this.fields);
     const predicate = predicateFunction(modelPredicate);
-    return this.getStorage().remove(this.storeName, predicate);
+    const result = this.getStorage().remove(this.storeName, predicate);
+    this.changeEventStream.push({
+      eventType: CRUDEvents.DELETE,
+      data: result,
+      storeName: this.storeName
+    });
+
+    return result;
   }
 
   // TODO add seed and reset - investigate.
 
   public on(eventType: CRUDEvents, listener: (event: StoreChangeEvent) => void) {
-    return this.getStorage()
-      .storeChangeEventStream.subscribe((event: StoreChangeEvent) => {
+    return this.changeEventStream.subscribe((event: StoreChangeEvent) => {
         if (event.eventType !== eventType) { return; }
         listener(event);
       });
