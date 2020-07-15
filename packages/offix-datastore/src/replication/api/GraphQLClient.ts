@@ -29,5 +29,5 @@ export interface GraphQLClient {
    * Subscriptions to a graphql server
    * @param query
    */
-  subscribe<T>(query: string | DocumentNode): Observable<T>;
+  subscribe<T>(query: string | DocumentNode, variables?: any): Observable<T>;
 }

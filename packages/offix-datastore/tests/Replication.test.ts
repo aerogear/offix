@@ -15,6 +15,10 @@ const testFields = {
   id: {
     type: "ID",
     key: "id"
+  },
+  name: {
+    type: "String",
+    key: "name"
   }
 };
 const testMatcher = (d: any) => (p: any) => p.id("eq", d.id);

@@ -60,10 +60,10 @@ export class UrqlGraphQLClient implements GraphQLClient {
     }
   }
 
-  public subscribe<T>(query: DocumentNode) {
+  public subscribe<T>(query: DocumentNode, variables?: any) {
     return new Observable<T>(observer => {
       pipe(
-        this.client.subscription(query),
+        this.client.subscription(query, variables),
         subscribe(result => {
           if (result.error) {
             observer.error(result.error);

@@ -28,15 +28,25 @@ export type TypeOperatorMap<T> =
     T extends Date ? MathematicalOperators :
     AllOperators;
 
+export class Operator {
+    public readonly op: string;
+    public readonly opFunction: (m: any, v: any) => boolean;
+
+    constructor(op: string, opFunction: (m: any, v: any) => boolean) {
+        this.op = op;
+        this.opFunction = opFunction;
+    }
+}
+
 export const OperatorFunctionMap = {
-    ne: (m: any, v: any) => m !== v,
-    eq: (m: any, v: any) => m === v,
-    ge: (m: number | string | Date, v: number | string | Date) => m >= v,
-    gt: (m: number | string | Date, v: number | string | Date) => m > v,
-    le: (m: number | string | Date, v: number | string | Date) => m <= v,
-    lt: (m: number | string | Date, v: number | string | Date) => m < v,
-    in: (m: any, v: any[] | string) => v.includes(m),
-    contains: (m: any[] | string, v: string) => m.includes(v),
-    startsWith: (m: string, v: string) => m.startsWith(v),
-    endsWith: (m: string, v: string) => m.endsWith(v)
+    ne: new Operator("ne", (m: any, v: any) => m !== v),
+    eq: new Operator("eq", (m: any, v: any) => m === v),
+    ge: new Operator("ge", (m: number | string | Date, v: number | string | Date) => m >= v),
+    gt: new Operator("gt", (m: number | string | Date, v: number | string | Date) => m > v),
+    le: new Operator("le", (m: number | string | Date, v: number | string | Date) => m <= v),
+    lt: new Operator("lt", (m: number | string | Date, v: number | string | Date) => m < v),
+    in: new Operator("in", (m: any, v: any[] | string) => v.includes(m)),
+    contains: new Operator("contains", (m: any[] | string, v: string) => m.includes(v)),
+    startsWith: new Operator("startsWith", (m: string, v: string) => m.startsWith(v)),
+    endsWith: new Operator("endsWith", (m: string, v: string) => m.endsWith(v))
 };

@@ -1,6 +1,8 @@
 // TODO evaluate how SQL Lite can be supported.
 // Capacitor or ReactNative or WebSQLLite
 
+import { Operator } from "./Operators";
+
 /**
  * A PredicateFunction filters data that match its conditions.
  * The conditions for any PredicateFunction is specified by overriding the evaluate method
@@ -22,12 +24,12 @@ export abstract class PredicateFunction {
 export class ModelFieldPredicate extends PredicateFunction {
     private key: string;
     private value: any;
-    private operator: Function;
+    private operator: Operator;
 
     constructor(
         key: string,
         value: any,
-        operator: Function
+        operator: Operator
     ) {
         super();
         this.key = key;
@@ -36,7 +38,7 @@ export class ModelFieldPredicate extends PredicateFunction {
     }
 
     public evaluate(model: any) {
-        return this.operator(model[this.key], this.value);
+        return this.operator.opFunction(model[this.key], this.value);
     }
 
     public getKey() {
@@ -57,6 +59,11 @@ export class ModelFieldPredicate extends PredicateFunction {
  */
 export interface ExpressionOperator {
     /**
+     * The name of the operator
+     */
+    op: string;
+
+    /**
      * Performs a logical operation on its inputs
      *
      * @param previousResult
@@ -68,16 +75,19 @@ export interface ExpressionOperator {
 
 export const ExpressionOperators = {
     or: {
+        op: "or",
         operate: (prevResult: boolean, currentResult: boolean) => {
             return prevResult || currentResult;
         }
     },
     and: {
+        op: "and",
         operate: (prevResult: boolean, currentResult: boolean) => {
             return prevResult && currentResult;
         }
     },
     not: {
+        op: "not",
         operate: (prevResult: boolean, currentResult: boolean) => {
             return !currentResult;
         }
