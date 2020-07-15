@@ -170,7 +170,7 @@ export class Model<T = unknown> {
     if (data.data && data.data.length > 0) {
       data.data
         .filter((d: any) => (d._deleted))
-        .forEach((d: any) => { this.remove(matcher(d)); });
+        .forEach((d: any) => { this.getStorage().remove(this.storeName, predicate); });
 
       data.data
         .filter((d: any) => (!d._deleted))
