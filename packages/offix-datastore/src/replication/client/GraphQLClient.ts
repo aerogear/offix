@@ -1,4 +1,4 @@
-import { createClient, defaultExchanges, subscriptionExchange, Client } from "urql";
+import { createClient, defaultExchanges, subscriptionExchange, Client as URQLClient } from "urql";
 import { SubscriptionClient, ClientOptions } from "subscriptions-transport-ws";
 
 export interface GraphQLClientConfig {
@@ -27,29 +27,26 @@ const defaultWsConfig: ClientOptions = {
   connectionCallback: undefined
 };
 
-export class GraphQLClient {
-
-  public static create(clientConfig: GraphQLClientConfig): Client {
-    const { wsUrl, wsConfig, ...config } = clientConfig;
-    if (!wsUrl) {
-      return createClient(config);
-    }
-
-    const subscriptionClient = new SubscriptionClient(wsUrl, {
-      ...defaultWsConfig,
-      ...wsConfig
-    });
-
-    const exchanges = [
-      ...defaultExchanges,
-      subscriptionExchange({
-        forwardSubscription: operation => {
-          return subscriptionClient.request(operation);
-        }
-      })
-    ];
-
-    return createClient({ ...config, url: config.url, exchanges });
+export function createGraphQLClient(clientConfig: GraphQLClientConfig): URQLClient {
+  const { wsUrl, wsConfig, ...config } = clientConfig;
+  if (!wsUrl) {
+    return createClient(config);
   }
 
+  const subscriptionClient = new SubscriptionClient(wsUrl, {
+    ...defaultWsConfig,
+    ...wsConfig
+  });
+
+  const exchanges = [
+    ...defaultExchanges,
+    subscriptionExchange({
+      forwardSubscription: operation => {
+        return subscriptionClient.request(operation);
+      }
+    })
+  ];
+
+  return createClient({ ...config, url: config.url, exchanges });
 }
+

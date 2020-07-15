@@ -4,7 +4,7 @@ import { ReplicationEngine } from "./replication";
 import { GraphQLCRUDReplicator } from "./replication/graphqlcrud/GraphQLCRUDReplicator";
 import { buildGraphQLCRUDQueries } from "./replication/graphqlcrud/buildGraphQLCRUDQueries";
 import { IReplicator } from "./replication/api/Replicator";
-import { GraphQLClient, GraphQLClientConfig } from "./replication/client/GraphQLClient";
+import { createGraphQLClient, GraphQLClientConfig } from "./replication/client/GraphQLClient";
 
 /**
  * Configuration Options for DataStore
@@ -51,7 +51,7 @@ export class DataStore {
 
   public init() {
     this.storage = new LocalStorage(this.dbName, this.models, this.schemaVersion);
-    const gqlClient = GraphQLClient.create(this.clientConfig);
+    const gqlClient = createGraphQLClient(this.clientConfig);
     const queries = buildGraphQLCRUDQueries(this.models);
     const gqlReplicator = new GraphQLCRUDReplicator(gqlClient, queries);
     const engine = new ReplicationEngine(gqlReplicator, (this.storage as LocalStorage));
