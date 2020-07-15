@@ -15,7 +15,7 @@ export interface GraphQLClientConfig {
   /**
    * Subscription client options
    */
-  wsConfig: ClientOptions;
+  wsConfig?: ClientOptions;
 }
 
 const defaultWsConfig: ClientOptions = {
