@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Badge } from 'antd';
 import 'antd/dist/antd.css';
 
+import { TodoModel } from './config/datastoreConfig';
 import { useFindTodos } from './helpers/hooks';
 import { TodoList, AddTodo, Loading, Error, Header } from './components';
+import { CRUDEvents } from 'offix-datastore';
 
 function App() {
 
   // TODO implement a network listener
   const [addView, setAddView] = useState<boolean>(false);
   const  { loading, error, data } = useFindTodos();
+
+  useEffect(() => {
+    TodoModel.subscribeForServerEvents(CRUDEvents.Add)
+      .subscribe((res: any) => console.log(res));
+    // TODO unsubscribe method
+  })
 
   if (loading) return <Loading />;
 

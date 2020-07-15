@@ -61,6 +61,7 @@ export class Model<T = unknown> {
   private storeName: string;
   private fields: Fields<T>;
   private getStorage: () => LocalStorage;
+  private replicator: IReplicator | undefined;
 
   constructor(
     config: ModelConfig<T>,
@@ -76,7 +77,6 @@ export class Model<T = unknown> {
     // We can control Model specific replication here
     // TODO set default matcher
     if (replicator && config.matcher) {
-      this.subscribeForServerEvents(replicator);
       // TODO this should be moved
       this.doDeltaSync(replicator, config.matcher, config.predicate);
     }
@@ -94,6 +94,12 @@ export class Model<T = unknown> {
 
   public getStoreName() {
     return this.storeName;
+  }
+
+  // TODO refactor this so that this is not required
+  // otherwise find a simpler solution
+  public setReplicator(replicator: IReplicator) {
+    this.replicator = replicator;
   }
 
   public save(input: T): Promise<T> {
@@ -136,15 +142,11 @@ export class Model<T = unknown> {
       });
   }
 
-  // TODO this method should be public
-  // so we can then specify the type of subscription event
-  // the replicator in this case should not be passed as a variable
-  private subscribeForServerEvents(replicator: IReplicator) {
-    // TODO replicator.subscribe
-    // handle subscription events here
-    // for now the 'new' subscription
-    // item is hardcoded in
-    return replicator.subscribe(this.getStoreName(), CRUDEvents.ADD);
+  public subscribeForServerEvents(eventType: CRUDEvents, filter: any = {}) {
+    if (!this.replicator) {
+      throw new Error("Replicator has not yet been set");
+    }
+    return this.replicator.subscribe(this.getStoreName(), eventType);
   }
 
   // TODO remove this from here and move to replicator
