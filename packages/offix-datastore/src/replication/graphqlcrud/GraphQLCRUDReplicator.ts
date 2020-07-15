@@ -2,8 +2,11 @@
 import { IReplicator, IOperation } from "../api/Replicator";
 import { CRUDEvents } from "../../storage";
 import { PredicateFunction, ModelFieldPredicate, PredicateExpression } from "../../predicates";
-import { GraphQLClient } from "../api/GraphQLClient";
 import { GraphQLDocuments } from "../api/Documents";
+import { DocumentNode } from "graphql";
+import { Client } from "urql";
+import Observable from "zen-observable";
+import { pipe, subscribe } from "wonka";
 
 export function convertPredicateToFilter(predicate: PredicateFunction): any {
   if (predicate instanceof ModelFieldPredicate) {
@@ -21,10 +24,10 @@ export function convertPredicateToFilter(predicate: PredicateFunction): any {
  * Performs replication using GraphQL
  */
 export class GraphQLCRUDReplicator implements IReplicator {
-  private client: GraphQLClient;
+  private client: Client;
   private queries: Map<string, GraphQLDocuments>;
 
-  constructor(client: GraphQLClient, queries: Map<string, GraphQLDocuments>) {
+  constructor(client: Client, queries: Map<string, GraphQLDocuments>) {
     this.client = client;
     this.queries = queries;
   }
@@ -39,13 +42,13 @@ export class GraphQLCRUDReplicator implements IReplicator {
 
     switch (eventType) {
       case CRUDEvents.ADD:
-        return this.client.mutate<T>(mutations.create, { input });
+        return this.mutate<T>(mutations.create, { input });
 
       case CRUDEvents.UPDATE:
-        return this.client.mutate<T>(mutations.update, { input });
+        return this.mutate<T>(mutations.update, { input });
 
       case CRUDEvents.DELETE:
-        return this.client.mutate<T>(mutations.delete, { input });
+        return this.mutate<T>(mutations.delete, { input });
 
       default:
         throw new Error("Invalid store event received");
@@ -62,7 +65,7 @@ export class GraphQLCRUDReplicator implements IReplicator {
     if (predicate) {
       variables.filter = convertPredicateToFilter(predicate);
     }
-    return await this.client.query<T>(syncQuery, variables);
+    return await this.query<T>(syncQuery, variables);
   }
 
   public subscribe<T>(storeName: string, eventType: CRUDEvents, predicate?: PredicateFunction) {
@@ -78,13 +81,57 @@ export class GraphQLCRUDReplicator implements IReplicator {
 
     switch (eventType) {
       case CRUDEvents.ADD:
-        return this.client.subscribe<T>(subscriptions.new, variables);
+        return this.observe<T>(subscriptions.new, variables);
       case CRUDEvents.UPDATE:
-        return this.client.subscribe<T>(subscriptions.updated, variables);
+        return this.observe<T>(subscriptions.updated, variables);
       case CRUDEvents.DELETE:
-        return this.client.subscribe<T>(subscriptions.deleted, variables);
+        return this.observe<T>(subscriptions.deleted, variables);
       default:
         throw new Error("Invalid subscription type received");
     }
+  }
+
+  async query<T>(query: string | DocumentNode, variables?: any) {
+    try {
+      const result = await this.client.query(query, variables).toPromise();
+      return {
+        data: result.data,
+        errors: [result.error]
+      };
+    } catch (error) {
+      return {
+        errors: [error]
+      };
+    }
+  }
+
+  async mutate<T>(query: string | DocumentNode, variables?: any) {
+    try {
+      const result = await this.client.mutation(query, variables).toPromise();
+      return {
+        data: result.data,
+        errors: [result.error]
+      };
+    } catch (error) {
+      return {
+        errors: [error]
+      };
+    }
+  }
+
+  public observe<T>(query: string | DocumentNode, variables?: any) {
+    return new Observable<T>(observer => {
+      pipe(
+        this.client.subscription(query, variables),
+        subscribe(result => {
+          if (result.error) {
+            observer.error(result.error);
+          }
+          if (result?.data) {
+            observer.next(result.data);
+          }
+        })
+      );
+    });
   }
 }
