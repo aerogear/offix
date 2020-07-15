@@ -2,8 +2,10 @@ import { DataStore } from 'offix-datastore';
 
 export const datastore = new DataStore({
   dbName: "offix-datastore",
-  url: "http://localhost:4000/graphql",
-  wsUrl: "ws://localhost:4000/graphql",
+  clientConfig: {
+    url: "http://localhost:4000/graphql",
+    wsUrl: "ws://localhost:4000/graphql",
+  }
 });
 
 export const TodoModel = datastore.createModel({
