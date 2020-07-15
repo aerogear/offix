@@ -63,4 +63,27 @@ export class LocalStorage {
     });
     return result;
   }
+
+  /**
+   * Write metadata store.
+   * This particular store is not going to notify model listeners
+   * and can only exist as full write.
+   * @param storeName
+   * @param input
+   */
+  public async writeMetadata(storeName: string, input: any): Promise<any> {
+    const result = await this.adapter.save(storeName, input);
+
+    return result;
+  }
+
+  /**
+   * Read metadata store.
+   * This particular store is not going to notify model listeners
+   * and can only exist as full write.
+   * @param storeName
+   */
+  public async readMetadata(storeName: any): Promise<any> {
+    return this.adapter.query(storeName);
+  }
 }

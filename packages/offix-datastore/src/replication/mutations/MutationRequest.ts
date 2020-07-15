@@ -1,4 +1,5 @@
 import { DocumentNode } from "graphql";
+import { StoreChangeEvent } from "../../storage";
 
 
 /**
@@ -6,11 +7,9 @@ import { DocumentNode } from "graphql";
  * This object contain all information needed to perform specific mutations
  */
 export class MutationRequest {
-  query: string | DocumentNode;
-  options: { variables?: any };
+  public event: StoreChangeEvent;
 
-  constructor(query: string | DocumentNode, options: { variables?: any }) {
-    this.query = query;
-    this.options = options;
+  constructor(event: StoreChangeEvent) {
+    this.event = event;
   }
 }
