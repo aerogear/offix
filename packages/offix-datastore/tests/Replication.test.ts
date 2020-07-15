@@ -73,7 +73,7 @@ test("Pull and save new data from server", (done) => {
   const expectedPayload: any[] = [{ id: "Yay", name: "Test" }];
   const replicator: any = {
     pullDelta: () => {
-      return Promise.resolve(expectedPayload) as Promise<any[]>;
+      return Promise.resolve({ data: expectedPayload });
     }
   };
 
