@@ -41,7 +41,9 @@ let NoteModel: Model<Note>;
 beforeEach(() => {
   const dataStore = new DataStore({
     dbName: DB_NAME,
-    url: "http://localhost:4000/"
+    clientConfig: {
+      url: "http://localhost:4000/"
+    }
   });
   NoteModel = dataStore.createModel<Note>({
     name: "Note",

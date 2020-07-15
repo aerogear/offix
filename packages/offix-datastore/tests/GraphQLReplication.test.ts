@@ -10,7 +10,7 @@ let queries: Map<string, GraphQLDocuments>;
 let modelQueries: GraphQLDocuments;
 
 beforeAll(() => {
-  const dataStore = new DataStore({ dbName: "test", url: "" });
+  const dataStore = new DataStore({ dbName: "test", clientConfig: { url: "" } });
   model = dataStore.createModel<any>({
     name: "Note",
     fields: {
