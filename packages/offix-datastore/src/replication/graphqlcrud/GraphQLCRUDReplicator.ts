@@ -1,5 +1,5 @@
 
-import { IReplicator, IOperation, } from "../api/Replicator";
+import { IReplicator, IOperation } from "../api/Replicator";
 import { CRUDEvents } from "../../storage";
 import { Predicate } from "../../predicates";
 import { GraphQLClient } from "../api/GraphQLClient";
