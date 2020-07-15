@@ -69,7 +69,7 @@ export class UrqlGraphQLClient implements GraphQLClient {
             observer.error(result.error);
           }
           if (result?.data) {
-            observer.error(result.data);
+            observer.next(result.data);
           }
         })
       );
