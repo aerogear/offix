@@ -1,5 +1,6 @@
 import { createClient, defaultExchanges, subscriptionExchange, Client as URQLClient } from "urql";
 import { SubscriptionClient, ClientOptions } from "subscriptions-transport-ws";
+import { NetworkStatus } from "../../utils/NetworkStatus";
 
 export interface GraphQLClientConfig {
   /**
@@ -27,10 +28,13 @@ const defaultWsConfig: ClientOptions = {
   connectionCallback: undefined
 };
 
-export function createGraphQLClient(clientConfig: GraphQLClientConfig): [URQLClient, SubscriptionClient | undefined] {
+export function createGraphQLClient(clientConfig: GraphQLClientConfig): { gqlClient: URQLClient; networkStatus: NetworkStatus | undefined} {
   const { wsUrl, wsConfig, ...config } = clientConfig;
   if (!wsUrl) {
-    return [createClient(config), undefined];
+    return {
+      gqlClient: createClient(config),
+      networkStatus: undefined
+    };
   }
 
   const subscriptionClient = new SubscriptionClient(wsUrl, {
@@ -47,6 +51,9 @@ export function createGraphQLClient(clientConfig: GraphQLClientConfig): [URQLCli
     })
   ];
 
-  return [createClient({ ...config, url: config.url, exchanges }), subscriptionClient];
+  return {
+    gqlClient: createClient({ ...config, url: config.url, exchanges }),
+    networkStatus: new NetworkStatus(subscriptionClient)
+  };
 }
 
