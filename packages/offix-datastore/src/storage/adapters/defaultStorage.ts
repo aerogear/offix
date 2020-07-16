@@ -1,5 +1,5 @@
-import { IndexedDBStorage } from "./IndexedDBStorage";
+import { IndexedDBStorageAdapter } from "./IndexedDBStorageAdapter";
 
 export function createDefaultStorage() {
-    return new IndexedDBStorage();
+    return new IndexedDBStorageAdapter();
 }

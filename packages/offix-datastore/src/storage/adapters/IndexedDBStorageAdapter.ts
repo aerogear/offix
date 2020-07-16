@@ -5,7 +5,7 @@ import { PredicateFunction } from "../../predicates";
 /**
  * Web Storage Implementation for DataStore using IndexedDB
  */
-export class IndexedDBStorage implements StorageAdapter {
+export class IndexedDBStorageAdapter implements StorageAdapter {
     private indexedDB?: Promise<IDBDatabase>;
     private stores: IStoreConfig[] = [];
 

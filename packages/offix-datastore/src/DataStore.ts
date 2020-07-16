@@ -5,7 +5,7 @@ import { buildGraphQLCRUDQueries } from "./replication/graphqlcrud/buildGraphQLC
 import { IReplicator } from "./replication/api/Replicator";
 import { MutationReplicationEngine } from "./replication";
 import { GraphQLCRUDReplicator } from "./replication/graphqlcrud/GraphQLCRUDReplicator";
-import { IndexedDBStorage } from "./storage/adapters/IndexedDBStorage";
+import { IndexedDBStorageAdapter } from "./storage/adapters/IndexedDBStorageAdapter";
 
 /**
  * Configuration Options for DataStore
@@ -31,7 +31,7 @@ export class DataStore {
   private dbName: string;
   private schemaVersion: number;
   private models: Model<unknown>[];
-  private indexedDB: IndexedDBStorage;
+  private indexedDB: IndexedDBStorageAdapter;
   private storage: LocalStorage;
   private clientConfig: any;
 
@@ -40,7 +40,7 @@ export class DataStore {
     this.schemaVersion = config.schemaVersion || 1; // return 1 if schemaVersion is undefined or 0
     this.clientConfig = config.clientConfig;
     this.models = [];
-    this.indexedDB = new IndexedDBStorage();
+    this.indexedDB = new IndexedDBStorageAdapter();
     this.storage = new LocalStorage(this.indexedDB);
   }
 

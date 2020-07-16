@@ -7,7 +7,7 @@ import "fake-indexeddb/auto";
 import { MutationReplicationEngine } from "../src/replication";
 import { Model } from "../src/Model";
 import { LocalStorage, CRUDEvents, StorageAdapter } from "../src/storage";
-import { IndexedDBStorage } from "../src/storage/adapters/IndexedDBStorage";
+import { IndexedDBStorageAdapter } from "../src/storage/adapters/IndexedDBStorageAdapter";
 
 const DB_NAME = "offix-datastore";
 const storeName = "user_Test";
@@ -25,10 +25,10 @@ const testFields = {
 const testMatcher = (d: any) => (p: any) => p.id("eq", d.id);
 
 describe("Test Push operations", () => {
-  let adapter: IndexedDBStorage;
+  let adapter: IndexedDBStorageAdapter;
 
   beforeEach(() => {
-    adapter = new IndexedDBStorage();
+    adapter = new IndexedDBStorageAdapter();
     adapter.addStore({ name: storeName });
     storage = new LocalStorage(adapter);
   });
@@ -77,10 +77,10 @@ describe("Test Push operations", () => {
 
 });
 
-describe.skip("Test Pull operations", () => {
+describe("Test Pull operations", () => {
 
   beforeAll(() => {
-    const adapter = new IndexedDBStorage();
+    const adapter = new IndexedDBStorageAdapter();
     adapter.addStore({ name: storeName });
     storage = new LocalStorage(adapter);
     adapter.createStores(DB_NAME, 1);
