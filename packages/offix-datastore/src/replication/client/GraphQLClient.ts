@@ -27,10 +27,10 @@ const defaultWsConfig: ClientOptions = {
   connectionCallback: undefined
 };
 
-export function createGraphQLClient(clientConfig: GraphQLClientConfig): URQLClient {
+export function createGraphQLClient(clientConfig: GraphQLClientConfig): [URQLClient, SubscriptionClient | undefined] {
   const { wsUrl, wsConfig, ...config } = clientConfig;
   if (!wsUrl) {
-    return createClient(config);
+    return [createClient(config), undefined];
   }
 
   const subscriptionClient = new SubscriptionClient(wsUrl, {
@@ -47,6 +47,6 @@ export function createGraphQLClient(clientConfig: GraphQLClientConfig): URQLClie
     })
   ];
 
-  return createClient({ ...config, url: config.url, exchanges });
+  return [createClient({ ...config, url: config.url, exchanges }), subscriptionClient];
 }
 
