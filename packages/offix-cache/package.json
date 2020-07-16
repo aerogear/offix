@@ -12,7 +12,7 @@
     "size:why": "size-limit --why"
   },
   "devDependencies": {
-    "@size-limit/preset-small-lib": "4.5.4",
+    "@size-limit/preset-small-lib": "4.5.5",
     "@types/fetch-mock": "7.3.2",
     "@types/graphql": "14.2.3",
     "@types/jest": "26.0.4",
@@ -20,7 +20,7 @@
     "graphql": "15.3.0",
     "graphql-tag": "2.10.4",
     "jest": "26.1.0",
-    "size-limit": "4.5.4",
+    "size-limit": "4.5.5",
     "ts-jest": "26.1.2",
     "typescript": "3.9.6"
   },
