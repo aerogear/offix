@@ -10,7 +10,7 @@ let queries: Map<string, GraphQLDocuments>;
 let modelQueries: GraphQLDocuments;
 
 beforeAll(() => {
-  const dataStore = new DataStore({ dbName: "test", url: "" });
+  const dataStore = new DataStore({ dbName: "test", clientConfig: { url: "" } });
   model = dataStore.createModel<any>({
     name: "Note",
     fields: {
@@ -36,14 +36,14 @@ test("Test Query generation", () => {
 test("Push mutation to GraphQL Server", (done) => {
   const input = { title: "test" };
 
-  const graphQLReplicaionAPI = new GraphQLCRUDReplicator({
-    mutate: async (query: any, variables: any) => {
-      expect(query).toEqual(modelQueries.mutations.create);
-      expect(variables.input).toEqual(input);
-      done();
-      return { data: null, errors: [] };
-    }
-  } as any, queries);
+  const graphQLReplicaionAPI = new GraphQLCRUDReplicator({} as any, queries);
+
+  graphQLReplicaionAPI.mutate = async (query: any, variables: any) => {
+    expect(query).toEqual(modelQueries.mutations.create);
+    expect(variables.input).toEqual(input);
+    done();
+    return { data: null, errors: [] };
+  };
 
   graphQLReplicaionAPI.push({
     eventType: CRUDEvents.ADD,

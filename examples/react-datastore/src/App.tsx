@@ -9,15 +9,20 @@ import { CRUDEvents } from 'offix-datastore';
 
 function App() {
 
+  const [mounted, setMounted] = useState<boolean>(false);
   // TODO implement a network listener
   const [addView, setAddView] = useState<boolean>(false);
   const  { loading, error, data } = useFindTodos();
 
   useEffect(() => {
-    TodoModel.subscribeForServerEvents(CRUDEvents.Add)
-      .subscribe((res: any) => console.log(res));
+    if (mounted) {
+      TodoModel.subscribeForServerEvents(CRUDEvents.ADD)
+        .subscribe((res: any) => console.log(res));
+    }
+    setMounted(true);
+    return () => setMounted(false);
     // TODO unsubscribe method
-  })
+  }, [mounted, setMounted]);
 
   if (loading) return <Loading />;
 
