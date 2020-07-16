@@ -8,10 +8,10 @@ import { ApolloServer } from "apollo-server";
 import { readFileSync } from "fs";
 
 import { DataStore } from "../src/DataStore";
-import { createDefaultStorage } from "../src/storage/adapters/defaultStorage";
 import { Model } from "../src/Model";
 import { Predicate } from "../src/predicates";
 import { CRUDEvents } from "../src/storage";
+import { IndexedDBStorage } from "../src/storage/adapters/IndexedDBStorage";
 
 const DB_NAME = "offix-datastore";
 const schema = JSON.parse(readFileSync(`${__dirname}/schema.json`).toString());
@@ -72,9 +72,9 @@ test("Setup client db with provided models", async () => {
 });
 
 test("Store Schema update", async () => {
-  const idbStorage = createDefaultStorage(DB_NAME, [
-    new Model({ name: "Test", fields: {} }, () => (null as any))
-  ], 2);
+  const idbStorage = new IndexedDBStorage();
+  idbStorage.addStore({ name: "user_Test" });
+  idbStorage.createStores(DB_NAME, 2);
   const db = await idbStorage.getIndexedDBInstance();
   expect(db.objectStoreNames).toContain("user_Test");
   expect(db.objectStoreNames).not.toContain("user_Note");

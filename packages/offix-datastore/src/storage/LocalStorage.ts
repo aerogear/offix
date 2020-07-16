@@ -1,7 +1,5 @@
 import { PushStream, ObservablePushStream } from "../utils/PushStream";
 import { PredicateFunction } from "../predicates";
-import { createDefaultStorage } from "./adapters/defaultStorage";
-import { Model } from "../Model";
 import { CRUDEvents } from "./api/CRUDEvents";
 import { StorageAdapter } from "./api/StorageAdapter";
 import { StoreChangeEvent, StoreEventSource } from "./api/StoreChangeEvent";
@@ -12,24 +10,22 @@ export function generateId() {
   return uuidv1();
 }
 
-
 /**
  * Implements local storage that saves data to specified adapter (underlying store)
  * and notifies developers about changes in store.
  */
 export class LocalStorage {
   public readonly storeChangeEventStream: PushStream<StoreChangeEvent>;
-  private adapter: StorageAdapter;
+  public readonly adapter: StorageAdapter;
 
-  constructor(dbName: string, models: Model[], schemaVersion: number) {
+  constructor(adapter: StorageAdapter) {
     this.storeChangeEventStream = new ObservablePushStream();
-    this.adapter = createDefaultStorage(dbName, models, schemaVersion);
+    this.adapter = adapter;
   }
 
   public async save(storeName: string, input: any, eventSource: StoreEventSource = "user"): Promise<any> {
     const result = await this.adapter.save(storeName, { id: generateId(), ...input });
     this.storeChangeEventStream.push({
-      // TODO replace for enums
       eventType: CRUDEvents.ADD,
       data: result,
       storeName,

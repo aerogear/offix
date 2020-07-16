@@ -60,18 +60,20 @@ export class Model<T = unknown> {
   private name: string;
   private storeName: string;
   private fields: Fields<T>;
-  private getStorage: () => LocalStorage;
+  private storage: LocalStorage;
   private replicator: IReplicator | undefined;
 
   constructor(
     config: ModelConfig<T>,
-    getStorage: () => LocalStorage,
+    storage: LocalStorage,
     replicator?: IReplicator
   ) {
     this.name = config.name;
     this.storeName = config.storeName || `user_${config.name}`;
     this.fields = config.fields;
-    this.getStorage = getStorage;
+    this.storage = storage;
+    // TODO set custom primary keys
+    this.storage.adapter.addStore({ name: this.storeName });
 
     // Model has access to replicator so there is possibility of model specific replicator config
     // We can control Model specific replication here
@@ -103,39 +105,39 @@ export class Model<T = unknown> {
   }
 
   public save(input: T): Promise<T> {
-    return this.getStorage().save(this.storeName, input);
+    return this.storage.save(this.storeName, input);
   }
 
   public query(predicateFunction?: Predicate<T>) {
-    if (!predicateFunction) { return this.getStorage().query(this.storeName); }
+    if (!predicateFunction) { return this.storage.query(this.storeName); }
 
     const modelPredicate = createPredicate(this.fields);
     const predicate = predicateFunction(modelPredicate);
-    return this.getStorage().query(this.storeName, predicate);
+    return this.storage.query(this.storeName, predicate);
   }
 
   public update(input: Partial<T>, predicateFunction?: Predicate<T>) {
     if (!predicateFunction) {
-      return this.getStorage().update(this.storeName, input);
+      return this.storage.update(this.storeName, input);
     }
 
     const modelPredicate = createPredicate(this.fields);
     const predicate = predicateFunction(modelPredicate);
-    return this.getStorage().update(this.storeName, input, predicate);
+    return this.storage.update(this.storeName, input, predicate);
   }
 
   public remove(predicateFunction?: Predicate<T>) {
-    if (!predicateFunction) { return this.getStorage().remove(this.storeName); }
+    if (!predicateFunction) { return this.storage.remove(this.storeName); }
 
     const modelPredicate = createPredicate(this.fields);
     const predicate = predicateFunction(modelPredicate);
-    return this.getStorage().remove(this.storeName, predicate);
+    return this.storage.remove(this.storeName, predicate);
   }
 
   // TODO add seed and reset - investigate.
 
   public on(eventType: CRUDEvents, listener: (event: StoreChangeEvent) => void) {
-    return this.getStorage()
+    return this.storage
       .storeChangeEventStream.subscribe((event: StoreChangeEvent) => {
         if (event.eventType !== eventType) { return; }
         listener(event);
@@ -171,7 +173,7 @@ export class Model<T = unknown> {
       data.data
         .filter((d: any) => (d._deleted))
         .forEach((d: any) => {
-          this.getStorage().remove(this.storeName,
+          this.storage.remove(this.storeName,
             (predicate ? predicate(modelPredicate) : undefined), "replication");
         });
 
@@ -179,10 +181,10 @@ export class Model<T = unknown> {
         .filter((d: any) => (!d._deleted))
         .forEach((d: any) => {
           (async () => {
-            const results = await this.getStorage().update(this.storeName, d, undefined, "replication");
+            const results = await this.storage.update(this.storeName, d, undefined, "replication");
             if (results.length === 0) {
               // no update was made, save the data instead
-              await this.getStorage().save(this.storeName, d, "replication");
+              await this.storage.save(this.storeName, d, "replication");
               return;
             }
           })();

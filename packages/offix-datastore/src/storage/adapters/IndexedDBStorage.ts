@@ -1,20 +1,25 @@
 import { StorageAdapter } from "../api/StorageAdapter";
+import { IStoreConfig } from "../api/StoreConfig";
 import { PredicateFunction } from "../../predicates";
-import { Model } from "../../Model";
 
 /**
  * Web Storage Implementation for DataStore using IndexedDB
  */
 export class IndexedDBStorage implements StorageAdapter {
-    private indexedDB: Promise<IDBDatabase>;
+    private indexedDB?: Promise<IDBDatabase>;
+    private stores: IStoreConfig[] = [];
 
-    constructor(dbName: string, models: Model[], schemaVersion: number) {
+    public addStore(config: IStoreConfig) {
+        this.stores.push(config);
+    }
+
+    public createStores(dbName: string, schemaVersion: number) {
         this.indexedDB = new Promise((resolve, reject) => {
             const openreq = indexedDB.open(dbName, schemaVersion);
             openreq.onerror = () => reject(openreq.error);
             openreq.onsuccess = () => {
                 const db = openreq.result;
-                db.onversionchange = function() {
+                db.onversionchange = function () {
                     this.close();
                     // alert("Please reload the page.");
                 };
@@ -24,25 +29,23 @@ export class IndexedDBStorage implements StorageAdapter {
             openreq.onupgradeneeded = () => {
                 const db = openreq.result;
                 const existingStoreNames = db.objectStoreNames;
-
+    
                 for (let i = 0; i < existingStoreNames.length; i++) {
                     const storeName = (existingStoreNames.item(i) as string);
-                    const existingModelStoreName = models.find((model) => (
-                        model.getStoreName() === storeName
-                    ));
+                    const existingModelStoreName = this.stores.find((({ name }) => (storeName === name)))
                     if (existingModelStoreName) { return; }
-
+    
                     // model has been removed, remove it's store
                     db.deleteObjectStore(storeName);
                 }
-                models.forEach((model) => {
-                    const storeName = model.getStoreName();
 
-                    if (existingStoreNames.contains(storeName)) { return; }
-                    db.createObjectStore(storeName, { keyPath: "id" });
+                this.stores.forEach(({ name, keyPath }) => {
+                    if (existingStoreNames.contains(name)) { return; }
+                    db.createObjectStore(name, { keyPath: keyPath || "id" });
                 });
             };
         });
+        return this.indexedDB;
     }
 
     public async save(storeName: string, input: any) {
@@ -88,6 +91,8 @@ export class IndexedDBStorage implements StorageAdapter {
     }
 
     private async getStore(storeName: string) {
+        if (!this.indexedDB) { throw new Error("DataStore has not been initalised"); }
+
         const db = await this.indexedDB;
         return db.transaction(storeName, "readwrite")
             .objectStore(storeName);

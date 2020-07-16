@@ -1,6 +1,6 @@
 
 import { MutationRequest } from "./MutationRequest";
-import { CRUDEvents, StoreChangeEvent, LocalStorage } from "../../storage";
+import { CRUDEvents, StoreChangeEvent, StorageAdapter } from "../../storage";
 import { IReplicator } from "..";
 
 /**
@@ -10,15 +10,16 @@ export class MutationsReplicationQueue {
 
   private items: MutationRequest[];
   private started: boolean;
-  private storage: LocalStorage;
+  private storage: StorageAdapter;
   private api: IReplicator;
   private queueName = "mutation_replication_queue";
 
-  constructor(storage: LocalStorage, api: IReplicator) {
+  constructor(storage: StorageAdapter, api: IReplicator) {
     this.started = false;
     this.items = [];
     this.storage = storage;
     this.api = api;
+    storage.addStore({ name: this.queueName });
   }
 
   createMutationEvent(event: StoreChangeEvent) {
@@ -28,7 +29,8 @@ export class MutationsReplicationQueue {
   }
 
   public async start() {
-    this.items = await this.storage.readMetadata(this.queueName);
+    this.started = true;
+    this.items = await this.storage.query(this.queueName);
 
     if (this.started) {
       return;
@@ -74,7 +76,7 @@ export class MutationsReplicationQueue {
         }
       }
       // TODO save after finished replication
-      await this.storage.writeMetadata(this.queueName, this.items);
+      await this.storage.save(this.queueName, this.items);
     }
   }
 }
