@@ -22,7 +22,7 @@
     "jest": "26.1.0",
     "size-limit": "4.5.5",
     "ts-jest": "26.1.2",
-    "typescript": "3.9.6"
+    "typescript": "3.9.7"
   },
   "dependencies": {
     "apollo-client": "2.6.10",

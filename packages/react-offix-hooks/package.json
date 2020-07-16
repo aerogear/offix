@@ -45,7 +45,7 @@
     "react-test-renderer": "16.13.1",
     "size-limit": "4.5.5",
     "ts-jest": "26.1.2",
-    "typescript": "3.9.6"
+    "typescript": "3.9.7"
   },
   "dependencies": {
     "offix-client": "0.15.5",
