@@ -6,7 +6,6 @@ import { IReplicator } from "./replication/api/Replicator";
 import { MutationReplicationEngine } from "./replication";
 import { GraphQLCRUDReplicator } from "./replication/graphqlcrud/GraphQLCRUDReplicator";
 import { IndexedDBStorageAdapter } from "./storage/adapters/IndexedDBStorageAdapter";
-import { NetworkStatus } from "./utils/NetworkStatus";
 
 /**
  * Configuration Options for DataStore
@@ -55,10 +54,10 @@ export class DataStore {
   }
 
   public init() {
-    const [gqlClient, subcriptionClient] = createGraphQLClient(this.clientConfig);
-    if (subcriptionClient) {
-      this.networkStatus = new NetworkStatus(subcriptionClient);
-    }
+    // TODO rename createGraphQLClient since it is responsible
+    // for the creation of the network status handler too
+    const { gqlClient, networkStatus } = createGraphQLClient(this.clientConfig);
+    this.networkStatus = networkStatus;
     const queries = buildGraphQLCRUDQueries(this.models);
     const gqlReplicator = new GraphQLCRUDReplicator(gqlClient, queries);
     const engine = new MutationReplicationEngine(gqlReplicator, (this.storage as LocalStorage));
