@@ -34,6 +34,7 @@ export class DataStore {
   private indexedDB: IndexedDBStorageAdapter;
   private storage: LocalStorage;
   private clientConfig: any;
+  private metadataName = "metadata";
 
   constructor(config: DataStoreConfig) {
     this.dbName = config.dbName;
@@ -42,10 +43,11 @@ export class DataStore {
     this.models = [];
     this.indexedDB = new IndexedDBStorageAdapter();
     this.storage = new LocalStorage(this.indexedDB);
+    this.indexedDB.addStore({ name: this.metadataName });
   }
 
   public createModel<T>(config: ModelConfig<T>) {
-    const model = new Model<T>(config, this.storage);
+    const model = new Model<T>(config, this.storage, this.metadataName);
     this.models.push(model);
     return model;
   }

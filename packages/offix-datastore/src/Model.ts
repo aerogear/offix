@@ -62,28 +62,28 @@ export class Model<T = unknown> {
   private fields: Fields<T>;
   private storage: LocalStorage;
   private replicator: IReplicator | undefined;
+  private metadataName: string;
 
   constructor(
     config: ModelConfig<T>,
     storage: LocalStorage,
+    metadataName: string,
     replicator?: IReplicator
   ) {
     this.name = config.name;
     this.storeName = config.storeName || `user_${config.name}`;
     this.fields = config.fields;
     this.storage = storage;
+    this.metadataName = metadataName;
     // TODO set custom primary keys
     this.storage.adapter.addStore({ name: this.storeName });
+    this.saveInitialMetadata();
 
-    // Model has access to replicator so there is possibility of model specific replicator config
-    // We can control Model specific replication here
     // TODO set default matcher
     if (replicator && config.matcher) {
       // TODO this should be moved
       this.doDeltaSync(replicator, config.matcher, config.predicate);
     }
-    // TODO remove ReplicationEngine
-    // and push changes to replicator from change methods(CUD) here instead
   }
 
   public getFields() {
@@ -154,11 +154,11 @@ export class Model<T = unknown> {
   // TODO remove this from here and move to replicator
   private async doDeltaSync(replicator: IReplicator, matcher: (d: T) => Predicate<T>, predicate?: Predicate<T>) {
     // TODO limit the size of data returned
-    // TODO get lastSync for model for metadata store and pass to pullDelta
+    const lastSync = (await this.readMetadata())?.lastSync || "";
     const modelPredicate = createPredicate(this.fields);
     const data = await replicator.pullDelta(
       this.getStoreName(),
-      "",
+      lastSync,
       (predicate ? predicate(modelPredicate) : undefined)
     );
     if (data.errors) {
@@ -196,5 +196,28 @@ export class Model<T = unknown> {
 
     // TODO replicator.pullDelta should return lastSync and write to metadata store for model
     // TODO consider removing older data if local db surpasses size limit
+  }
+
+  /**
+   * @returns metadata for this model or undefined is none exists
+   */
+  private async readMetadata(): Promise<any | undefined> {
+    const p = createPredicate({
+      name: { type: "String", key: "name" },
+      lastSync: { type: "String", key: "lastSync" }
+    });
+    const result = await this.storage.query(this.metadataName, p.name("eq", this.name));
+    if (result.length === 0) { return undefined; }
+    return result[0];
+  }
+
+  /**
+   * Add an entry to the metadata store if there is none
+   * i.e this is the first use of the model
+   */
+  private async saveInitialMetadata() {
+    const result = await this.readMetadata();
+    if (result) { return; }
+    this.storage.adapter.save(this.metadataName, { name, lastSync: "" });
   }
 }
