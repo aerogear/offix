@@ -10,7 +10,7 @@ import { IStoreConfig } from "./StoreConfig";
 export interface StorageAdapter {
   /**
    * Create a new Store with the given config
-   * 
+   *
    * @param config
    */
   addStore(config: IStoreConfig): void;

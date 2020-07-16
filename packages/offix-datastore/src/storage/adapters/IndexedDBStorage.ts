@@ -19,7 +19,7 @@ export class IndexedDBStorage implements StorageAdapter {
             openreq.onerror = () => reject(openreq.error);
             openreq.onsuccess = () => {
                 const db = openreq.result;
-                db.onversionchange = function () {
+                db.onversionchange = function() {
                     this.close();
                     // alert("Please reload the page.");
                 };
@@ -29,12 +29,12 @@ export class IndexedDBStorage implements StorageAdapter {
             openreq.onupgradeneeded = () => {
                 const db = openreq.result;
                 const existingStoreNames = db.objectStoreNames;
-    
+
                 for (let i = 0; i < existingStoreNames.length; i++) {
                     const storeName = (existingStoreNames.item(i) as string);
-                    const existingModelStoreName = this.stores.find((({ name }) => (storeName === name)))
+                    const existingModelStoreName = this.stores.find((({ name }) => (storeName === name)));
                     if (existingModelStoreName) { return; }
-    
+
                     // model has been removed, remove it's store
                     db.deleteObjectStore(storeName);
                 }
