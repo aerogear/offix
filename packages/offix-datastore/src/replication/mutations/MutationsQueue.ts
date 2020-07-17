@@ -29,11 +29,11 @@ export class MutationsReplicationQueue {
   }
 
   public async start() {
-    this.items = await this.storage.query(this.queueName):
-	if (!this.started) {
-		this.started = true;
-		this.process();
-	}
+    this.items = await this.storage.query(this.queueName);
+    if (!this.started) {
+      this.started = true;
+      this.process();
+    }
   }
 
   public stop() {
