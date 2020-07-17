@@ -28,7 +28,7 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
         openreq.onerror = () => this.rejectIDB(openreq.error);
         openreq.onsuccess = () => {
             const db = openreq.result;
-            db.onversionchange = function () {
+            db.onversionchange = function() {
                 this.close();
                 // alert("Please reload the page.");
             };
