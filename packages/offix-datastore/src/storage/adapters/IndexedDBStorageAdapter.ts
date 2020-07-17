@@ -1,6 +1,7 @@
 import { StorageAdapter } from "../api/StorageAdapter";
 import { IStoreConfig } from "../api/StoreConfig";
 import { PredicateFunction } from "../../predicates";
+import { generateId } from "../LocalStorage";
 
 /**
  * Web Storage Implementation for DataStore using IndexedDB
@@ -56,7 +57,7 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
 
     public async save(storeName: string, input: any) {
         const store = await this.getStore(storeName);
-        const key = await this.convertToPromise<IDBValidKey>(store.add(input));
+        const key = await this.convertToPromise<IDBValidKey>(store.add({ id: generateId(), ...input }));
         return this.convertToPromise<any>(store.get(key));
     }
 
@@ -97,8 +98,6 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     }
 
     private async getStore(storeName: string) {
-        if (!this.indexedDB) { throw new Error("DataStore has not been initalised"); }
-
         const db = await this.indexedDB;
         return db.transaction(storeName, "readwrite")
             .objectStore(storeName);

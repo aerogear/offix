@@ -23,16 +23,18 @@ const testFields = {
   }
 };
 const testMatcher = (d: any) => (p: any) => p.id("eq", d.id);
+const metadataName = "metadata";
+
+beforeAll(() => {
+  const adapter = new IndexedDBStorageAdapter();
+  adapter.addStore({ name: storeName });
+  adapter.addStore({ name: metadataName });
+  adapter.addStore({ name: "mutation_replication_queue" });
+  storage = new LocalStorage(adapter);
+  adapter.createStores(DB_NAME, 1);
+});
 
 describe("Test Push operations", () => {
-  let adapter: IndexedDBStorageAdapter;
-
-  beforeEach(() => {
-    adapter = new IndexedDBStorageAdapter();
-    adapter.addStore({ name: storeName });
-    storage = new LocalStorage(adapter);
-  });
-
   test("Push ADD operation data to server", (done) => {
     const api: any = {
       push: (op: any) => {
@@ -47,7 +49,6 @@ describe("Test Push operations", () => {
     };
 
     const engine = new MutationReplicationEngine(api, storage);
-    adapter.createStores(DB_NAME, 1);
     engine.start();
     storage.save(storeName, { title: "test" });
   });
@@ -67,7 +68,6 @@ describe("Test Push operations", () => {
     };
 
     const engine = new MutationReplicationEngine(api, storage);
-    adapter.createStores(DB_NAME, 1);
     storage.save(storeName, { title: "test" })
       .then((r) => {
         engine.start();
@@ -78,14 +78,6 @@ describe("Test Push operations", () => {
 });
 
 describe("Test Pull operations", () => {
-
-  beforeAll(() => {
-    const adapter = new IndexedDBStorageAdapter();
-    adapter.addStore({ name: storeName });
-    storage = new LocalStorage(adapter);
-    adapter.createStores(DB_NAME, 1);
-  });
-
   afterEach(() => {
     storage.storeChangeEventStream.clearSubscriptions();
   });
@@ -104,7 +96,7 @@ describe("Test Pull operations", () => {
       fields: testFields,
       predicate: (p) => (p.name("eq", "Test")),
       matcher: testMatcher
-    }, storage, replicator);
+    }, storage, metadataName, replicator);
 
     testModel.on(CRUDEvents.ADD, (event) => {
       expect(event.data.id).toEqual(expectedPayload[0].id);
@@ -130,7 +122,7 @@ describe("Test Pull operations", () => {
           fields: testFields,
           predicate: (p) => (p.name("eq", "Test")),
           matcher: testMatcher
-        }, storage, replicator);
+        }, storage, metadataName, replicator);
 
         testModel.on(CRUDEvents.UPDATE, (event) => {
           expect(event.data).toEqual(expectedPayload);
@@ -156,7 +148,7 @@ describe("Test Pull operations", () => {
           fields: testFields,
           predicate: (p) => (p.name("eq", "Test")),
           matcher: testMatcher
-        }, storage, replicator);
+        }, storage, metadataName, replicator);
 
         testModel.on(CRUDEvents.DELETE, (event) => {
           expect(event.data).toEqual(expectedPayload);
