@@ -1,7 +1,7 @@
 import { useEffect, useReducer } from "react";
 import { CRUDEvents } from 'offix-datastore';
 import { TodoModel } from '../config/datastoreConfig';
-import { ITodo, HookState, ActionType, ReducerAction, ITodoModel } from "../types";
+import { ITodo, HookState, ActionType, ReducerAction } from "../types";
 import { Predicate } from "offix-datastore/types/predicates";
 import { Subscription } from "offix-datastore/types/utils/PushStream";
 import { uuid } from "uuidv4"
