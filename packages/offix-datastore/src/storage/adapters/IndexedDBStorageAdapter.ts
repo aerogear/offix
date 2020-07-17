@@ -1,4 +1,4 @@
-import { StorageAdapter } from "../api/StorageAdapter";
+import { StorageAdapter, Transaction } from "../api/StorageAdapter";
 import { IStoreConfig } from "../api/StoreConfig";
 import { PredicateFunction } from "../../predicates";
 import { generateId } from "../LocalStorage";
@@ -6,17 +6,19 @@ import { generateId } from "../LocalStorage";
 /**
  * Web Storage Implementation for DataStore using IndexedDB
  */
-export class IndexedDBStorageAdapter implements StorageAdapter {
+export class IndexedDBStorageAdapter implements StorageAdapter, Transaction {
     private indexedDB: Promise<IDBDatabase>;
     private stores: IStoreConfig[] = [];
     private resolveIDB: any;
     private rejectIDB: any;
+    private transaction?: IDBTransaction;
 
-    constructor() {
+    constructor(transaction?: IDBTransaction) {
         this.indexedDB = new Promise((resolve, reject) => {
             this.resolveIDB = resolve;
             this.rejectIDB = reject;
         });
+        this.transaction = transaction;
     }
 
     public addStore(config: IStoreConfig) {
@@ -28,7 +30,7 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
         openreq.onerror = () => this.rejectIDB(openreq.error);
         openreq.onsuccess = () => {
             const db = openreq.result;
-            db.onversionchange = function() {
+            db.onversionchange = function () {
                 this.close();
                 // alert("Please reload the page.");
             };
@@ -53,6 +55,24 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
                 db.createObjectStore(name, { keyPath: keyPath || "id" });
             });
         };
+    }
+
+    public async createTransaction() {
+        if (!this.indexedDB) { throw new Error("DataStore has not been initalised"); }
+
+        const db = await this.indexedDB;
+        const transaction = db.transaction((db.objectStoreNames as unknown as string[]), "readwrite");
+        return new IndexedDBStorageAdapter(transaction);
+    }
+
+    public commit() {
+        // nothing to do here
+        return;
+    }
+
+    public rollback() {
+        if (!this.transaction) return;
+        this.transaction.abort();
     }
 
     public async save(storeName: string, input: any) {
@@ -98,6 +118,9 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     }
 
     private async getStore(storeName: string) {
+        if (this.transaction) {
+            return this.transaction.objectStore(storeName);
+        }
         const db = await this.indexedDB;
         return db.transaction(storeName, "readwrite")
             .objectStore(storeName);

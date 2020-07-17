@@ -6,7 +6,7 @@ import "fake-indexeddb/auto";
 
 import { MutationReplicationEngine } from "../src/replication";
 import { Model } from "../src/Model";
-import { LocalStorage, CRUDEvents, StorageAdapter } from "../src/storage";
+import { LocalStorage, CRUDEvents } from "../src/storage";
 import { IndexedDBStorageAdapter } from "../src/storage/adapters/IndexedDBStorageAdapter";
 
 const DB_NAME = "offix-datastore";
