@@ -17,15 +17,45 @@ export function generateId() {
 export class LocalStorage {
   public readonly storeChangeEventStream: PushStream<StoreChangeEvent>;
   public readonly adapter: StorageAdapter;
+  private eventQueue: StoreChangeEvent[] = [];
 
-  constructor(adapter: StorageAdapter) {
-    this.storeChangeEventStream = new ObservablePushStream();
+  constructor(adapter: StorageAdapter, pushStream?: PushStream<StoreChangeEvent>) {
+    this.storeChangeEventStream = pushStream || new ObservablePushStream();
     this.adapter = adapter;
+  }
+
+  /**
+   * @returns a new LocalStorage instance in transaction mode
+   * In transaction, no events are fired unitll the transaction is committed.
+   */
+  public async createTransaction() {
+    const adapterTransaction = await this.adapter.createTransaction();
+    return new LocalStorage(adapterTransaction, this.storeChangeEventStream);
+  }
+
+  /**
+   * Commits a transaction if one is open.
+   * It fires all events that occured in this transaction
+   */
+  public async commit() {
+    if (!this.adapter.isTransactionOpen()) { return; }
+    await this.adapter.commit();
+    this.eventQueue.forEach((event) => this.storeChangeEventStream.push(event));
+  }
+
+  /**
+   * Rollback all changes that occured in this transaction, if one is open.
+   * All events that occured within this transaction are cleared.
+   */
+  public async rollback() {
+    if (!this.adapter.isTransactionOpen()) { return; }
+    await this.adapter.rollback();
+    this.eventQueue = [];
   }
 
   public async save(storeName: string, input: any, eventSource: StoreEventSource = "user"): Promise<any> {
     const result = await this.adapter.save(storeName, { id: generateId(), ...input });
-    this.storeChangeEventStream.push({
+    this.dispatchEvent({
       eventType: CRUDEvents.ADD,
       data: result,
       storeName,
@@ -40,7 +70,7 @@ export class LocalStorage {
 
   public async update(storeName: string, input: any, predicate?: PredicateFunction, eventSource: StoreEventSource = "user"): Promise<any> {
     const result = await this.adapter.update(storeName, input, predicate);
-    this.storeChangeEventStream.push({
+    this.dispatchEvent({
       eventType: CRUDEvents.UPDATE,
       data: result,
       storeName,
@@ -51,7 +81,7 @@ export class LocalStorage {
 
   public async remove(storeName: string, predicate?: PredicateFunction, eventSource: StoreEventSource = "user"): Promise<any | any[]> {
     const result = await this.adapter.remove(storeName, predicate);
-    this.storeChangeEventStream.push({
+    this.dispatchEvent({
       eventType: CRUDEvents.DELETE,
       data: result,
       storeName,
@@ -81,5 +111,13 @@ export class LocalStorage {
    */
   public async readMetadata(storeName: any): Promise<any> {
     return this.adapter.query(storeName);
+  }
+
+  private dispatchEvent(event: StoreChangeEvent) {
+    if (!this.adapter.isTransactionOpen()) {
+      this.storeChangeEventStream.push(event);
+    }
+
+    this.eventQueue.push(event);
   }
 }
