@@ -17,6 +17,12 @@ export interface GraphQLClientConfig {
    * Subscription client options
    */
   wsConfig?: ClientOptions;
+
+  /**
+   * Network status override. Required when subscription
+   * config is not provided
+   */
+  networkStatus?: NetworkStatus;
 }
 
 const defaultWsConfig: ClientOptions = {
@@ -28,15 +34,18 @@ const defaultWsConfig: ClientOptions = {
   connectionCallback: undefined
 };
 
-// TODO provide a network status override
-export function createGraphQLClient(clientConfig: GraphQLClientConfig): { gqlClient: URQLClient; networkStatus: NetworkStatus | undefined} {
-  const { wsUrl, wsConfig, ...config } = clientConfig;
+export function createGraphQLClient(clientConfig: GraphQLClientConfig): {
+    gqlClient: URQLClient;
+    networkStatus: NetworkStatus;
+} {
+  const { wsUrl, wsConfig, networkStatus, ...config } = clientConfig;
   if (!wsUrl) {
-    // TODO throw an error if a network status override is not
-    // provided
+    if (!networkStatus) {
+      throw new Error("No network status config provided");
+    }
     return {
       gqlClient: createClient(config),
-      networkStatus: undefined
+      networkStatus
     };
   }
 
@@ -53,11 +62,9 @@ export function createGraphQLClient(clientConfig: GraphQLClientConfig): { gqlCli
       }
     })
   ];
-
   return {
     gqlClient: createClient({ ...config, url: config.url, exchanges }),
-    // TODO use override if provided or use default
-    networkStatus: new NetworkStatus(subscriptionClient)
+    networkStatus: networkStatus ?? new NetworkStatus(subscriptionClient)
   };
 }
 
