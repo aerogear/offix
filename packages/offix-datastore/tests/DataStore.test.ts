@@ -12,6 +12,7 @@ import { Model } from "../src/Model";
 import { Predicate } from "../src/predicates";
 import { CRUDEvents } from "../src/storage";
 import { IndexedDBStorageAdapter } from "../src/storage/adapters/IndexedDBStorageAdapter";
+import { NetworkStatus } from "../src/utils/NetworkStatus";
 
 const DB_NAME = "offix-datastore";
 const schema = JSON.parse(readFileSync(`${__dirname}/schema.json`).toString());
@@ -48,7 +49,8 @@ beforeEach(() => {
   const dataStore = new DataStore({
     dbName: DB_NAME,
     clientConfig: {
-      url: "http://localhost:4000/"
+      url: "http://localhost:4000/",
+      networkStatus: {} as NetworkStatus
     }
   });
   NoteModel = dataStore.createModel<Note>({
