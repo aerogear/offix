@@ -16,11 +16,11 @@ export class MutationReplicationEngine {
   ) {
     this.queue = new MutationsReplicationQueue(storage.adapter, api);
     // TODO connect network interface/subscriotion status
+    this.queue.start();
     this.storage = storage;
   }
 
   public start() {
-    this.queue.start();
     // TODO replication engine should be not based on the events itself.
     this.storage.storeChangeEventStream.subscribe((event) => {
       const { eventType, data, storeName, eventSource } = event;
