@@ -1,4 +1,5 @@
 import { PredicateFunction } from "../../predicates";
+import { IStoreConfig } from "./StoreConfig";
 
 /**
  * This interface defines the API that is required
@@ -7,6 +8,13 @@ import { PredicateFunction } from "../../predicates";
  * device specific implementation must support.
 */
 export interface StorageAdapter {
+  /**
+   * Create a new Store with the given config
+   *
+   * @param config
+   */
+  addStore(config: IStoreConfig): void;
+
   /**
    * Saves data to the Store
    *

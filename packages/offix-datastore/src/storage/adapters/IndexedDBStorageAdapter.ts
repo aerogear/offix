@@ -1,53 +1,63 @@
 import { StorageAdapter } from "../api/StorageAdapter";
+import { IStoreConfig } from "../api/StoreConfig";
 import { PredicateFunction } from "../../predicates";
-import { Model } from "../../Model";
+import { generateId } from "../LocalStorage";
 
 /**
  * Web Storage Implementation for DataStore using IndexedDB
  */
-export class IndexedDBStorage implements StorageAdapter {
+export class IndexedDBStorageAdapter implements StorageAdapter {
     private indexedDB: Promise<IDBDatabase>;
+    private stores: IStoreConfig[] = [];
+    private resolveIDB: any;
+    private rejectIDB: any;
 
-    constructor(dbName: string, models: Model[], schemaVersion: number) {
+    constructor() {
         this.indexedDB = new Promise((resolve, reject) => {
-            const openreq = indexedDB.open(dbName, schemaVersion);
-            openreq.onerror = () => reject(openreq.error);
-            openreq.onsuccess = () => {
-                const db = openreq.result;
-                db.onversionchange = function() {
-                    this.close();
-                    // alert("Please reload the page.");
-                };
-                resolve(db);
-            };
-
-            openreq.onupgradeneeded = () => {
-                const db = openreq.result;
-                const existingStoreNames = db.objectStoreNames;
-
-                for (let i = 0; i < existingStoreNames.length; i++) {
-                    const storeName = (existingStoreNames.item(i) as string);
-                    const existingModelStoreName = models.find((model) => (
-                        model.getStoreName() === storeName
-                    ));
-                    if (existingModelStoreName) { return; }
-
-                    // model has been removed, remove it's store
-                    db.deleteObjectStore(storeName);
-                }
-                models.forEach((model) => {
-                    const storeName = model.getStoreName();
-
-                    if (existingStoreNames.contains(storeName)) { return; }
-                    db.createObjectStore(storeName, { keyPath: "id" });
-                });
-            };
+            this.resolveIDB = resolve;
+            this.rejectIDB = reject;
         });
+    }
+
+    public addStore(config: IStoreConfig) {
+        this.stores.push(config);
+    }
+
+    public createStores(dbName: string, schemaVersion: number) {
+        const openreq = indexedDB.open(dbName, schemaVersion);
+        openreq.onerror = () => this.rejectIDB(openreq.error);
+        openreq.onsuccess = () => {
+            const db = openreq.result;
+            db.onversionchange = function() {
+                this.close();
+                // alert("Please reload the page.");
+            };
+            this.resolveIDB(db);
+        };
+
+        openreq.onupgradeneeded = () => {
+            const db = openreq.result;
+            const existingStoreNames = db.objectStoreNames;
+
+            for (let i = 0; i < existingStoreNames.length; i++) {
+                const storeName = (existingStoreNames.item(i) as string);
+                const existingModelStoreName = this.stores.find((({ name }) => (storeName === name)));
+                if (existingModelStoreName) { return; }
+
+                // model has been removed, remove it's store
+                db.deleteObjectStore(storeName);
+            }
+
+            this.stores.forEach(({ name, keyPath }) => {
+                if (existingStoreNames.contains(name)) { return; }
+                db.createObjectStore(name, { keyPath: keyPath || "id" });
+            });
+        };
     }
 
     public async save(storeName: string, input: any) {
         const store = await this.getStore(storeName);
-        const key = await this.convertToPromise<IDBValidKey>(store.add(input));
+        const key = await this.convertToPromise<IDBValidKey>(store.add({ id: generateId(), ...input }));
         return this.convertToPromise<any>(store.get(key));
     }
 
