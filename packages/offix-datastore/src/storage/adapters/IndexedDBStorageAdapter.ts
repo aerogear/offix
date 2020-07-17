@@ -1,4 +1,4 @@
-import { StorageAdapter, Transaction } from "../api/StorageAdapter";
+import { StorageAdapter } from "../api/StorageAdapter";
 import { IStoreConfig } from "../api/StoreConfig";
 import { PredicateFunction } from "../../predicates";
 import { generateId } from "../LocalStorage";
@@ -6,7 +6,7 @@ import { generateId } from "../LocalStorage";
 /**
  * Web Storage Implementation for DataStore using IndexedDB
  */
-export class IndexedDBStorageAdapter implements StorageAdapter, Transaction {
+export class IndexedDBStorageAdapter implements StorageAdapter {
     private indexedDB: Promise<IDBDatabase>;
     private stores: IStoreConfig[] = [];
     private resolveIDB: any;
@@ -30,7 +30,7 @@ export class IndexedDBStorageAdapter implements StorageAdapter, Transaction {
         openreq.onerror = () => this.rejectIDB(openreq.error);
         openreq.onsuccess = () => {
             const db = openreq.result;
-            db.onversionchange = function () {
+            db.onversionchange = function() {
                 this.close();
                 // alert("Please reload the page.");
             };
@@ -58,21 +58,31 @@ export class IndexedDBStorageAdapter implements StorageAdapter, Transaction {
     }
 
     public async createTransaction() {
-        if (!this.indexedDB) { throw new Error("DataStore has not been initalised"); }
-
         const db = await this.indexedDB;
         const transaction = db.transaction((db.objectStoreNames as unknown as string[]), "readwrite");
         return new IndexedDBStorageAdapter(transaction);
     }
 
     public commit() {
-        // nothing to do here
-        return;
+        return new Promise<void>((resolve, reject) => {
+            if (!this.transaction) { resolve(); return; };
+
+            this.transaction.onerror = (ev) => { reject(this.transaction?.error); };
+            this.transaction.oncomplete = () => { resolve(); };
+        });
     }
 
     public rollback() {
-        if (!this.transaction) return;
-        this.transaction.abort();
+        return new Promise<void>((resolve, reject) => {
+            if (!this.transaction) { resolve(); return; };
+
+            this.transaction.onabort = () => { resolve(); };
+            this.transaction.abort();
+        });
+    }
+
+    public isTransactionOpen() {
+        return (this.transaction !== undefined);
     }
 
     public async save(storeName: string, input: any) {
