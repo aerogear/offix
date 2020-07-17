@@ -22,7 +22,7 @@ export class NetworkStatus {
       observer.next({ event: "initialising", status: false });
       subscriptionClient.onConnected(() => observer.next({ event: "connected", status: true }));
       subscriptionClient.onDisconnected(() => observer.next({ event: "disconnected", status: false }));
-      subscriptionClient.onReconnected(() => observer.next({ event: "reconnected", status: false }));
+      subscriptionClient.onReconnected(() => observer.next({ event: "reconnected", status: true }));
     });
     this.subscriber.subscribe((x: NetworkEvent) => this.isOnline = x.status);
   }
