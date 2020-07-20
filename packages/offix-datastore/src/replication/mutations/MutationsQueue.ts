@@ -1,7 +1,6 @@
 
 import { MutationRequest } from "./MutationRequest";
-import { CRUDEvents, StoreChangeEvent, StorageAdapter } from "../../storage";
-import { IReplicator } from "..";
+import { CRUDEvents, StoreChangeEvent, LocalStorage } from "../../storage";
 import { createLogger } from "../../utils/logger";
 
 const logger = createLogger("queue");
@@ -13,16 +12,14 @@ export class MutationsReplicationQueue {
 
   private items: MutationRequest[];
   private started: boolean;
-  private storage: StorageAdapter;
-  private api: IReplicator;
+  private storage: LocalStorage;
   private queueName = "mutation_replication_queue";
 
-  constructor(storage: StorageAdapter, api: IReplicator) {
+  constructor(storage: LocalStorage) {
     logger("Mutation queue created");
     this.started = false;
     this.items = [];
     this.storage = storage;
-    this.api = api;
     storage.addStore({ name: this.queueName });
   }
 
@@ -58,26 +55,26 @@ export class MutationsReplicationQueue {
       const { eventType, data, storeName } = item?.event;
       // TODO transform operation into replication event
       if (eventType === CRUDEvents.ADD) {
-        await this.api.push({
-          eventType, input: data, storeName
-        });
+        // await this.api.push({
+        //   eventType, input: data, storeName
+        // });
       }
 
       if (typeof data.forEach !== "function") {
         // eslint-disable-next-line no-console
         console.log(data);
-        await this.api.push({
-          eventType, input: data, storeName
-        });
+        // await this.api.push({
+        //   eventType, input: data, storeName
+        // });
         return;
       }
       // TODO updates and deletes are in batches
       // TODO queue those changes
       if (data instanceof Array) {
         for (const element of data) {
-          await this.api.push({
-            eventType, input: element, storeName
-          });
+          // await this.api.push({
+          //   eventType, input: element, storeName
+          // });
         }
       }
       // TODO save after finished replication

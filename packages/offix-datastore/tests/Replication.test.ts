@@ -36,7 +36,7 @@ beforeAll(() => {
 });
 
 describe("Test Push operations", () => {
-  test.skip("Push ADD operation data to server", (done: any) => {
+  test("Push ADD operation data to server", (done: any) => {
     const api: any = {
       push: (op: any) => {
         expect(op.eventType).toEqual(CRUDEvents.ADD);
@@ -54,7 +54,7 @@ describe("Test Push operations", () => {
     storage.save(storeName, { title: "test" });
   });
 
-  test.skip("Push UPDATE operation data to server", (done: any) => {
+  test("Push UPDATE operation data to server", (done: any) => {
     const api: any = {
       push: (op: any) => {
         expect(op.eventType).toEqual(CRUDEvents.UPDATE);

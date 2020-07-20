@@ -1,35 +1,54 @@
-import { CRUDEvents } from "../../storage";
+import { CRUDEvents, StoreChangeEvent, LocalStorage } from "../../storage";
 import { PredicateFunction } from "../../predicates";
 import Observable from "zen-observable";
 import { GraphQLClientReponse } from "./GraphQLClient";
+import { Model } from "../../Model";
+import { PushStream } from "../../utils/PushStream";
+import { ModelReplicationConfig, GlobalReplicationConfig } from "./ReplicationConfig";
+import { NetworkStatus } from "../../network/NetworkStatus";
 
 /**
  * Operation to be pushed to Server
  */
 export interface IOperation {
-    eventType: CRUDEvents;
-    input: any;
-    storeName: string;
+  eventType: CRUDEvents;
+  input: any;
+  storeName: string;
 }
 
 /**
- * Push and pulls changes to and from server
+ * Replicator interface that every replication engine needs to satisfy.
  */
 export interface IReplicator {
-    /**
-     * Push changes to server with replication support
-     *
-     * @param operation
-     */
-    push<T>(operation: IOperation): Promise<GraphQLClientReponse<T>>;
+  /**
+   * Start replication process for managed models
+   *
+   * @param models - models used for replication
+   * @param storage - local storage
+   */
+  start(models: Model[], storage: LocalStorage): void;
+}
 
-    /**
-     * Pull changes from server since lastSync
-     */
-    pullDelta<T>(storeName: string, lastSync: string, predicate?: PredicateFunction): Promise<GraphQLClientReponse<T>>;
+/**
+ * Replicator inteface used to expose replication operations that can be executed on the model
+ */
+export interface IModelReplicator {
+  /**
+   * __internal__ method should not be called by end users
+   *
+   * @param config model configuration
+   * @param networkInterface - networkInterface used for this model
+   */
+  init(config: ModelReplicationConfig, networkInterface: NetworkStatus): void;
 
-    /**
-     * Subscribe to the changes on the server
-     */
-    subscribe<T>(storeName: string, eventType: CRUDEvents,  predicate?: PredicateFunction): Observable<T>;
+  /**
+   * Force override delta query and perform query instantly (subject to network availability)
+   * Use this method to make sure that you have fresh data from server (when no subscriptions provided)
+   */
+  forceDeltaQuery<T>(): Promise<void>;
+
+  /**
+   * Removes all metadata used to replicate model and starts with the new configuration
+   */
+  resetReplication<T>(config: ModelReplicationConfig): void;
 }

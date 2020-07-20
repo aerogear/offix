@@ -4,8 +4,7 @@ import { PredicateFunction } from "../../predicates";
 /**
  * This interface defines the API that is required
  * from any device specific storage implementation.
- * It defines an interface that a
- * device specific implementation must support.
+ * It defines an interface that a device specific implementation must support.
 */
 export interface StorageAdapter {
   /**
@@ -36,6 +35,12 @@ export interface StorageAdapter {
    * @param config
    */
   addStore(config: IStoreConfig): void;
+
+
+  /**
+   * Create a new Stores with the given config
+   */
+  createStores(dbName: string, schemaVersion: number): void;
 
   /**
    * Saves data to the Store

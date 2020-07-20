@@ -1,15 +1,15 @@
 
-import { IReplicator } from "./api/Replicator";
-import { LocalStorage } from "../storage";
-import { MutationsReplicationQueue } from "./mutations/MutationsQueue";
-import { createLogger } from "../utils/logger";
+import { IReplicator } from "../api/Replicator";
+import { LocalStorage } from "../../storage";
+import { MutationsReplicationQueue } from "./MutationsQueue";
+import { createLogger } from "../../utils/logger";
 
 const logger = createLogger("engine");
 /**
  * Schedules replication events and handles replication errors
  */
 export class MutationReplicationEngine {
-  private queue: MutationsReplicationQueue;
+
   private storage: LocalStorage;
 
   constructor(
@@ -17,9 +17,7 @@ export class MutationReplicationEngine {
     storage: LocalStorage
   ) {
     logger("Replication engine initialized");
-    this.queue = new MutationsReplicationQueue(storage.adapter, api);
-    // TODO connect network interface/subscriotion status
-    this.queue.start();
+
     this.storage = storage;
   }
 

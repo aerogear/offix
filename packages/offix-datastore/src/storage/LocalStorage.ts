@@ -5,6 +5,8 @@ import { CRUDEvents } from "./api/CRUDEvents";
 import { StorageAdapter } from "./api/StorageAdapter";
 import { StoreChangeEvent, StoreEventSource } from "./api/StoreChangeEvent";
 import { createLogger } from "../utils/logger";
+import { IStoreConfig } from "./api/StoreConfig";
+import { DataStoreConfig } from "../DataStoreConfig";
 
 const logger = createLogger("storage");
 
@@ -17,6 +19,7 @@ export function generateId() {
  * and notifies developers about changes in store.
  */
 export class LocalStorage {
+
   public readonly storeChangeEventStream: PushStream<StoreChangeEvent>;
   public readonly adapter: StorageAdapter;
   private eventQueue: StoreChangeEvent[] = [];
@@ -43,7 +46,7 @@ export class LocalStorage {
    */
   public async commit() {
     await this.adapter.commit();
-    this.eventQueue.forEach((event) => this.storeChangeEventStream.push(event));
+    this.eventQueue.forEach((event) => this.storeChangeEventStream.publish(event));
   }
 
   /**
@@ -57,6 +60,7 @@ export class LocalStorage {
   }
 
   public async save(storeName: string, input: any, eventSource: StoreEventSource = "user"): Promise<any> {
+    // TODO id is hardcoded
     const result = await this.adapter.save(storeName, { id: generateId(), ...input });
     this.dispatchEvent({
       eventType: CRUDEvents.ADD,
@@ -116,9 +120,29 @@ export class LocalStorage {
     return this.adapter.query(storeName);
   }
 
+  /**
+   * Create store in underlying storage provider
+   *
+   * @param config
+   */
+  public addStore(config: IStoreConfig) {
+    this.adapter.addStore(config);
+  }
+
+  /**
+   * Trigger creation of stores in underlying storage provider
+   *
+   * @param config
+   */
+  public createStores(config: DataStoreConfig) {
+    const name = config.dbName || "offixdb"
+    const version = config.schemaVersion || 1;
+    this.adapter.createStores(name, version);
+  }
+
   private dispatchEvent(event: StoreChangeEvent) {
     if (!this.adapter.isTransactionOpen()) {
-      this.storeChangeEventStream.push(event);
+      this.storeChangeEventStream.publish(event);
     }
 
     this.eventQueue.push(event);

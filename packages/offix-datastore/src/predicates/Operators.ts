@@ -1,6 +1,3 @@
-type ArrayOperators = "ne" | "eq" | "in" | "contains";
-type MathematicalOperators = "ne" | "eq" | "le" | "lt" | "ge" | "gt" | "in";
-
 /**
  * All Operators
  *
@@ -28,6 +25,9 @@ export type TypeOperatorMap<T> =
     T extends Date ? MathematicalOperators :
     AllOperators;
 
+/**
+ * Operator class used to associate operator with underlying filtering function
+ */
 export class Operator {
     public readonly op: string;
     public readonly opFunction: (m: any, v: any) => boolean;
@@ -38,6 +38,9 @@ export class Operator {
     }
 }
 
+/**
+ * List of supported operators with underlying filtering functions
+ */
 export const OperatorFunctionMap = {
     ne: new Operator("ne", (m: any, v: any) => m !== v),
     eq: new Operator("eq", (m: any, v: any) => m === v),
@@ -50,3 +53,7 @@ export const OperatorFunctionMap = {
     startsWith: new Operator("startsWith", (m: string, v: string) => m.startsWith(v)),
     endsWith: new Operator("endsWith", (m: string, v: string) => m.endsWith(v))
 };
+
+type ArrayOperators = "ne" | "eq" | "in" | "contains";
+
+type MathematicalOperators = "ne" | "eq" | "le" | "lt" | "ge" | "gt" | "in";

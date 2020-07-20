@@ -1,10 +1,32 @@
 import { DocumentNode } from "graphql";
 import Observable from "zen-observable";
+import { SubscriptionClient, ClientOptions } from "subscriptions-transport-ws";
 
-export interface GraphQLClientReponse<T>{
+/**
+ * Represents error information returned from GraphQL Client
+ */
+export interface GraphQLClientReponse<T = any> {
   data?: T[];
   errors?: any[];
 }
+
+export interface GraphQLClientConfig {
+  /**
+   * GraphQl client endpoint url
+   */
+  url: string;
+
+  /**
+   * GraphQL client websocket url
+   */
+  wsUrl?: string;
+
+  /**
+   * Subscription client options
+   */
+  wsConfig?: ClientOptions;
+}
+
 
 /**
  * A GraphQLClient to communicate with the GraphQLAPI
