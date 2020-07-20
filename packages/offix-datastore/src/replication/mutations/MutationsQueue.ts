@@ -2,6 +2,9 @@
 import { MutationRequest } from "./MutationRequest";
 import { CRUDEvents, StoreChangeEvent, StorageAdapter } from "../../storage";
 import { IReplicator } from "..";
+import { createLogger } from "../../utils/logger";
+
+const logger = createLogger("queue");
 
 /**
  * Queue that manages replication of the mutations for all local edits.
@@ -15,6 +18,7 @@ export class MutationsReplicationQueue {
   private queueName = "mutation_replication_queue";
 
   constructor(storage: StorageAdapter, api: IReplicator) {
+    logger("Mutation queue created");
     this.started = false;
     this.items = [];
     this.storage = storage;
@@ -29,6 +33,7 @@ export class MutationsReplicationQueue {
   }
 
   public async start() {
+    logger("Mutation queue started");
     this.items = await this.storage.query(this.queueName);
     if (!this.started) {
       this.started = true;
@@ -37,6 +42,7 @@ export class MutationsReplicationQueue {
   }
 
   public stop() {
+    logger("Mutation queue stopped");
     this.started = false;
   }
 
@@ -44,6 +50,7 @@ export class MutationsReplicationQueue {
     if (!this.started) {
       return;
     }
+    logger("Mutation queue processing");
     const item = this.items.shift();
 
     // TODO errors

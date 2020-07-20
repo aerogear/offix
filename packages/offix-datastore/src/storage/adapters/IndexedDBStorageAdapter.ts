@@ -2,6 +2,9 @@ import { StorageAdapter } from "../api/StorageAdapter";
 import { IStoreConfig } from "../api/StoreConfig";
 import { PredicateFunction } from "../../predicates";
 import { generateId } from "../LocalStorage";
+import { createLogger } from "../../utils/logger";
+
+const logger = createLogger("idb");
 
 /**
  * Web Storage Implementation for DataStore using IndexedDB
@@ -26,6 +29,7 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     }
 
     public createStores(dbName: string, schemaVersion: number) {
+        logger("Creating stores");
         const openreq = indexedDB.open(dbName, schemaVersion);
         openreq.onerror = () => this.rejectIDB(openreq.error);
         openreq.onsuccess = () => {
