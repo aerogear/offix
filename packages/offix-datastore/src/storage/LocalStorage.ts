@@ -36,9 +36,9 @@ export class LocalStorage {
   /**
    * Commits a transaction if one is open.
    * It fires all events that occured in this transaction
+   * @throws Will throw error if not in transaction
    */
   public async commit() {
-    if (!this.adapter.isTransactionOpen()) { return; }
     await this.adapter.commit();
     this.eventQueue.forEach((event) => this.storeChangeEventStream.push(event));
   }
@@ -46,9 +46,9 @@ export class LocalStorage {
   /**
    * Rollback all changes that occured in this transaction, if one is open.
    * All events that occured within this transaction are cleared.
+   * @throws Will throw error if not in transaction
    */
   public async rollback() {
-    if (!this.adapter.isTransactionOpen()) { return; }
     await this.adapter.rollback();
     this.eventQueue = [];
   }

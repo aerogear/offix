@@ -15,11 +15,13 @@ export interface StorageAdapter {
 
   /**
    * Commits current active transaction to db
+   * @throws Will throw if @this is not a transaction
    */
   commit(): Promise<void>;
 
   /**
    * Rollback current active transaction
+   * @throws Will throw if @this is not a transaction
    */
   rollback(): Promise<void>;
 
