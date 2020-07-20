@@ -172,15 +172,19 @@ export class Model<T = unknown> {
     if (data.data && data.data.length > 0) {
       data.data
         .filter((d: any) => (d._deleted))
-        .forEach((d: any) => { this.remove(matcher(d)); });
+        .forEach((d: any) => {
+          this.storage.remove(this.storeName,
+            (predicate ? predicate(modelPredicate) : undefined), "replication");
+        });
+
       data.data
         .filter((d: any) => (!d._deleted))
         .forEach((d: any) => {
           (async () => {
-            const results = await this.update(d, matcher(d));
+            const results = await this.storage.update(this.storeName, d, undefined, "replication");
             if (results.length === 0) {
               // no update was made, save the data instead
-              this.save(d);
+              await this.storage.save(this.storeName, d, "replication");
               return;
             }
           })();
