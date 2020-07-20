@@ -1,76 +1,84 @@
 import { Model } from "./Model";
-import { LocalStorage } from "./storage";
-import { createGraphQLClient, GraphQLClientConfig } from "./replication/client/GraphQLClient";
-import { buildGraphQLCRUDQueries } from "./replication/graphqlcrud/buildGraphQLCRUDQueries";
+import { LocalStorage, StorageAdapter } from "./storage";
 import { IReplicator } from "./replication/api/Replicator";
-import { MutationReplicationEngine } from "./replication";
-import { GraphQLCRUDReplicator } from "./replication/graphqlcrud/GraphQLCRUDReplicator";
+import { GraphQLCRUDReplicator } from "./replication/GraphQLCRUDReplicator";
 import { IndexedDBStorageAdapter } from "./storage/adapters/IndexedDBStorageAdapter";
 import { ModelSchema, DataSyncJsonSchema } from "./ModelSchema";
+import { DataStoreConfig } from "./DataStoreConfig";
+import { createLogger, enableLogger } from "./utils/logger";
+
+const logger = createLogger("DataStore");
+// TODO disable logging before release
+enableLogger();
+
+const metadataStoreName = "model_metadata"
 
 /**
- * Configuration Options for DataStore
+ * Custom implementation
  */
-export interface DataStoreConfig {
+export interface CustomEngines {
   /**
-   * The Database name
+   * Custom storage adapter.
+   * By default DataStore will use IndexedDB that might not be available in every environment.
+   * If you wish to override adapter you can supply it here
    */
-  dbName: string;
+  storeAdapter?: StorageAdapter,
 
   /**
-   * The URQL config
+   * Custom replication mechanism that will replicate data.
+   * By default DataStore will be GraphQL (https://graphqlcrud.org) replication mechanism
    */
-  clientConfig: GraphQLClientConfig;
-
-  /**
-   * The Schema Version number. Used to trigger a Schema upgrade
-   */
-  schemaVersion?: number;
+  replicator?: IReplicator
 }
 
+/**
+ * ____ Offix DataStore ___
+ * Client side storage with efficient querying capabilities
+ * and GraphQL replication engine.
+ */
 export class DataStore {
-  public networkStatus: any;
-  private dbName: string;
-  private schemaVersion: number;
   private models: Model<unknown>[];
-  private indexedDB: IndexedDBStorageAdapter;
   private storage: LocalStorage;
-  private clientConfig: any;
-  private metadataName = "metadata";
 
-  constructor(config: DataStoreConfig) {
-    this.dbName = config.dbName;
-    this.schemaVersion = config.schemaVersion || 1; // return 1 if schemaVersion is undefined or 0
-    this.clientConfig = config.clientConfig;
+  private config: DataStoreConfig;
+  private engines: CustomEngines | undefined;
+
+  constructor(config: DataStoreConfig, engines?: CustomEngines) {
+    this.config = config;
     this.models = [];
-    this.indexedDB = new IndexedDBStorageAdapter();
-    this.storage = new LocalStorage(this.indexedDB);
-    this.indexedDB.addStore({ name: this.metadataName });
+    this.engines = engines;
+
+    if (engines && engines.storeAdapter) {
+      this.storage = new LocalStorage(engines.storeAdapter);
+    } else {
+      const indexedDB = new IndexedDBStorageAdapter();
+      this.storage = new LocalStorage(indexedDB);
+    }
+    this.storage.addStore({ name: metadataStoreName });
   }
 
   public createModel<T>(schema: DataSyncJsonSchema<T>) {
     const modelSchema = new ModelSchema(schema);
-    const model = new Model<T>(modelSchema, this.storage, this.metadataName);
-    this.models.push(model);
+    const model = new Model<T>(modelSchema, this.storage);
+    // TODO replace any with something better
+    this.models.push(model as any);
     return model;
   }
 
   public init() {
-    // TODO rename createGraphQLClient since it is responsible
-    // for the creation of the network status handler too
-    const { gqlClient, networkStatus } = createGraphQLClient(this.clientConfig);
-    this.networkStatus = networkStatus;
-    const queries = buildGraphQLCRUDQueries(this.models);
-    const gqlReplicator = new GraphQLCRUDReplicator(gqlClient, queries);
-    const engine = new MutationReplicationEngine(gqlReplicator, (this.storage as LocalStorage));
-    this.pushReplicator(gqlReplicator);
-    this.indexedDB.createStores(this.dbName, this.schemaVersion);
-    engine.start();
-  }
+    // TODO this fails on firefox
 
-  private pushReplicator(replicator: IReplicator) {
-    this.models.forEach((model) => {
-      model.setReplicator(replicator);
-    });
+
+    if (this.config.replicationConfig) {
+      if (this.engines?.replicator) {
+        this.engines?.replicator.start(this.models, this.storage);
+      } else {
+        const gqlReplicator = new GraphQLCRUDReplicator(this.config.replicationConfig);
+        gqlReplicator.start(this.models, this.storage);
+      }
+      this.storage.createStores(this.config);
+    } else {
+      logger("Replication configuration was not provided. Replication will be disabled");
+    }
   }
 }
