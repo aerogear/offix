@@ -65,7 +65,10 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
 
     public commit() {
         return new Promise<void>((resolve, reject) => {
-            if (!this.transaction) { resolve(); return; };
+            if (!this.transaction) {
+                reject(new Error("Transaction is not open"));
+                return;
+            }
 
             this.transaction.onerror = (ev) => { reject(this.transaction?.error); };
             this.transaction.oncomplete = () => { resolve(); };
@@ -74,7 +77,10 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
 
     public rollback() {
         return new Promise<void>((resolve, reject) => {
-            if (!this.transaction) { resolve(); return; };
+            if (!this.transaction) {
+                reject(new Error("Transaction is not open"));
+                return;
+            }
 
             this.transaction.onabort = () => { resolve(); };
             this.transaction.abort();
