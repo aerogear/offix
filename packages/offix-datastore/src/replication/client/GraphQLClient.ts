@@ -1,5 +1,6 @@
 import { createClient, defaultExchanges, subscriptionExchange, Client as URQLClient } from "urql";
 import { SubscriptionClient, ClientOptions } from "subscriptions-transport-ws";
+import invariant from "tiny-invariant";
 import { NetworkStatus } from "../../utils/NetworkStatus";
 
 export interface GraphQLClientConfig {
@@ -40,9 +41,7 @@ export function createGraphQLClient(clientConfig: GraphQLClientConfig): {
 } {
   const { wsUrl, wsConfig, networkStatus, ...config } = clientConfig;
   if (!wsUrl) {
-    if (!networkStatus) {
-      throw new Error("No network status config provided");
-    }
+    invariant(networkStatus, "No network status config provided");
     return {
       gqlClient: createClient(config),
       networkStatus

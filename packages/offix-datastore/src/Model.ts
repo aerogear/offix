@@ -2,6 +2,7 @@ import { CRUDEvents, LocalStorage } from "./storage";
 import { createPredicate, Predicate } from "./predicates";
 import { IReplicator } from "./replication";
 import { StoreChangeEvent } from "./storage";
+import invariant from "tiny-invariant";
 
 export interface FieldOptions {
   /** GraphQL type */
@@ -145,9 +146,7 @@ export class Model<T = unknown> {
   }
 
   public subscribeForServerEvents(eventType: CRUDEvents, filter: any = {}) {
-    if (!this.replicator) {
-      throw new Error("Replicator has not yet been set");
-    }
+    invariant(this.replicator, "Replicator has not yet been set");
     return this.replicator.subscribe(this.getStoreName(), eventType);
   }
 

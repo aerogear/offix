@@ -7,6 +7,7 @@ import { DocumentNode } from "graphql";
 import { Client } from "urql";
 import Observable from "zen-observable";
 import { pipe, subscribe } from "wonka";
+import invariant from "tiny-invariant";
 import { createLogger } from "../../utils/logger";
 
 const logger = createLogger("replicator");
@@ -39,11 +40,7 @@ export class GraphQLCRUDReplicator implements IReplicator {
     const { storeName, input, eventType } = operation;
     const mutations = this.queries.get(storeName)?.mutations;
     logger(`${eventType} replication initialised`);
-
-    if (!mutations) {
-      logger(`GraphQL Mutations not found for ${storeName}`);
-      throw new Error(`GraphQL Mutations not found for ${storeName}`);
-    }
+    invariant(mutations, `GraphQL Mutations not found for ${storeName}`);
 
     switch (eventType) {
       case CRUDEvents.ADD:
@@ -63,9 +60,7 @@ export class GraphQLCRUDReplicator implements IReplicator {
 
   public async pullDelta<T>(storeName: string, lastSync: string, predicate?: PredicateFunction) {
     const syncQuery = this.queries.get(storeName)?.queries.sync;
-    if (!syncQuery) {
-      throw new Error(`GraphQL Sync Queries not found for ${storeName}`);
-    }
+    invariant(syncQuery, `GraphQL Sync Queries not found for ${storeName}`);
 
     const variables: any = { lastSync };
     if (predicate) {
@@ -76,9 +71,7 @@ export class GraphQLCRUDReplicator implements IReplicator {
 
   public subscribe<T>(storeName: string, eventType: CRUDEvents, predicate?: PredicateFunction) {
     const subscriptions = this.queries.get(storeName)?.subscriptions;
-    if (!subscriptions) {
-      throw new Error(`GraphQL Sync Queries not found for ${storeName}`);
-    }
+    invariant (subscriptions, `GraphQL Sync Queries not found for ${storeName}`);
 
     const variables: any = {};
     if (predicate) {
