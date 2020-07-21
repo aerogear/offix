@@ -11,7 +11,7 @@
   "dependencies": {
     "@docusaurus/core": "2.0.0-alpha.58",
     "@docusaurus/preset-classic": "2.0.0-alpha.58",
-    "gsap": "3.4.1",
+    "gsap": "3.4.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "scrollmagic": "2.0.7",
