@@ -1,10 +1,12 @@
+import { v1 as uuidv1 } from "uuid";
 import { PushStream, ObservablePushStream } from "../utils/PushStream";
 import { PredicateFunction } from "../predicates";
 import { CRUDEvents } from "./api/CRUDEvents";
 import { StorageAdapter } from "./api/StorageAdapter";
 import { StoreChangeEvent, StoreEventSource } from "./api/StoreChangeEvent";
+import { createLogger } from "../utils/logger";
 
-import { v1 as uuidv1 } from "uuid";
+const logger = createLogger("storage");
 
 export function generateId() {
   return uuidv1();
@@ -29,6 +31,7 @@ export class LocalStorage {
    * In transaction, no events are fired unitll the transaction is committed.
    */
   public async createTransaction() {
+    logger("creating transaction");
     const adapterTransaction = await this.adapter.createTransaction();
     return new LocalStorage(adapterTransaction, this.storeChangeEventStream);
   }
