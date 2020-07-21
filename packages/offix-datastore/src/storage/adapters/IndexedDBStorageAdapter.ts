@@ -29,7 +29,7 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     }
 
     public createStores(dbName: string, schemaVersion: number) {
-        logger("Creating stores");
+        logger("Creating stores", dbName, schemaVersion);
         const openreq = indexedDB.open(dbName, schemaVersion);
         openreq.onerror = () => this.rejectIDB(openreq.error);
         openreq.onsuccess = () => {
