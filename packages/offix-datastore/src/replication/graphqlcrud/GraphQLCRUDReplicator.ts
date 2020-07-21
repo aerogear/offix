@@ -7,6 +7,9 @@ import { DocumentNode } from "graphql";
 import { Client } from "urql";
 import Observable from "zen-observable";
 import { pipe, subscribe } from "wonka";
+import { createLogger } from "../../utils/logger";
+
+const logger = createLogger("replicator");
 
 export function convertPredicateToFilter(predicate: PredicateFunction): any {
   if (predicate instanceof ModelFieldPredicate) {
@@ -35,8 +38,10 @@ export class GraphQLCRUDReplicator implements IReplicator {
   public push<T>(operation: IOperation) {
     const { storeName, input, eventType } = operation;
     const mutations = this.queries.get(storeName)?.mutations;
+    logger(`${eventType} replication initialised`);
 
     if (!mutations) {
+      logger(`GraphQL Mutations not found for ${storeName}`);
       throw new Error(`GraphQL Mutations not found for ${storeName}`);
     }
 
@@ -51,6 +56,7 @@ export class GraphQLCRUDReplicator implements IReplicator {
         return this.mutate<T>(mutations.delete, { input });
 
       default:
+        logger("Invalid store event received");
         throw new Error("Invalid store event received");
     }
   }
