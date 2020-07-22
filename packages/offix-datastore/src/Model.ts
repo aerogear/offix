@@ -207,11 +207,11 @@ export class Model<T = unknown> {
 
   /**
    * Add an entry to the metadata store if there is none
-   * i.e this is the first use of the model
+   * i.e if this is the first use of the model
    */
   private async saveInitialMetadata() {
     const result = await this.readMetadata();
     if (result) { return; }
-    this.storage.adapter.save(this.metadataName, { name, lastSync: "" });
+    this.storage.adapter.save(this.metadataName, { name: this.getName(), lastSync: "" });
   }
 }
