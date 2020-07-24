@@ -101,3 +101,7 @@ function extractEncryptedFields<T = any>(schema: DSJsonSchema<T>): string[] {
   }
   return encrypted;
 }
+
+export function createModelSchema<T = any>(schema: DSJsonSchema<T>): ModelSchema<T> {
+  return new ModelSchema<T>(schema);
+}
