@@ -1,4 +1,4 @@
-import { IOffixDataSyncPluginConfig } from './OffixDataSyncConfig';
+import { IOffixDataSyncPluginConfig } from "./OffixDataSyncConfig";
 
 
 export const validateOffixDataSyncPluginConfig = (config?: IOffixDataSyncPluginConfig) => {
@@ -8,4 +8,4 @@ export const validateOffixDataSyncPluginConfig = (config?: IOffixDataSyncPluginC
     if (!config?.outputDir) {
         throw new Error("Datasync-client plugin requires outputDir parameter");
     }
-}
+};

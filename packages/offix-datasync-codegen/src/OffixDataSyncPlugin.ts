@@ -65,7 +65,7 @@ const datastore = new DataStore({
     }
 });
 
-${modelInitLines.join('\n')}
+${modelInitLines.join("\n")}
 
 datastore.init();
 `;
