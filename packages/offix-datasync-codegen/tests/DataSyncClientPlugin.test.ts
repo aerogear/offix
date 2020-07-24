@@ -15,6 +15,6 @@ test('Test json schema', () => {
       }
     
       const metadata = new GraphbackCoreMetadata({ crudMethods }, buildSchema(schemaText))
-      const plugin = new Plugin({ jsonOutputFile: './tmp/generated.json' });
+      const plugin = new Plugin({ outputDir: './tmp/output/' });
       expect(plugin.getDocuments(metadata)).toMatchSnapshot();
 });

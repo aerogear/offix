@@ -3,6 +3,7 @@ import { writeFileSync } from "fs";
 import { IOffixDataSyncPluginConfig } from "./OffixDataSyncConfig";
 import { createJsonSchema } from "./json_schema";
 import { isDataSyncClientModel } from "./utils";
+import { validateOffixDataSyncPluginConfig } from "./OffixDataSyncPluginValidator";
 
 export const OFFIX_DATASYNC_PLUGIN_NAME = "OffixDataSyncPlugin";
 
@@ -19,24 +20,18 @@ export class OffixDataSyncPlugin extends GraphbackPlugin {
 
     constructor(config?: IOffixDataSyncPluginConfig) {
         super();
-
-        if (!config) {
-            throw new Error("Please supply Datasync-client plugin config");
-        }
-        if (!config?.jsonOutputFile) {
-            throw new Error("Datasync-client plugin requires jsonOutputFile parameter");
-        }
-
+        validateOffixDataSyncPluginConfig(config);
         this.pluginConfig = config as Required<IOffixDataSyncPluginConfig>;
     }
 
     public createResources(metadata: GraphbackCoreMetadata): void {
+        const { outputDir } = this.pluginConfig;
         const documents = this.getDocuments(metadata);
         // for now there are only json documents
         const jsonSchema = documents
             .map(doc => doc.json)
             .reduce((prev, cur) => ({ ...prev, ...cur }), {});
-        writeFileSync(this.pluginConfig.jsonOutputFile, JSON.stringify(jsonSchema, null, 2));
+        writeFileSync(`${outputDir}/schema.json`, JSON.stringify(jsonSchema, null, 2));
     }
 
     public getDocuments(metadata: GraphbackCoreMetadata) {

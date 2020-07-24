@@ -3,7 +3,9 @@
  */
 export interface IOffixDataSyncPluginConfig {
     /**
-     * The output file path for json schema
+     * The output dir path.
+     * The json schema will be written to ${outputDir}/schema.json
+     * The datasync config will be written to ${outputDir}/config.ts
      */
-    jsonOutputFile?: string;
+    outputDir?: string;
 }
