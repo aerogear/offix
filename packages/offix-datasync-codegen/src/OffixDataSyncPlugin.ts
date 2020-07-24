@@ -31,7 +31,11 @@ export class OffixDataSyncPlugin extends GraphbackPlugin {
         const jsonSchema = documents
             .map(doc => doc.json)
             .reduce((prev, cur) => ({ ...prev, ...cur }), {});
+
+        const dataSyncConfig = this.getDataSyncConfig(metadata);
+
         writeFileSync(`${outputDir}/schema.json`, JSON.stringify(jsonSchema, null, 2));
+        writeFileSync(`${outputDir}/config.ts`, dataSyncConfig);
     }
 
     public getDocuments(metadata: GraphbackCoreMetadata) {
@@ -39,6 +43,33 @@ export class OffixDataSyncPlugin extends GraphbackPlugin {
         return metadata.getModelDefinitions()
             .filter(model => isDataSyncClientModel(model))
             .map(model => ({ json: createJsonSchema(model) }));
+    }
+
+    public getDataSyncConfig(metadata: GraphbackCoreMetadata) {
+        const modelInitLines: string[] = [];
+
+        metadata.getModelDefinitions()
+            .filter(model => isDataSyncClientModel(model))
+            .forEach((model) => {
+                modelInitLines.push(`datastore.createModel(schema.${model.graphqlType.name});`);
+            });
+
+        const configCode = `import { DataStore } from 'offix-datastore';
+import schema from './schema.json';
+
+const datastore = new DataStore({
+    dbName: "offix-datasync",
+    clientConfig: {
+      url: "http://localhost:4000/graphql",
+      wsUrl: "ws://localhost:4000/graphql",
+    }
+});
+
+${modelInitLines.join('\n')}
+
+datastore.init();
+`;
+        return configCode;
     }
 
     public getPluginName(): string {
