@@ -1,7 +1,7 @@
 /**
- * Config for DataSyncClient
+ * Config for OffixDataSync plugin
  */
-export interface IDataSyncClientPluginConfig {
+export interface IOffixDataSyncPluginConfig {
     /**
      * The output file path for json schema
      */

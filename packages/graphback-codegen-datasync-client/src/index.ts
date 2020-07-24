@@ -1,1 +1,1 @@
-export { DataSyncClientPlugin as Plugin } from "./DataSyncClientPlugin";
+export { OffixDataSyncPlugin as Plugin } from "./OffixDataSyncPlugin";

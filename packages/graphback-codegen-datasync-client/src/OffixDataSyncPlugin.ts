@@ -1,9 +1,9 @@
 import { GraphbackPlugin, GraphbackCoreMetadata } from "@graphback/core";
-import { IDataSyncClientPluginConfig } from "./DataSyncClientConfig";
+import { IOffixDataSyncPluginConfig } from "./OffixDataSyncConfig";
 import { createJsonSchema } from "./json_schema";
 import { isDataSyncClientModel } from "./utils";
 
-export const DATASYNC_CLIENT_PLUGIN_NAME = "DataSyncClientPlugin";
+export const OFFIX_DATASYNC_PLUGIN_NAME = "OffixDataSyncPlugin";
 
 /**
  * This a graphback plugin which generates:
@@ -13,10 +13,10 @@ export const DATASYNC_CLIENT_PLUGIN_NAME = "DataSyncClientPlugin";
  * which are required by the offix-datasync for
  * every model annotated with @datasync-client in schema.
  */
-export class DataSyncClientPlugin extends GraphbackPlugin {
-    private pluginConfig: Required<IDataSyncClientPluginConfig>;
+export class OffixDataSyncPlugin extends GraphbackPlugin {
+    private pluginConfig: Required<IOffixDataSyncPluginConfig>;
 
-    constructor(config?: IDataSyncClientPluginConfig) {
+    constructor(config?: IOffixDataSyncPluginConfig) {
         super();
 
         if (!config) {
@@ -26,16 +26,21 @@ export class DataSyncClientPlugin extends GraphbackPlugin {
             throw new Error("Datasync-client plugin requires jsonOutputFile parameter");
         }
 
-        this.pluginConfig = config as Required<IDataSyncClientPluginConfig>;
+        this.pluginConfig = config as Required<IOffixDataSyncPluginConfig>;
     }
 
     public createResources(metadata: GraphbackCoreMetadata): void {
-        metadata.getModelDefinitions()
+        const documents = this.getDocuments(metadata);
+        // write to file
+    }
+
+    public getDocuments(metadata: GraphbackCoreMetadata) {
+        return metadata.getModelDefinitions()
             .filter(model => isDataSyncClientModel(model))
             .map(model => ({ json: createJsonSchema(model) }));
     }
 
     public getPluginName(): string {
-        return DATASYNC_CLIENT_PLUGIN_NAME;
+        return OFFIX_DATASYNC_PLUGIN_NAME;
     }
 }
