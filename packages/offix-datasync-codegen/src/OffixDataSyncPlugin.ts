@@ -1,4 +1,5 @@
 import { GraphbackPlugin, GraphbackCoreMetadata } from "@graphback/core";
+import { writeFileSync } from "fs";
 import { IOffixDataSyncPluginConfig } from "./OffixDataSyncConfig";
 import { createJsonSchema } from "./json_schema";
 import { isDataSyncClientModel } from "./utils";
@@ -31,10 +32,15 @@ export class OffixDataSyncPlugin extends GraphbackPlugin {
 
     public createResources(metadata: GraphbackCoreMetadata): void {
         const documents = this.getDocuments(metadata);
-        // write to file
+        // for now there are only json documents
+        const jsonSchema = documents
+            .map(doc => doc.json)
+            .reduce((prev, cur) => ({ ...prev, ...cur }), {});
+        writeFileSync(this.pluginConfig.jsonOutputFile, JSON.stringify(jsonSchema, null, 2));
     }
 
     public getDocuments(metadata: GraphbackCoreMetadata) {
+        // TODO add types
         return metadata.getModelDefinitions()
             .filter(model => isDataSyncClientModel(model))
             .map(model => ({ json: createJsonSchema(model) }));
