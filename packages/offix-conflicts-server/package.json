@@ -19,7 +19,7 @@
     "devDependencies": {
         "@size-limit/preset-small-lib": "4.5.5",
         "@types/jest": "26.0.7",
-        "@types/node": "12.12.52",
+        "@types/node": "12.12.53",
         "graphql": "15.3.0",
         "jest": "26.1.0",
         "size-limit": "4.5.5",
