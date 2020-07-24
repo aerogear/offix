@@ -15,7 +15,7 @@ test('Test json schema', () => {
   }
 
   const metadata = new GraphbackCoreMetadata({ crudMethods }, buildSchema(schemaText))
-  const plugin = new Plugin({ outputDir: './tmp/output/' });
+  const plugin = new Plugin({ modelOutputDir: './tmp/output/' });
   expect(plugin.getDocuments(metadata)).toMatchSnapshot();
 });
 
@@ -29,6 +29,6 @@ test('Test datasync config', () => {
   }
 
   const metadata = new GraphbackCoreMetadata({ crudMethods }, buildSchema(schemaText))
-  const plugin = new Plugin({ outputDir: './tmp/output/' });
+  const plugin = new Plugin({ modelOutputDir: './tmp/output/' });
   expect(plugin.getDataSyncConfig(metadata)).toMatchSnapshot();
 });

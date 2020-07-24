@@ -25,7 +25,7 @@ export class OffixDataSyncPlugin extends GraphbackPlugin {
     }
 
     public createResources(metadata: GraphbackCoreMetadata): void {
-        const { outputDir } = this.pluginConfig;
+        const { modelOutputDir } = this.pluginConfig;
         const documents = this.getDocuments(metadata);
         // for now there are only json documents
         const jsonSchema = documents
@@ -34,8 +34,8 @@ export class OffixDataSyncPlugin extends GraphbackPlugin {
 
         const dataSyncConfig = this.getDataSyncConfig(metadata);
 
-        writeFileSync(`${outputDir}/schema.json`, JSON.stringify(jsonSchema, null, 2));
-        writeFileSync(`${outputDir}/config.ts`, dataSyncConfig);
+        writeFileSync(`${modelOutputDir}/schema.json`, JSON.stringify(jsonSchema, null, 2));
+        writeFileSync(`${modelOutputDir}/config.ts`, dataSyncConfig);
     }
 
     public getDocuments(metadata: GraphbackCoreMetadata) {
