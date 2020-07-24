@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test json schema 1`] = `
+Array [
+  Object {
+    "json": Object {
+      "name": "Note",
+      "properties": Object {
+        "comments": Object {
+          "test": "test",
+        },
+        "description": Object {
+          "test": "test",
+        },
+        "id": Object {
+          "test": "test",
+        },
+        "title": Object {
+          "test": "test",
+        },
+      },
+    },
+  },
+  Object {
+    "json": Object {
+      "name": "Comment",
+      "properties": Object {
+        "description": Object {
+          "test": "test",
+        },
+        "id": Object {
+          "test": "test",
+        },
+        "noteComment": Object {
+          "test": "test",
+        },
+        "title": Object {
+          "test": "test",
+        },
+      },
+    },
+  },
+]
+`;
