@@ -23,7 +23,8 @@ export declare class DSJsonSchema<T> {
 };
 
 export class ModelSchema<T = any>{
-  private schema: DSJsonSchema<T>;
+  private name: string;
+  private namespace: string;
   private primaryKey: string;
   private fields: string[];
   private encrypted: string[];
@@ -32,12 +33,29 @@ export class ModelSchema<T = any>{
 
   constructor(schema: DSJsonSchema<T>) {
     invariant(schema, "Schema cannot be undefined");
-    this.schema = schema;
     this.version = schema.version || 0;
+    this.name = schema.name;
+    this.namespace = schema.namespace || "user";
     this.fields = extractFields(schema);
     this.primaryKey = extractPrimary(schema);
     this.indices = extractIndices(schema);
     this.encrypted = extractEncryptedFields(schema);
+  }
+
+  public fill(): void {
+    // TODO fill object with default values
+  }
+
+  public validate() {
+    // TODO validate the schema
+  }
+
+  public getName() {
+    return this.name;
+  }
+
+  public getNamespace() {
+    return this.namespace;
   }
 
   public getIndices(): string[] {
@@ -103,5 +121,9 @@ function extractEncryptedFields<T = any>(schema: DSJsonSchema<T>): string[] {
 }
 
 export function createModelSchema<T = any>(schema: DSJsonSchema<T>): ModelSchema<T> {
-  return new ModelSchema<T>(schema);
+  const modelSchema =  new ModelSchema<T>(schema);
+  // TODO validation could potentially be run
+  // in the constructor
+  modelSchema.validate();
+  return modelSchema;
 }
