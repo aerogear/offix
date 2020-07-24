@@ -7,16 +7,20 @@ Array [
       "name": "Note",
       "properties": Object {
         "comments": Object {
-          "test": "test",
+          "isRequired": true,
+          "type": "string[]",
         },
         "description": Object {
-          "test": "test",
+          "isRequired": true,
+          "type": "string",
         },
         "id": Object {
-          "test": "test",
+          "isRequired": true,
+          "type": "string",
         },
         "title": Object {
-          "test": "test",
+          "isRequired": true,
+          "type": "string",
         },
       },
     },
@@ -26,16 +30,20 @@ Array [
       "name": "Comment",
       "properties": Object {
         "description": Object {
-          "test": "test",
+          "isRequired": true,
+          "type": "string",
         },
         "id": Object {
-          "test": "test",
+          "isRequired": true,
+          "type": "string",
         },
         "noteComment": Object {
-          "test": "test",
+          "isRequired": true,
+          "type": "string",
         },
         "title": Object {
-          "test": "test",
+          "isRequired": true,
+          "type": "string",
         },
       },
     },
