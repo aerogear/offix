@@ -8,14 +8,15 @@ import { convertToTsType } from "../utils";
 
 
 const getFieldParameters = (type: GraphQLOutputType): any => {
-    let options: any = {};
+    const options: any = {};
 
     // TODO handle relationships
 
     if (isNonNullType(type)) {
         type = getNullableType(type);
-        options = { isRequired: true };
+        options.isRequired = true;
     }
+
     return { type: convertToTsType(type), ...options };
 };
 
@@ -32,6 +33,8 @@ const getModelProperties = (model: ModelDefinition) => {
 export const createJsonSchema = (model: ModelDefinition) => {
     return {
         name: model.graphqlType.name,
+        version: 1,
+        type: "object",
         properties: getModelProperties(model)
     };
 };

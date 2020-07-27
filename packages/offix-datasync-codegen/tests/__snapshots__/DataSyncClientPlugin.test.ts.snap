@@ -42,6 +42,8 @@ Array [
           "type": "string",
         },
       },
+      "type": "object",
+      "version": 1,
     },
   },
   Object {
@@ -65,6 +67,8 @@ Array [
           "type": "string",
         },
       },
+      "type": "object",
+      "version": 1,
     },
   },
 ]
