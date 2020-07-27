@@ -4,5 +4,7 @@ extensions:
     # path to data mode file(s)
     model: './src/model/runtime.graphql'
     plugins:
+      graphback-schema:
+        outputPath: './src/schema/schema.graphql'
       offix-datasync-client-plugin:
         modelOutputDir: './src/datasync'
