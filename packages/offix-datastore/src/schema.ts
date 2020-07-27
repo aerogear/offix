@@ -9,8 +9,7 @@ const schema: DataSyncJsonSchema<any> =  {
     "id": {
       "type": "string",
       "index": true,
-      "primary": true,
-      "key": "ID"
+      "primary": true
     },
     "title": {
       "type": "string",
