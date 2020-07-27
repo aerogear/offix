@@ -7,7 +7,7 @@ interface Test {
 
 const testFields: Fields<Test> = {
   numberOfTasks: {
-    type: "Number",
+    type: "number",
     key: "numberOfTasks"
   }
 };

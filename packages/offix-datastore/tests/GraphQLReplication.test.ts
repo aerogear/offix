@@ -13,20 +13,21 @@ beforeAll(() => {
   const dataStore = new DataStore({ dbName: "test", clientConfig: { url: "" } });
   model = dataStore.createModel<any>({
     name: "Note",
-    fields: {
+    type: "object",
+    properties: {
       id: {
-        type: "ID",
-        key: "id"
+        type: "string",
+        primary: true
       },
       title: {
-        type: "String",
+        type: "string",
         key: "title"
       }
     }
   });
 
   queries = buildGraphQLCRUDQueries([model]);
-  modelQueries = (queries.get(model.getStoreName()) as GraphQLDocuments);
+  modelQueries = (queries.get(model.schema.getStoreName()) as GraphQLDocuments);
 });
 
 test("Test Query generation", () => {
@@ -48,13 +49,13 @@ test("Push mutation to GraphQL Server", (done) => {
   graphQLReplicaionAPI.push({
     eventType: CRUDEvents.ADD,
     input,
-    storeName: model.getStoreName()
+    storeName: model.schema.getStoreName()
   });
 });
 
 describe("Predicate to GraphQL query conversion", () => {
   test("Convert ModelField Predicates", () => {
-    const mp = createPredicate(model.getFields());
+    const mp = createPredicate(model.schema.getFields());
     const predicateFunction = mp.title("eq", "test");
     const result = convertPredicateToFilter(predicateFunction);
     const expectedResult = {
@@ -64,7 +65,7 @@ describe("Predicate to GraphQL query conversion", () => {
   });
 
   test("Convert Expression Predicates", () => {
-    const mp = createPredicate(model.getFields());
+    const mp = createPredicate(model.schema.getFields());
     const predicateFunction = mp.or(
       mp.title("eq", "test"), mp.title("endsWith", "st"));
     const result = convertPredicateToFilter(predicateFunction);
@@ -78,7 +79,7 @@ describe("Predicate to GraphQL query conversion", () => {
   });
 
   test("Convert Expression of Expression Predicates", () => {
-    const mp = createPredicate(model.getFields());
+    const mp = createPredicate(model.schema.getFields());
     const predicateFunction = mp.or(
       mp.and(mp.title("eq", "test"), mp.title("endsWith", "st")),
       mp.and(mp.title("eq", "test"), mp.title("startsWith", "ts"))

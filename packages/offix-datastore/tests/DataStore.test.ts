@@ -25,7 +25,7 @@ function getIndexedDB() {
       const db = request.result;
       db.onversionchange = () => {
         db.close();
-      }
+      };
       resolve(db);
     };
   });
@@ -55,11 +55,13 @@ beforeEach(() => {
   });
   NoteModel = dataStore.createModel<Note>({
     name: "Note",
-    fields: schema.Note
+    type: "object",
+    properties: schema.Note
   });
   dataStore.createModel<Comment>({
     name: "Comment",
-    fields: schema.Comment
+    type: "object",
+    properties: schema.Comment
   });
   dataStore.init();
 });
