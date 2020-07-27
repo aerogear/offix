@@ -3,23 +3,7 @@ import { createPredicate, Predicate } from "./predicates";
 import { IReplicator } from "./replication";
 import { StoreChangeEvent } from "./storage";
 import invariant from "tiny-invariant";
-import { ModelSchema, DataSyncProperties } from "./ModelSchema";
-
-export interface FieldOptions {
-  /** GraphQL type */
-  type: string;
-  /** GraphQL key */
-  key: string;
-  // TODO
-  format?: {};
-}
-
-/**
- * Defines the properties expected in the Fields object for a model
- */
-export type Fields<T> = {
-  [P in keyof T]: DataSyncProperties
-};
+import { ModelSchema } from "./ModelSchema";
 
 /**
  * Provides CRUD capabilities for a model
