@@ -25,7 +25,7 @@
     "@types/jest": "25.2.3",
     "@types/json-schema": "7.0.5",
     "@types/uuid": "8.0.0",
-    "apollo-server": "2.16.0",
+    "apollo-server": "2.16.1",
     "debug": "4.1.1",
     "fake-indexeddb": "3.1.2",
     "isomorphic-unfetch": "3.0.0",
