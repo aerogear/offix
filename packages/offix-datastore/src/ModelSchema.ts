@@ -1,18 +1,35 @@
 import invariant from "tiny-invariant";
 import { JSONSchema7 } from "json-schema";
 
+export interface FieldOptions {
+  /** GraphQL type */
+  type: string;
+  /** GraphQL key */
+  key: string;
+  // TODO
+  format?: {};
+}
+
+/**
+ * Defines the properties expected in the Fields object for a model
+ */
+export type Fields<T> = {
+  [P in keyof T]: DataSyncProperties
+};
+
 export interface DataSyncProperties extends JSONSchema7 {
   index?: boolean;
   primary?: boolean;
   default?: any;
   encrypted?: boolean;
+  key?: string;
   // TODO investigate scalars
 }
 
 export declare class DataSyncJsonSchema<T> {
   name: string;
   namespace?: string;
-  version: number;
+  version?: number;
   indexes?: string[];
   encrypted?: string[];
   primaryKey?: string;
@@ -26,7 +43,7 @@ export class ModelSchema<T = any>{
   private name: string;
   private namespace: string;
   private primaryKey: string;
-  private fields: string[];
+  private fields: Fields<T>;
   private encrypted: string[];
   private version: number;
   private indexes: string[] = [];
@@ -50,12 +67,16 @@ export class ModelSchema<T = any>{
     // TODO validate the schema
   }
 
-  public getName() {
+  public getName(): string {
     return this.name;
   }
 
-  public getNamespace() {
+  public getNamespace(): string {
     return this.namespace;
+  }
+
+  public getStoreName(): string {
+    return `${this.namespace}_${this.name}`;
   }
 
   public getIndexes(): string[] {
@@ -66,7 +87,7 @@ export class ModelSchema<T = any>{
     return this.primaryKey;
   }
 
-  public getFields(): string[] {
+  public getFields(): Fields<T> {
     return this.fields;
   }
 
@@ -80,9 +101,9 @@ export class ModelSchema<T = any>{
 
 };
 
-function extractFields<T = any>(schema: DataSyncJsonSchema<T>): string[] {
+function extractFields<T = any>(schema: DataSyncJsonSchema<T>): Fields<T> {
   invariant(schema.properties, "Properties cannot be undefined");
-  return Object.keys(schema.properties);
+  return schema.properties as unknown as Fields<T>;
 }
 
 function extractIndexes<T = any>(schema: DataSyncJsonSchema<T>) {
