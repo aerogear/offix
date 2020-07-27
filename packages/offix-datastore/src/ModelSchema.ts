@@ -1,21 +1,10 @@
 import invariant from "tiny-invariant";
 import { JSONSchema7 } from "json-schema";
 
-export interface FieldOptions {
-  /** GraphQL type */
-  type: string;
-  /** GraphQL key */
-  key: string;
-  // TODO
-  format?: {};
-}
-
 /**
  * Defines the properties expected in the Fields object for a model
  */
-export type Fields<T> = {
-  [P in keyof T]: DataSyncProperties
-};
+export type Fields<T> = Record<keyof T, DataSyncProperties>;
 
 export interface DataSyncProperties extends JSONSchema7 {
   index?: boolean;
@@ -34,9 +23,7 @@ export declare class DataSyncJsonSchema<T> {
   encrypted?: string[];
   primaryKey?: string;
   type: "object";
-  properties?: {
-    [key: string]: DataSyncProperties;
-  };
+  properties?: Fields<T>;
 };
 
 export class ModelSchema<T = any>{
@@ -54,17 +41,13 @@ export class ModelSchema<T = any>{
     this.name = schema.name;
     this.namespace = schema.namespace || "user";
     this.fields = extractFields(schema);
-    this.primaryKey = extractPrimary(schema);
-    this.indexes = extractIndexes(schema);
-    this.encrypted = extractEncryptedFields(schema);
+    this.primaryKey = extractPrimary(this.fields, schema.primaryKey);
+    this.indexes = extractIndexes(this.fields, schema.indexes);
+    this.encrypted = extractEncryptedFields(this.fields, schema.encrypted);
   }
 
   public fill(): void {
     // TODO fill object with default values
-  }
-
-  public validate() {
-    // TODO validate the schema
   }
 
   public getName(): string {
@@ -102,42 +85,53 @@ export class ModelSchema<T = any>{
 };
 
 function extractFields<T = any>(schema: DataSyncJsonSchema<T>): Fields<T> {
-  invariant(schema.properties, "Properties cannot be undefined");
-  return schema.properties as unknown as Fields<T>;
+  invariant(schema.properties, "Datasync: Properties cannot be undefined");
+  return schema.properties;
 }
 
-function extractIndexes<T = any>(schema: DataSyncJsonSchema<T>) {
-  const { properties, indexes } = schema;
+function extractIndexes<T = any>(fields: Fields<T>, indexes?: string[]): string[] {
   if (!indexes) {
-    invariant(properties, "Schema is undefined");
-    return Object.keys(properties)
-      .filter((key) => {
-        if (properties[key].index) {
+    return Object.keys(fields)
+      .filter((key: string) => {
+        const field = fields[key as keyof T];
+        if (field.index) {
           return key;
         };
       });
   }
+  indexes.forEach((index) => {
+    invariant(index in fields,
+      `Datasync: ${index} in the indexes array is missing 
+      from the properties field in the model schema`
+    );
+  });
   return indexes;
 }
 
-function extractPrimary<T = any>(schema: DataSyncJsonSchema<T>): string {
-  const { properties, primaryKey } = schema;
+function extractPrimary<T =any>(fields: Fields<T>, primaryKey?: string): string {
   if (!primaryKey) {
-    invariant(properties, "Schema is undefined");
-    const obj = Object.keys(properties)
-      .find((key) => properties[key].primary);
+    const obj = Object.keys(fields)
+      .find((key: string) => fields[key as keyof T].primary);
     return obj || "_id";
   }
+  invariant(primaryKey in fields,
+    `Datasync: ${primaryKey} provided does not exist in 
+    the properties of the modelschema`
+  );
   return primaryKey;
 }
 
-function extractEncryptedFields<T = any>(schema: DataSyncJsonSchema<T>): string[] {
-  const { properties, encrypted } = schema;
+function extractEncryptedFields<T = any>(fields: Fields<T>, encrypted?: string[]): string[] {
   if (!encrypted) {
-    invariant(properties, "Schema is undefined");
-    return Object.keys(properties)
-      .filter((key) => properties[key].encrypted);
+    return Object.keys(fields)
+      .filter((key) => fields[key as keyof T].encrypted);
   }
+  encrypted.forEach((enc) => {
+    invariant(enc in fields,
+      `Datasync: ${enc} in the encrypted fields array is missing 
+      from the properties field in the model schema`
+    );
+  });
   return encrypted;
 }
 
@@ -145,6 +139,6 @@ export function createModelSchema<T = any>(schema: DataSyncJsonSchema<T>): Model
   const modelSchema =  new ModelSchema<T>(schema);
   // TODO validation could potentially be run
   // in the constructor
-  modelSchema.validate();
+  // modelSchema.validate();
   return modelSchema;
 }
