@@ -23,7 +23,7 @@
   "devDependencies": {
     "@size-limit/preset-small-lib": "4.5.5",
     "@types/jest": "25.2.3",
-    "@types/json-schema": "^7.0.5",
+    "@types/json-schema": "7.0.5",
     "@types/uuid": "8.0.0",
     "apollo-server": "2.16.0",
     "debug": "4.1.1",
