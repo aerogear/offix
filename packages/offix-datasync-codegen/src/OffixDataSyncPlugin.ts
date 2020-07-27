@@ -1,5 +1,5 @@
 import { GraphbackPlugin, GraphbackCoreMetadata } from "@graphback/core";
-import { writeFileSync } from "fs";
+import { writeFileSync, mkdirSync } from "fs";
 import { IOffixDataSyncPluginConfig } from "./OffixDataSyncConfig";
 import { createJsonSchema } from "./json_schema";
 import { isDataSyncClientModel } from "./utils";
@@ -34,6 +34,11 @@ export class OffixDataSyncPlugin extends GraphbackPlugin {
 
         const dataSyncConfig = this.getDataSyncConfig(metadata);
 
+        try {
+            mkdirSync(modelOutputDir);
+        } catch (error) {
+            // nothing to do here, the directory already exists
+        }
         writeFileSync(`${modelOutputDir}/schema.json`, JSON.stringify(jsonSchema, null, 2));
         writeFileSync(`${modelOutputDir}/config.ts`, dataSyncConfig);
     }
