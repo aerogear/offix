@@ -1,24 +1,24 @@
 import invariant from "tiny-invariant";
 import { JSONSchema7 } from "json-schema";
 
-export interface DSProperties extends JSONSchema7 {
+export interface DataSyncProperties extends JSONSchema7 {
   index?: boolean;
   primary?: boolean;
   default?: any;
   encrypted?: boolean;
-  key?: string;
+  // TODO investigate scalars
 }
 
-export declare class DSJsonSchema<T> {
+export declare class DataSyncJsonSchema<T> {
   name: string;
   namespace?: string;
   version: number;
-  indices?: string[];
+  indexes?: string[];
   encrypted?: string[];
   primaryKey?: string;
   type: "object";
   properties?: {
-    [key: string]: DSProperties;
+    [key: string]: DataSyncProperties;
   };
 };
 
@@ -29,16 +29,16 @@ export class ModelSchema<T = any>{
   private fields: string[];
   private encrypted: string[];
   private version: number;
-  private indices: string[] = [];
+  private indexes: string[] = [];
 
-  constructor(schema: DSJsonSchema<T>) {
+  constructor(schema: DataSyncJsonSchema<T>) {
     invariant(schema, "Schema cannot be undefined");
     this.version = schema.version || 0;
     this.name = schema.name;
     this.namespace = schema.namespace || "user";
     this.fields = extractFields(schema);
     this.primaryKey = extractPrimary(schema);
-    this.indices = extractIndices(schema);
+    this.indexes = extractIndexes(schema);
     this.encrypted = extractEncryptedFields(schema);
   }
 
@@ -58,8 +58,8 @@ export class ModelSchema<T = any>{
     return this.namespace;
   }
 
-  public getIndices(): string[] {
-    return this.indices;
+  public getIndexes(): string[] {
+    return this.indexes;
   }
 
   public getPrimaryKey(): string {
@@ -80,14 +80,14 @@ export class ModelSchema<T = any>{
 
 };
 
-function extractFields<T = any>(schema: DSJsonSchema<T>): string[] {
+function extractFields<T = any>(schema: DataSyncJsonSchema<T>): string[] {
   invariant(schema.properties, "Properties cannot be undefined");
   return Object.keys(schema.properties);
 }
 
-function extractIndices<T = any>(schema: DSJsonSchema<T>) {
-  const { properties, indices } = schema;
-  if (!indices) {
+function extractIndexes<T = any>(schema: DataSyncJsonSchema<T>) {
+  const { properties, indexes } = schema;
+  if (!indexes) {
     invariant(properties, "Schema is undefined");
     return Object.keys(properties)
       .filter((key) => {
@@ -96,10 +96,10 @@ function extractIndices<T = any>(schema: DSJsonSchema<T>) {
         };
       });
   }
-  return indices;
+  return indexes;
 }
 
-function extractPrimary<T = any>(schema: DSJsonSchema<T>): string {
+function extractPrimary<T = any>(schema: DataSyncJsonSchema<T>): string {
   const { properties, primaryKey } = schema;
   if (!primaryKey) {
     invariant(properties, "Schema is undefined");
@@ -110,7 +110,7 @@ function extractPrimary<T = any>(schema: DSJsonSchema<T>): string {
   return primaryKey;
 }
 
-function extractEncryptedFields<T = any>(schema: DSJsonSchema<T>): string[] {
+function extractEncryptedFields<T = any>(schema: DataSyncJsonSchema<T>): string[] {
   const { properties, encrypted } = schema;
   if (!encrypted) {
     invariant(properties, "Schema is undefined");
@@ -120,7 +120,7 @@ function extractEncryptedFields<T = any>(schema: DSJsonSchema<T>): string[] {
   return encrypted;
 }
 
-export function createModelSchema<T = any>(schema: DSJsonSchema<T>): ModelSchema<T> {
+export function createModelSchema<T = any>(schema: DataSyncJsonSchema<T>): ModelSchema<T> {
   const modelSchema =  new ModelSchema<T>(schema);
   // TODO validation could potentially be run
   // in the constructor
