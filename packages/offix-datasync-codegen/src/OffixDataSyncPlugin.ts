@@ -30,7 +30,7 @@ export class OffixDataSyncPlugin extends GraphbackPlugin {
         // for now there are only json documents
         const jsonSchema = documents
             .map(doc => doc.json)
-            .reduce((prev, cur) => ({ ...prev, ...cur }), {});
+            .reduce((prev, cur) => ({ ...prev, [cur.name]: cur }), {});
 
         const dataSyncConfig = this.getDataSyncConfig(metadata);
 
