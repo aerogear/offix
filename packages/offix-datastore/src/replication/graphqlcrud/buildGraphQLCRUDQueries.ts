@@ -12,13 +12,13 @@ export const buildGraphQLCRUDQueries = (models: Model[]): Map<string, GraphQLDoc
   const queriesMap: Map<string, GraphQLDocuments> = new Map();
 
   models.forEach((model) => {
-    const fields: any = model.getFields();
+    const fields: any = model.schema.getFields();
     const fieldsBuilder: string[] = Object.keys(fields).map((key) => {
       const graphQLKey = fields[key].key;
       return graphQLKey;
     });
     const graphQLFields = fieldsBuilder.join("\n");
-    const modelName = model.getName();
+    const modelName = model.schema.getName();
 
     const mutations = {
       create: gql`
@@ -94,7 +94,7 @@ export const buildGraphQLCRUDQueries = (models: Model[]): Map<string, GraphQLDoc
                 }
             }`
     };
-    queriesMap.set(model.getStoreName(), { mutations, subscriptions, queries });
+    queriesMap.set(model.schema.getStoreName(), { mutations, subscriptions, queries });
   });
 
   return queriesMap;
