@@ -1,6 +1,6 @@
 import { ExpressionOperators, ModelFieldPredicate, PredicateExpression, PredicateFunction } from "./PredicateFunctions";
 import { OperatorFunctionMap, TypeOperatorMap, AllOperators } from "./Operators";
-import { Fields } from "../Model";
+import { Fields } from "../ModelSchema";
 
 /**
  * Defines the fields that can be used for filtering in a predicate for a given type
