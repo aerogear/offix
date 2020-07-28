@@ -1,7 +1,7 @@
 import { DataStore } from 'offix-datastore';
-import schema from './schema.json';
+import { schema } from './schema';
 
-const datastore = new DataStore({
+export const datastore = new DataStore({
     dbName: "offix-datasync",
     clientConfig: {
       url: "http://localhost:4000/graphql",

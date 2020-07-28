@@ -1,0 +1,29 @@
+{
+  "Todo": {
+    "name": "Todo",
+    "version": 1,
+    "type": "object",
+    "primaryKey": "id",
+    "properties": {
+      "id": {
+        "type": "string",
+        "key": "id",
+        "isRequired": true,
+        "index": true,
+        "primary": true
+      },
+      "title": {
+        "type": "string",
+        "key": "title"
+      },
+      "description": {
+        "type": "string",
+        "key": "description"
+      },
+      "completed": {
+        "type": "boolean",
+        "key": "completed"
+      }
+    }
+  }
+}

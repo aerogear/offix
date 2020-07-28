@@ -51,6 +51,6 @@
   },
   "devDependencies": {
     "graphback-cli": "^0.14.0",
-    "offix-datasync-client-plugin": "~0.1.1"
+    "offix-datasync-client-plugin": "~0.1.2"
   }
 }
