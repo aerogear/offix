@@ -22,6 +22,6 @@
   },
   "dependencies": {
     "@graphback/core": "^0.14.0",
-    "graphql-metadata": "0.7.3-dev1"
+    "graphql-metadata": "0.7.3"
   }
 }
