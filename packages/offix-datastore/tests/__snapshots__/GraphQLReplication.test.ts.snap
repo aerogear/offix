@@ -50,17 +50,6 @@ Object {
                       "kind": "Field",
                       "name": Object {
                         "kind": "Name",
-                        "value": "id",
-                      },
-                      "selectionSet": undefined,
-                    },
-                    Object {
-                      "alias": undefined,
-                      "arguments": Array [],
-                      "directives": Array [],
-                      "kind": "Field",
-                      "name": Object {
-                        "kind": "Name",
                         "value": "title",
                       },
                       "selectionSet": undefined,
@@ -98,7 +87,7 @@ Object {
       ],
       "kind": "Document",
       "loc": Object {
-        "end": 185,
+        "end": 183,
         "start": 0,
       },
     },
@@ -149,17 +138,6 @@ Object {
                       "kind": "Field",
                       "name": Object {
                         "kind": "Name",
-                        "value": "id",
-                      },
-                      "selectionSet": undefined,
-                    },
-                    Object {
-                      "alias": undefined,
-                      "arguments": Array [],
-                      "directives": Array [],
-                      "kind": "Field",
-                      "name": Object {
-                        "kind": "Name",
                         "value": "title",
                       },
                       "selectionSet": undefined,
@@ -197,7 +175,7 @@ Object {
       ],
       "kind": "Document",
       "loc": Object {
-        "end": 185,
+        "end": 183,
         "start": 0,
       },
     },
@@ -248,17 +226,6 @@ Object {
                       "kind": "Field",
                       "name": Object {
                         "kind": "Name",
-                        "value": "id",
-                      },
-                      "selectionSet": undefined,
-                    },
-                    Object {
-                      "alias": undefined,
-                      "arguments": Array [],
-                      "directives": Array [],
-                      "kind": "Field",
-                      "name": Object {
-                        "kind": "Name",
                         "value": "title",
                       },
                       "selectionSet": undefined,
@@ -296,7 +263,7 @@ Object {
       ],
       "kind": "Document",
       "loc": Object {
-        "end": 185,
+        "end": 183,
         "start": 0,
       },
     },
@@ -382,17 +349,6 @@ Object {
                       "selectionSet": Object {
                         "kind": "SelectionSet",
                         "selections": Array [
-                          Object {
-                            "alias": undefined,
-                            "arguments": Array [],
-                            "directives": Array [],
-                            "kind": "Field",
-                            "name": Object {
-                              "kind": "Name",
-                              "value": "id",
-                            },
-                            "selectionSet": undefined,
-                          },
                           Object {
                             "alias": undefined,
                             "arguments": Array [],
@@ -497,7 +453,7 @@ Object {
       ],
       "kind": "Document",
       "loc": Object {
-        "end": 323,
+        "end": 321,
         "start": 0,
       },
     },
@@ -548,17 +504,6 @@ Object {
                       "kind": "Field",
                       "name": Object {
                         "kind": "Name",
-                        "value": "id",
-                      },
-                      "selectionSet": undefined,
-                    },
-                    Object {
-                      "alias": undefined,
-                      "arguments": Array [],
-                      "directives": Array [],
-                      "kind": "Field",
-                      "name": Object {
-                        "kind": "Name",
                         "value": "title",
                       },
                       "selectionSet": undefined,
@@ -596,7 +541,7 @@ Object {
       ],
       "kind": "Document",
       "loc": Object {
-        "end": 159,
+        "end": 157,
         "start": 0,
       },
     },
@@ -666,17 +611,6 @@ Object {
                       "selectionSet": Object {
                         "kind": "SelectionSet",
                         "selections": Array [
-                          Object {
-                            "alias": undefined,
-                            "arguments": Array [],
-                            "directives": Array [],
-                            "kind": "Field",
-                            "name": Object {
-                              "kind": "Name",
-                              "value": "id",
-                            },
-                            "selectionSet": undefined,
-                          },
                           Object {
                             "alias": undefined,
                             "arguments": Array [],
@@ -754,7 +688,7 @@ Object {
       ],
       "kind": "Document",
       "loc": Object {
-        "end": 278,
+        "end": 276,
         "start": 0,
       },
     },
@@ -807,17 +741,6 @@ Object {
                       "kind": "Field",
                       "name": Object {
                         "kind": "Name",
-                        "value": "id",
-                      },
-                      "selectionSet": undefined,
-                    },
-                    Object {
-                      "alias": undefined,
-                      "arguments": Array [],
-                      "directives": Array [],
-                      "kind": "Field",
-                      "name": Object {
-                        "kind": "Name",
                         "value": "title",
                       },
                       "selectionSet": undefined,
@@ -852,7 +775,7 @@ Object {
       ],
       "kind": "Document",
       "loc": Object {
-        "end": 179,
+        "end": 177,
         "start": 0,
       },
     },
@@ -903,17 +826,6 @@ Object {
                       "kind": "Field",
                       "name": Object {
                         "kind": "Name",
-                        "value": "id",
-                      },
-                      "selectionSet": undefined,
-                    },
-                    Object {
-                      "alias": undefined,
-                      "arguments": Array [],
-                      "directives": Array [],
-                      "kind": "Field",
-                      "name": Object {
-                        "kind": "Name",
                         "value": "title",
                       },
                       "selectionSet": undefined,
@@ -948,7 +860,7 @@ Object {
       ],
       "kind": "Document",
       "loc": Object {
-        "end": 172,
+        "end": 170,
         "start": 0,
       },
     },
@@ -999,17 +911,6 @@ Object {
                       "kind": "Field",
                       "name": Object {
                         "kind": "Name",
-                        "value": "id",
-                      },
-                      "selectionSet": undefined,
-                    },
-                    Object {
-                      "alias": undefined,
-                      "arguments": Array [],
-                      "directives": Array [],
-                      "kind": "Field",
-                      "name": Object {
-                        "kind": "Name",
                         "value": "title",
                       },
                       "selectionSet": undefined,
@@ -1044,7 +945,7 @@ Object {
       ],
       "kind": "Document",
       "loc": Object {
-        "end": 178,
+        "end": 176,
         "start": 0,
       },
     },

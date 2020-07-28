@@ -1,5 +1,5 @@
 import { createPredicate } from "../src/predicates";
-import { Fields } from "../src/Model";
+import { Fields } from "../src/ModelSchema";
 
 interface Test {
   numberOfTasks: number;
@@ -7,7 +7,7 @@ interface Test {
 
 const testFields: Fields<Test> = {
   numberOfTasks: {
-    type: "Number",
+    type: "number",
     key: "numberOfTasks"
   }
 };

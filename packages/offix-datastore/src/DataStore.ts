@@ -1,4 +1,4 @@
-import { Model, ModelConfig } from "./Model";
+import { Model } from "./Model";
 import { LocalStorage } from "./storage";
 import { createGraphQLClient, GraphQLClientConfig } from "./replication/client/GraphQLClient";
 import { buildGraphQLCRUDQueries } from "./replication/graphqlcrud/buildGraphQLCRUDQueries";
@@ -6,6 +6,7 @@ import { IReplicator } from "./replication/api/Replicator";
 import { MutationReplicationEngine } from "./replication";
 import { GraphQLCRUDReplicator } from "./replication/graphqlcrud/GraphQLCRUDReplicator";
 import { IndexedDBStorageAdapter } from "./storage/adapters/IndexedDBStorageAdapter";
+import { ModelSchema, DataSyncJsonSchema } from "./ModelSchema";
 
 /**
  * Configuration Options for DataStore
@@ -47,8 +48,9 @@ export class DataStore {
     this.indexedDB.addStore({ name: this.metadataName });
   }
 
-  public createModel<T>(config: ModelConfig<T>) {
-    const model = new Model<T>(config, this.storage, this.metadataName);
+  public createModel<T>(schema: DataSyncJsonSchema<T>) {
+    const modelSchema = new ModelSchema(schema);
+    const model = new Model<T>(modelSchema, this.storage, this.metadataName);
     this.models.push(model);
     return model;
   }

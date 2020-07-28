@@ -25,7 +25,7 @@ function getIndexedDB() {
       const db = request.result;
       db.onversionchange = () => {
         db.close();
-      }
+      };
       resolve(db);
     };
   });
@@ -55,11 +55,13 @@ beforeEach(() => {
   });
   NoteModel = dataStore.createModel<Note>({
     name: "Note",
-    fields: schema.Note
+    type: "object",
+    properties: schema.Note
   });
   dataStore.createModel<Comment>({
     name: "Comment",
-    fields: schema.Comment
+    type: "object",
+    properties: schema.Comment
   });
   dataStore.init();
 });
@@ -153,32 +155,33 @@ test("Observe local store events", async () => {
 
 
 const typeDefs = `
-    type Note {
-        id: ID
-        title: String
-        description: String
-    }
+  type Note {
+    id: ID
+    title: String
+    description: String
+  }
 
-    input CreateNoteInput {
-        id: ID
-        title: String
-        description: String
-    }
+  input CreateNoteInput {
+    id: ID
+    title: String
+    description: String
+  }
 
-    type Query {
-        dummy: String
-    }
+  type Query {
+    dummy: String
+  }
 
-    type Mutation {
-        createNote(input: CreateNoteInput!): Note
-    }
-    `;
-const note: Note = {
-  title: "test",
-  description: "test"
-};
+  type Mutation {
+    createNote(input: CreateNoteInput!): Note
+  }
+`;
+
 
 test("Push local change to server", (done) => {
+  const note: Note = {
+    title: "test",
+    description: "test"
+  };
   const server = new ApolloServer({
     typeDefs,
     resolvers: {
@@ -196,13 +199,16 @@ test("Push local change to server", (done) => {
 });
 
 test.skip("Subscribe to changes from server", (done) => {
+  const note: Note = {
+    title: "test",
+    description: "test"
+  };
   const server = new ApolloServer({
     typeDefs,
     resolvers: {
       Mutation: {
-        createNote: (_, { input }) => {
-
-        }
+        // eslint-disable-next-line
+        createNote: (_, { input }) => {}
       }
     }
   });

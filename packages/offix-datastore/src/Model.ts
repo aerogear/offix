@@ -3,100 +3,32 @@ import { createPredicate, Predicate } from "./predicates";
 import { IReplicator } from "./replication";
 import { StoreChangeEvent } from "./storage";
 import invariant from "tiny-invariant";
-
-export interface FieldOptions {
-  /** GraphQL type */
-  type: string;
-  /** GraphQL key */
-  key: string;
-  // TODO
-  format?: {};
-}
-
-/**
- * Defines the properties expected in the Fields object for a model
- */
-export type Fields<T> = {
-  [P in keyof T]: FieldOptions
-};
-
-/**
- * Model Config options
- */
-export interface ModelConfig<T = unknown> {
-  /**
-   * Model name
-   */
-  name: string;
-
-  /**
-   * Model store name, defualts to `user_${name}`
-   */
-  storeName?: string;
-
-  /**
-   * Model fields
-   */
-  fields: Fields<T>;
-
-  /**
-   * Delta Query and Subscription filter
-   */
-  predicate?: Predicate<T>;
-
-  /**
-   * Associate server version of entities with local version.
-   * It returns a predicate used to determine which entities
-   * get changed given the data from the server
-   *
-   * @param data is the version from the server
-   */
-  matcher?: (data: T) => Predicate<T>;
-}
+import { ModelSchema } from "./ModelSchema";
 
 /**
  * Provides CRUD capabilities for a model
  */
 export class Model<T = unknown> {
-  private name: string;
-  private storeName: string;
-  private fields: Fields<T>;
+  public schema: ModelSchema<T>;
   private storage: LocalStorage;
   private replicator: IReplicator | undefined;
   private metadataName: string;
+  private storeName: string;
 
   constructor(
-    config: ModelConfig<T>,
+    schema: ModelSchema<T>,
     storage: LocalStorage,
     metadataName: string,
     replicator?: IReplicator
   ) {
-    this.name = config.name;
-    this.storeName = config.storeName || `user_${config.name}`;
-    this.fields = config.fields;
+    this.schema = schema;
+    this.storeName = schema.getStoreName();
     this.storage = storage;
     this.metadataName = metadataName;
     // TODO set custom primary keys
-    this.storage.adapter.addStore({ name: this.storeName });
+    this.storage.adapter.addStore({ name: this.schema.getStoreName() });
     this.saveInitialMetadata();
 
-    // TODO set default matcher
-    if (replicator && config.matcher) {
-      // TODO this should be moved
-      this.doDeltaSync(replicator, config.matcher, config.predicate);
-    }
-  }
-
-  public getFields() {
-    return this.fields;
-  }
-
-  public getName() {
-    return this.name;
-  }
-
-  public getStoreName() {
-    return this.storeName;
   }
 
   // TODO refactor this so that this is not required
@@ -112,7 +44,7 @@ export class Model<T = unknown> {
   public query(predicateFunction?: Predicate<T>) {
     if (!predicateFunction) { return this.storage.query(this.storeName); }
 
-    const modelPredicate = createPredicate(this.fields);
+    const modelPredicate = createPredicate(this.schema.getFields());
     const predicate = predicateFunction(modelPredicate);
     return this.storage.query(this.storeName, predicate);
   }
@@ -122,7 +54,7 @@ export class Model<T = unknown> {
       return this.storage.update(this.storeName, input);
     }
 
-    const modelPredicate = createPredicate(this.fields);
+    const modelPredicate = createPredicate(this.schema.getFields());
     const predicate = predicateFunction(modelPredicate);
     return this.storage.update(this.storeName, input, predicate);
   }
@@ -130,7 +62,7 @@ export class Model<T = unknown> {
   public remove(predicateFunction?: Predicate<T>) {
     if (!predicateFunction) { return this.storage.remove(this.storeName); }
 
-    const modelPredicate = createPredicate(this.fields);
+    const modelPredicate = createPredicate(this.schema.getFields());
     const predicate = predicateFunction(modelPredicate);
     return this.storage.remove(this.storeName, predicate);
   }
@@ -147,16 +79,16 @@ export class Model<T = unknown> {
 
   public subscribeForServerEvents(eventType: CRUDEvents, filter: any = {}) {
     invariant(this.replicator, "Replicator has not yet been set");
-    return this.replicator.subscribe(this.getStoreName(), eventType);
+    return this.replicator.subscribe(this.storeName, eventType);
   }
 
   // TODO remove this from here and move to replicator
   private async doDeltaSync(replicator: IReplicator, matcher: (d: T) => Predicate<T>, predicate?: Predicate<T>) {
     // TODO limit the size of data returned
     const lastSync = (await this.readMetadata())?.lastSync || "";
-    const modelPredicate = createPredicate(this.fields);
+    const modelPredicate = createPredicate(this.schema.getFields());
     const data = await replicator.pullDelta(
-      this.getStoreName(),
+      this.storeName,
       lastSync,
       (predicate ? predicate(modelPredicate) : undefined)
     );
@@ -197,10 +129,10 @@ export class Model<T = unknown> {
    */
   private async readMetadata(): Promise<any | undefined> {
     const p = createPredicate({
-      name: { type: "String", key: "name" },
-      lastSync: { type: "String", key: "lastSync" }
+      name: { type: "string", key: "name" },
+      lastSync: { type: "string", key: "lastSync" }
     });
-    const result = await this.storage.query(this.metadataName, p.name("eq", this.name));
+    const result = await this.storage.query(this.metadataName, p.name("eq", this.schema.getName()));
     if (result.length === 0) { return undefined; }
     return result[0];
   }
@@ -212,6 +144,6 @@ export class Model<T = unknown> {
   private async saveInitialMetadata() {
     const result = await this.readMetadata();
     if (result) { return; }
-    this.storage.adapter.save(this.metadataName, { name: this.getName(), lastSync: "" });
+    this.storage.adapter.save(this.metadataName, { name: this.schema.getName(), lastSync: "" });
   }
 }
