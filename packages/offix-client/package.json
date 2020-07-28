@@ -35,7 +35,7 @@
     "cross-fetch": "3.0.5",
     "fake-indexeddb": "3.1.2",
     "graphql": "15.3.0",
-    "graphql-tag": "2.10.4",
+    "graphql-tag": "2.11.0",
     "jest": "26.1.0",
     "size-limit": "4.5.5",
     "ts-jest": "26.1.4",

@@ -36,7 +36,7 @@
     "typescript": "3.9.7"
   },
   "dependencies": {
-    "graphql-tag": "2.10.4",
+    "graphql-tag": "2.11.0",
     "subscriptions-transport-ws": "0.9.17",
     "tiny-invariant": "1.1.0",
     "urql": "1.9.8",
