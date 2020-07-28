@@ -52,7 +52,26 @@ test("it should return the same schema as the createModelSchema method", () => {
   expect(m1).toEqual(m2);
 });
 
-test("it should return correct fields", () => {
+test("it should return the correct name", () => {
+  const schema = { ...basicSchema, properties } as DataSyncJsonSchema<any>;
+  const model = new ModelSchema(schema);
+  expect(model.getName()).toBe(schema.name);
+});
+
+test("it should return the correct version (default)", () => {
+  const schema = { ...basicSchema, properties } as DataSyncJsonSchema<any>;
+  const model = new ModelSchema(schema);
+  expect(model.getVersion()).toBe(0);
+});
+
+test("it should return the version name (specified)", () => {
+  const version = 2;
+  const schema = { ...basicSchema, properties, version } as DataSyncJsonSchema<any>;
+  const model = new ModelSchema(schema);
+  expect(model.getVersion()).toBe(version);
+});
+
+test("it should return the correct fields", () => {
   const schema = { ...basicSchema, properties } as DataSyncJsonSchema<any>;
   const model = new ModelSchema(schema);
   expect(model.getFields()).toBe(schema.properties);
@@ -82,8 +101,14 @@ test("it should return the correct storename (specified)", () => {
   expect(model.getStoreName()).toBe(`${schema.namespace}_${schema.name}`);
 });
 
-test("it should return the correct primary key", () => {
+test("it should return the correct primary key (field level)", () => {
   const schema = { ...basicSchema, properties } as DataSyncJsonSchema<any>;
+  const model = new ModelSchema(schema);
+  expect(model.getPrimaryKey()).toBe("id");
+});
+
+test("it should return the correct primary key (specified)", () => {
+  const schema = { ...basicSchema, properties, primaryKey: "id" } as DataSyncJsonSchema<any>;
   const model = new ModelSchema(schema);
   expect(model.getPrimaryKey()).toBe("id");
 });
