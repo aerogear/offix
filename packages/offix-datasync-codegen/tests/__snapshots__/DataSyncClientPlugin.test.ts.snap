@@ -2,7 +2,7 @@
 
 exports[`Test datasync config 1`] = `
 "import { DataStore } from 'offix-datastore';
-import schema from './schema.json';
+import schema from './schema';
 
 export const datastore = new DataStore({
     dbName: \\"offix-datasync\\",
@@ -20,9 +20,32 @@ datastore.init();
 `;
 
 exports[`Test json schema 1`] = `
-Array [
-  Object {
-    "json": Object {
+Object {
+  "json": Object {
+    "Comment": Object {
+      "name": "Comment",
+      "properties": Object {
+        "description": Object {
+          "isRequired": true,
+          "type": "string",
+        },
+        "id": Object {
+          "isRequired": true,
+          "type": "string",
+        },
+        "noteComment": Object {
+          "isRequired": true,
+          "type": "string",
+        },
+        "title": Object {
+          "isRequired": true,
+          "type": "string",
+        },
+      },
+      "type": "object",
+      "version": 1,
+    },
+    "Note": Object {
       "name": "Note",
       "properties": Object {
         "comments": Object {
@@ -46,30 +69,14 @@ Array [
       "version": 1,
     },
   },
-  Object {
-    "json": Object {
-      "name": "Comment",
-      "properties": Object {
-        "description": Object {
-          "isRequired": true,
-          "type": "string",
-        },
-        "id": Object {
-          "isRequired": true,
-          "type": "string",
-        },
-        "noteComment": Object {
-          "isRequired": true,
-          "type": "string",
-        },
-        "title": Object {
-          "isRequired": true,
-          "type": "string",
-        },
-      },
-      "type": "object",
-      "version": 1,
-    },
-  },
-]
+  "schemaExport": "import { DataSyncJsonSchema } from \\"offix-datastore\\";
+import schema from \\"./schema.json\\";
+
+type Schema<T = any> = {
+    [P in keyof T]: DataSyncJsonSchema<any>
+};
+
+export schema as Schema;
+",
+}
 `;
