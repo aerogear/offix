@@ -1,0 +1,22 @@
+{
+  "Todo": {
+    "name": "Todo",
+    "version": 1,
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "isRequired": true
+      },
+      "title": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      },
+      "completed": {
+        "type": "boolean"
+      }
+    }
+  }
+}
