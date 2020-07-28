@@ -2,7 +2,8 @@
   "Note": {
     "id": {
       "type": "ID",
-      "key": "id"
+      "key": "id",
+      "primary": true
     },
     "title": {
       "type": "String",
@@ -16,7 +17,8 @@
   "Comment": {
     "id": {
       "type": "ID",
-      "key": "id"
+      "key": "id",
+      "primary": true
     },
     "title": {
       "type": "String",
