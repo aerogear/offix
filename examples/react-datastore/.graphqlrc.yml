@@ -1,7 +1,7 @@
 schema: './src/schema.graphql'
 extensions:
   graphback:
-    # path to data mode file(s)
+    # path to data model file(s)
     model: './src/model/runtime.graphql'
     plugins:
       graphback-schema:

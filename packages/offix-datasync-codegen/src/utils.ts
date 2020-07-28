@@ -6,9 +6,18 @@ import {
     isCompositeType,
     GraphQLType
 } from "graphql";
+import { mkdirSync } from "fs";
 
 export const isDataSyncClientModel = (model: ModelDefinition) => {
     return parseMetadata("datasync-client", model.graphqlType);
+};
+
+export const makeDirIfNotExists = (path: string) => {
+    try {
+        mkdirSync(path);
+    } catch (error) {
+        // nothing to do here, the directory already exists
+    }
 };
 
 /**

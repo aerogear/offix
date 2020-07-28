@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Badge } from 'antd';
 import 'antd/dist/antd.css';
 
-import { datastore, TodoModel } from './config/datastoreConfig';
+import { datastore, TodoModel } from './datasync/config';
 import { useFindTodos } from './helpers/hooks';
 import { TodoList, AddTodo, Loading, Error, Header } from './components';
 import { CRUDEvents } from 'offix-datastore';

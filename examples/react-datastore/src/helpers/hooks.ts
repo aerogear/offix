@@ -1,6 +1,6 @@
 import { useEffect, useReducer } from "react";
 import { CRUDEvents } from 'offix-datastore';
-import { TodoModel } from '../config/datastoreConfig';
+import { TodoModel } from '../datasync/config';
 import { ITodo, HookState, ActionType, ReducerAction } from "../types";
 import { Predicate } from "offix-datastore/types/predicates";
 import { Subscription } from "offix-datastore/types/utils/PushStream";
@@ -78,7 +78,7 @@ export const useAddTodo = () => {
 
 export const useEditTodo = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const editTodo = async (todo: ITodo, predicate: Predicate<ITodo>) => {
+  const editTodo = async (todo: ITodo, predicate: Predicate<any>) => {
     dispatch({ type: ActionType.REQ_START });
     try {
       const result = await TodoModel.update(todo, predicate);
@@ -94,7 +94,7 @@ export const useEditTodo = () => {
 
 export const useDeleteTodo = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const deleteTodo = async (predicate: Predicate<ITodo>) => {
+  const deleteTodo = async (predicate: Predicate<any>) => {
     dispatch({ type: ActionType.REQ_START });
     try {
       const result = await TodoModel.remove(predicate);

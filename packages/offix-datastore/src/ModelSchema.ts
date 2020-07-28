@@ -11,6 +11,10 @@ export interface DataSyncProperties extends JSONSchema7 {
   primary?: boolean;
   default?: any;
   encrypted?: boolean;
+  /**
+   * GraphQL field name.
+   * It is used for graphql query generation
+   */
   key?: string;
   // TODO investigate scalars
 }

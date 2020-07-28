@@ -2,9 +2,9 @@
 
 exports[`Test datasync config 1`] = `
 "import { DataStore } from 'offix-datastore';
-import schema from './schema.json';
+import { schema } from './schema';
 
-const datastore = new DataStore({
+export const datastore = new DataStore({
     dbName: \\"offix-datasync\\",
     clientConfig: {
       url: \\"http://localhost:4000/graphql\\",
@@ -12,58 +12,70 @@ const datastore = new DataStore({
     }
 });
 
-datastore.createModel(schema.Note);
-datastore.createModel(schema.Comment);
+export const NoteModel = datastore.createModel(schema.Note);
+export const CommentModel = datastore.createModel(schema.Comment);
 
 datastore.init();
 "
 `;
 
 exports[`Test json schema 1`] = `
-Array [
-  Object {
-    "json": Object {
-      "name": "Note",
-      "properties": Object {
-        "comments": Object {
-          "isRequired": true,
-          "type": "string[]",
-        },
-        "description": Object {
-          "isRequired": true,
-          "type": "string",
-        },
-        "id": Object {
-          "isRequired": true,
-          "type": "string",
-        },
-        "title": Object {
-          "isRequired": true,
-          "type": "string",
-        },
-      },
-      "type": "object",
-      "version": 1,
-    },
-  },
-  Object {
-    "json": Object {
+Object {
+  "json": Object {
+    "Comment": Object {
       "name": "Comment",
+      "primaryKey": "id",
       "properties": Object {
         "description": Object {
           "isRequired": true,
+          "key": "description",
           "type": "string",
         },
         "id": Object {
+          "index": true,
           "isRequired": true,
+          "key": "id",
+          "primary": true,
           "type": "string",
         },
         "noteComment": Object {
           "isRequired": true,
+          "key": "noteComment",
           "type": "string",
         },
         "title": Object {
           "isRequired": true,
+          "key": "title",
+          "type": "string",
+        },
+      },
+      "type": "object",
+      "version": 1,
+    },
+    "Note": Object {
+      "name": "Note",
+      "primaryKey": "id",
+      "properties": Object {
+        "comments": Object {
+          "isRequired": true,
+          "key": "comments",
+          "type": "string[]",
+        },
+        "description": Object {
+          "isRequired": true,
+          "key": "description",
+          "type": "string",
+        },
+        "id": Object {
+          "index": true,
+          "isRequired": true,
+          "key": "id",
+          "primary": true,
+          "type": "string",
+        },
+        "title": Object {
+          "isRequired": true,
+          "key": "title",
           "type": "string",
         },
       },
@@ -71,5 +83,14 @@ Array [
       "version": 1,
     },
   },
-]
+  "schemaExport": "import { DataSyncJsonSchema } from \\"offix-datastore\\";
+import jsonSchema from \\"./schema.json\\";
+
+type Schema<T = any> = {
+    [P in keyof T]: DataSyncJsonSchema<any>
+};
+
+export const schema = jsonSchema as Schema;
+",
+}
 `;

@@ -1,8 +1,8 @@
 import { GraphbackPlugin, GraphbackCoreMetadata } from "@graphback/core";
-import { writeFileSync, mkdirSync } from "fs";
+import { writeFileSync } from "fs";
 import { IOffixDataSyncPluginConfig } from "./OffixDataSyncConfig";
 import { createJsonSchema } from "./json_schema";
-import { isDataSyncClientModel } from "./utils";
+import { isDataSyncClientModel, makeDirIfNotExists } from "./utils";
 import { validateOffixDataSyncPluginConfig } from "./OffixDataSyncPluginValidator";
 
 export const OFFIX_DATASYNC_PLUGIN_NAME = "OffixDataSyncPlugin";
@@ -27,27 +27,42 @@ export class OffixDataSyncPlugin extends GraphbackPlugin {
     public createResources(metadata: GraphbackCoreMetadata): void {
         const { modelOutputDir } = this.pluginConfig;
         const documents = this.getDocuments(metadata);
-        // for now there are only json documents
-        const jsonSchema = documents
-            .map(doc => doc.json)
-            .reduce((prev, cur) => ({ ...prev, [cur.name]: cur }), {});
-
         const dataSyncConfig = this.getDataSyncConfig(metadata);
 
-        try {
-            mkdirSync(modelOutputDir);
-        } catch (error) {
-            // nothing to do here, the directory already exists
-        }
-        writeFileSync(`${modelOutputDir}/schema.json`, JSON.stringify(jsonSchema, null, 2));
+        makeDirIfNotExists(modelOutputDir);
+        makeDirIfNotExists(`${modelOutputDir}/schema`);
+        writeFileSync(`${modelOutputDir}/schema/schema.json`, JSON.stringify(documents.json, null, 2));
+        writeFileSync(`${modelOutputDir}/schema/index.ts`, documents.schemaExport);
         writeFileSync(`${modelOutputDir}/config.ts`, dataSyncConfig);
     }
 
     public getDocuments(metadata: GraphbackCoreMetadata) {
-        // TODO add types
-        return metadata.getModelDefinitions()
-            .filter(model => isDataSyncClientModel(model))
-            .map(model => ({ json: createJsonSchema(model) }));
+        const models = metadata.getModelDefinitions()
+            .filter(model => isDataSyncClientModel(model));
+
+        const modelJsonSchemas = models
+            .map(model => (createJsonSchema(model)));
+        // concatenate all the json documents
+        const jsonSchema = modelJsonSchemas
+            .reduce((prev, cur) => ({ ...prev, [cur.name]: cur }), {});
+
+        // TODO use actual model type instead of any for DataSyncJsonSchema
+        const schemaExport = `import { DataSyncJsonSchema } from "offix-datastore";
+import jsonSchema from "./schema.json";
+
+type Schema<T = any> = {
+    [P in keyof T]: DataSyncJsonSchema<any>
+};
+
+export const schema = jsonSchema as Schema;
+`;
+
+        // TODO generate types
+
+        return {
+            json: jsonSchema,
+            schemaExport
+        };
     }
 
     public getDataSyncConfig(metadata: GraphbackCoreMetadata) {
@@ -56,13 +71,14 @@ export class OffixDataSyncPlugin extends GraphbackPlugin {
         metadata.getModelDefinitions()
             .filter(model => isDataSyncClientModel(model))
             .forEach((model) => {
-                modelInitLines.push(`datastore.createModel(schema.${model.graphqlType.name});`);
+                const name = model.graphqlType.name;
+                modelInitLines.push(`export const ${name}Model = datastore.createModel(schema.${name});`);
             });
 
         const configCode = `import { DataStore } from 'offix-datastore';
-import schema from './schema.json';
+import { schema } from './schema';
 
-const datastore = new DataStore({
+export const datastore = new DataStore({
     dbName: "offix-datasync",
     clientConfig: {
       url: "http://localhost:4000/graphql",
