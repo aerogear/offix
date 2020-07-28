@@ -56,7 +56,8 @@ export class OffixDataSyncPlugin extends GraphbackPlugin {
         metadata.getModelDefinitions()
             .filter(model => isDataSyncClientModel(model))
             .forEach((model) => {
-                modelInitLines.push(`datastore.createModel(schema.${model.graphqlType.name});`);
+                const name = model.graphqlType.name;
+                modelInitLines.push(`export const ${name}Model = datastore.createModel(schema.${name});`);
             });
 
         const configCode = `import { DataStore } from 'offix-datastore';
