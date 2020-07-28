@@ -48,13 +48,13 @@ export class OffixDataSyncPlugin extends GraphbackPlugin {
 
         // TODO use actual model type instead of any for DataSyncJsonSchema
         const schemaExport = `import { DataSyncJsonSchema } from "offix-datastore";
-import schema from "./schema.json";
+import jsonSchema from "./schema.json";
 
 type Schema<T = any> = {
     [P in keyof T]: DataSyncJsonSchema<any>
 };
 
-export schema as Schema;
+export const schema = jsonSchema as Schema;
 `;
 
         // TODO generate types
@@ -76,7 +76,7 @@ export schema as Schema;
             });
 
         const configCode = `import { DataStore } from 'offix-datastore';
-import schema from './schema';
+import { schema } from './schema';
 
 export const datastore = new DataStore({
     dbName: "offix-datasync",

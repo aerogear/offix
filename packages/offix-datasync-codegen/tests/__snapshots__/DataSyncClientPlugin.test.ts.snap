@@ -2,7 +2,7 @@
 
 exports[`Test datasync config 1`] = `
 "import { DataStore } from 'offix-datastore';
-import schema from './schema';
+import { schema } from './schema';
 
 export const datastore = new DataStore({
     dbName: \\"offix-datasync\\",
@@ -84,13 +84,13 @@ Object {
     },
   },
   "schemaExport": "import { DataSyncJsonSchema } from \\"offix-datastore\\";
-import schema from \\"./schema.json\\";
+import jsonSchema from \\"./schema.json\\";
 
 type Schema<T = any> = {
     [P in keyof T]: DataSyncJsonSchema<any>
 };
 
-export schema as Schema;
+export const schema = jsonSchema as Schema;
 ",
 }
 `;
