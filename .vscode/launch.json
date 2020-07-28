@@ -45,6 +45,20 @@
       // "console": "integratedTerminal",
       // "internalConsoleOptions": "neverOpen",
       "port": 9229
-    }
+    },
+    {
+      "name": "Debug Jest Tests in offix-datasync-codegen",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/packages/offix-datasync-codegen",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "${workspaceRoot}/packages/offix-datasync-codegen/node_modules/.bin/jest",
+        "--runInBand"
+      ],
+      // "console": "integratedTerminal",
+      // "internalConsoleOptions": "neverOpen",
+      "port": 9229
+    },
   ]
 }

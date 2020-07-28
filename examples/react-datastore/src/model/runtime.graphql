@@ -1,4 +1,7 @@
-""" @model """
+"""
+@model
+@datasync-client
+"""
 type Todo {
   id: ID!
   title: String
