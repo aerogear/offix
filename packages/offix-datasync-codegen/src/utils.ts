@@ -18,7 +18,7 @@ export const makeDirIfNotExists = (path: string) => {
     } catch (error) {
         // nothing to do here, the directory already exists
     }
-}
+};
 
 /**
  * Trys to convert the input graphql type to a ts type.

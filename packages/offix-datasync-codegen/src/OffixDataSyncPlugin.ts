@@ -58,11 +58,11 @@ export schema as Schema;
 `;
 
         // TODO generate types
-        
+
         return {
             json: jsonSchema,
             schemaExport
-        }
+        };
     }
 
     public getDataSyncConfig(metadata: GraphbackCoreMetadata) {

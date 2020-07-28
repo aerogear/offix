@@ -24,21 +24,28 @@ Object {
   "json": Object {
     "Comment": Object {
       "name": "Comment",
+      "primaryKey": "id",
       "properties": Object {
         "description": Object {
           "isRequired": true,
+          "key": "description",
           "type": "string",
         },
         "id": Object {
+          "index": true,
           "isRequired": true,
+          "key": "id",
+          "primary": true,
           "type": "string",
         },
         "noteComment": Object {
           "isRequired": true,
+          "key": "noteComment",
           "type": "string",
         },
         "title": Object {
           "isRequired": true,
+          "key": "title",
           "type": "string",
         },
       },
@@ -47,21 +54,28 @@ Object {
     },
     "Note": Object {
       "name": "Note",
+      "primaryKey": "id",
       "properties": Object {
         "comments": Object {
           "isRequired": true,
+          "key": "comments",
           "type": "string[]",
         },
         "description": Object {
           "isRequired": true,
+          "key": "description",
           "type": "string",
         },
         "id": Object {
+          "index": true,
           "isRequired": true,
+          "key": "id",
+          "primary": true,
           "type": "string",
         },
         "title": Object {
           "isRequired": true,
+          "key": "title",
           "type": "string",
         },
       },
