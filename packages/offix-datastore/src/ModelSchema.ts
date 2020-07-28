@@ -112,7 +112,8 @@ function extractPrimary<T =any>(fields: Fields<T>, primaryKey?: string): string 
   if (!primaryKey) {
     const obj = Object.keys(fields)
       .find((key: string) => fields[key as keyof T].primary);
-    return obj || "_id";
+    invariant(obj, "Datasync: no primary key provided. Please specify a primary key");
+    return obj;
   }
   invariant(primaryKey in fields,
     `Datasync: ${primaryKey} provided does not exist in 
