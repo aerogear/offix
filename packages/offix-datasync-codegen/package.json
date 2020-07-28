@@ -1,6 +1,6 @@
 {
   "name": "offix-datasync-client-plugin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Graphback plugin for offix-datasync-client",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
