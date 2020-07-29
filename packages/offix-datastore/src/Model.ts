@@ -47,7 +47,7 @@ export interface ModelConfig<T = unknown> {
 export class Model<T = unknown> {
   private storage: LocalStorage;
   public schema: ModelSchema<T>;
-  public replicationConfig?: ModelReplicationConfig<T>;
+  public replicationConfig?: ModelReplicationConfig;
   public replicator?: IModelReplicator;
 
   constructor(
@@ -119,7 +119,7 @@ export class Model<T = unknown> {
    *
    * @param replicationConfig replication configuration for individual model
    */
-  public setupReplication(replicationConfig: ModelReplicationConfig<T>) {
+  public setupReplication(replicationConfig: ModelReplicationConfig) {
     this.replicationConfig = replicationConfig;
   }
 

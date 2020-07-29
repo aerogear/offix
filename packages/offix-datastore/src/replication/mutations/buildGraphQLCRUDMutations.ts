@@ -1,8 +1,6 @@
 import gql from "graphql-tag";
 
 import { Model } from "../../Model";
-import { ReplicatorMutations } from "./ReplicatorMutations";
-
 /**
  * Builds GraphQL mutations for models following
  * the [GraphQLCRUD specification]{@link https://graphqlcrud.org/}

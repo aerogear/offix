@@ -9,7 +9,6 @@ import { GlobalReplicationConfig, ModelReplicationConfig } from "./api/Replicati
 import { createGraphQLClient } from "./utils/createGraphQLClient";
 import { ModelReplication } from "./ModelReplication";
 
-const logger = createLogger("replicator");
 
 /**
  * Defaults for replicating settings aggregated in single place
@@ -56,9 +55,6 @@ export class GraphQLCRUDReplicator implements IReplicator {
    * @param storage
    */
   public async start(models: Model[], storage: LocalStorage) {
-    storage.addStore({name: "whatever", keyPath:"key"});
-    storage.addStore("234");
-
     // Generic client created only once at startup
     const client = createGraphQLClient(this.config.client)
     for (const model of models) {
@@ -69,7 +65,7 @@ export class GraphQLCRUDReplicator implements IReplicator {
 
       // Replication on model level gives more refined control how individual
       // models are replicate and allows developers to directly control it.
-      const modelReplication = new ModelReplication(model, storage);
+      const modelReplication = new ModelReplication(model, storage, client);
       modelReplication.init(config, this.networkStatus)
       // We need to inject replicator for users to be able to execute it's public method
       model.setReplicator(modelReplication);

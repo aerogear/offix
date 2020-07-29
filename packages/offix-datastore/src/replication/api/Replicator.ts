@@ -17,6 +17,18 @@ export interface IOperation {
 }
 
 /**
+ * Queue used to hold ongoing mutations
+ */
+export const MUTATION_QUEUE = "mutation_request_queue"
+export const MUTATION_QUEUE_KEY = "storeName"
+
+/**
+ * Contains metadata for model
+ */
+export const MODEL_METADATA = "model_metadata"
+export const MODEL_METADATA_KEY = "storeName"
+
+/**
  * Replicator interface that every replication engine needs to satisfy.
  */
 export interface IReplicator {
