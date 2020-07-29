@@ -1,4 +1,4 @@
-import { createClient, defaultExchanges, subscriptionExchange, Client as URQLClient } from "urql";
+import { createClient, defaultExchanges, subscriptionExchange} from "urql";
 import { SubscriptionClient, ClientOptions } from "subscriptions-transport-ws";
 import { GraphQLClientConfig } from "../api/GraphQLClient";
 

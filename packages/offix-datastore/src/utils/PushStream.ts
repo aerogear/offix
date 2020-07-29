@@ -8,7 +8,6 @@ export interface Subscription {
  * Even stream used to recieve live updates for specific object T
  */
 export interface PushStream<T> {
-
   finishSubscriptions(): void;
   publish(message: T): void;
   subscribe(listener: (message: T) => void, filter?: (value: T) => boolean): Subscription;

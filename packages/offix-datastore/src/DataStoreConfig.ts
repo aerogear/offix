@@ -1,4 +1,4 @@
-import { ReplicationConfig } from "./replication/api/ReplicationConfig";
+import { GlobalReplicationConfig } from "./replication/api/ReplicationConfig";
 
 /**
  * Configuration Options for DataStore
@@ -17,5 +17,5 @@ export interface DataStoreConfig {
   /**
    * Configuration for replication engine
    */
-  replicationConfig?: ReplicationConfig
+  replicationConfig?: GlobalReplicationConfig
 }

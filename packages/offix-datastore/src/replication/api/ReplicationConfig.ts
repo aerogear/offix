@@ -29,6 +29,11 @@ export interface LiveUpdatesConfig {
  */
 export interface MutationsConfig {
   enabled: boolean;
+
+  /**
+   * Allow users to specify error handler that will check error type and repeat operations
+   */
+  errorHandler: (error: any) => boolean
 }
 
 
