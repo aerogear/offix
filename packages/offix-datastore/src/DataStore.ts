@@ -5,7 +5,7 @@ import { buildGraphQLCRUDQueries } from "./replication/graphqlcrud/buildGraphQLC
 import { IReplicator } from "./replication/api/Replicator";
 import { MutationReplicationEngine } from "./replication";
 import { GraphQLCRUDReplicator } from "./replication/graphqlcrud/GraphQLCRUDReplicator";
-import { IndexedDBStorageAdapter } from "./storage/adapters/IndexedDBStorageAdapter";
+import { IndexedDBStorageAdapter } from "./storage/adapters/indexeddb/IndexedDBStorageAdapter";
 import { ModelSchema, DataSyncJsonSchema } from "./ModelSchema";
 
 /**

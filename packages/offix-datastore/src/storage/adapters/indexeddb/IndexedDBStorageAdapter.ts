@@ -1,8 +1,8 @@
-import { StorageAdapter } from "../api/StorageAdapter";
-import { IStoreConfig } from "../api/StoreConfig";
-import { PredicateFunction } from "../../predicates";
-import { generateId } from "../LocalStorage";
-import { createLogger } from "../../utils/logger";
+import { StorageAdapter } from "../../api/StorageAdapter";
+import { IStoreConfig } from "../../api/StoreConfig";
+import { PredicateFunction } from "../../../predicates";
+import { generateId } from "../../LocalStorage";
+import { createLogger } from "../../../utils/logger";
 
 const logger = createLogger("idb");
 
