@@ -100,3 +100,7 @@ test("combination group", () => {
     firstNote, secondNote
   ])).toEqual([firstNote, secondNote]);
 });
+
+describe("Test predicate executor for IndexedDB", () => {
+
+});

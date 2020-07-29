@@ -27,7 +27,13 @@ export function createPredicate<T>(fields: Fields<T>): ModelPredicate<T> {
     const modelPredicate: any = {};
 
     Object.keys(fields).forEach((key: string) => {
-        modelPredicate[key] = (op: AllOperators, input: any) => new ModelFieldPredicate(key, input, OperatorFunctionMap[op]);
+        modelPredicate[key] = (op: AllOperators, input: any) => 
+            new ModelFieldPredicate(
+                key,
+                fields[key as keyof Fields<T>],
+                input,
+                OperatorFunctionMap[op]
+            );
     });
 
     modelPredicate.or = (...predicates: any[]) => {

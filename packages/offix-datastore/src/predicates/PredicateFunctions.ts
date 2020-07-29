@@ -2,6 +2,7 @@
 // Capacitor or ReactNative or WebSQLLite
 
 import { Operator } from "./Operators";
+import { DataSyncProperties } from "../ModelSchema";
 
 /**
  * A PredicateFunction filters data that match its conditions.
@@ -15,7 +16,6 @@ export abstract class PredicateFunction {
     public abstract evaluate(model: any): boolean;
 }
 
-
 /**
  * A ModelFieldPredicate is a PredicateFunction that filters
  * data by checking that a data field passes the condition
@@ -23,16 +23,19 @@ export abstract class PredicateFunction {
  */
 export class ModelFieldPredicate extends PredicateFunction {
     private key: string;
+    private fieldInfo: DataSyncProperties;
     private value: any;
     private operator: Operator;
 
     constructor(
         key: string,
+        fieldInfo: DataSyncProperties,
         value: any,
         operator: Operator
     ) {
         super();
         this.key = key;
+        this.fieldInfo = fieldInfo;
         this.value = value;
         this.operator = operator;
     }
@@ -43,6 +46,10 @@ export class ModelFieldPredicate extends PredicateFunction {
 
     public getKey() {
         return this.key;
+    }
+
+    public getFieldInfo() {
+        return this.fieldInfo;
     }
 
     public getValue() {
