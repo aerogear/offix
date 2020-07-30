@@ -9,6 +9,7 @@ import { MutationsReplicationQueue } from "./mutations/MutationsQueue";
 import { Model } from "../Model";
 import { Client as URQLClient } from "urql";
 import { createLogger } from "../utils/logger";
+import { DocumentNode } from "graphql";
 
 const logger = createLogger("replicator");
 
@@ -44,10 +45,18 @@ export class ModelReplication implements IModelReplicator {
     }
   }
 
-  private createMutationsReplication(networkInterface: NetworkStatus, config: MutationsConfig) {
-    // TODO maybe we want this functions to be injected
+  private createMutationsReplication(networkStatus: NetworkStatus, config: MutationsConfig) {
+    // TODO maybe we want this functions to be injected and replaced
+    // Later consideration how replication engine is build
     const mutation = buildGraphQLCRUDMutations(this.model);
-    const mutationQueue = new MutationsReplicationQueue(this.storage, this.client, networkInterface);
+    const mutationQueue = new MutationsReplicationQueue({
+      storage: this.storage,
+      client: this.client,
+      networkStatus: networkStatus,
+      errorHandler: config.errorHandler,
+      resultProcessor: config.resultProcessor,
+      model: this.model
+    });
     this.storage.storeChangeEventStream.subscribe((event) => {
       const { eventType, data, storeName, eventSource } = event;
       // We getting all events here and filter only to user and store.
@@ -57,37 +66,37 @@ export class ModelReplication implements IModelReplicator {
         // This will ensure consistency for situations when model changed (without migrating queue)
         let mutationRequest;
         if (CRUDEvents.ADD === eventType) {
-          mutationRequest = {
-            mutation: mutation.create,
-            variables: { input: data },
-            storeName, version: 1,
-            eventType
-          };
+          mutationRequest = this.createMutationRequest(mutation.create, data, storeName, eventType);
         }
         else if (CRUDEvents.UPDATE === eventType) {
-          mutationRequest = {
-            mutation: mutation.update,
-            variables: { input: data },
-            storeName, version: 1, eventType
-          };
+          mutationRequest = this.createMutationRequest(mutation.update, data, storeName, eventType);
         }
         else if (CRUDEvents.DELETE === eventType) {
-          mutationRequest = {
-            mutation: mutation.update,
-            variables: { input: data }, storeName,
-            version: 1, eventType
-          };
-        }
-        else {
+          mutationRequest = this.createMutationRequest(mutation.delete, data, storeName, eventType);
+        } else {
           logger("Invalid store event received");
           throw new Error("Invalid store event received");
         }
         // Adding request to queue.
         // Queue deals with: persistence, processing, offline, error handling, id mapping
-        mutationQueue.addMutationRequest(mutationRequest, config);
+        mutationQueue.addMutationRequest(mutationRequest);
       }
     });
-    mutationQueue.process();
+    mutationQueue.init().then(() => {
+      mutationQueue.process();
+    })
+  }
+
+  // TODO extract to simplify overriding replication
+  private createMutationRequest(mutation: DocumentNode, data: any, storeName: string, eventType: CRUDEvents) {
+    return {
+      mutation,
+      // TODO transform this to generic values
+      variables: { input: data },
+      storeName,
+      version: 1,
+      eventType
+    };
   }
 
   public forceDeltaQuery<T>(): Promise<void> {
