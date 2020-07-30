@@ -110,7 +110,9 @@ export class Model<T = unknown> {
     return this.storage
       .storeChangeEventStream.subscribe((event: StoreChangeEvent) => {
         if (event.eventType !== eventType) { return; }
-        listener(event);
+        if(event.storeName === this.schema.getStoreName()){
+
+        }
       });
   }
 

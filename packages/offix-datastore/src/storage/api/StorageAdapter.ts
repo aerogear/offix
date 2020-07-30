@@ -70,7 +70,7 @@ export interface StorageAdapter {
    * @param predicate A PredicateFunction to filter data
    * @returns A Promise of the updated data
    */
-  update(storeName: string, input: any, predicate?: PredicateFunction): Promise<any>;
+  update(storeName: string, input: any, predicate?: PredicateFunction): Promise<any[]>;
 
   /**
    * Deletes data matching predicate or all from the store
@@ -79,5 +79,5 @@ export interface StorageAdapter {
    * @param predicate A PredicateFunction to filter data
    * @returns A Promise of the deleted data
    */
-  remove(storeName: string, predicate?: PredicateFunction): Promise<any | any[]>;
+  remove(storeName: string, predicate?: PredicateFunction): Promise<any[]>;
 }

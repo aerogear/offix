@@ -2,7 +2,7 @@
 import { GraphQLClientConfig } from "./GraphQLClient";
 import { NetworkStatus } from "../../network/NetworkStatus";
 import { Predicate } from "../../predicates";
-import { Model } from "../../Model";
+import { MutationRequest } from "../mutations/MutationRequest";
 
 /**
  * Configuration options for Delta Queries replication
@@ -25,6 +25,18 @@ export interface LiveUpdatesConfig {
 }
 
 /**
+ * Handle errors repeat request if needed
+ *
+ * @returns MutationRequest if request should be repeated
+ */
+export type UserErrorHandler = (networkError: any, graphqlError: any) => MutationRequest | undefined;
+
+/**
+ * Allows to update queue operations. Returns new updated queue that should be persisted
+ */
+export type ResultProcessor = (result: any, queue: MutationRequest[]) => MutationRequest[];
+
+/**
  * Configuration options for mutations (edits) replication
  */
 export interface MutationsConfig {
@@ -33,7 +45,17 @@ export interface MutationsConfig {
   /**
    * Allow users to specify error handler that will check error type and repeat operations
    */
-  errorHandler: (error: any) => boolean
+  errorHandler?: UserErrorHandler
+
+  /**
+   * Allows to update queue operations. Returns new updated queue that should be persisted
+   */
+  resultProcessor?: ResultProcessor
+
+  /**
+   * Updates fetch options for particular model
+   */
+  fetchOptions?: RequestInit | (() => RequestInit);
 }
 
 

@@ -105,6 +105,7 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     const store = await this.getStore(storeName);
     // TODO hardcoded id
     const key = await this.convertToPromise<IDBValidKey>(store.add({ id: generateId(), ...input }));
+    // TODO - why we read the same object from store?
     return this.convertToPromise<any>(store.get(key));
   }
 
@@ -124,6 +125,7 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
       store.put({ ...data, ...input }))
     );
     await Promise.all(promises);
+    // TODO redundant query to the DB.
     return this.query(storeName, predicate);
   }
 
