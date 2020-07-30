@@ -24,11 +24,11 @@
     "karma-mocha": "2.0.1",
     "karma-mocha-reporter": "2.2.5",
     "karma-webpack": "4.0.2",
-    "mocha": "8.0.1",
+    "mocha": "8.1.0",
     "offix-cache": "0.15.5",
     "offix-server-conflicts": "0.6.0",
     "subscriptions-transport-ws": "0.9.17",
-    "webpack": "4.44.0"
+    "webpack": "4.44.1"
   },
   "devDependencies": {}
 }
