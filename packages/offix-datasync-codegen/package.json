@@ -21,7 +21,7 @@
     "typescript": "3.9.7"
   },
   "dependencies": {
-    "@graphback/core": "0.15.0",
+    "@graphback/core": "0.15.1",
     "graphql-metadata": "0.7.3"
   }
 }
