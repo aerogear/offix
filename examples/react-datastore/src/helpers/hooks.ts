@@ -44,9 +44,9 @@ export const useFindTodos = () => {
     })();
 
     const subscriptions: Array<Subscription> = [];
-    subscriptions.push(TodoModel.on(CRUDEvents.ADD, refreshState));
-    subscriptions.push(TodoModel.on(CRUDEvents.UPDATE, refreshState));
-    subscriptions.push(TodoModel.on(CRUDEvents.DELETE, refreshState));
+    subscriptions.push(TodoModel.subscribe(CRUDEvents.ADD, refreshState));
+    subscriptions.push(TodoModel.subscribe(CRUDEvents.UPDATE, refreshState));
+    subscriptions.push(TodoModel.subscribe(CRUDEvents.DELETE, refreshState));
 
     return () => {
       subscriptions.forEach((sub) => sub.unsubscribe());
