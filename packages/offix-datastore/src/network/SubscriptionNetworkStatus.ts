@@ -3,8 +3,7 @@ import { SubscriptionClient } from "subscriptions-transport-ws";
 import { NetworkStatusEvent } from "./NetworkStatus";
 import { WebNetworkStatus } from "./WebNetworkStatus";
 
-
-/**Î
+/**
  * The default implementation of the NetworkStatus listener
  * uses the websocket connection to the server to detect
  * changes in the network status and use this as an indicator

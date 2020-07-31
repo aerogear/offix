@@ -1,6 +1,6 @@
 
 import { ClientOptions } from "subscriptions-transport-ws";
-import { ClientOptions as URQLOriginalOptions } from "urql"
+import { ClientOptions as URQLOriginalOptions } from "urql";
 /**
  * Represents error information returned from GraphQL Client
  */
@@ -9,7 +9,7 @@ export interface GraphQLClientReponse<T = any> {
   errors?: any[];
 }
 
-export interface URQLConfig extends Omit<URQLOriginalOptions, "url"> { }
+export type URQLConfig = Omit<URQLOriginalOptions, "url">;
 
 export interface GraphQLClientConfig {
   /**
@@ -30,5 +30,5 @@ export interface GraphQLClientConfig {
   /**
    * URLQL specific options
    */
-  clientConfig?: URQLConfig
+  clientConfig?: URQLConfig;
 }

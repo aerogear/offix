@@ -14,7 +14,7 @@ export interface MutationRequest {
   /**
    * Version used to detect changes in structure
    */
-  version: number,
+  version: number;
   /**
    * Document mutation to be executed on server
    */

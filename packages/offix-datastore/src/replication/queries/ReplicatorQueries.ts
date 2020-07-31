@@ -8,15 +8,15 @@ export interface ReplicatorQueries {
   /**
    * FindQuery used to fetch data
    */
-  find: string | DocumentNode;
+  find: DocumentNode;
 
   /**
    * GraphQL get operation
    */
-  get: string | DocumentNode;
+  get: DocumentNode;
 
   /**
    * GraphQL sync operation
    */
-  sync: string | DocumentNode;
+  sync: DocumentNode;
 }

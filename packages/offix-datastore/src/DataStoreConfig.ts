@@ -17,5 +17,5 @@ export interface DataStoreConfig {
   /**
    * Configuration for replication engine
    */
-  replicationConfig?: GlobalReplicationConfig
+  replicationConfig?: GlobalReplicationConfig;
 }

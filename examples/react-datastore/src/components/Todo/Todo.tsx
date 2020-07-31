@@ -9,14 +9,14 @@ import { useDeleteTodo } from '../../helpers/hooks';
 export const Todo = ({ todo }: TodoProps) => {
   const [edit, setEdit] = useState<boolean>(false);
   const { deleteTodo } = useDeleteTodo();
-  
+
   const handleDelete = (e: FormEvent) => {
     e.preventDefault();
     deleteTodo((t) => t.id('eq', todo.id))
     .then((res: any) => console.log(res))
     .catch((error: any) => console.log(error));
   };
-  
+
   if (edit) {
     return (
       <EditTodo
