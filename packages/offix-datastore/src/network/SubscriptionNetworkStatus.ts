@@ -13,10 +13,6 @@ export class SubscriptionNetworkStatus extends WebNetworkStatus {
   public subscriber: Observable<NetworkStatusEvent>;
   private isOnlineFlag?: boolean;
 
-  public isNetworkReachable() {
-    return Promise.resolve(true);
-  }
-
   public constructor(subscriptionClient: SubscriptionClient) {
     super();
     this.subscriber = new Observable((observer) => {
@@ -27,11 +23,15 @@ export class SubscriptionNetworkStatus extends WebNetworkStatus {
     this.subscriber.subscribe((x: NetworkStatusEvent) => this.isOnlineFlag = x.isOnline);
   }
 
-  public isOnline(): Promise<boolean> {
+  public isNetworkReachable() {
+    return Promise.resolve(true);
+  }
+
+  public async isOnline(): Promise<boolean> {
     if (this.isOnlineFlag === undefined) {
       return super.isOnline();
     }
-    return Promise.resolve(super.isOnline() && this.isOnlineFlag);
+    return Promise.resolve((await super.isOnline()) && this.isOnlineFlag);
   }
 
   public subscribe(observer: ZenObservable.Observer<NetworkStatusEvent>) {

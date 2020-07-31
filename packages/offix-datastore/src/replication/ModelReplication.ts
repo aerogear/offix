@@ -4,7 +4,6 @@ import { ModelReplicationConfig, MutationsConfig } from "./api/ReplicationConfig
 import { NetworkStatus } from "../network/NetworkStatus";
 import { buildGraphQLCRUDMutations } from "./mutations/buildGraphQLCRUDMutations";
 import { buildGraphQLCRUDQueries } from ".";
-import { buildGraphQLCRUDSubscriptions } from "./subscriptions/buildGraphQLCRUDSubscriptions";
 import { MutationsReplicationQueue } from "./mutations/MutationsQueue";
 import { Model } from "../Model";
 import { Client as URQLClient } from "urql";
@@ -50,9 +49,18 @@ export class ModelReplication implements IModelReplicator {
     }
 
     if (config.liveupdates?.enabled) {
-      const subscriptionQueries = buildGraphQLCRUDSubscriptions(this.model);
+      // const subscriptionQueries = buildGraphQLCRUDSubscriptions(this.model);
       // TODOs
     }
+  }
+
+  public forceDeltaQuery<T>(): Promise<void> {
+    //TODO
+    return Promise.resolve();
+  }
+
+  public resetReplication<T>(config: ModelReplicationConfig): void {
+    // TODO
   }
 
   private createMutationsReplication(networkStatus: NetworkStatus, config: MutationsConfig) {
@@ -107,14 +115,5 @@ export class ModelReplication implements IModelReplicator {
       version: 1,
       eventType
     };
-  }
-
-  public forceDeltaQuery<T>(): Promise<void> {
-    //TODO
-    return Promise.resolve();
-  }
-
-  public resetReplication<T>(config: ModelReplicationConfig): void {
-    // TODO
   }
 }

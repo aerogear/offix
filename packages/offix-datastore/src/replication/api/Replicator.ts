@@ -1,10 +1,6 @@
-import { CRUDEvents, StoreChangeEvent, LocalStorage } from "../../storage";
-import { PredicateFunction } from "../../predicates";
-import Observable from "zen-observable";
-import { GraphQLClientReponse } from "./GraphQLClient";
+import { CRUDEvents, LocalStorage } from "../../storage";
 import { Model } from "../../Model";
-import { PushStream } from "../../utils/PushStream";
-import { ModelReplicationConfig, GlobalReplicationConfig } from "./ReplicationConfig";
+import { ModelReplicationConfig } from "./ReplicationConfig";
 import { NetworkStatus } from "../../network/NetworkStatus";
 
 /**
