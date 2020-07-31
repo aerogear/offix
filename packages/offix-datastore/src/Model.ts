@@ -57,7 +57,7 @@ export class Model<T = unknown> {
     this.schema = schema;
     this.storage = storage;
     // TODO set primary keys here or thru api
-    this.storage.addStore({ name:  this.schema.getStoreName()});
+    this.storage.addStore({ name: this.schema.getStoreName() });
   }
 
   public getFields() {
@@ -110,8 +110,9 @@ export class Model<T = unknown> {
     return this.storage
       .storeChangeEventStream.subscribe((event: StoreChangeEvent) => {
         if (event.eventType !== eventType) { return; }
-        if(event.storeName === this.schema.getStoreName()){
-
+        // Check if the same store
+        if (event.storeName === this.schema.getStoreName()) {
+          listener(event);
         }
       });
   }
