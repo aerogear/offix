@@ -14,7 +14,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/jest": "26.0.7",
+    "@types/jest": "26.0.8",
     "jest": "26.2.1",
     "rimraf": "3.0.2",
     "ts-jest": "26.1.4",

@@ -30,7 +30,7 @@
   "devDependencies": {
     "@size-limit/preset-small-lib": "4.5.5",
     "@types/graphql": "14.2.3",
-    "@types/jest": "26.0.7",
+    "@types/jest": "26.0.8",
     "@typescript-eslint/eslint-plugin": "2.34.0",
     "@typescript-eslint/parser": "2.34.0",
     "del-cli": "3.0.1",
