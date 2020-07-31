@@ -20,14 +20,10 @@ export const defaultConfig: GlobalReplicationConfig = {
   // Delta, Mutations and Subscriptions defaults
   delta: {
     enabled: true,
-    pullInterval: 1000 * 60 * 1, // 1 minute
-    forceOnReconnect: true,
-    forceOnReconnectDelay: 3000 // 3 seconds
+    pullInterval: 1000 * 60 * 1 // 1 minute
   },
   liveupdates: {
-    enabled: true,
-    forceReconnect: true,
-    forceOnReconnectDelay: 3000
+    enabled: true
   },
   mutations: {
     enabled: true
