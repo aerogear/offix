@@ -3,10 +3,10 @@ import { Model } from "../../Model";
 import { reducer, InitialState, ActionType } from "../ReducerUtils";
 import { Predicate } from "../../predicates";
 
-export const useUpdate = (model: Model) => {
+export const useUpdate = <T>(model: Model<T>) => {
     const [state, dispatch] = useReducer(reducer, InitialState);
 
-    const update = async (input: any, predicate?: Predicate<unknown>) => {
+    const update = async (input: any, predicate?: Predicate<T>) => {
         if (state.isLoading) { return; }
 
         dispatch({ type: ActionType.INITIATE_REQUEST });

@@ -3,10 +3,10 @@ import { Model } from "../../Model";
 import { reducer, InitialState, ActionType } from "../ReducerUtils";
 import { Predicate } from "../../predicates";
 
-export const useRemove = (model: Model) => {
+export const useRemove = <T>(model: Model<T>) => {
     const [state, dispatch] = useReducer(reducer, InitialState);
 
-    const remove = async (predicate?: Predicate<unknown>) => {
+    const remove = async (predicate?: Predicate<T>) => {
         if (state.isLoading) { return; }
 
         dispatch({ type: ActionType.INITIATE_REQUEST });
