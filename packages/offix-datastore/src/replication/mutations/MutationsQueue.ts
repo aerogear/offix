@@ -84,7 +84,7 @@ export class MutationsReplicationQueue {
     }
     // Clone queue
     let currentItems = Object.assign({}, this.items) as MutationRequest[];
-    while (open && currentItems.length != 0) {
+    while (open && currentItems.length !== 0) {
       const isOnline = await this.options.networkStatus.isOnline();
       if (isOnline) {
         const item = currentItems.shift();
