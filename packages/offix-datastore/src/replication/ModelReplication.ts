@@ -11,9 +11,8 @@ import { Client as URQLClient } from "urql";
 import { createLogger } from "../utils/logger";
 import { DocumentNode } from "graphql";
 import { DeltaReplicator } from "./queries/DeltaReplicator";
-import { convertPredicateToFilter } from "./utils/convertPredicateToFilter";
 
-const logger = createLogger("replicator");
+const logger = createLogger("modelreplicator");
 
 /**
  * Represents model replication object
@@ -38,8 +37,16 @@ export class ModelReplication implements IModelReplicator {
 
     if (config.delta?.enabled) {
       const queries = buildGraphQLCRUDQueries(this.model);
-      // const replicator = new DeltaReplicator(config.delta, networkInterface);
-      // replicator.start(queries.sync);
+      const deltaOptions = {
+        config: config.delta,
+        client: this.client,
+        networkInterface,
+        storage: this.storage,
+        query: queries.sync,
+        model: this.model
+      };
+      const replicator = new DeltaReplicator(deltaOptions);
+      replicator.start();
     }
 
     if (config.liveupdates?.enabled) {
@@ -87,7 +94,7 @@ export class ModelReplication implements IModelReplicator {
     });
     mutationQueue.init().then(() => {
       mutationQueue.process();
-    })
+    });
   }
 
   // TODO extract to simplify overriding replication
@@ -104,7 +111,7 @@ export class ModelReplication implements IModelReplicator {
 
   public forceDeltaQuery<T>(): Promise<void> {
     //TODO
-    return Promise.resolve()
+    return Promise.resolve();
   }
 
   public resetReplication<T>(config: ModelReplicationConfig): void {

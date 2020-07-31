@@ -20,13 +20,13 @@ export interface CustomEngines {
    * By default DataStore will use IndexedDB that might not be available in every environment.
    * If you wish to override adapter you can supply it here
    */
-  storeAdapter?: StorageAdapter,
+  storeAdapter?: StorageAdapter;
 
   /**
    * Custom replication mechanism that will replicate data.
    * By default DataStore will be GraphQL (https://graphqlcrud.org) replication mechanism
    */
-  replicator?: IReplicator
+  replicator?: IReplicator;
 }
 
 /**

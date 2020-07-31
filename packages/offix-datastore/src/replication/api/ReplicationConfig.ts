@@ -1,7 +1,7 @@
 
 import { GraphQLClientConfig } from "./GraphQLClient";
 import { NetworkStatus } from "../../network/NetworkStatus";
-import { Predicate } from "../../predicates";
+import { PredicateFunction } from "../../predicates";
 import { MutationRequest } from "../mutations/MutationRequest";
 
 /**
@@ -10,8 +10,6 @@ import { MutationRequest } from "../mutations/MutationRequest";
 export interface DeltaQueriesConfig {
   enabled: boolean;
   pullInterval?: number;
-  forceOnReconnect?: boolean;
-  forceOnReconnectDelay?: number;
   queryLimit?: number;
 }
 
@@ -20,8 +18,6 @@ export interface DeltaQueriesConfig {
  */
 export interface LiveUpdatesConfig {
   enabled: boolean;
-  forceReconnect?: boolean;
-  forceOnReconnectDelay?: number;
 }
 
 /**
@@ -30,6 +26,11 @@ export interface LiveUpdatesConfig {
  * @returns MutationRequest if request should be repeated
  */
 export type UserErrorHandler = (networkError: any, graphqlError: any) => MutationRequest | undefined;
+
+/**
+ * Handle errors repeat request if needed
+ */
+export type PullErrorHandler = (networkError: any, graphqlError: any) => boolean;
 
 /**
  * Allows to update queue operations. Returns new updated queue that should be persisted
@@ -45,12 +46,12 @@ export interface MutationsConfig {
   /**
    * Allow users to specify error handler that will check error type and repeat operations
    */
-  errorHandler?: UserErrorHandler
+  errorHandler?: UserErrorHandler;
 
   /**
    * Allows to update queue operations. Returns new updated queue that should be persisted
    */
-  resultProcessor?: ResultProcessor
+  resultProcessor?: ResultProcessor;
 
   /**
    * Updates fetch options for particular model
@@ -92,25 +93,47 @@ export interface GlobalReplicationConfig {
   networkStatus?: NetworkStatus;
 }
 
+
 /**
- * Extension to global query configuration
+ * Model delta config
  */
-export interface ModelPredicateQuery {
+export interface ModelDeltaConfig extends DeltaQueriesConfig {
   /**
    * Predicate that will be be transformed to remote GraphQL query
    */
-  // TODO remove unneded generics
-  predicate?: Predicate<any>
-}
+  predicate?: PredicateFunction;
+
+  /**
+   *  Limit of the queries
+   */
+  limit?: number;
+
+  /**
+  * Allow users to specify error handler that will check error type and repeat operations
+  */
+  errorHandler?: PullErrorHandler;
+};
+
+
+export interface ModelSubscriptionsConfig extends DeltaQueriesConfig {
+  /**
+  * Predicate that will be be transformed to remote GraphQL query
+  */
+  predicate?: PredicateFunction;
+
+  /**
+  * Allow users to specify error handler that will check error type and repeat operations
+  */
+  errorHandler?: PullErrorHandler;
+};
 
 /**
  * Model specific configuration for replication
  */
-
 export interface ModelReplicationConfig {
   // TODO add ability to change url for replication
-  delta?: DeltaQueriesConfig & ModelPredicateQuery;
-  liveupdates?: LiveUpdatesConfig & ModelPredicateQuery;
+  delta?: ModelDeltaConfig;
+  liveupdates?: ModelSubscriptionsConfig;
   mutations?: MutationsConfig;
 }
 

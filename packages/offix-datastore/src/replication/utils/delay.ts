@@ -8,4 +8,4 @@
  * ```
  * @param time time to wait
  */
-export const delay = (time: number) => new Promise(r => setTimeout(r, time))
+export const delay = (time: number) => new Promise(r => setTimeout(r, time));

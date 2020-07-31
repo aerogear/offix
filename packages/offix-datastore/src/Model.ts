@@ -3,7 +3,7 @@ import { createPredicate, Predicate } from "./predicates";
 import { StoreChangeEvent } from "./storage";
 import { ModelSchema } from "./ModelSchema";
 import { ModelReplicationConfig } from "./replication/api/ReplicationConfig";
-import { IModelReplicator, IReplicator } from "./replication";
+import { IModelReplicator } from "./replication";
 
 export interface FieldOptions {
   /** GraphQL type */
@@ -45,14 +45,14 @@ export interface ModelConfig<T = unknown> {
  * Provides CRUD capabilities for a model
  */
 export class Model<T = unknown> {
-  private storage: LocalStorage;
   public schema: ModelSchema<T>;
   public replicationConfig?: ModelReplicationConfig;
   public replicator?: IModelReplicator;
+  private storage: LocalStorage;
 
   constructor(
     schema: ModelSchema<T>,
-    storage: LocalStorage,
+    storage: LocalStorage
   ) {
     this.schema = schema;
     this.storage = storage;

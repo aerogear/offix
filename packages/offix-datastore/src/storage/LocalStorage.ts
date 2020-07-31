@@ -135,7 +135,7 @@ export class LocalStorage {
    * @param config
    */
   public createStores(config: DataStoreConfig) {
-    const name = config.dbName || "offixdb"
+    const name = config.dbName || "offixdb";
     const version = config.schemaVersion || 1;
     this.adapter.createStores(name, version);
   }

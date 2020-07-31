@@ -12,12 +12,12 @@ import { Model } from "../../Model";
 const logger = createLogger("queue");
 
 interface MutationReplicationOptions {
-  storage: LocalStorage,
-  model: Model,
-  client: Client,
-  networkStatus: NetworkStatus,
-  errorHandler?: UserErrorHandler,
-  resultProcessor?: ResultProcessor
+  storage: LocalStorage;
+  model: Model;
+  client: Client;
+  networkStatus: NetworkStatus;
+  errorHandler?: UserErrorHandler;
+  resultProcessor?: ResultProcessor;
 }
 
 /**
@@ -41,10 +41,8 @@ export class MutationsReplicationQueue {
    * Initialize networkstatus and Queue to make sure that it is in proper state after startup.
    */
   public async init() {
-    this.open = await this.options.networkStatus.isOnline()
-    this.options.storage.query(MUTATION_QUEUE,)
-    this.open = await this.options.networkStatus.isOnline()
-    this.options.storage.query(MUTATION_QUEUE,)
+    this.open = await this.options.networkStatus.isOnline();
+    this.options.storage.query(MUTATION_QUEUE);
 
     // Subscribe to network updates and open and close replication
     this.options.networkStatus.subscribe({
@@ -57,7 +55,7 @@ export class MutationsReplicationQueue {
       complete: () => {
         this.open = false;
       }
-    })
+    });
   }
 
   /**
@@ -81,7 +79,7 @@ export class MutationsReplicationQueue {
   public async process() {
     this.open = await this.options.networkStatus.isOnline();
     if (!this.open) {
-      logger("Client offline. Stop processsing queue")
+      logger("Client offline. Stop processsing queue");
       return;
     }
     // Clone queue
@@ -103,7 +101,7 @@ export class MutationsReplicationQueue {
             logger("Unhandled error");
             // TODO Id should be accesible easily
             // TODO reset processing - while loop is not flexible here
-            this.clearQueueById(item?.variables.input.id)
+            this.clearQueueById(item?.variables.input.id);
           };
           currentItems = this.items;
         });
@@ -133,7 +131,7 @@ export class MutationsReplicationQueue {
       // TODO add number of retries
       // All auth errors should he handled by user error provider
       logger("error replied due to network error");
-      return request
+      return request;
     }
 
     return undefined;
@@ -145,7 +143,7 @@ export class MutationsReplicationQueue {
 
   private resultProcessor(queue: MutationRequest[], currentItem: MutationRequest, data: OperationResult<any>) {
     // TODO generic handling or responses
-    const response = data.data[Object.keys(data.data)[0]]
+    const response = data.data[Object.keys(data.data)[0]];
     this.options.storage.save(currentItem.storeName, response);
     // TODO transations
     if (currentItem.eventType === CRUDEvents.ADD) {
@@ -159,7 +157,7 @@ export class MutationsReplicationQueue {
   }
 
   private clearQueueById(id: string) {
-    const newItems = []
+    const newItems = [];
     for (const item of this.items) {
       if (item.variables.data.id !== id) {
         newItems.push(item);

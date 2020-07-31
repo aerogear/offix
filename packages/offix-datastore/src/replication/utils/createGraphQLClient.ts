@@ -7,7 +7,7 @@ const defaultWsConfig: ClientOptions = {
   lazy: false,
   reconnectionAttempts: 10000000,
   inactivityTimeout: 100
-}
+};
 
 /**
  * Creates URQL GraphQL Client with optional websockets support.
@@ -17,7 +17,7 @@ const defaultWsConfig: ClientOptions = {
 export function createGraphQLClient(clientConfig: GraphQLClientConfig) {
   const { wsUrl, wsConfig, ...config } = clientConfig;
   if (!wsUrl) {
-    return createClient(config)
+    return createClient(config);
   }
 
   const subscriptionClient = new SubscriptionClient(wsUrl, {

@@ -1,14 +1,12 @@
 
-import { IReplicator, IOperation } from "./api/Replicator";
+import { IReplicator } from "./api/Replicator";
 import { LocalStorage } from "../storage";
-import { createLogger } from "../utils/logger";
 import { Model } from "../Model";
 import { WebNetworkStatus } from "../network/WebNetworkStatus";
 import { NetworkStatus } from "../network/NetworkStatus";
 import { GlobalReplicationConfig, ModelReplicationConfig } from "./api/ReplicationConfig";
 import { createGraphQLClient } from "./utils/createGraphQLClient";
 import { ModelReplication } from "./ModelReplication";
-
 
 /**
  * Defaults for replicating settings aggregated in single place
@@ -34,7 +32,7 @@ export const defaultConfig: GlobalReplicationConfig = {
   mutations: {
     enabled: true
   }
-}
+};
 
 /**
  * Performs replication using GraphQL
@@ -45,7 +43,7 @@ export class GraphQLCRUDReplicator implements IReplicator {
 
   constructor(globalReplicationConfig: GlobalReplicationConfig) {
     this.config = Object.assign({}, defaultConfig, globalReplicationConfig);
-    this.networkStatus = this.config.networkStatus || new WebNetworkStatus;
+    this.networkStatus = this.config.networkStatus || new WebNetworkStatus();
   }
 
   /**
@@ -56,17 +54,17 @@ export class GraphQLCRUDReplicator implements IReplicator {
    */
   public async start(models: Model[], storage: LocalStorage) {
     // Generic client created only once at startup
-    const client = createGraphQLClient(this.config.client)
+    const client = createGraphQLClient(this.config.client);
     for (const model of models) {
       let config: ModelReplicationConfig = this.config;
       if (model.replicationConfig) {
-        config = Object.assign({}, this.config, model.replicationConfig)
+        config = Object.assign({}, this.config, model.replicationConfig);
       }
 
       // Replication on model level gives more refined control how individual
       // models are replicate and allows developers to directly control it.
       const modelReplication = new ModelReplication(model, storage, client);
-      modelReplication.init(config, this.networkStatus)
+      modelReplication.init(config, this.networkStatus);
       // We need to inject replicator for users to be able to execute it's public method
       model.setReplicator(modelReplication);
     }

@@ -6,6 +6,6 @@ export function createLogger(name: string): Debugger {
 
 export function enableLogger() {
   if (window?.localStorage) {
-    window.localStorage.setItem('debug', 'datasync:*');
+    window.localStorage.setItem("debug", "datasync:*");
   }
 }
