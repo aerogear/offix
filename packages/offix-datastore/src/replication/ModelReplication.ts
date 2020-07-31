@@ -10,6 +10,8 @@ import { Model } from "../Model";
 import { Client as URQLClient } from "urql";
 import { createLogger } from "../utils/logger";
 import { DocumentNode } from "graphql";
+import { DeltaReplicator } from "./queries/DeltaReplicator";
+import { convertPredicateToFilter } from "./utils/convertPredicateToFilter";
 
 const logger = createLogger("replicator");
 
@@ -36,7 +38,8 @@ export class ModelReplication implements IModelReplicator {
 
     if (config.delta?.enabled) {
       const queries = buildGraphQLCRUDQueries(this.model);
-      // TODO
+      // const replicator = new DeltaReplicator(config.delta, networkInterface);
+      // replicator.start(queries.sync);
     }
 
     if (config.liveupdates?.enabled) {
