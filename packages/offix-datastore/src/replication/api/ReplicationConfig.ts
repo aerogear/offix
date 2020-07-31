@@ -89,7 +89,7 @@ export interface GlobalReplicationConfig {
    * By default platform will assume that deal with web interfaces.
    * If you use react native you should override that with React Native specific interfaces.
    */
-  networkStatusProvider?: NetworkStatus;
+  networkStatus?: NetworkStatus;
 }
 
 /**

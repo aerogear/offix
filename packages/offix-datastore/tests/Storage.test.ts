@@ -15,7 +15,7 @@ describe("Test Transactions", () => {
     });
 
     afterEach(async () => {
-        storage.storeChangeEventStream.clearSubscriptions();
+        storage.storeChangeEventStream.finishSubscriptions();
         await storage.remove(storeName);
     });
 

@@ -45,7 +45,7 @@ export class GraphQLCRUDReplicator implements IReplicator {
 
   constructor(globalReplicationConfig: GlobalReplicationConfig) {
     this.config = Object.assign({}, defaultConfig, globalReplicationConfig);
-    this.networkStatus = this.config.networkStatusProvider || new WebNetworkStatus;
+    this.networkStatus = this.config.networkStatus || new WebNetworkStatus;
   }
 
   /**

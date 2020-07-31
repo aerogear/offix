@@ -4,7 +4,6 @@
 
 import "isomorphic-unfetch";
 import "fake-indexeddb/auto";
-import { ApolloServer } from "apollo-server";
 import { readFileSync } from "fs";
 
 import { DataStore } from "../src/DataStore";
@@ -12,7 +11,7 @@ import { Model } from "../src/Model";
 import { Predicate } from "../src/predicates";
 import { CRUDEvents } from "../src/storage";
 import { IndexedDBStorageAdapter } from "../src/storage/adapters/IndexedDBStorageAdapter";
-import { NetworkStatus } from "../src/utils/NetworkStatus";
+import { NetworkStatus } from "../src/network/NetworkStatus";
 
 const DB_NAME = "offix-datastore";
 const schema = JSON.parse(readFileSync(`${__dirname}/schema.json`).toString());
@@ -48,10 +47,6 @@ let NoteModel: Model<Note>;
 beforeEach(() => {
   const dataStore = new DataStore({
     dbName: DB_NAME,
-    clientConfig: {
-      url: "http://localhost:4000/",
-      networkStatus: {} as NetworkStatus
-    }
   });
   NoteModel = dataStore.createModel<Note>({
     name: "Note",
@@ -141,11 +136,11 @@ test("Observe local store events", async () => {
   const note = { title: "test", description: "description" };
   expect.assertions(3);
 
-  NoteModel.on(CRUDEvents.ADD, (event) => {
+  NoteModel.subscribe(CRUDEvents.ADD, (event) => {
     expect(event.eventType).toEqual(CRUDEvents.ADD);
     expect(event.data.title).toEqual(note.title);
   });
-  NoteModel.on(CRUDEvents.UPDATE, (event) => {
+  NoteModel.subscribe(CRUDEvents.UPDATE, (event) => {
     expect(event.eventType).toEqual(CRUDEvents.UPDATE);
   });
 
@@ -175,43 +170,3 @@ const typeDefs = `
     createNote(input: CreateNoteInput!): Note
   }
 `;
-
-
-test("Push local change to server", (done) => {
-  const note: Note = {
-    title: "test",
-    description: "test"
-  };
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers: {
-      Mutation: {
-        createNote: (_, { input }) => {
-          expect(input).toHaveProperty("title", note.title);
-          expect(input).toHaveProperty("description", note.description);
-          server.stop().finally(() => done());
-        }
-      }
-    }
-  });
-  server.listen();
-  NoteModel.save(note);
-});
-
-test.skip("Subscribe to changes from server", (done) => {
-  const note: Note = {
-    title: "test",
-    description: "test"
-  };
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers: {
-      Mutation: {
-        // eslint-disable-next-line
-        createNote: (_, { input }) => {}
-      }
-    }
-  });
-  server.listen();
-  NoteModel.save(note);
-});
