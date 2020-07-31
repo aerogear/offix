@@ -9,7 +9,7 @@ function App() {
 
   const [mounted, setMounted] = useState<boolean>(false);
   const [addView, setAddView] = useState<boolean>(false);
-  const  { loading, error, data } = useFindTodos();
+  const  { isLoading: loading, error, data } = useFindTodos();
 
   if (loading) return <Loading />;
 

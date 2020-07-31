@@ -7,7 +7,7 @@ import { useEditTodo } from '../../helpers/hooks';
 
 export function ToggleTodo ({ todo }: ToggleTodoProps) {
 
-  const { editTodo } = useEditTodo();
+  const { update: editTodo } = useEditTodo();
 
   const handleUpdate = () => {
     editTodo({
