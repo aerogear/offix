@@ -29,10 +29,6 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
   }
 
   public createStores(dbName: string, schemaVersion: number) {
-    if (!('indexedDB' in window)) {
-      // Devs need to handle that
-      throw new Error("IndexedDBMissing");
-    }
     logger("Creating stores", dbName, schemaVersion);
     const openreq = indexedDB.open(dbName, schemaVersion);
     openreq.onerror = () => this.rejectIDB(openreq.error);
