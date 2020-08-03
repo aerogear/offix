@@ -4,10 +4,8 @@ import { Predicate } from "../../predicates";
 import { reducer, InitialState, ActionType, Action } from "../ReducerUtils";
 import { CRUDEvents } from "../../storage";
 
-type ResultUpdateFunction = (data: any) => any;
-
 const createSubscribeToMore = (model: Model, dispatch: React.Dispatch<Action>) => {
-    return (eventType: CRUDEvents, updateResult: ResultUpdateFunction, predicate?: Predicate<unknown>) => {
+    return (eventType: CRUDEvents, updateResult: (data: any) => any, predicate?: Predicate<unknown>) => {
         // TODO subscribe to specific predicate
         const subscription = model.subscribe(eventType, (event) => {
             const newData = updateResult(event.data);
