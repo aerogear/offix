@@ -29,11 +29,11 @@ export const MODEL_METADATA_KEY = "storeName";
  */
 export interface IReplicator {
   /**
-   *
+   * Start replication for this model
    * @param model - model used for replication
    * @param storage - local storage
    */
-  getModelReplicator(model: Model, storage: LocalStorage): void;
+  startModelReplication(model: Model, storage: LocalStorage): void;
 }
 
 /**
