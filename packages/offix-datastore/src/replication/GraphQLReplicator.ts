@@ -45,7 +45,7 @@ export class GraphQLCRUDReplicator implements IReplicator {
     this.client = createGraphQLClient(this.config.client);
   }
 
-  public getModelReplicator(model: Model, storage: LocalStorage) {
+  public startModelReplication(model: Model, storage: LocalStorage) {
     let config: ModelReplicationConfig = this.config;
     if (model.replicationConfig) {
       config = Object.assign({}, this.config, model.replicationConfig);

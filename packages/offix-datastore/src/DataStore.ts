@@ -64,7 +64,7 @@ export class DataStore {
   public createModel<T>(schema: DataSyncJsonSchema<T>) {
     const modelSchema = new ModelSchema(schema);
     const model = new Model<T>(modelSchema, this.storage);
-    this.replicator?.getModelReplicator(model, this.storage);
+    this.replicator?.startModelReplication(model, this.storage);
     return model;
   }
 
