@@ -22,6 +22,8 @@ export class ModelReplication implements IModelReplicator {
   private storage: LocalStorage;
   private model: Model;
   private client: URQLClient;
+  private mutation: any;
+  private mutationQueue?: MutationsReplicationQueue;
 
   constructor(model: Model, storage: LocalStorage, client: URQLClient) {
     this.storage = storage;
@@ -63,11 +65,39 @@ export class ModelReplication implements IModelReplicator {
     // TODO
   }
 
+  public async replicate(data: any, eventType: CRUDEvents) {
+    if (!this.mutationQueue) {
+      return;
+    }
+
+    // Actual graphql queries need to be persisted at the time of request creation
+    // This will ensure consistency for situations when model changed (without migrating queue)
+    let mutationRequest;
+    const storeName = this.model.getStoreName();
+    if (CRUDEvents.ADD === eventType) {
+      mutationRequest = this.createMutationRequest(this.mutation.create, data, storeName, eventType);
+    }
+    else if (CRUDEvents.UPDATE === eventType) {
+      mutationRequest = this.createMutationRequest(this.mutation.update, data, storeName, eventType);
+    }
+    else if (CRUDEvents.DELETE === eventType) {
+      mutationRequest = this.createMutationRequest(this.mutation.delete, data, storeName, eventType);
+    } else {
+      logger("Invalid store event received");
+      throw new Error("Invalid store event received");
+    }
+
+    // Adding request to queue.
+    // Queue deals with: persistence, processing, offline, error handling, id mapping
+    // TODO await the completion of this request
+    this.mutationQueue.addMutationRequest(mutationRequest);
+  }
+
   private createMutationsReplication(networkStatus: NetworkStatus, config: MutationsConfig) {
     // TODO maybe we want this functions to be injected and replaced
     // Later consideration how replication engine is build
-    const mutation = buildGraphQLCRUDMutations(this.model);
-    const mutationQueue = new MutationsReplicationQueue({
+    this.mutation = buildGraphQLCRUDMutations(this.model);
+    this.mutationQueue = new MutationsReplicationQueue({
       storage: this.storage,
       client: this.client,
       networkStatus: networkStatus,
@@ -75,33 +105,8 @@ export class ModelReplication implements IModelReplicator {
       resultProcessor: config.resultProcessor,
       model: this.model
     });
-    this.storage.storeChangeEventStream.subscribe((event) => {
-      const { eventType, data, storeName, eventSource } = event;
-      // We getting all events here and filter only to user and store.
-      // In future we should split to have multiple push streams instead
-      if (eventSource === "user" && this.model.getStoreName() === storeName) {
-        // Actual graphql queries need to be persisted at the time of request creation
-        // This will ensure consistency for situations when model changed (without migrating queue)
-        let mutationRequest;
-        if (CRUDEvents.ADD === eventType) {
-          mutationRequest = this.createMutationRequest(mutation.create, data, storeName, eventType);
-        }
-        else if (CRUDEvents.UPDATE === eventType) {
-          mutationRequest = this.createMutationRequest(mutation.update, data, storeName, eventType);
-        }
-        else if (CRUDEvents.DELETE === eventType) {
-          mutationRequest = this.createMutationRequest(mutation.delete, data, storeName, eventType);
-        } else {
-          logger("Invalid store event received");
-          throw new Error("Invalid store event received");
-        }
-        // Adding request to queue.
-        // Queue deals with: persistence, processing, offline, error handling, id mapping
-        mutationQueue.addMutationRequest(mutationRequest);
-      }
-    });
-    mutationQueue.init().then(() => {
-      mutationQueue.process();
+    this.mutationQueue.init().then(() => {
+      this.mutationQueue?.process();
     });
   }
 

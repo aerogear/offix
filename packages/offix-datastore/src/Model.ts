@@ -73,7 +73,9 @@ export class Model<T = unknown> {
   }
 
   public save(input: T): Promise<T> {
-    return this.storage.save(this.schema.getStoreName(), input);
+    const data = this.storage.save(this.schema.getStoreName(), input);
+    this.replicator?.replicate(data, CRUDEvents.ADD);
+    return data;
   }
 
   public query(predicateFunction?: Predicate<T>) {
@@ -92,7 +94,9 @@ export class Model<T = unknown> {
 
     const modelPredicate = createPredicate(this.schema.getFields());
     const predicate = predicateFunction(modelPredicate);
-    return this.storage.update(this.schema.getStoreName(), input, predicate);
+    const data = this.storage.update(this.schema.getStoreName(), input, predicate);
+    this.replicator?.replicate(data, CRUDEvents.UPDATE);
+    return data;
   }
 
   public remove(predicateFunction?: Predicate<T>) {
@@ -103,7 +107,9 @@ export class Model<T = unknown> {
 
     const modelPredicate = createPredicate(this.schema.getFields());
     const predicate = predicateFunction(modelPredicate);
-    return this.storage.remove(this.schema.getStoreName(), predicate);
+    const data = this.storage.remove(this.schema.getStoreName(), predicate);
+    this.replicator?.replicate(data, CRUDEvents.DELETE);
+    return data;
   }
 
   public subscribe(eventType: CRUDEvents, listener: (event: StoreChangeEvent) => void) {
