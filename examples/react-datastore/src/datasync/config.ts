@@ -1,5 +1,6 @@
 import { DataStore } from 'offix-datastore';
 import { schema } from './schema';
+import { ITodo } from '../types';
 
 export const datastore = new DataStore({
   dbName: "offix-datasync",
@@ -14,6 +15,6 @@ export const datastore = new DataStore({
   }
 });
 
-export const TodoModel = datastore.createModel(schema.Todo);
+export const TodoModel = datastore.createModel<ITodo>(schema.Todo);
 
 datastore.init();
