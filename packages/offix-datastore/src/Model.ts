@@ -4,6 +4,7 @@ import { StoreChangeEvent } from "./storage";
 import { ModelSchema } from "./ModelSchema";
 import { ModelReplicationConfig } from "./replication/api/ReplicationConfig";
 import { IModelReplicator } from "./replication";
+import { PushStream, ObservablePushStream } from "./utils/PushStream";
 
 export interface FieldOptions {
   /** GraphQL type */
@@ -49,11 +50,13 @@ export class Model<T = unknown> {
   public replicationConfig?: ModelReplicationConfig;
   public replicator?: IModelReplicator;
   private storage: LocalStorage;
+  private changeEventStream: PushStream<StoreChangeEvent>;
 
   constructor(
     schema: ModelSchema<T>,
     storage: LocalStorage
   ) {
+    this.changeEventStream = new ObservablePushStream();
     this.schema = schema;
     this.storage = storage;
     // TODO set primary keys here or thru api
@@ -75,6 +78,12 @@ export class Model<T = unknown> {
   public save(input: T): Promise<T> {
     const data = this.storage.save(this.schema.getStoreName(), input);
     this.replicator?.replicate(data, CRUDEvents.ADD);
+    this.changeEventStream.publish({
+      eventType: CRUDEvents.ADD,
+      data,
+      storeName: this.getStoreName(),
+      eventSource: "user"
+    });
     return data;
   }
 
@@ -96,6 +105,12 @@ export class Model<T = unknown> {
     const predicate = predicateFunction(modelPredicate);
     const data = this.storage.update(this.schema.getStoreName(), input, predicate);
     this.replicator?.replicate(data, CRUDEvents.UPDATE);
+    this.changeEventStream.publish({
+      eventType: CRUDEvents.UPDATE,
+      data,
+      storeName: this.getStoreName(),
+      eventSource: "user"
+    });
     return data;
   }
 
@@ -109,17 +124,19 @@ export class Model<T = unknown> {
     const predicate = predicateFunction(modelPredicate);
     const data = this.storage.remove(this.schema.getStoreName(), predicate);
     this.replicator?.replicate(data, CRUDEvents.DELETE);
+    this.changeEventStream.publish({
+      eventType: CRUDEvents.DELETE,
+      data,
+      storeName: this.getStoreName(),
+      eventSource: "user"
+    });
     return data;
   }
 
   public subscribe(eventType: CRUDEvents, listener: (event: StoreChangeEvent) => void) {
-    return this.storage
-      .storeChangeEventStream.subscribe((event: StoreChangeEvent) => {
+    return this.changeEventStream.subscribe((event: StoreChangeEvent) => {
         if (event.eventType !== eventType) { return; }
-        // Check if the same store
-        if (event.storeName === this.schema.getStoreName()) {
-          listener(event);
-        }
+        listener(event);
       });
   }
 

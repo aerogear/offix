@@ -138,7 +138,7 @@ export class MutationsReplicationQueue {
   }
 
   private saveStore() {
-    this.options.storage.save(MUTATION_QUEUE, { storeName: this.options.model.getStoreName(), items: this.items }, "replication");
+    this.options.storage.save(MUTATION_QUEUE, { storeName: this.options.model.getStoreName(), items: this.items });
   }
 
   private resultProcessor(queue: MutationRequest[], currentItem: MutationRequest, data: OperationResult<any>) {
