@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { CRUDEvents } from 'offix-datastore';
 import { Button } from 'antd';
 import 'antd/dist/antd.css';
 
@@ -9,7 +10,14 @@ function App() {
 
   const [mounted, setMounted] = useState<boolean>(false);
   const [addView, setAddView] = useState<boolean>(false);
-  const  { isLoading: loading, error, data } = useFindTodos();
+  const  { isLoading: loading, error, data, subscribeToMore } = useFindTodos();
+  useEffect(() => {
+    const subscription = subscribeToMore(CRUDEvents.ADD, (newData) => {
+      if (!data) return [newData];
+      return [...data, newData];
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   if (loading) return <Loading />;
 
