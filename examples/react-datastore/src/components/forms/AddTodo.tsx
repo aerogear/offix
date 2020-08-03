@@ -13,7 +13,7 @@ import { useAddTodo } from '../../helpers/hooks';
 
 export const AddTodo = ({ cancel }: AddTodoProps) => {
 
-  const { addTodo } = useAddTodo();
+  const { save: addTodo } = useAddTodo();
 
   const handleSubmit = ({ title, description }: ITodo) => {
     addTodo({
