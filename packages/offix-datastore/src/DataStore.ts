@@ -35,16 +35,13 @@ export interface CustomEngines {
  * and GraphQL replication engine.
  */
 export class DataStore {
-  private models: Model<unknown>[];
   private storage: LocalStorage;
+  private replicator?: IReplicator;
 
   private config: DataStoreConfig;
-  private engines: CustomEngines | undefined;
 
   constructor(config: DataStoreConfig, engines?: CustomEngines) {
     this.config = config;
-    this.models = [];
-    this.engines = engines;
 
     if (engines && engines.storeAdapter) {
       this.storage = new LocalStorage(engines.storeAdapter);
@@ -52,13 +49,22 @@ export class DataStore {
       const indexedDB = new IndexedDBStorageAdapter();
       this.storage = new LocalStorage(indexedDB);
     }
+
+    if (this.config.replicationConfig) {
+      if (engines?.replicator) {
+        this.replicator = engines.replicator;
+      } else {
+        this.replicator = new GraphQLCRUDReplicator(this.config.replicationConfig);
+      }
+    } else {
+      logger("Replication configuration was not provided. Replication will be disabled");
+    }
   }
 
   public createModel<T>(schema: DataSyncJsonSchema<T>) {
     const modelSchema = new ModelSchema(schema);
     const model = new Model<T>(modelSchema, this.storage);
-    // TODO replace any
-    this.models.push(model as any);
+    this.replicator?.getModelReplicator(model, this.storage);
     return model;
   }
 
@@ -69,16 +75,5 @@ export class DataStore {
     this.storage.addStore({ name: MODEL_METADATA, keyPath: MODEL_METADATA_KEY });
     // TODO this fails on firefox
     this.storage.createStores(this.config);
-
-    if (this.config.replicationConfig) {
-      if (this.engines?.replicator) {
-        this.engines?.replicator.start(this.models, this.storage);
-      } else {
-        const gqlReplicator = new GraphQLCRUDReplicator(this.config.replicationConfig);
-        gqlReplicator.start(this.models, this.storage);
-      }
-    } else {
-      logger("Replication configuration was not provided. Replication will be disabled");
-    }
   }
 }

@@ -29,12 +29,11 @@ export const MODEL_METADATA_KEY = "storeName";
  */
 export interface IReplicator {
   /**
-   * Start replication process for managed models
    *
-   * @param models - models used for replication
+   * @param model - model used for replication
    * @param storage - local storage
    */
-  start(models: Model[], storage: LocalStorage): void;
+  getModelReplicator(model: Model, storage: LocalStorage): void;
 }
 
 /**
@@ -59,4 +58,6 @@ export interface IModelReplicator {
    * Removes all metadata used to replicate model and starts with the new configuration
    */
   resetReplication<T>(config: ModelReplicationConfig): void;
+
+  replicate(data: any, eventType: CRUDEvents): Promise<void>;
 }
