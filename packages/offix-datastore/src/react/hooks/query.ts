@@ -22,3 +22,21 @@ export const useQuery = (model: Model, predicate?: Predicate<unknown>) => {
 
     return state;
 };
+
+export const useLazyQuery = (model: Model) => {
+    const [state, dispatch] = useReducer(reducer, InitialState);
+
+    const query = async (predicate?: Predicate<unknown>) => {
+        if (state.isLoading) { return; }
+
+        dispatch({ type: ActionType.INITIATE_REQUEST });
+        try {
+            const results = await model.query(predicate);
+            dispatch({ type: ActionType.REQUEST_COMPLETE, data: results });
+        } catch (error) {
+            dispatch({ type: ActionType.REQUEST_COMPLETE, error });
+        }
+    }
+
+    return { ...state, query };
+}
