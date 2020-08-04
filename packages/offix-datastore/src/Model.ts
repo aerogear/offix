@@ -75,8 +75,8 @@ export class Model<T = unknown> {
     return this.schema.getStoreName();
   }
 
-  public save(input: T): Promise<T> {
-    const data = this.storage.save(this.schema.getStoreName(), input);
+  public async save(input: T): Promise<T> {
+    const data = await this.storage.save(this.schema.getStoreName(), input);
     this.replicator?.replicate(data, CRUDEvents.ADD);
     this.changeEventStream.publish({
       eventType: CRUDEvents.ADD,
@@ -95,7 +95,7 @@ export class Model<T = unknown> {
     return this.storage.query(this.schema.getStoreName(), predicate);
   }
 
-  public update(input: Partial<T>, predicateFunction?: Predicate<T>) {
+  public async update(input: Partial<T>, predicateFunction?: Predicate<T>) {
     if (!predicateFunction) {
       // TODO Identify ID
       return this.storage.update(this.schema.getStoreName(), input);
@@ -103,7 +103,7 @@ export class Model<T = unknown> {
 
     const modelPredicate = createPredicate(this.schema.getFields());
     const predicate = predicateFunction(modelPredicate);
-    const data = this.storage.update(this.schema.getStoreName(), input, predicate);
+    const data = await this.storage.update(this.schema.getStoreName(), input, predicate);
     this.replicator?.replicate(data, CRUDEvents.UPDATE);
     this.changeEventStream.publish({
       eventType: CRUDEvents.UPDATE,
@@ -114,7 +114,7 @@ export class Model<T = unknown> {
     return data;
   }
 
-  public remove(predicateFunction?: Predicate<T>) {
+  public async remove(predicateFunction?: Predicate<T>) {
     if (!predicateFunction) {
       // TODO indentify and pass id directly
       return this.storage.remove(this.schema.getStoreName());
@@ -122,7 +122,7 @@ export class Model<T = unknown> {
 
     const modelPredicate = createPredicate(this.schema.getFields());
     const predicate = predicateFunction(modelPredicate);
-    const data = this.storage.remove(this.schema.getStoreName(), predicate);
+    const data = await this.storage.remove(this.schema.getStoreName(), predicate);
     this.replicator?.replicate(data, CRUDEvents.DELETE);
     this.changeEventStream.publish({
       eventType: CRUDEvents.DELETE,
@@ -135,9 +135,8 @@ export class Model<T = unknown> {
 
   public subscribe(eventType: CRUDEvents, listener: (event: StoreChangeEvent) => void) {
     return this.changeEventStream.subscribe((event: StoreChangeEvent) => {
-        if (event.eventType !== eventType) { return; }
         listener(event);
-      });
+      }, (event: StoreChangeEvent) => (event.eventType === eventType));
   }
 
   /**
