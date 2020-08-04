@@ -4,7 +4,7 @@ import { PredicateFunction, ModelFieldPredicate } from "../../predicates";
 // import { generateId } from "../LocalStorage";
 import { createLogger } from "../../utils/logger";
 import { ModelSchema } from "../../ModelSchema";
-import websql from "websql";
+import "websql";
 
 const logger = createLogger("sqlite");
 
@@ -23,9 +23,14 @@ export class WebSQLAdapter implements StorageAdapter {
   private schemaVersion: number;
 
   constructor(dbName: string, schemaVersion: number) {
-    this.sqlite = websql.openDatabase(dbName, schemaVersion.toString(), "Offix datastore", 5 * 1024 * 1024);
     this.dbName = dbName;
     this.schemaVersion = schemaVersion;
+    invariant("openDatabase" in window, "WebSQL not supported");
+    this.sqlite = window.openDatabase(
+      dbName,
+      schemaVersion.toString(),
+      "Offix datastore", 5 * 1024 * 1024
+    );
   }
   // TODO Wrong architecture. Store can be created on demand
   // @ts-ignore
@@ -36,7 +41,7 @@ export class WebSQLAdapter implements StorageAdapter {
   public async createStores() {
     // eslint-disable-next-line
     this.sqlite.transaction(async (tx: SQLTransaction) => {
-      const existingStoreNames = await this.getStoreNames(tx);
+      const existingStoreNames = await this.getStoreNames();
       existingStoreNames.forEach((storeName) => {
         const existingModelStoreName = this.stores.find(((store) => (storeName === store.getStoreName())));
         if (existingModelStoreName) { return; }
@@ -47,7 +52,6 @@ export class WebSQLAdapter implements StorageAdapter {
 
       this.stores.forEach((store) => {
         if (existingStoreNames.includes(store.getName())) { return; }
-        // TODO hardcoded id and unused keypath
         const stmt = this.getCreateStatement(store);
         tx.executeSql(stmt, [], () => logger("Store created", store), errorCallback);
       });
@@ -55,22 +59,17 @@ export class WebSQLAdapter implements StorageAdapter {
   }
 
   public async save(storeName: string, input: any) {
-    this.sqlite.transaction((tx) => {
-      const cols = Object.keys(input).join(",");
-      const bindings = Object.keys(input).map(() => "?").join(",");
-      const vals = Object.values(input);
-      const stmt = `INSERT INTO ${storeName} (${cols}) VALUES (${bindings})`;
-      tx.executeSql(stmt, [...vals], () => {
-        logger("Item added to store", storeName, vals);
-      }, errorCallback);
-    });
+    const [cols, vals] = prepareStatement(input, "insert");
+    const stmt = `INSERT INTO ${storeName} ${cols}`;
+    this.transaction(stmt, vals);
   }
 
   public async query(storeName: string, predicate?: PredicateFunction) {
     if (!predicate) {
       return await this.getStore(storeName);
     }
-    const query = predicateToSQL(storeName, predicate as ModelFieldPredicate);
+    const condition = predicateToSQL(predicate as ModelFieldPredicate);
+    const query = `SELECT * FROM ${storeName} ${condition}`;
     // @ts-ignore
     const res = await this.readTransaction(query, [predicate.value]);
     return res;
@@ -78,31 +77,19 @@ export class WebSQLAdapter implements StorageAdapter {
 
   // @ts-ignore
   public async update(storeName: string, input: any, predicate?: PredicateFunction) {
-    // const targets = await this.query(storeName, predicate);
-    // const store = await this.getStore(storeName);
-
-    // const promises = targets.map((data) => this.convertToPromise<IDBValidKey>(
-    //   store.put({ ...data, ...input }))
-    // );
-    // await Promise.all(promises);
-    // // TODO redundant query to the DB.
-    // return this.query(storeName, predicate);
+    const condition = predicateToSQL(predicate as ModelFieldPredicate);
+    const [cols, vals] = prepareStatement(input, "update");
+    const query = `UPDATE ${storeName} SET ${cols} ${condition}`;
+    // @ts-ignore
+    return this.transaction(query, [...vals, predicate.value]);
   }
 
   // @ts-ignore
   public async remove(storeName: string, predicate?: PredicateFunction) {
-    // const store = await this.getStore(storeName);
-    // // TODO provide ability to delete from store by key (not fetching entire store which is innefficient)
-    // // detect if predicate is id or create separate method
-    // const all = await this.convertToPromise<any[]>(store.getAll());
-    // let targets = all;
-    // if (predicate) {
-    //   targets = predicate.filter(all);
-    // }
-    // await Promise.all(
-    //   targets.map((t) => this.convertToPromise(store.delete(t.id)))
-    // );
-    // return targets;
+    const condition = predicateToSQL(predicate as ModelFieldPredicate);
+    const query = `DELETE FROM ${storeName} ${condition}`;
+    // @ts-ignore
+    return this.transaction(query, [predicate.value]);
   }
 
   public getSQLiteInstance() {
@@ -113,7 +100,7 @@ export class WebSQLAdapter implements StorageAdapter {
     return this.readTransaction(`SELECT * FROM ${storeName}`, []);
   }
 
-  private getStoreNames(transaction: SQLTransaction): Promise<string[]> {
+  private getStoreNames(): Promise<string[]> {
     return new Promise((resolve, reject) => {
       const successCb = (tx: SQLTransaction, res: SQLResultSet) => {
         const l = res.rows.length - 1;
@@ -129,7 +116,7 @@ export class WebSQLAdapter implements StorageAdapter {
         return false;
       };
       this.sqlite.transaction((tx) => {
-        transaction.executeSql("SELECT name FROM sqlite_master WHERE name LIKE 'user_%'", [],
+        tx.executeSql("SELECT name FROM sqlite_master WHERE name LIKE 'user_%'", [],
           successCb,
           errorCb
         );
@@ -137,7 +124,7 @@ export class WebSQLAdapter implements StorageAdapter {
     });
   }
 
-  private async transaction(query: string, args: any, read: false) {
+  private async transaction(query: string, args: any) {
     return new Promise((resolve, reject) => {
       const successCb = (tx: SQLTransaction, res: SQLResultSet) => {
         logger("Executed query with results", res.rows);
@@ -214,12 +201,31 @@ export class WebSQLAdapter implements StorageAdapter {
   }
 }
 
-const predicateToSQL = (storeName: string, predicate: ModelFieldPredicate) => {
+// TODO change to constants/enums
+const prepareStatement = (input: any, type: string = "insert"): [string, any[]] => {
+  if (type === "insert") {
+    const cols = Object.keys(input).join(",");
+    const bindings = Object.keys(input).map(() => "?").join(",");
+    const vals = Object.values(input);
+    const statement = `(${cols}) VALUES (${bindings})`;
+    return [statement, vals];
+  }
+  if (type === "update") {
+    const statement = Object.keys(input).map((k) => {
+      return `${k} = ?`;
+    }).join(",");
+    const vals = Object.values(input);
+    return [statement, vals];
+  }
+  invariant(false, "Unsupported query type");
+};
+
+const predicateToSQL = (predicate: ModelFieldPredicate) => {
   const key = predicate.getKey();
   const op = predicate.getOperator().op;
   const operator = (op === "eq") ? "=" : undefined;
   invariant(operator, "Operator not supported");
-  return `SELECT * FROM ${storeName} WHERE ${key} ${operator} ?`;
+  return `WHERE ${key} ${operator} ?`;
 };
 
 const getType = (type: string): string => {
