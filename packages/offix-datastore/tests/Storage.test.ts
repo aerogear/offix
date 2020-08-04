@@ -15,17 +15,10 @@ describe("Test Transactions", () => {
     });
 
     afterEach(async () => {
-        storage.storeChangeEventStream.finishSubscriptions();
         await storage.remove(storeName);
     });
 
     test("transaction commit", async () => {
-        expect.assertions(2);
-
-        storage.storeChangeEventStream.subscribe(event => {
-            expect(event.data).toHaveProperty("name", "test");
-        });
-
         const transaction = await storage.createTransaction();
         await transaction.save(storeName, { name: "test" });
         await transaction.commit();
@@ -35,10 +28,6 @@ describe("Test Transactions", () => {
     });
 
     test("transaction rollback", async () => {
-        storage.storeChangeEventStream.subscribe(() => {
-            fail("No event should be fired");
-        });
-
         const transaction = await storage.createTransaction();
         await transaction.save(storeName, { name: "test 1" });
         await transaction.save(storeName, { name: "test 2" });
