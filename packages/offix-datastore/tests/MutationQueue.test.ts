@@ -32,9 +32,10 @@ const fireNetworkOffline = () => {
     windowEvents.offline();
 };
 
-const mockClienWithResponse = (response: Promise<any>): any => {
+const mockClienWithResponse = (response: Promise<any>, onMutation?: Function): any => {
     return {
-        mutation: jest.fn(() => {
+        mutation: (...args: any[]) => {
+            if (onMutation) onMutation(...args);
             return {
                 toPromise: async () => {
                     if (await networkStatus.isOnline()) return response;
@@ -43,9 +44,25 @@ const mockClienWithResponse = (response: Promise<any>): any => {
                     }));
                 }
             }
-        })
+        }
     };
 };
+const buildQueue = (client: any) => {
+    return new MutationsReplicationQueue({
+        storage,
+        model,
+        client,
+        networkStatus,
+    });
+};
+const dummyRequest = {
+    eventType: CRUDEvents.ADD,
+    version: 1,
+    variables: { id: "2" },
+    storeName: STORE_NAME,
+    mutation: {} as any
+};
+
 
 beforeAll(async () => {
     adapter.addStore({ name: MUTATION_QUEUE });
@@ -53,30 +70,43 @@ beforeAll(async () => {
     await adapter.createStores(DB_NAME, 1);
 });
 
-test("Queue works when online and stops when offline", async () => {
-    const client = mockClienWithResponse(Promise.resolve({}));
-    const clientWatch = client.mutation as jest.Mock;
-    const queue = new MutationsReplicationQueue({
-        storage,
-        model,
-        client,
-        networkStatus,
+beforeEach(() => storage.remove(STORE_NAME));
+
+test("Queue works when online", (done) => {
+    const client = mockClienWithResponse(Promise.resolve({}), () => {
+        networkStatus.isOnline().then((isOnline) => {
+            expect(isOnline).toBe(true);
+            done();
+        });
     });
+    const queue = buildQueue(client);
 
-    await queue.init();
-    const request = {
-        eventType: CRUDEvents.ADD,
-        version: 1,
-        variables: { id: "2" },
-        storeName: STORE_NAME,
-        mutation: {} as any
-    };
+    queue.init().then(() => {
+        fireNetworkOffline();
+        queue.addMutationRequest(dummyRequest);
+        fireNetworkOnline();
+    });
+});
 
-    fireNetworkOffline();
-    queue.addMutationRequest(request);
-    queue.addMutationRequest(request);
-    expect(clientWatch).toHaveBeenCalledTimes(0);
+test.skip("Update id after suscess response", (done) => {
+    const client = mockClienWithResponse(
+        Promise.resolve({ test: { id: 'server_id', name: 'test' } })
+    );
+    const queue = buildQueue(client);
 
-    fireNetworkOnline();
-    expect(clientWatch).toBeCalledTimes(2);
+    storage.save(STORE_NAME, { id: "client_id", name: "test" })
+        .then((data) => {
+            queue.init().then(() => {
+                fireNetworkOnline();
+                queue.addMutationRequest({
+                    ...dummyRequest,
+                    eventType: CRUDEvents.ADD,
+                    variables: data
+                });
+            });
+        });
+
+    // TODO do this inside success event listener
+    // const result = await storage.query(STORE_NAME);
+    // expect(result[0].id).toEqual('server_id');
 });
