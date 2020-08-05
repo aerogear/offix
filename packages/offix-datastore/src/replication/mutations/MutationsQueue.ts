@@ -1,4 +1,5 @@
 
+import travese from "traverse";
 import { MutationRequest } from "./MutationRequest";
 import { LocalStorage, CRUDEvents } from "../../storage";
 import { createLogger } from "../../utils/logger";
@@ -145,13 +146,22 @@ export class MutationsReplicationQueue {
     // TODO generic handling or responses
     const response = data.data[Object.keys(data.data)[0]];
     this.options.storage.save(currentItem.storeName, response);
+    
     // TODO transations
     if (currentItem.eventType === CRUDEvents.ADD) {
-      for (const item of queue) {
-        // TODO hardcoded id and hacky way to get object
-        item.variables.id = response.id;
-      }
+      // TODO hardcoded id and hacky way to get object
+      const clientSideId = currentItem.variables.id;
+
+      queue.forEach((item) => {
+        travese(item.variables).forEach(function (val) {
+          if (this.isLeaf && val === clientSideId) {
+            // TODO ids need be updated in storage
+            this.update(response.id);
+          }
+        });
+      })
     }
+    
     // TODO update version for conflicts.
     this.saveStore();
   }
