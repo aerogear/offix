@@ -9,6 +9,7 @@ import { NetworkStatus, NetworkStatusEvent } from "../../network/NetworkStatus";
 import { DocumentNode } from "graphql";
 import { ResultProcessor, UserErrorHandler } from "../api/ReplicationConfig";
 import { Model } from "../../Model";
+import { createPredicate } from "../../predicates";
 
 const logger = createLogger("queue");
 
@@ -72,7 +73,7 @@ export class MutationsReplicationQueue {
   public addMutationRequest(request: MutationRequest) {
     this.items.push(request);
     // Save entire queue
-    this.saveStore();
+    this.persistQueueTo();
     logger("Saved Queue. Preparing to process");
     this.process();
   }
@@ -138,32 +139,36 @@ export class MutationsReplicationQueue {
     return undefined;
   }
 
-  private saveStore() {
-    this.options.storage.save(MUTATION_QUEUE, { storeName: this.options.model.getStoreName(), items: this.items });
+  private persistQueueTo(storage: LocalStorage = this.options.storage) {
+    storage.save(MUTATION_QUEUE, { storeName: this.options.model.getStoreName(), items: this.items });
   }
 
-  private resultProcessor(queue: MutationRequest[], currentItem: MutationRequest, data: OperationResult<any>) {
+  private async resultProcessor(queue: MutationRequest[], currentItem: MutationRequest, data: OperationResult<any>) {
     // TODO generic handling or responses
+    // TODO hardcoded id and hacky way to get object
+    const clientSideId = currentItem.variables.id;
     const response = data.data[Object.keys(data.data)[0]];
-    this.options.storage.save(currentItem.storeName, response);
-    
-    // TODO transations
     if (currentItem.eventType === CRUDEvents.ADD) {
-      // TODO hardcoded id and hacky way to get object
-      const clientSideId = currentItem.variables.id;
-
       queue.forEach((item) => {
         travese(item.variables).forEach(function (val) {
           if (this.isLeaf && val === clientSideId) {
-            // TODO ids need be updated in storage
             this.update(response.id);
           }
         });
       })
     }
-    
-    // TODO update version for conflicts.
-    this.saveStore();
+
+    const transaction = await this.options.storage.createTransaction();
+    // The only way to filter pending a better way
+    const modelPredicate = createPredicate<any>(data as any);
+
+    try {
+      transaction.update(currentItem.storeName, response, modelPredicate.id('eq', clientSideId));
+      // TODO update version for conflicts.
+      this.persistQueueTo(transaction);
+    } catch (error) {
+      transaction.rollback();
+    }
   }
 
   private clearQueueById(id: string) {
@@ -174,6 +179,6 @@ export class MutationsReplicationQueue {
       }
     }
     this.items = newItems;
-    this.saveStore();
+    this.persistQueueTo();
   }
 }
