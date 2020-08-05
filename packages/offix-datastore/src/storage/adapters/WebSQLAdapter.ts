@@ -33,7 +33,6 @@ export class WebSQLAdapter implements StorageAdapter {
     );
   }
   // TODO Wrong architecture. Store can be created on demand
-  // @ts-ignore
   public addStore(config: ModelSchema) {
     this.stores.push(config);
   }
@@ -59,13 +58,13 @@ export class WebSQLAdapter implements StorageAdapter {
     });
   }
 
-  public async save(storeName: string, input: any) {
+  public async save(storeName: string, input: any): Promise<any> {
     const [cols, vals] = prepareStatement(input, "insert");
     const stmt = `INSERT INTO ${storeName} ${cols}`;
-    this.transaction(stmt, vals);
+    return this.transaction(stmt, vals);
   }
 
-  public async query(storeName: string, predicate?: PredicateFunction) {
+  public async query(storeName: string, predicate?: PredicateFunction): Promise<any> {
     if (!predicate) {
       return await this.getStore(storeName);
     }
@@ -76,8 +75,7 @@ export class WebSQLAdapter implements StorageAdapter {
     return res;
   }
 
-  // @ts-ignore
-  public async update(storeName: string, input: any, predicate?: PredicateFunction) {
+  public async update(storeName: string, input: any, predicate?: PredicateFunction): Promise<any> {
     const condition = predicateToSQL(predicate as ModelFieldPredicate);
     const [cols, vals] = prepareStatement(input, "update");
     const query = `UPDATE ${storeName} SET ${cols} ${condition}`;
@@ -85,8 +83,7 @@ export class WebSQLAdapter implements StorageAdapter {
     return this.transaction(query, [...vals, predicate.value]);
   }
 
-  // @ts-ignore
-  public async remove(storeName: string, predicate?: PredicateFunction) {
+  public async remove(storeName: string, predicate?: PredicateFunction): Promise<any> {
     const condition = predicateToSQL(predicate as ModelFieldPredicate);
     const query = `DELETE FROM ${storeName} ${condition}`;
     // @ts-ignore
@@ -95,6 +92,19 @@ export class WebSQLAdapter implements StorageAdapter {
 
   public getSQLiteInstance() {
     return this.sqlite;
+  }
+
+  createTransaction(): Promise<StorageAdapter> {
+    throw new Error("Method not implemented.");
+  }
+  commit(): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  rollback(): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  isTransactionOpen(): boolean {
+    throw new Error("Method not implemented.");
   }
 
   private async getStore(storeName: string) {
