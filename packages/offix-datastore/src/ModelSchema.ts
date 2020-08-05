@@ -22,6 +22,7 @@ export interface DataSyncProperties extends JSONSchema7 {
 export declare class DataSyncJsonSchema<T> {
   name: string;
   namespace?: string;
+  keyPath?: string;
   version?: number;
   indexes?: string[];
   encrypted?: string[];
@@ -33,6 +34,7 @@ export declare class DataSyncJsonSchema<T> {
 export class ModelSchema<T = any>{
   private name: string;
   private namespace: string;
+  private keyPath: string;
   private primaryKey: string;
   private fields: Fields<T>;
   private encrypted: string[];
@@ -48,6 +50,7 @@ export class ModelSchema<T = any>{
     this.primaryKey = extractPrimary(this.fields, schema.primaryKey);
     this.indexes = extractIndexes(this.fields, schema.indexes);
     this.encrypted = extractEncryptedFields(this.fields, schema.encrypted);
+    this.keyPath = schema.keyPath || this.primaryKey;
   }
 
   public fill(): void {
@@ -84,6 +87,10 @@ export class ModelSchema<T = any>{
 
   public getEncryptedFields(): string[] {
     return this.encrypted;
+  }
+
+  public getKeyPath(): string {
+    return this.keyPath;
   }
 
 };
