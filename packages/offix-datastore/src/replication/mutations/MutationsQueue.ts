@@ -85,7 +85,7 @@ export class MutationsReplicationQueue {
       return;
     }
     // Clone queue
-    let currentItems = Object.assign({}, this.items) as MutationRequest[];
+    let currentItems = Object.assign([], this.items) as MutationRequest[];
     while (this.open && currentItems.length !== 0) {
       const isOnline = await this.options.networkStatus.isOnline();
       if (isOnline) {
