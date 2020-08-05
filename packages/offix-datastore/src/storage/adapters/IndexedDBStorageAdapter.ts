@@ -1,8 +1,8 @@
 import { StorageAdapter } from "../api/StorageAdapter";
-import { IStoreConfig } from "../api/StoreConfig";
 import { PredicateFunction } from "../../predicates";
 import { generateId } from "../LocalStorage";
 import { createLogger } from "../../utils/logger";
+import { ModelSchema } from "../../ModelSchema";
 
 const logger = createLogger("idb");
 
@@ -11,12 +11,16 @@ const logger = createLogger("idb");
  */
 export class IndexedDBStorageAdapter implements StorageAdapter {
   private indexedDB: Promise<IDBDatabase>;
-  private stores: IStoreConfig[] = [];
+  private stores: ModelSchema[] = [];
   private resolveIDB: any;
   private rejectIDB: any;
   private transaction?: IDBTransaction;
+  private dbName: string;
+  private schemaVersion: number;
 
-  constructor(transaction?: IDBTransaction) {
+  constructor(dbName: string, schemaVersion: number, transaction?: IDBTransaction) {
+    this.dbName = dbName;
+    this.schemaVersion = schemaVersion;
     this.indexedDB = new Promise((resolve, reject) => {
       this.resolveIDB = resolve;
       this.rejectIDB = reject;
@@ -24,13 +28,13 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     this.transaction = transaction;
   }
   // TODO Wrong architecture. Store can be created on demand
-  public addStore(config: IStoreConfig) {
+  public addStore(config: ModelSchema) {
     this.stores.push(config);
   }
 
-  public createStores(dbName: string, schemaVersion: number) {
-    logger("Creating stores", dbName, schemaVersion);
-    const openreq = indexedDB.open(dbName, schemaVersion);
+  public createStores() {
+    logger("Creating stores", this.dbName, this.schemaVersion);
+    const openreq = indexedDB.open(this.dbName, this.schemaVersion);
     openreq.onerror = () => this.rejectIDB(openreq.error);
     openreq.onsuccess = () => {
       const db = openreq.result;
@@ -45,20 +49,25 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
       const db = openreq.result;
       const existingStoreNames = db.objectStoreNames;
 
+      db.onerror = (event) => {
+        logger("error", event);
+      };
+
       for (let i = 0; i < existingStoreNames.length; i++) {
         const storeName = (existingStoreNames.item(i) as string);
-        const existingModelStoreName = this.stores.find((({ name }) => (storeName === name)));
+        const existingModelStoreName = this.stores.find(((store) => (storeName === store.getStoreName())));
         if (existingModelStoreName) { return; }
 
         // model has been removed, remove it's store
         db.deleteObjectStore(storeName);
       }
 
-      this.stores.forEach(({ name, keyPath }) => {
-        if (existingStoreNames.contains(name)) { return; }
-        logger("Creating store", name, keyPath);
+      this.stores.forEach((store) => {
+        if (existingStoreNames.contains(store.getName())) { return; }
+        logger("Creating store", store.getStoreName());
         // TODO hardcoded id and unused keypath
-        db.createObjectStore(name, { keyPath: keyPath || "id" });
+        const keyPath = store.getKeyPath() || store.getPrimaryKey();
+        db.createObjectStore(store.getStoreName(), { keyPath });
       });
     };
   }
@@ -66,7 +75,7 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
   public async createTransaction() {
     const db = await this.indexedDB;
     const transaction = db.transaction((db.objectStoreNames as unknown as string[]), "readwrite");
-    return new IndexedDBStorageAdapter(transaction);
+    return new IndexedDBStorageAdapter(this.dbName, this.schemaVersion, transaction);
   }
 
   public commit() {
