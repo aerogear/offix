@@ -34,6 +34,7 @@
     "@types/json-schema": "7.0.5",
     "@types/uuid": "8.0.1",
     "@types/react-dom": "^16.9.8",
+    "@types/traverse": "^0.6.32",
     "apollo-server": "2.16.1",
     "debug": "4.1.1",
     "fake-indexeddb": "3.1.2",
@@ -51,6 +52,7 @@
     "subscriptions-transport-ws": "0.9.17",
     "tiny-invariant": "1.1.0",
     "urql": "1.10.0",
+    "traverse": "^0.6.6",
     "uuid": "8.3.0",
     "wonka": "4.0.14",
     "zen-observable": "0.8.15"
