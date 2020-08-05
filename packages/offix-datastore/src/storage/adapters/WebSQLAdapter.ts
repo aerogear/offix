@@ -1,10 +1,10 @@
+import "websql";
 import invariant from "tiny-invariant";
 import { StorageAdapter } from "../api/StorageAdapter";
 import { PredicateFunction, ModelFieldPredicate } from "../../predicates";
-// import { generateId } from "../LocalStorage";
+import { generateId } from "../LocalStorage";
 import { createLogger } from "../../utils/logger";
 import { ModelSchema } from "../../ModelSchema";
-import "websql";
 
 const logger = createLogger("sqlite");
 
@@ -39,20 +39,21 @@ export class WebSQLAdapter implements StorageAdapter {
   }
 
   public async createStores() {
-    // eslint-disable-next-line
-    this.sqlite.transaction(async (tx: SQLTransaction) => {
-      const existingStoreNames = await this.getStoreNames();
-      existingStoreNames.forEach((storeName) => {
-        const existingModelStoreName = this.stores.find(((store) => (storeName === store.getStoreName())));
-        if (existingModelStoreName) { return; }
+    const existingStoreNames = await this.getStoreNames();
+    existingStoreNames.forEach((storeName) => {
+      const existingModelStoreName = this.stores.find(((store) => (storeName === store.getName())));
+      if (existingModelStoreName) { return; }
+      this.sqlite.transaction((tx) => {
         tx.executeSql("DROP TABLE ?", [existingModelStoreName], () => {
           logger("Store deleted", existingModelStoreName);
         }, errorCallback);
       });
+    });
 
-      this.stores.forEach((store) => {
-        if (existingStoreNames.includes(store.getName())) { return; }
-        const stmt = this.getCreateStatement(store);
+    this.stores.forEach((store) => {
+      if (existingStoreNames.includes(store.getName())) { return; }
+      const stmt = this.getCreateStatement(store);
+      this.sqlite.transaction((tx) => {
         tx.executeSql(stmt, [], () => logger("Store created", store), errorCallback);
       });
     });
@@ -204,6 +205,7 @@ export class WebSQLAdapter implements StorageAdapter {
 // TODO change to constants/enums
 const prepareStatement = (input: any, type: string = "insert"): [string, any[]] => {
   if (type === "insert") {
+    input.id = generateId();
     const cols = Object.keys(input).join(",");
     const bindings = Object.keys(input).map(() => "?").join(",");
     const vals = Object.values(input);
