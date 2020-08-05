@@ -58,7 +58,7 @@ export class Model<T = unknown> {
     this.schema = schema;
     this.storage = storage;
     // TODO set primary keys here or thru api
-    this.storage.addStore({ name: this.schema.getStoreName() });
+    this.storage.addStore(this.schema);
   }
 
   public getFields() {
