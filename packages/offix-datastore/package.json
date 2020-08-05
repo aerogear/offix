@@ -24,7 +24,7 @@
     "@size-limit/preset-small-lib": "4.5.5",
     "@types/jest": "25.2.3",
     "@types/json-schema": "7.0.5",
-    "@types/uuid": "8.0.0",
+    "@types/uuid": "8.0.1",
     "apollo-server": "2.16.1",
     "debug": "4.1.1",
     "fake-indexeddb": "3.1.2",
