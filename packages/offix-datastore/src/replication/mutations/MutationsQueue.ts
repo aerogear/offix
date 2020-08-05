@@ -150,12 +150,12 @@ export class MutationsReplicationQueue {
     const response = data.data[Object.keys(data.data)[0]];
     if (currentItem.eventType === CRUDEvents.ADD) {
       queue.forEach((item) => {
-        travese(item.variables).forEach(function (val) {
+        travese(item.variables).forEach(function(val) {
           if (this.isLeaf && val === clientSideId) {
             this.update(response.id);
           }
         });
-      })
+      });
     }
 
     const transaction = await this.options.storage.createTransaction();
@@ -163,7 +163,7 @@ export class MutationsReplicationQueue {
     const modelPredicate = createPredicate<any>(data as any);
 
     try {
-      transaction.update(currentItem.storeName, response, modelPredicate.id('eq', clientSideId));
+      transaction.update(currentItem.storeName, response, modelPredicate.id("eq", clientSideId));
       // TODO update version for conflicts.
       this.persistQueueTo(transaction);
     } catch (error) {
