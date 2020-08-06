@@ -7,12 +7,12 @@ import { MutationsReplicationQueue } from "../src/replication/mutations/Mutation
 import { LocalStorage, CRUDEvents } from "../src/storage";
 import { IndexedDBStorageAdapter } from "../src/storage/adapters/IndexedDBStorageAdapter";
 import { WebNetworkStatus } from "../src/network/WebNetworkStatus";
-import { MUTATION_QUEUE } from "../src/replication";
 import { CombinedError } from "urql";
+import { metadataModel, queueModel } from "../src/replication/api/MetadataModels";
 
 const DB_NAME = "test";
 const STORE_NAME = "test";
-const adapter = new IndexedDBStorageAdapter();
+const adapter = new IndexedDBStorageAdapter(DB_NAME, 1);
 const storage = new LocalStorage(adapter);
 const model = { getStoreName: () => STORE_NAME } as any;
 
@@ -65,12 +65,12 @@ const dummyRequest = {
 
 
 beforeAll(async () => {
-    adapter.addStore({ name: MUTATION_QUEUE });
-    adapter.addStore({ name: STORE_NAME });
-    await adapter.createStores(DB_NAME, 1);
+    adapter.addStore(queueModel);
+    adapter.addStore(metadataModel);
+    await adapter.createStores();
 });
 
-beforeEach(() => storage.remove(STORE_NAME));
+// beforeEach(() => storage.remove(metadataModel.getName()));
 
 test("Queue works when online", (done) => {
     const client = mockClienWithResponse(Promise.resolve({}), () => {
