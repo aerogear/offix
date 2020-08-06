@@ -48,12 +48,12 @@ beforeEach(() => {
   const dataStore = new DataStore({
     dbName: DB_NAME,
   });
-  NoteModel = dataStore.createModel<Note>({
+  NoteModel = dataStore.setupModel<Note>({
     name: "Note",
     type: "object",
     properties: schema.Note
   });
-  dataStore.createModel<Comment>({
+  dataStore.setupModel<Comment>({
     name: "Comment",
     type: "object",
     properties: schema.Comment
