@@ -47,7 +47,6 @@ export interface ModelConfig<T = unknown> {
  */
 export class Model<T = unknown> {
   public schema: ModelSchema<T>;
-  public replicationConfig?: ModelReplicationConfig;
   public replicator?: IModelReplicator;
   private storage: LocalStorage;
   private changeEventStream: PushStream<StoreChangeEvent>;
@@ -137,15 +136,6 @@ export class Model<T = unknown> {
     return this.changeEventStream.subscribe((event: StoreChangeEvent) => {
         listener(event);
       }, (event: StoreChangeEvent) => (event.eventType === eventType));
-  }
-
-  /**
-   * Setup custom overrides for the model replication system
-   *
-   * @param replicationConfig replication configuration for individual model
-   */
-  public setupReplication(replicationConfig: ModelReplicationConfig) {
-    this.replicationConfig = replicationConfig;
   }
 
   /**

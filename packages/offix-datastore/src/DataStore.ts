@@ -6,6 +6,7 @@ import { IndexedDBStorageAdapter } from "./storage/adapters/IndexedDBStorageAdap
 import { ModelSchema, DataSyncJsonSchema } from "./ModelSchema";
 import { DataStoreConfig } from "./DataStoreConfig";
 import { createLogger, enableLogger } from "./utils/logger";
+import { ModelReplicationConfig } from "./replication/api/ReplicationConfig";
 
 const logger = createLogger("DataStore");
 // TODO disable logging before release
@@ -61,13 +62,23 @@ export class DataStore {
     }
   }
 
-  public createModel<T>(schema: DataSyncJsonSchema<T>) {
+  /**
+   * Initialize specific model using it's schema.
+   *
+   * @param schema - model schema containing fields and other details used to persist data
+   * @param replicationConfig optional override for replication configuration for this particular model
+   */
+  public setupModel<T>(schema: DataSyncJsonSchema<T>, replicationConfig?: ModelReplicationConfig) {
     const modelSchema = new ModelSchema(schema);
     const model = new Model<T>(modelSchema, this.storage);
-    this.replicator?.startModelReplication(model, this.storage);
+    this.replicator?.startModelReplication(model, this.storage, replicationConfig);
     return model;
   }
 
+
+  /**
+   * Initialize
+   */
   public init() {
     // Created fixed stores for replication
     // TODO this is just workaround for replication engine

@@ -45,10 +45,10 @@ export class GraphQLCRUDReplicator implements IReplicator {
     this.client = createGraphQLClient(this.config.client);
   }
 
-  public startModelReplication(model: Model, storage: LocalStorage) {
+  public startModelReplication(model: Model, storage: LocalStorage, replicationConfig?: ModelReplicationConfig) {
     let config: ModelReplicationConfig = this.config;
-    if (model.replicationConfig) {
-      config = Object.assign({}, this.config, model.replicationConfig);
+    if (replicationConfig) {
+      config = Object.assign({}, this.config, replicationConfig);
     }
 
     // Replication on model level gives more refined control how individual
