@@ -50,22 +50,22 @@ export class WebSQLAdapter implements StorageAdapter {
 
     this.stores.forEach((store) => {
       if (existingStoreNames.includes(store.getName())) { return; }
-      const stmt = this.getCreateStatement(store);
+      const query = this.getCreateStatement(store);
       this.sqlite.transaction((tx) => {
-        tx.executeSql(stmt, [], () => logger("Store created", store), errorCallback);
+        tx.executeSql(query, [], () => logger("Store created", store), errorCallback);
       });
     });
   }
 
   public async save(storeName: string, input: any): Promise<any> {
     const [cols, vals] = prepareStatement(input, "insert");
-    const stmt = `INSERT INTO ${storeName} ${cols}`;
-    return this.transaction(stmt, vals);
+    const query = `INSERT INTO ${storeName} ${cols}`;
+    return this.transaction(query, vals);
   }
 
   public async query(storeName: string, predicate?: PredicateFunction): Promise<any> {
     if (!predicate) {
-      return await this.getStore(storeName);
+      return await this.fetchAll(storeName);
     }
     const condition = predicateToSQL(predicate as ModelFieldPredicate);
     const query = `SELECT * FROM ${storeName} ${condition}`;
@@ -106,7 +106,7 @@ export class WebSQLAdapter implements StorageAdapter {
     throw new Error("Method not implemented.");
   }
 
-  private async getStore(storeName: string) {
+  private async fetchAll(storeName: string) {
     return this.readTransaction(`SELECT * FROM ${storeName}`, []);
   }
 
