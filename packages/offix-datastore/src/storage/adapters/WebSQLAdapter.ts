@@ -1,4 +1,3 @@
-import "websql";
 import invariant from "tiny-invariant";
 import { StorageAdapter } from "../api/StorageAdapter";
 import { PredicateFunction, ModelFieldPredicate } from "../../predicates";
@@ -25,7 +24,7 @@ export class WebSQLAdapter implements StorageAdapter {
   constructor(dbName: string, schemaVersion: number) {
     this.dbName = dbName;
     this.schemaVersion = schemaVersion;
-    invariant("openDatabase" in window, "WebSQL not supported");
+    invariant("openDatabase" in window, "websql not supported");
     this.sqlite = window.openDatabase(
       dbName,
       schemaVersion.toString(),
