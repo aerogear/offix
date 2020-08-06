@@ -72,7 +72,7 @@ export const schema = jsonSchema as Schema;
             .filter(model => isDataSyncClientModel(model))
             .forEach((model) => {
                 const name = model.graphqlType.name;
-                modelInitLines.push(`export const ${name}Model = datastore.createModel(schema.${name});`);
+                modelInitLines.push(`export const ${name}Model = datastore.setupModel(schema.${name});`);
             });
 
         const configCode = `import { DataStore } from 'offix-datastore';

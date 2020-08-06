@@ -12,8 +12,8 @@ export const datastore = new DataStore({
     }
 });
 
-export const NoteModel = datastore.createModel(schema.Note);
-export const CommentModel = datastore.createModel(schema.Comment);
+export const NoteModel = datastore.setupModel(schema.Note);
+export const CommentModel = datastore.setupModel(schema.Comment);
 
 datastore.init();
 "
