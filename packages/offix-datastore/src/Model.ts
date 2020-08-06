@@ -2,7 +2,6 @@ import { CRUDEvents, LocalStorage } from "./storage";
 import { createPredicate, Predicate } from "./predicates";
 import { StoreChangeEvent } from "./storage";
 import { ModelSchema } from "./ModelSchema";
-import { ModelReplicationConfig } from "./replication/api/ReplicationConfig";
 import { IModelReplicator } from "./replication";
 import { PushStream, ObservablePushStream } from "./utils/PushStream";
 
