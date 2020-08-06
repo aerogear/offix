@@ -15,6 +15,6 @@ export const datastore = new DataStore({
   }
 });
 
-export const TodoModel = datastore.createModel<ITodo>(schema.Todo);
+export const TodoModel = datastore.setupModel<ITodo>(schema.Todo);
 
 datastore.init();

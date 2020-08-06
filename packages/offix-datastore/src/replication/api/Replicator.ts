@@ -32,8 +32,9 @@ export interface IReplicator {
    * Start replication for this model
    * @param model - model used for replication
    * @param storage - local storage
+   * @param replicationConfig - configuration for particular model that will override global config
    */
-  startModelReplication(model: Model, storage: LocalStorage): void;
+  startModelReplication(model: Model, storage: LocalStorage, replicationConfig?: ModelReplicationConfig): void;
 }
 
 /**
