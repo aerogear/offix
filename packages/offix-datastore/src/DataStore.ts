@@ -49,7 +49,7 @@ export class DataStore {
     } else {
       const name = this.config.dbName || "offixdb";
       const version = this.config.schemaVersion || 1;
-      const indexedDB = new IndexedDBStorageAdapter(name, config.schemaVersion || 1);
+      const indexedDB = new IndexedDBStorageAdapter(name, version);
       this.storage = new LocalStorage(indexedDB);
     }
 
