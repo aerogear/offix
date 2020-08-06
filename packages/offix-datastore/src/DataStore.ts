@@ -49,7 +49,7 @@ export class DataStore {
     } else {
       const name = this.config.dbName || "offixdb";
       const version = this.config.schemaVersion || 1;
-      const indexedDB = new IndexedDBStorageAdapter(name, config.schemaVersion);
+      const indexedDB = new IndexedDBStorageAdapter(name, config.schemaVersion || 1);
       this.storage = new LocalStorage(indexedDB);
     }
 
@@ -87,6 +87,6 @@ export class DataStore {
     this.storage.addStore(queueModel);
     this.storage.addStore(metadataModel);
     // TODO this fails on firefox
-    this.storage.createStores(this.config);
+    this.storage.createStores();
   }
 }
