@@ -9,7 +9,7 @@ import { readFileSync } from "fs";
 import { DataStore } from "../src/DataStore";
 import { Model } from "../src/Model";
 import { CRUDEvents } from "../src/storage";
-import { IndexedDBStorageAdapter } from "../src/storage/adapters/indexeddb/IndexedDBStorageAdapter";
+import { IndexedDBStorageAdapter } from "../src/storage/adapters/indexedDB/IndexedDBStorageAdapter";
 import { ModelSchema } from "../src";
 
 const DB_NAME = "offix-datastore";

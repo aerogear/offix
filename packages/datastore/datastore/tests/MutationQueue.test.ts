@@ -5,7 +5,7 @@
 import "fake-indexeddb/auto";
 import { MutationsReplicationQueue } from "../src/replication/mutations/MutationsQueue";
 import { LocalStorage, CRUDEvents } from "../src/storage";
-import { IndexedDBStorageAdapter } from "../src/storage/adapters/IndexedDBStorageAdapter";
+import { IndexedDBStorageAdapter } from "../src/storage/adapters/indexedDB/IndexedDBStorageAdapter";
 import { WebNetworkStatus } from "../src/network/WebNetworkStatus";
 import { CombinedError } from "urql";
 import { metadataModel, queueModel } from "../src/replication/api/MetadataModels";
