@@ -31,30 +31,23 @@ export class WebSQLAdapter implements StorageAdapter {
       "Offix datastore", 5 * 1024 * 1024
     );
   }
-  // TODO Wrong architecture. Store can be created on demand
+
   public addStore(config: ModelSchema) {
     this.stores.push(config);
   }
 
   public async createStores() {
     const existingStoreNames = await this.getStoreNames();
-    existingStoreNames.forEach((storeName) => {
+    for await (const storeName of existingStoreNames) {
       const existingModelStoreName = this.stores.find(((store) => (storeName === store.getName())));
       if (existingModelStoreName) { return; }
-      this.sqlite.transaction((tx) => {
-        tx.executeSql("DROP TABLE ?", [existingModelStoreName], () => {
-          logger("Store deleted", existingModelStoreName);
-        }, errorCallback);
-      });
-    });
-
-    this.stores.forEach((store) => {
+      await this.transaction("DROP TABLE ?", [existingModelStoreName]);
+    }
+    for await (const store of this.stores) {
       if (existingStoreNames.includes(store.getName())) { return; }
       const query = this.getCreateStatement(store);
-      this.sqlite.transaction((tx) => {
-        tx.executeSql(query, [], () => logger("Store created", store), errorCallback);
-      });
-    });
+      await this.transaction(query, []);
+    }
   }
 
   public async save(storeName: string, input: any): Promise<any> {
@@ -110,35 +103,19 @@ export class WebSQLAdapter implements StorageAdapter {
     return this.readTransaction(`SELECT * FROM ${storeName}`, []);
   }
 
-  private getStoreNames(): Promise<string[]> {
-    return new Promise((resolve, reject) => {
-      const successCb = (tx: SQLTransaction, res: SQLResultSet) => {
-        const l = res.rows.length - 1;
-        const existingStores = [];
-        for (let i = 0; i < l; i++) {
-          const existingStore = res.rows.item(i);
-          existingStores.push(existingStore.name);
-        }
-        resolve(existingStores);
-      };
-      const errorCb = (tx: SQLTransaction, err: SQLError) => {
-        reject(err.message);
-        return false;
-      };
-      this.sqlite.transaction((tx) => {
-        tx.executeSql("SELECT name FROM sqlite_master WHERE name LIKE 'user_%'", [],
-          successCb,
-          errorCb
-        );
-      });
-    });
+  private async getStoreNames(): Promise<string[]> {
+    const res = await this.readTransaction(
+      "SELECT name FROM sqlite_master WHERE name LIKE 'user_%'",
+      []
+    );
+    return res.map((r) => r.name);
   }
 
-  private async transaction(query: string, args: any) {
+  private async transaction(query: string, args: any): Promise<any[]> {
     return new Promise((resolve, reject) => {
       const successCb = (tx: SQLTransaction, res: SQLResultSet) => {
         logger("Executed query with results", res.rows);
-        resolve(res.rows);
+        resolve(flattenResultSet(res.rows));
       };
       const errorCb = (tx: SQLTransaction, error: SQLError) => {
         reject(error);
@@ -155,11 +132,11 @@ export class WebSQLAdapter implements StorageAdapter {
     });
   }
 
-  private async readTransaction(query: string, args: any) {
+  private async readTransaction(query: string, args: any): Promise<any[]> {
     return new Promise((resolve, reject) => {
       const successCb = (tx: SQLTransaction, res: SQLResultSet) => {
         logger("Executed query with results", res.rows);
-        resolve(res.rows);
+        resolve(flattenResultSet(res.rows));
       };
       const errorCb = (tx: SQLTransaction, error: SQLError) => {
         reject(error);
@@ -246,4 +223,19 @@ const getType = (type: string): string => {
     "boolean": "INTEGER"
   };
   return types[type] as string;
+};
+
+/**
+ * Return the SQL result set as a flat array
+ * instead of having to iterate over it at a later stage
+ *
+ * @param rows SQLResultSet
+ */
+const flattenResultSet = (rows: SQLResultSetRowList): any[] => {
+  const result: any = [];
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows.item(i);
+    result.push(row);
+  }
+  return result;
 };
