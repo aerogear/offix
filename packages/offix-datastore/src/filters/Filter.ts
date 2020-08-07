@@ -1,4 +1,4 @@
-import { OperatorFunctionMap } from "../predicates";
+import { OperatorFunctionMap } from "./Operators";
 
 export type Filter<T = any> = any;
 
