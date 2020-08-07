@@ -1,8 +1,9 @@
-import { StorageAdapter } from "../api/StorageAdapter";
-import { PredicateFunction } from "../../predicates";
-import { generateId } from "../LocalStorage";
-import { createLogger } from "../../utils/logger";
-import { ModelSchema } from "../../ModelSchema";
+import { StorageAdapter } from "../../api/StorageAdapter";
+import { generateId } from "../../LocalStorage";
+import { createLogger } from "../../../utils/logger";
+import { ModelSchema } from "../../../ModelSchema";
+import { Filter } from "../../../filters";
+import { createPredicateFrom } from "./Predicate";
 
 const logger = createLogger("idb");
 
@@ -114,16 +115,17 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     return this.convertToPromise<any>(store.get(key));
   }
 
-  public async query(storeName: string, predicate?: PredicateFunction) {
+  public async query(storeName: string, filter?: Filter) {
     const store = await this.getStore(storeName);
     const all = await this.convertToPromise<any[]>(store.getAll());
 
-    if (!predicate) { return all; }
+    if (!filter) { return all; }
+    const predicate = createPredicateFrom(filter);
     return predicate.filter(all);
   }
 
-  public async update(storeName: string, input: any, predicate?: PredicateFunction) {
-    const targets = await this.query(storeName, predicate);
+  public async update(storeName: string, input: any, filter?: Filter) {
+    const targets = await this.query(storeName, filter);
     const store = await this.getStore(storeName);
 
     const promises = targets.map((data) => this.convertToPromise<IDBValidKey>(
@@ -131,20 +133,16 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     );
     await Promise.all(promises);
     // TODO redundant query to the DB.
-    return this.query(storeName, predicate);
+    return this.query(storeName, filter);
   }
 
-  public async remove(storeName: string, predicate?: PredicateFunction) {
+  public async remove(storeName: string, filter?: Filter) {
     const store = await this.getStore(storeName);
     // TODO provide ability to delete from store by key (not fetching entire store which is innefficient)
     // detect if predicate is id or create separate method
-    const all = await this.convertToPromise<any[]>(store.getAll());
-    let targets = all;
-    if (predicate) {
-      targets = predicate.filter(all);
-    }
+    const targets = await this.query(storeName, filter);
     await Promise.all(
-      targets.map((t) => this.convertToPromise(store.delete(t.id)))
+      targets.map((t: any) => this.convertToPromise(store.delete(t.id)))
     );
     return targets;
   }
