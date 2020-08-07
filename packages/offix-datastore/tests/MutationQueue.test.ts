@@ -9,11 +9,15 @@ import { IndexedDBStorageAdapter } from "../src/storage/adapters/IndexedDBStorag
 import { WebNetworkStatus } from "../src/network/WebNetworkStatus";
 import { CombinedError } from "urql";
 import { metadataModel, queueModel } from "../src/replication/api/MetadataModels";
+import { ModelSchema } from "../src";
+import { readFileSync } from "fs";
 
 const DB_NAME = "test";
-const STORE_NAME = "test";
+const STORE_NAME = "user_Test";
+const jsonSchema = JSON.parse(readFileSync(`${__dirname}/schema.json`).toString());
 const adapter = new IndexedDBStorageAdapter(DB_NAME, 1);
 const storage = new LocalStorage(adapter);
+const schema = new ModelSchema<any>(jsonSchema.Test);
 const model = { getStoreName: () => STORE_NAME } as any;
 
 const windowEvents: any = {};
@@ -40,7 +44,7 @@ const mockClienWithResponse = (response: Promise<any>, onMutation?: Function): a
                 toPromise: async () => {
                     if (await networkStatus.isOnline()) return response;
                     return Promise.reject(new CombinedError({
-                        networkError: Error('something went wrong!'),
+                        networkError: Error("something went wrong!")
                     }));
                 }
             }
@@ -52,7 +56,7 @@ const buildQueue = (client: any) => {
         storage,
         model,
         client,
-        networkStatus,
+        networkStatus
     });
 };
 const dummyRequest = {
@@ -65,6 +69,7 @@ const dummyRequest = {
 
 
 beforeAll(async () => {
+    adapter.addStore(schema);
     adapter.addStore(queueModel);
     adapter.addStore(metadataModel);
     await adapter.createStores();
