@@ -5,7 +5,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest -w 1",
+    "test": "jest --runInBand",
     "coverage": "jest --coverage",
     "size": "size-limit",
     "cleanInstall": "lerna exec yarn install --ignore-scripts",
