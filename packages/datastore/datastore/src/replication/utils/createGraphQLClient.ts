@@ -1,4 +1,4 @@
-import { createClient, defaultExchanges, subscriptionExchange} from "urql";
+import { createClient, defaultExchanges, subscriptionExchange } from "urql";
 import { SubscriptionClient, ClientOptions } from "subscriptions-transport-ws";
 import { GraphQLClientConfig } from "../api/GraphQLClient";
 
@@ -17,7 +17,7 @@ const defaultWsConfig: ClientOptions = {
 export function createGraphQLClient(clientConfig: GraphQLClientConfig) {
   const { wsUrl, wsConfig, ...config } = clientConfig;
   if (!wsUrl) {
-    return createClient(config);
+    return { client: createClient(config) };
   }
 
   const subscriptionClient = new SubscriptionClient(wsUrl, {
@@ -33,6 +33,8 @@ export function createGraphQLClient(clientConfig: GraphQLClientConfig) {
       }
     })
   ];
-  return createClient({ ...config, url: config.url, exchanges });
+  const client = createClient({ ...config, url: config.url, exchanges });
+
+  return { client, subscriptionClient };
 }
 
