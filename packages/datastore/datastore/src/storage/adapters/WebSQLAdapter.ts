@@ -235,6 +235,10 @@ const filterToSQL = (filter: Filter) => {
   const tokens: string[] = [];
 
   Object.keys(filter).forEach((key) => {
+    if (!(filter[key] instanceof Object)) {
+      tokens.push(`eq=${filter[key]}`);
+      return;
+    }
     const op = Object.keys(filter[key])[0];
     const operator = (op === "eq") ? "=" : undefined;
     invariant(operator, "Operator not supported");
