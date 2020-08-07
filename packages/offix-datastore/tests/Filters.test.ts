@@ -11,18 +11,19 @@ test("Filter based on object fields", () => {
 
 test("Filter based on expressions", () => {
     const list = [
-        { clickCount: 9, isTest: true }, { clickCount: 4, isTest: false }
+        { clickCount: 9, isTest: true },
+        { clickCount: 4, isTest: false },
+        { clickCount: 4, isTest: true }
     ];
     const predicate = createPredicateFrom({
-        clickCount: {
-            lt: 9,
-            ne: 4
-        },
         or: {
-            isTest: { eq: true }
+            clickCount: { eq: 9 },
+            not: {
+                and: { isTest: { eq: false }, clickCount: { eq: 4 } }
+            }
         }
     });
+    
     const result = predicate.filter(list);
-    expect(result.length).toEqual(1);
-    expect(result[0].isTest).toEqual(true);
+    expect(result).toEqual([list[0], list[2]]);
 });
