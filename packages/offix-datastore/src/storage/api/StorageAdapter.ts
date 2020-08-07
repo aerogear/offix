@@ -1,5 +1,5 @@
-import { IStoreConfig } from "./StoreConfig";
 import { PredicateFunction } from "../../predicates";
+import { ModelSchema } from "../../ModelSchema";
 
 /**
  * This interface defines the API that is required
@@ -34,13 +34,13 @@ export interface StorageAdapter {
    *
    * @param config
    */
-  addStore(config: IStoreConfig): void;
+  addStore(config: ModelSchema): void;
 
 
   /**
    * Create a new Stores with the given config
    */
-  createStores(dbName: string, schemaVersion: number): void;
+  createStores(): void;
 
   /**
    * Saves data to the Store

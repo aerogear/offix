@@ -12,6 +12,11 @@
       "es2015",
       "dom",
       "es2016"
-    ]
+    ],
+    "types": [
+      "websql",
+      "jest",
+      "node"
+    ],
   }
 }

@@ -28,5 +28,15 @@
       "type": "ID",
       "key": "noteId"
     }
+  },
+  "Test": {
+    "name": "Test",
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "primary": true
+      }
+    }
   }
 }

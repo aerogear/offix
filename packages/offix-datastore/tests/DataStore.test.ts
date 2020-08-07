@@ -11,7 +11,7 @@ import { Model } from "../src/Model";
 import { Predicate } from "../src/predicates";
 import { CRUDEvents } from "../src/storage";
 import { IndexedDBStorageAdapter } from "../src/storage/adapters/IndexedDBStorageAdapter";
-import { NetworkStatus } from "../src/network/NetworkStatus";
+import { ModelSchema } from "../src";
 
 const DB_NAME = "offix-datastore";
 const schema = JSON.parse(readFileSync(`${__dirname}/schema.json`).toString());
@@ -46,7 +46,7 @@ let NoteModel: Model<Note>;
 
 beforeEach(() => {
   const dataStore = new DataStore({
-    dbName: DB_NAME,
+    dbName: DB_NAME
   });
   NoteModel = dataStore.setupModel<Note>({
     name: "Note",
@@ -77,9 +77,10 @@ test("Setup client db with provided models", async () => {
 });
 
 test.skip("Store Schema update", async () => {
-  const idbStorage = new IndexedDBStorageAdapter();
-  idbStorage.addStore({ name: "user_Test" });
-  idbStorage.createStores(DB_NAME, 2);
+  const idbStorage = new IndexedDBStorageAdapter(DB_NAME, 2);
+  const model = new ModelSchema<any>(schema.Test);
+  idbStorage.addStore(model);
+  idbStorage.createStores();
   const db = (await idbStorage.getIndexedDBInstance() as IDBDatabase);
   expect(db.objectStoreNames).toContain("user_Test");
   expect(db.objectStoreNames).not.toContain("user_Note");

@@ -1,12 +1,13 @@
 import { Model } from "./Model";
 import { LocalStorage, StorageAdapter } from "./storage";
-import { IReplicator, MUTATION_QUEUE_KEY, MUTATION_QUEUE, MODEL_METADATA, MODEL_METADATA_KEY } from "./replication/api/Replicator";
+import { IReplicator } from "./replication/api/Replicator";
 import { GraphQLCRUDReplicator } from "./replication/GraphQLReplicator";
 import { IndexedDBStorageAdapter } from "./storage/adapters/IndexedDBStorageAdapter";
 import { ModelSchema, DataSyncJsonSchema } from "./ModelSchema";
 import { DataStoreConfig } from "./DataStoreConfig";
 import { createLogger, enableLogger } from "./utils/logger";
 import { ModelReplicationConfig } from "./replication/api/ReplicationConfig";
+import { queueModel, metadataModel } from "./replication/api/MetadataModels";
 
 const logger = createLogger("DataStore");
 // TODO disable logging before release
@@ -38,7 +39,6 @@ export interface CustomEngines {
 export class DataStore {
   private storage: LocalStorage;
   private replicator?: IReplicator;
-
   private config: DataStoreConfig;
 
   constructor(config: DataStoreConfig, engines?: CustomEngines) {
@@ -47,7 +47,9 @@ export class DataStore {
     if (engines && engines.storeAdapter) {
       this.storage = new LocalStorage(engines.storeAdapter);
     } else {
-      const indexedDB = new IndexedDBStorageAdapter();
+      const name = this.config.dbName || "offixdb";
+      const version = this.config.schemaVersion || 1;
+      const indexedDB = new IndexedDBStorageAdapter(name, version);
       this.storage = new LocalStorage(indexedDB);
     }
 
@@ -82,9 +84,9 @@ export class DataStore {
   public init() {
     // Created fixed stores for replication
     // TODO this is just workaround for replication engine
-    this.storage.addStore({ name: MUTATION_QUEUE, keyPath: MUTATION_QUEUE_KEY });
-    this.storage.addStore({ name: MODEL_METADATA, keyPath: MODEL_METADATA_KEY });
+    this.storage.addStore(queueModel);
+    this.storage.addStore(metadataModel);
     // TODO this fails on firefox
-    this.storage.createStores(this.config);
+    this.storage.createStores();
   }
 }

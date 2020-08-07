@@ -2,8 +2,7 @@ import { v1 as uuidv1 } from "uuid";
 import { PredicateFunction } from "../predicates";
 import { StorageAdapter } from "./api/StorageAdapter";
 import { createLogger } from "../utils/logger";
-import { IStoreConfig } from "./api/StoreConfig";
-import { DataStoreConfig } from "../DataStoreConfig";
+import { ModelSchema } from "../ModelSchema";
 
 const logger = createLogger("storage");
 
@@ -97,7 +96,7 @@ export class LocalStorage {
    *
    * @param config
    */
-  public addStore(config: IStoreConfig) {
+  public addStore(config: ModelSchema) {
     this.adapter.addStore(config);
   }
 
@@ -106,9 +105,7 @@ export class LocalStorage {
    *
    * @param config
    */
-  public createStores(config: DataStoreConfig) {
-    const name = config.dbName || "offixdb";
-    const version = config.schemaVersion || 1;
-    this.adapter.createStores(name, version);
+  public createStores() {
+    this.adapter.createStores();
   }
 }
