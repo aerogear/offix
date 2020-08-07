@@ -17,7 +17,7 @@ export class LeafNode implements INode {
         const actualValue = input[this.fieldkey];
         return Object.keys(this.filter)
             .reduce((prev, cur) => {
-                const op = OperatorFunctionMap[cur as AllOperators];
+                const op = OperatorFunctionMap[cur as (keyof AllOperators)];
                 const targetValue = this.filter[cur];
                 return prev && op.opFunction(actualValue, targetValue);
             }, true);
