@@ -1,11 +1,11 @@
 import { useEffect, useReducer, useCallback, Dispatch } from "react";
 import { Model } from "../../Model";
-import { Predicate } from "../../predicates";
 import { reducer, InitialState, ActionType, Action, ResultState } from "../ReducerUtils";
 import { CRUDEvents } from "../../storage";
+import { Filter } from "../../filters";
 
 const createSubscribeToMore = (model: Model, dispatch: Dispatch<Action>) => {
-    return (eventType: CRUDEvents, updateResult: (data: any) => any, predicate?: Predicate<unknown>) => {
+    return (eventType: CRUDEvents, updateResult: (data: any) => any, filter?: Filter) => {
         // TODO subscribe to specific predicate
         const subscription = model.subscribe(eventType, (event) => {
             const newData = updateResult(event.data);
@@ -26,7 +26,7 @@ interface IQueryOptions {
     forceDelta?: boolean;
 }
 
-export const useQuery = (model: Model, predicate?: Predicate<unknown>, options?: IQueryOptions) => {
+export const useQuery = (model: Model, filter?: Filter, options?: IQueryOptions) => {
     const [state, dispatch] = useReducer(reducer, InitialState);
     const subscribeToMore = useCallback(createSubscribeToMore(model, dispatch), [model, dispatch]);
 
@@ -37,13 +37,13 @@ export const useQuery = (model: Model, predicate?: Predicate<unknown>, options?:
             dispatch({ type: ActionType.INITIATE_REQUEST });
             try {
                 await forceDelta(model, state, dispatch, options);
-                const results = await model.query(predicate);
+                const results = await model.query(filter);
                 dispatch({ type: ActionType.REQUEST_COMPLETE, data: results });
             } catch (error) {
                 dispatch({ type: ActionType.REQUEST_COMPLETE, error });
             }
         })();
-    }, [model, predicate, options]);
+    }, [model, filter, options]);
 
     return { ...state, subscribeToMore };
 };
@@ -51,13 +51,13 @@ export const useQuery = (model: Model, predicate?: Predicate<unknown>, options?:
 export const useLazyQuery = (model: Model, options?: IQueryOptions) => {
     const [state, dispatch] = useReducer(reducer, InitialState);
 
-    const query = async (predicate?: Predicate<unknown>) => {
+    const query = async (filter?: Filter) => {
         if (state.isLoading) { return; }
 
         dispatch({ type: ActionType.INITIATE_REQUEST });
         try {
             await forceDelta(model, state, dispatch, options);
-            const results = await model.query(predicate);
+            const results = await model.query(filter);
             dispatch({ type: ActionType.REQUEST_COMPLETE, data: results });
         } catch (error) {
             dispatch({ type: ActionType.REQUEST_COMPLETE, error });

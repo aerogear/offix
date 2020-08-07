@@ -1,10 +1,10 @@
 import { useEffect, useReducer } from "react";
 import { Model } from "../../Model";
 import { CRUDEvents } from "../..";
-import { Predicate } from "../../predicates";
 import { InitialState, reducer, ActionType } from "../ReducerUtils";
+import { Filter } from "../../filters";
 
-export const useSubscription = (model: Model, eventType: CRUDEvents, predicate?: Predicate<unknown>) => {
+export const useSubscription = (model: Model, eventType: CRUDEvents, filter?: Filter) => {
     const [state, dispatch] = useReducer(reducer, InitialState);
 
     useEffect(() => {
@@ -13,7 +13,7 @@ export const useSubscription = (model: Model, eventType: CRUDEvents, predicate?:
             dispatch({ type: ActionType.REQUEST_COMPLETE, data: event.data });
         });
         return () => subscription.unsubscribe();
-    }, [model, eventType, predicate]);
+    }, [model, eventType, filter]);
 
     return state;
 };
