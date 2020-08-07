@@ -8,9 +8,8 @@ import { readFileSync } from "fs";
 
 import { DataStore } from "../src/DataStore";
 import { Model } from "../src/Model";
-import { Predicate } from "../src/predicates";
 import { CRUDEvents } from "../src/storage";
-import { IndexedDBStorageAdapter } from "../src/storage/adapters/IndexedDBStorageAdapter";
+import { IndexedDBStorageAdapter } from "../src/storage/adapters/indexeddb/IndexedDBStorageAdapter";
 import { ModelSchema } from "../src";
 
 const DB_NAME = "offix-datastore";
@@ -97,7 +96,7 @@ test("Save Note to local store", async () => {
 test("Query from local store", async () => {
   const note = { title: "test", description: "description" };
   const savedNote = await NoteModel.save(note);
-  const results = (await NoteModel.query((p) => p.title("eq", note.title)));
+  const results = (await NoteModel.query({ title: note.title }));
   expect(results[0]).toHaveProperty("id", savedNote.id);
 });
 
@@ -120,16 +119,15 @@ test("Remove single entity from local store", async () => {
   const note = { title: "test", description: "description" };
   const savedNote = await NoteModel.save(note);
   await NoteModel.remove();
-  const results = (await NoteModel.query((p) => p.id("eq", savedNote.id)));
+  const results = (await NoteModel.query({ id: savedNote.id }));
   expect(results.length).toEqual(0);
 });
 
 test("Remove all entities matching predicate from local store", async () => {
   const note = { title: "test", description: "description" };
   const savedNote = await NoteModel.save(note);
-  const predicate: Predicate<Note> = (p) => p.id("eq", savedNote.id);
-  await NoteModel.remove(predicate);
-  const results = (await NoteModel.query(predicate));
+  await NoteModel.remove({ id: savedNote.id });
+  const results = (await NoteModel.query({ id: savedNote.id }));
   expect(results.length).toEqual(0);
 });
 
@@ -146,7 +144,7 @@ test("Observe local store events", async () => {
   });
 
   await NoteModel.save(note);
-  await NoteModel.update({ title: "changed" }, (p) => p.title("eq", "test"));
+  await NoteModel.update({ title: "changed" }, { title: "test" });
 });
 
 
