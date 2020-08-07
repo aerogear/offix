@@ -9,6 +9,15 @@ describe("Test IndexedDB filters", () => {
         const result = predicate.filter(list);
         expect(result.length).toEqual(0);
     });
+
+    test("Assume 'eq' operation", () => {
+        const list = [
+            { clickCount: 9 }, { clickCount: 4 }
+        ];
+        const predicate = createPredicateFrom({ clickCount: 9 });
+        const result = predicate.filter(list);
+        expect(result).toEqual([list[0]]);
+    });
     
     test("Filter based on expressions", () => {
         const list = [
