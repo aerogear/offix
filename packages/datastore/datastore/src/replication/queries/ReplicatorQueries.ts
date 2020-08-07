@@ -6,16 +6,6 @@ import { DocumentNode } from "graphql";
  */
 export interface ReplicatorQueries {
   /**
-   * FindQuery used to fetch data
-   */
-  find: DocumentNode;
-
-  /**
-   * GraphQL get operation
-   */
-  get: DocumentNode;
-
-  /**
    * GraphQL sync operation
    */
   sync: DocumentNode;

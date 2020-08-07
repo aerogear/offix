@@ -16,7 +16,6 @@ export class WebNetworkStatus implements NetworkStatus {
     });
   }
 
-
   public subscribe(observer: ZenObservable.Observer<NetworkStatusEvent>) {
     return this.observable.subscribe(observer);
   }

@@ -19,6 +19,7 @@ export interface NetworkStatusEvent {
 export interface NetworkStatus {
   /** Indicator for whether the client is online or not */
   isOnline(): Promise<boolean>;
+
   /** Function for subscribing to the observable NetworkEvent */
-  subscribe(observer: ZenObservable.Observer<NetworkStatusEvent>): ZenObservable.Subscription;
+  subscribe(observer: ZenObservable.Observer<NetworkStatusEvent> | any): ZenObservable.Subscription;
 }

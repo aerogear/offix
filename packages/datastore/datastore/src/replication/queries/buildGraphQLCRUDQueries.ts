@@ -17,16 +17,6 @@ export const buildGraphQLCRUDQueries = (model: Model) => {
   const modelName = model.getName();
 
   const queries: ReplicatorQueries = {
-    find: gql`
-            query find${modelName}($filter: ${modelName}Filter, $page: PageRequest, $orderBy: OrderByInput) {
-              find${modelName}s(filter: $filter, page: $page, orderBy: $orderBy) {
-                  items {
-                    ${graphQLFields}
-                  }
-                  offset
-                  limit
-              }
-            }`,
     sync: gql`
             query sync${modelName}($lastChanged: String!, $filter: ${modelName}Filter) {
               find${modelName}s(lastChanged: $lastChanged, filter: $filter) {
@@ -35,12 +25,6 @@ export const buildGraphQLCRUDQueries = (model: Model) => {
                   }
                   lastChanged
               }
-            }`,
-    get: gql`
-            query get${modelName}($input: Mutate${modelName}Input!) {
-                update${modelName}(input: $input) {
-                    ${graphQLFields}
-                }
             }`
   };
   return queries;
