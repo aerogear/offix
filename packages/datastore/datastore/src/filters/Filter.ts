@@ -1,11 +1,13 @@
-import { OperatorFunctionMap } from "./Operators";
+import { TypeOperatorMap } from "./Operators";
 
-export type Filter<T = any> = any;
+type Test = {
+    eq: string
+}
 
-// export type Filter<T = any> = {
-//     [P in keyof Required<T>]: { [keyof OperatorFunctionMap]: T[P] | T[P][] }
-// } & {
-//     or: Filter<T>;
-//     and: Filter<T>;
-//     not: Filter<T>;
-// };
+export type Filter<T = any> = {
+    [P in keyof Partial<T>]: T[P] | { [K in keyof Partial<TypeOperatorMap<T[P]>>]: T[P] }
+} & {
+    or?: Filter<T>;
+    and?: Filter<T>;
+    not?: Filter<T>;
+};

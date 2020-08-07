@@ -12,7 +12,11 @@
  * 'startsWith' - Does value start with input string
  * 'endsWith' - Does value end with input string
  */
-export type AllOperators = MathematicalOperators | "contains" | "startsWith" | "endsWith";
+export type AllOperators = MathematicalOperators & {
+    contains: string;
+    startsWith: string;
+    endsWith: string;
+};
 
 /**
  * Maps data type to allowed operators
@@ -21,7 +25,11 @@ export type TypeOperatorMap<T> =
     T extends Array<any> ? ArrayOperators :
     T extends string ? AllOperators :
     T extends number ? MathematicalOperators :
-    T extends boolean ? "ne" | "eq" | "in" :
+    T extends boolean ? {
+        ne: boolean;
+        eq: boolean;
+        in: boolean;
+    } :
     T extends Date ? MathematicalOperators :
     AllOperators;
 
@@ -54,6 +62,19 @@ export const OperatorFunctionMap = {
     endsWith: new Operator("endsWith", (m: string, v: string) => m.endsWith(v))
 };
 
-type ArrayOperators = "ne" | "eq" | "in" | "contains";
+type ArrayOperators = {
+    ne: any[];
+    eq: any[];
+    in: any[];
+    contains: any[];
+}
 
-type MathematicalOperators = "ne" | "eq" | "le" | "lt" | "ge" | "gt" | "in";
+type MathematicalOperators = {
+    ne: number;
+    eq: number;
+    le: number;
+    lt: number;
+    ge: number;
+    gt: number;
+    in: number;
+};

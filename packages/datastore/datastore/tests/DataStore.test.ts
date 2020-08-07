@@ -108,9 +108,9 @@ test("Update single entity in local store", async () => {
   await NoteModel.update({
     ...savedNote,
     title: newTitle
-  }, (p) => p.id("eq", savedNote.id));
+  }, { id: savedNote.id });
 
-  const updatedNote = (await NoteModel.query((p) => p.id("eq", savedNote.id)))[0];
+  const updatedNote = (await NoteModel.query({ id: savedNote.id }))[0];
 
   expect(updatedNote.title).toEqual(newTitle);
 });
