@@ -48,6 +48,6 @@
     "@types/node": "12.12.54"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*/*"
   ]
 }
