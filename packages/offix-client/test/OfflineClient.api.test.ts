@@ -7,15 +7,6 @@ import { ApolloOfflineClient, ApolloOfflineQueueListener, MutationHelperOptions,
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { CachePersistor } from "apollo-cache-persist";
 
-test("OfflineClient constructor does not throw", async () => {
-  const link = new HttpLink({ uri: "http://test" });
-  const client = new ApolloOfflineClient({
-    cache: new InMemoryCache(),
-    link
-  });
-  await client.init();
-});
-
 test("OfflineClient constructor throws if no link provided", async () => {
   expect(() => new ApolloOfflineClient({cache: new InMemoryCache()})).toThrow("config missing link property");
 });
