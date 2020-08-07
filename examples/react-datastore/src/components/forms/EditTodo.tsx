@@ -8,7 +8,7 @@ import { useEditTodo } from '../../helpers/hooks';
 
 export const EditTodo = ({ todo, toggleEdit }: EditTodoProps) => {
   
-  const { editTodo } = useEditTodo();
+  const { update: editTodo } = useEditTodo();
 
   const handleUpdate = (todo: ITodo) => {
     editTodo({

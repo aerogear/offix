@@ -2,30 +2,36 @@ import "fake-indexeddb/auto";
 
 import { LocalStorage } from "../src/storage";
 import { IndexedDBStorageAdapter } from "../src/storage/adapters/IndexedDBStorageAdapter";
+import { ModelSchema, DataSyncJsonSchema } from "../src/ModelSchema";
 
 describe("Test Transactions", () => {
     let storage: LocalStorage;
-    const storeName = "Test";
+    const name = "Test";
+    const storeName = "user_Test";
 
     beforeAll(() => {
-        const adapter = new IndexedDBStorageAdapter();
-        adapter.addStore({ name: storeName });
-        adapter.createStores("test", 1);
+        const adapter = new IndexedDBStorageAdapter("test", 1);
+        const schema = {
+          name: name,
+          type: "object",
+          properties: {
+            id: {
+              type: "string",
+              primary: true
+            }
+          }
+        } as DataSyncJsonSchema<any>;
+        const model = new ModelSchema<any>(schema);
+        adapter.addStore(model);
+        adapter.createStores();
         storage = new LocalStorage(adapter);
     });
 
     afterEach(async () => {
-        storage.storeChangeEventStream.clearSubscriptions();
         await storage.remove(storeName);
     });
 
     test("transaction commit", async () => {
-        expect.assertions(2);
-
-        storage.storeChangeEventStream.subscribe(event => {
-            expect(event.data).toHaveProperty("name", "test");
-        });
-
         const transaction = await storage.createTransaction();
         await transaction.save(storeName, { name: "test" });
         await transaction.commit();
@@ -35,10 +41,6 @@ describe("Test Transactions", () => {
     });
 
     test("transaction rollback", async () => {
-        storage.storeChangeEventStream.subscribe(() => {
-            fail("No event should be fired");
-        });
-
         const transaction = await storage.createTransaction();
         await transaction.save(storeName, { name: "test 1" });
         await transaction.save(storeName, { name: "test 2" });

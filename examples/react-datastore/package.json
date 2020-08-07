@@ -29,6 +29,7 @@
   },
   "scripts": {
     "start": "SKIP_PREFLIGHT_CHECK=true react-scripts start",
+    "startServer": "gqlserve serve --port=5400 ./src/model/runtime.graphql",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -51,6 +52,7 @@
   },
   "devDependencies": {
     "graphback-cli": "^0.14.0",
+    "graphql-serve": "^0.15.0",
     "offix-datasync-client-plugin": "~0.1.2"
   }
 }

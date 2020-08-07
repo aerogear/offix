@@ -10,7 +10,6 @@ export interface IStoreConfig {
     /**
      * The primary key
      */
+    // TODO rename to non-IndexedDB name
     keyPath?: string;
-
-    // TODO other indices
 }

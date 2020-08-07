@@ -1,33 +1,34 @@
-import { DocumentNode } from "graphql";
-import Observable from "zen-observable";
 
-export interface GraphQLClientReponse<T>{
+import { ClientOptions } from "subscriptions-transport-ws";
+import { ClientOptions as URQLOriginalOptions } from "urql";
+/**
+ * Represents error information returned from GraphQL Client
+ */
+export interface GraphQLClientReponse<T = any> {
   data?: T[];
   errors?: any[];
 }
 
-/**
- * A GraphQLClient to communicate with the GraphQLAPI
- * e.g. Urql, Apollo etc.
- */
-export interface GraphQLClient {
+export type URQLConfig = Omit<URQLOriginalOptions, "url">;
+
+export interface GraphQLClientConfig {
   /**
-   * sends a mutation to the server
-   * @param query
-   * @param variables
+   * GraphQl client endpoint url
    */
-  mutate<T>(query: string | DocumentNode, variables?: any): Promise<GraphQLClientReponse<T>>;
+  url: string;
 
   /**
-   * queries a graphql server
-   * @param query
-   * @param variables
+   * GraphQL client websocket url
    */
-  query<T>(query: string | DocumentNode, variables?: any): Promise<GraphQLClientReponse<T>>;
+  wsUrl?: string;
 
   /**
-   * Subscriptions to a graphql server
-   * @param query
+   * Subscription client options
    */
-  subscribe<T>(query: string | DocumentNode, variables?: any): Observable<T>;
+  wsConfig?: ClientOptions;
+
+  /**
+   * URLQL specific options
+   */
+  clientConfig?: URQLConfig;
 }

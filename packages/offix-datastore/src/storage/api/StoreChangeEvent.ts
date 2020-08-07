@@ -30,5 +30,4 @@ export interface StoreChangeEvent {
    * Source of the event gives ability to filter it out for different needs
    */
   eventSource?: StoreEventSource;
-
 }

@@ -1,11 +1,10 @@
-import { IStoreConfig } from "./StoreConfig";
 import { PredicateFunction } from "../../predicates";
+import { ModelSchema } from "../../ModelSchema";
 
 /**
  * This interface defines the API that is required
  * from any device specific storage implementation.
- * It defines an interface that a
- * device specific implementation must support.
+ * It defines an interface that a device specific implementation must support.
 */
 export interface StorageAdapter {
   /**
@@ -35,7 +34,13 @@ export interface StorageAdapter {
    *
    * @param config
    */
-  addStore(config: IStoreConfig): void;
+  addStore(config: ModelSchema): void;
+
+
+  /**
+   * Create a new Stores with the given config
+   */
+  createStores(): void;
 
   /**
    * Saves data to the Store
@@ -65,7 +70,7 @@ export interface StorageAdapter {
    * @param predicate A PredicateFunction to filter data
    * @returns A Promise of the updated data
    */
-  update(storeName: string, input: any, predicate?: PredicateFunction): Promise<any>;
+  update(storeName: string, input: any, predicate?: PredicateFunction): Promise<any[]>;
 
   /**
    * Deletes data matching predicate or all from the store
@@ -74,5 +79,5 @@ export interface StorageAdapter {
    * @param predicate A PredicateFunction to filter data
    * @returns A Promise of the deleted data
    */
-  remove(storeName: string, predicate?: PredicateFunction): Promise<any | any[]>;
+  remove(storeName: string, predicate?: PredicateFunction): Promise<any[]>;
 }

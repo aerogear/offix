@@ -1,14 +1,31 @@
-import { StoreChangeEvent } from "../../storage";
 
+import { DocumentNode } from "graphql";
+import { CRUDEvents } from "../..";
 
 /**
  * Request to perform mutation.
  * This object contain all information needed to perform specific mutations
  */
-export class MutationRequest {
-  public event: StoreChangeEvent;
+export interface MutationRequest {
+  /**
+   * Type of event/operation
+   */
+  eventType: CRUDEvents;
+  /**
+   * Version used to detect changes in structure
+   */
+  version: number;
+  /**
+   * Document mutation to be executed on server
+   */
+  mutation: DocumentNode;
+  /**
+   * Query variables used in client
+   */
+  variables: any;
 
-  constructor(event: StoreChangeEvent) {
-    this.event = event;
-  }
+  /**
+   * Primary key
+   */
+  storeName: string;
 }

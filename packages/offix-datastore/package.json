@@ -20,16 +20,29 @@
     "size": "size-limit",
     "size:why": "size-limit --why"
   },
+  "peerDependencies": {
+    "react": "^16.13.1"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@size-limit/preset-small-lib": "4.5.5",
     "@types/jest": "25.2.3",
     "@types/json-schema": "7.0.5",
     "@types/uuid": "8.0.1",
+    "@types/react-dom": "^16.9.8",
+    "@types/traverse": "^0.6.32",
+    "@types/websql": "^0.0.27",
     "apollo-server": "2.16.1",
     "debug": "4.1.1",
     "fake-indexeddb": "3.1.2",
     "isomorphic-unfetch": "3.0.0",
     "jest": "26.2.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "size-limit": "4.5.5",
     "supports-color": "7.1.0",
     "ts-jest": "26.1.4",
@@ -40,7 +53,9 @@
     "subscriptions-transport-ws": "0.9.17",
     "tiny-invariant": "1.1.0",
     "urql": "1.10.0",
+    "traverse": "^0.6.6",
     "uuid": "8.3.0",
+    "websql": "^1.0.0",
     "wonka": "4.0.14",
     "zen-observable": "0.8.15"
   }
