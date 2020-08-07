@@ -1,1 +1,2 @@
-export * from './Predicate';
+export * from "./Filter";
+export * from "./Operators";

@@ -1,4 +1,4 @@
-import { createPredicateFrom } from '../src/filters';
+import { createPredicateFrom } from '../src/storage/adapters/indexedDB/Predicate';
 
 test("Filter based on object fields", () => {
     const list = [
@@ -23,7 +23,7 @@ test("Filter based on expressions", () => {
             }
         }
     });
-    
+
     const result = predicate.filter(list);
     expect(result).toEqual([list[0], list[2]]);
 });

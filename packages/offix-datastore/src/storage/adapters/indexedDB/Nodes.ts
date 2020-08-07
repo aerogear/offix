@@ -1,10 +1,10 @@
-import { OperatorFunctionMap, AllOperators } from "./Operators";
+import { OperatorFunctionMap, AllOperators } from "../../../filters/Operators";
 
-interface INode {
+export interface INode {
     isPassed(input: any): boolean;
 }
 
-class LeafNode implements INode {
+export class LeafNode implements INode {
     private fieldkey: string;
     private filter: any;
 
@@ -24,7 +24,7 @@ class LeafNode implements INode {
     }
 }
 
-class ANDNode implements INode {
+export class ANDNode implements INode {
     private nodes: INode[];
 
     constructor(nodes: INode[]) {
@@ -38,7 +38,7 @@ class ANDNode implements INode {
     }
 }
 
-class ORNode implements INode {
+export class ORNode implements INode {
     private nodes: INode[];
 
     constructor(nodes: INode[]) {
@@ -52,7 +52,7 @@ class ORNode implements INode {
     }
 }
 
-class NotNode implements INode {
+export class NotNode implements INode {
     private root: ANDNode;
 
     constructor(root: ANDNode) {
@@ -62,38 +62,4 @@ class NotNode implements INode {
     isPassed(input: any): boolean {
         return !this.root.isPassed(input);
     }
-}
-
-class Predicate {
-    private root: ANDNode;
-
-    constructor(root: ANDNode) {
-        this.root = root;
-    }
-
-    public filter(data: any[]) {
-        return data.filter((val) => this.root.isPassed(val));
-    }
-}
-
-const createNodes = (filter: any): INode[] => {
-    return Object.keys(filter)
-        .map((fieldKey) => {
-            if (fieldKey === 'or') {
-                return new ORNode(createNodes(filter[fieldKey]));
-            }
-            if (fieldKey === 'not') {
-                return new NotNode(new ANDNode(createNodes(filter[fieldKey])));
-            }
-            if (fieldKey === 'and') {
-                return new ANDNode(createNodes(filter[fieldKey]));
-            }
-
-            return new LeafNode(fieldKey, filter[fieldKey]);
-        });
-}
-
-export const createPredicateFrom = (filter: any) => {
-    const nodes = createNodes(filter);
-    return new Predicate(new ANDNode(nodes));
 }

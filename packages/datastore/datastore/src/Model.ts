@@ -1,9 +1,9 @@
 import { CRUDEvents, LocalStorage } from "./storage";
-import { createPredicate, Predicate } from "./predicates";
 import { StoreChangeEvent } from "./storage";
 import { ModelSchema } from "./ModelSchema";
 import { IModelReplicator } from "./replication";
 import { PushStream, ObservablePushStream } from "./utils/PushStream";
+import { Filter } from "./filters";
 
 export interface FieldOptions {
   /** GraphQL type */
@@ -85,23 +85,19 @@ export class Model<T = unknown> {
     return data;
   }
 
-  public query(predicateFunction?: Predicate<T>) {
-    if (!predicateFunction) { return this.storage.query(this.schema.getStoreName()); }
+  public query(filter?: Filter<T>) {
+    if (!filter) { return this.storage.query(this.schema.getStoreName()); }
 
-    const modelPredicate = createPredicate(this.schema.getFields());
-    const predicate = predicateFunction(modelPredicate);
-    return this.storage.query(this.schema.getStoreName(), predicate);
+    return this.storage.query(this.schema.getStoreName(), filter);
   }
 
-  public async update(input: Partial<T>, predicateFunction?: Predicate<T>) {
-    if (!predicateFunction) {
+  public async update(input: Partial<T>, filter?: Filter<T>) {
+    if (!filter) {
       // TODO Identify ID
       return this.storage.update(this.schema.getStoreName(), input);
     }
 
-    const modelPredicate = createPredicate(this.schema.getFields());
-    const predicate = predicateFunction(modelPredicate);
-    const data = await this.storage.update(this.schema.getStoreName(), input, predicate);
+    const data = await this.storage.update(this.schema.getStoreName(), input, filter);
     this.replicator?.replicate(data, CRUDEvents.UPDATE);
     this.changeEventStream.publish({
       eventType: CRUDEvents.UPDATE,
@@ -112,15 +108,13 @@ export class Model<T = unknown> {
     return data;
   }
 
-  public async remove(predicateFunction?: Predicate<T>) {
-    if (!predicateFunction) {
+  public async remove(filter?: Filter<T>) {
+    if (!filter) {
       // TODO indentify and pass id directly
       return this.storage.remove(this.schema.getStoreName());
     }
 
-    const modelPredicate = createPredicate(this.schema.getFields());
-    const predicate = predicateFunction(modelPredicate);
-    const data = await this.storage.remove(this.schema.getStoreName(), predicate);
+    const data = await this.storage.remove(this.schema.getStoreName(), filter);
     this.replicator?.replicate(data, CRUDEvents.DELETE);
     this.changeEventStream.publish({
       eventType: CRUDEvents.DELETE,

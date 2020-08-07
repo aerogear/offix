@@ -1,8 +1,8 @@
 import { v1 as uuidv1 } from "uuid";
-import { PredicateFunction } from "../predicates";
 import { StorageAdapter } from "./api/StorageAdapter";
 import { createLogger } from "../utils/logger";
 import { ModelSchema } from "../ModelSchema";
+import { Filter } from "../filters";
 
 const logger = createLogger("storage");
 
@@ -54,17 +54,17 @@ export class LocalStorage {
     return result;
   }
 
-  public query(storeName: string, predicate?: PredicateFunction): Promise<any | any[]> {
-    return this.adapter.query(storeName, predicate);
+  public query(storeName: string, filter?: Filter): Promise<any | any[]> {
+    return this.adapter.query(storeName, filter);
   }
 
-  public async update(storeName: string, input: any, predicate?: PredicateFunction): Promise<any> {
-    const result = await this.adapter.update(storeName, input, predicate);
+  public async update(storeName: string, input: any, filter?: Filter): Promise<any> {
+    const result = await this.adapter.update(storeName, input, filter);
     return result;
   }
 
-  public async remove(storeName: string, predicate?: PredicateFunction): Promise<any | any[]> {
-    const result = await this.adapter.remove(storeName, predicate);
+  public async remove(storeName: string, filter?: Filter): Promise<any | any[]> {
+    const result = await this.adapter.remove(storeName, filter);
     return result;
   }
 
