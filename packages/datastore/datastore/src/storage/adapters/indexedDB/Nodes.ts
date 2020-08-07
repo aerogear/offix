@@ -1,9 +1,19 @@
 import { OperatorFunctionMap, AllOperators } from "../../../filters/Operators";
 
+/**
+ * A Filter node
+ */
 export interface INode {
+    /**
+     * Checks if @param input passed the test at this node
+     */
     isPassed(input: any): boolean;
 }
 
+/**
+ * This node has no children.
+ * It is a filter operation on one field of an input.
+ */
 export class LeafNode implements INode {
     private fieldkey: string;
     private filter: any;
@@ -24,6 +34,9 @@ export class LeafNode implements INode {
     }
 }
 
+/**
+ * This Node performs an AND operation on its children
+ */
 export class ANDNode implements INode {
     private nodes: INode[];
 
@@ -38,6 +51,9 @@ export class ANDNode implements INode {
     }
 }
 
+/**
+ * This Node performs an OR operation on its children
+ */
 export class ORNode implements INode {
     private nodes: INode[];
 
@@ -52,6 +68,10 @@ export class ORNode implements INode {
     }
 }
 
+/**
+ * This Node negates the result of
+ * an AND operation on its children
+ */
 export class NotNode implements INode {
     private root: ANDNode;
 
