@@ -8,7 +8,6 @@ import { NetworkStatus, NetworkStatusEvent } from "../../network/NetworkStatus";
 import { DocumentNode } from "graphql";
 import { ResultProcessor, UserErrorHandler } from "../api/ReplicationConfig";
 import { Model } from "../../Model";
-import { createPredicate } from "../../predicates";
 import { queueModel } from "../api/MetadataModels";
 
 const logger = createLogger("queue");
@@ -159,11 +158,8 @@ export class MutationsReplicationQueue {
     }
 
     const transaction = await this.options.storage.createTransaction();
-    // The only way to filter pending a better way
-    const modelPredicate = createPredicate<any>(data as any);
-
     try {
-      transaction.update(currentItem.storeName, response, modelPredicate.id("eq", clientSideId));
+      transaction.update(currentItem.storeName, response, { id: clientSideId });
       // TODO update version for conflicts.
       this.persistQueueTo(transaction);
     } catch (error) {
