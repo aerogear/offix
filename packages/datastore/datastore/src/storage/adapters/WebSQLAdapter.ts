@@ -7,11 +7,6 @@ import { ModelSchema } from "../../ModelSchema";
 
 const logger = createLogger("sqlite");
 
-const errorCallback = (tx: SQLTransaction, err: SQLError) => {
-  logger("error", err);
-  return false;
-};
-
 /**
  * Web Storage Implementation for DataStore using IndexedDB
  */
