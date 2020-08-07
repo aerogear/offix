@@ -32,8 +32,8 @@ export class ANDNode implements INode {
     }
 
     isPassed(input: any): boolean {
-        return (this.nodes.reduce((prev, cur) => {
-            return prev && cur.isPassed(input);
+        return (this.nodes.reduce((prev: boolean, cur: INode) => {
+            return (prev && cur.isPassed(input));
         }, true));
     }
 }
@@ -46,7 +46,7 @@ export class ORNode implements INode {
     }
 
     isPassed(input: any): boolean {
-        return this.nodes.reduce((prev, cur) => {
+        return this.nodes.reduce((prev: boolean, cur: INode) => {
             return prev || cur.isPassed(input);
         }, false);
     }
