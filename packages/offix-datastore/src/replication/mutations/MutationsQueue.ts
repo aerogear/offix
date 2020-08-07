@@ -3,13 +3,13 @@ import travese from "traverse";
 import { MutationRequest } from "./MutationRequest";
 import { LocalStorage, CRUDEvents } from "../../storage";
 import { createLogger } from "../../utils/logger";
-import { MUTATION_QUEUE } from "../api/Replicator";
 import { Client, OperationResult, CombinedError } from "urql";
 import { NetworkStatus, NetworkStatusEvent } from "../../network/NetworkStatus";
 import { DocumentNode } from "graphql";
 import { ResultProcessor, UserErrorHandler } from "../api/ReplicationConfig";
 import { Model } from "../../Model";
 import { createPredicate } from "../../predicates";
+import { queueModel } from "../api/MetadataModels";
 
 const logger = createLogger("queue");
 
@@ -44,7 +44,7 @@ export class MutationsReplicationQueue {
    */
   public async init() {
     this.open = await this.options.networkStatus.isOnline();
-    this.options.storage.query(MUTATION_QUEUE);
+    this.options.storage.query(queueModel.getStoreName());
 
     // Subscribe to network updates and open and close replication
     this.options.networkStatus.subscribe({
@@ -140,7 +140,7 @@ export class MutationsReplicationQueue {
   }
 
   private persistQueueTo(storage: LocalStorage = this.options.storage) {
-    storage.save(MUTATION_QUEUE, { storeName: this.options.model.getStoreName(), items: this.items });
+    storage.save(queueModel.getStoreName(), { storeName: this.options.model.getStoreName(), items: this.items });
   }
 
   private async resultProcessor(queue: MutationRequest[], currentItem: MutationRequest, data: OperationResult<any>) {
