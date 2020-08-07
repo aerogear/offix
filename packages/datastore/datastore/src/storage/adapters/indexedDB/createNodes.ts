@@ -16,7 +16,7 @@ export const createNodes = (filter: any): INode[] => {
             if (value instanceof Object) {
                 return new LeafNode(fieldKey, value);
             }
-            const defaultFilter = { eq: value }
+            const defaultFilter = { eq: value };
             return new LeafNode(fieldKey, defaultFilter);
         });
 };

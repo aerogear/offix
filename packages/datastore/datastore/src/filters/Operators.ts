@@ -62,14 +62,14 @@ export const OperatorFunctionMap = {
     endsWith: new Operator("endsWith", (m: string, v: string) => m.endsWith(v))
 };
 
-type ArrayOperators = {
+interface ArrayOperators {
     ne: any[];
     eq: any[];
     in: any[];
     contains: any[];
-}
+};
 
-type MathematicalOperators = {
+interface MathematicalOperators {
     ne: number;
     eq: number;
     le: number;
@@ -77,4 +77,4 @@ type MathematicalOperators = {
     ge: number;
     gt: number;
     in: number;
-};
+}
