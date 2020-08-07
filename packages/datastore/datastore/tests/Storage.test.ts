@@ -1,7 +1,7 @@
 import "fake-indexeddb/auto";
 
 import { LocalStorage } from "../src/storage";
-import { IndexedDBStorageAdapter } from "../src/storage/adapters/IndexedDBStorageAdapter";
+import { IndexedDBStorageAdapter } from "../src/storage/adapters/indexedDB/IndexedDBStorageAdapter";
 import { ModelSchema, DataSyncJsonSchema } from "../src/ModelSchema";
 
 describe("Test Transactions", () => {
