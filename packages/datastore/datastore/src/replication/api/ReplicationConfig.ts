@@ -1,8 +1,8 @@
 
 import { GraphQLClientConfig } from "./GraphQLClient";
 import { NetworkStatus } from "../../network/NetworkStatus";
-import { PredicateFunction } from "../../predicates";
 import { MutationRequest } from "../mutations/MutationRequest";
+import { Filter } from "../../filters";
 
 /**
  * Configuration options for Delta Queries replication
@@ -99,9 +99,9 @@ export interface GlobalReplicationConfig {
  */
 export interface ModelDeltaConfig extends DeltaQueriesConfig {
   /**
-   * Predicate that will be be transformed to remote GraphQL query
+   * Filter that will be be transformed to remote GraphQL query
    */
-  predicate?: PredicateFunction;
+  filter?: Filter;
 
   /**
    *  Limit of the queries
@@ -117,9 +117,9 @@ export interface ModelDeltaConfig extends DeltaQueriesConfig {
 
 export interface ModelSubscriptionsConfig extends DeltaQueriesConfig {
   /**
-  * Predicate that will be be transformed to remote GraphQL query
+  * PFilterthat will be be transformed to remote GraphQL query
   */
-  predicate?: PredicateFunction;
+  filter?: Filter;
 
   /**
   * Allow users to specify error handler that will check error type and repeat operations

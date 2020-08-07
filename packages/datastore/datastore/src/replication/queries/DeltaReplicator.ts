@@ -38,8 +38,8 @@ export class DeltaReplicator {
       }
     });
 
-    if (this.options.config.predicate) {
-      this.filter = convertFilterToGQLFilter(this.options.config.predicate);
+    if (this.options.config.filter) {
+      this.filter = convertFilterToGQLFilter(this.options.config.filter);
     } else {
       this.filter = {};
     }
