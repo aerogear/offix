@@ -203,7 +203,9 @@ const prepareStatement = (input: any, type: string = "insert"): [string, any[]] 
   invariant(false, "Unsupported query type");
 };
 
-const filterToSQL = (filter: Filter) => {
+const filterToSQL = (filter?: Filter) => {
+  if (!filter) { return ""; };
+
   const tokens: string[] = [];
 
   Object.keys(filter).forEach((key) => {
