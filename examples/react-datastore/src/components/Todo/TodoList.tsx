@@ -7,7 +7,7 @@ import { TodoListProps } from '../../types';
 
 export const TodoList = ({ todos }: TodoListProps) => {
 
-  if (todos.length === 0) return <Empty />;
+  if (!todos || todos.length === 0) return <Empty />;
 
   return (
     // map through todos and render
