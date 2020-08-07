@@ -2,7 +2,7 @@ import { ModelDeltaConfig } from "../api/ReplicationConfig";
 import { NetworkStatusEvent, NetworkStatus } from "../../network/NetworkStatus";
 import { DocumentNode } from "graphql";
 import { Client, OperationResult, CombinedError } from "urql";
-import { convertPredicateToFilter } from "../utils/convertPredicateToFilter";
+import { convertFilterToGQLFilter } from "../utils/convertFilterToGQLFilter";
 import { createLogger } from "../../utils/logger";
 import { LocalStorage } from "../../storage";
 import { Model } from "../../Model";
@@ -39,7 +39,7 @@ export class DeltaReplicator {
     });
 
     if (this.options.config.predicate) {
-      this.filter = convertPredicateToFilter(this.options.config.predicate);
+      this.filter = convertFilterToGQLFilter(this.options.config.predicate);
     } else {
       this.filter = {};
     }

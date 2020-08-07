@@ -1,9 +1,9 @@
 import invariant from "tiny-invariant";
 import { StorageAdapter } from "../api/StorageAdapter";
-import { PredicateFunction, ModelFieldPredicate } from "../../predicates";
 import { generateId } from "../LocalStorage";
 import { createLogger } from "../../utils/logger";
 import { ModelSchema } from "../../ModelSchema";
+import { Filter } from "../../filters";
 
 const logger = createLogger("sqlite");
 
@@ -51,27 +51,27 @@ export class WebSQLAdapter implements StorageAdapter {
     return this.transaction(query, vals);
   }
 
-  public async query(storeName: string, predicate?: PredicateFunction): Promise<any> {
-    if (!predicate) {
+  public async query(storeName: string, filter?: Filter): Promise<any> {
+    if (!filter) {
       return await this.fetchAll(storeName);
     }
-    const condition = predicateToSQL(predicate as ModelFieldPredicate);
+    const condition = filterToSQL(filter);
     const query = `SELECT * FROM ${storeName} ${condition}`;
     // @ts-ignore
     const res = await this.readTransaction(query, [predicate.value]);
     return res;
   }
 
-  public async update(storeName: string, input: any, predicate?: PredicateFunction): Promise<any> {
-    const condition = predicateToSQL(predicate as ModelFieldPredicate);
+  public async update(storeName: string, input: any, filter?: Filter): Promise<any> {
+    const condition = filterToSQL(filter);
     const [cols, vals] = prepareStatement(input, "update");
     const query = `UPDATE ${storeName} SET ${cols} ${condition}`;
     // @ts-ignore
     return this.transaction(query, [...vals, predicate.value]);
   }
 
-  public async remove(storeName: string, predicate?: PredicateFunction): Promise<any> {
-    const condition = predicateToSQL(predicate as ModelFieldPredicate);
+  public async remove(storeName: string, filter?: Filter): Promise<any> {
+    const condition = filterToSQL(filter);
     const query = `DELETE FROM ${storeName} ${condition}`;
     // @ts-ignore
     return this.transaction(query, [predicate.value]);
@@ -203,12 +203,19 @@ const prepareStatement = (input: any, type: string = "insert"): [string, any[]] 
   invariant(false, "Unsupported query type");
 };
 
-const predicateToSQL = (predicate: ModelFieldPredicate) => {
-  const key = predicate.getKey();
-  const op = predicate.getOperator().op;
-  const operator = (op === "eq") ? "=" : undefined;
-  invariant(operator, "Operator not supported");
-  return `WHERE ${key} ${operator} ?`;
+const filterToSQL = (filter: Filter) => {
+  const tokens: string[] = [];
+
+  Object.keys(filter).forEach((key) => {
+    const op = Object.keys(filter[key])[0];
+    const operator = (op === "eq") ? "=" : undefined;
+    invariant(operator, "Operator not supported");
+
+    const value = filter[key][op];
+    tokens.push(`${key}=${value}`);
+  });
+
+  return `WHERE ${tokens.join(" AND ")} ?`;
 };
 
 const getType = (type: string): string => {

@@ -2,7 +2,7 @@ import { DataStore } from "../src/DataStore";
 import { Model } from "../src/Model";
 import { CRUDEvents } from "../src/storage";
 import { GraphQLDocuments } from "../src/replication/api/Documents";
-import { buildGraphQLCRUDQueries, GraphQLCRUDReplicator, convertPredicateToFilter } from "../src/replication";
+import { buildGraphQLCRUDQueries, GraphQLCRUDReplicator, convertFilterToGQLFilter } from "../src/replication";
 import { createPredicate } from "../src/predicates";
 
 let model: Model<any>;
@@ -57,7 +57,7 @@ describe("Predicate to GraphQL query conversion", () => {
   test("Convert ModelField Predicates", () => {
     const mp = createPredicate(model.schema.getFields());
     const predicateFunction = mp.title("eq", "test");
-    const result = convertPredicateToFilter(predicateFunction);
+    const result = convertFilterToGQLFilter(predicateFunction);
     const expectedResult = {
       title: { eq: "test" }
     };
@@ -68,7 +68,7 @@ describe("Predicate to GraphQL query conversion", () => {
     const mp = createPredicate(model.schema.getFields());
     const predicateFunction = mp.or(
       mp.title("eq", "test"), mp.title("endsWith", "st"));
-    const result = convertPredicateToFilter(predicateFunction);
+    const result = convertFilterToGQLFilter(predicateFunction);
     const expectedResult = {
       or: [
         { title: { eq: "test" } },
@@ -84,7 +84,7 @@ describe("Predicate to GraphQL query conversion", () => {
       mp.and(mp.title("eq", "test"), mp.title("endsWith", "st")),
       mp.and(mp.title("eq", "test"), mp.title("startsWith", "ts"))
     );
-    const result = convertPredicateToFilter(predicateFunction);
+    const result = convertFilterToGQLFilter(predicateFunction);
     const expectedResult = {
       or: [
         {
