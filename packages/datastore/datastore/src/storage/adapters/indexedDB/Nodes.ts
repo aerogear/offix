@@ -3,7 +3,7 @@ import { OperatorFunctionMap, AllOperators } from "../../../filters/Operators";
 /**
  * A Filter node
  */
-export interface INode {
+export interface IFilterNode {
     /**
      * Checks if @param input passed the test at this node
      */
@@ -14,7 +14,7 @@ export interface INode {
  * This node has no children.
  * It is a filter operation on one field of an input.
  */
-export class LeafNode implements INode {
+export class LeafNode implements IFilterNode {
     private fieldkey: string;
     private filter: any;
 
@@ -37,15 +37,15 @@ export class LeafNode implements INode {
 /**
  * This Node performs an AND operation on its children
  */
-export class ANDNode implements INode {
-    private nodes: INode[];
+export class ANDNode implements IFilterNode {
+    private nodes: IFilterNode[];
 
-    constructor(nodes: INode[]) {
+    constructor(nodes: IFilterNode[]) {
         this.nodes = nodes;
     }
 
     isPassed(input: any): boolean {
-        return (this.nodes.reduce((prev: boolean, cur: INode) => {
+        return (this.nodes.reduce((prev: boolean, cur: IFilterNode) => {
             return (prev && cur.isPassed(input));
         }, true));
     }
@@ -54,15 +54,15 @@ export class ANDNode implements INode {
 /**
  * This Node performs an OR operation on its children
  */
-export class ORNode implements INode {
-    private nodes: INode[];
+export class ORNode implements IFilterNode {
+    private nodes: IFilterNode[];
 
-    constructor(nodes: INode[]) {
+    constructor(nodes: IFilterNode[]) {
         this.nodes = nodes;
     }
 
     isPassed(input: any): boolean {
-        return this.nodes.reduce((prev: boolean, cur: INode) => {
+        return this.nodes.reduce((prev: boolean, cur: IFilterNode) => {
             return prev || cur.isPassed(input);
         }, false);
     }
@@ -72,7 +72,7 @@ export class ORNode implements INode {
  * This Node negates the result of
  * an AND operation on its children
  */
-export class NotNode implements INode {
+export class NotNode implements IFilterNode {
     private root: ANDNode;
 
     constructor(root: ANDNode) {

@@ -1,6 +1,6 @@
-import { INode, ORNode, NotNode, ANDNode, LeafNode } from "./Nodes";
+import { IFilterNode, ORNode, NotNode, ANDNode, LeafNode } from "./Nodes";
 
-export const createNodes = (filter: any): INode[] => {
+export const createNodes = (filter: any): IFilterNode[] => {
     return Object.keys(filter)
         .map((fieldKey) => {
             const value = filter[fieldKey];
