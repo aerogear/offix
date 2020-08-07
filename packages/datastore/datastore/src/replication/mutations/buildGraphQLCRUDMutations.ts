@@ -1,6 +1,7 @@
 import gql from "graphql-tag";
 
 import { Model } from "../../Model";
+
 /**
  * Builds GraphQL mutations for models following
  * the [GraphQLCRUD specification]{@link https://graphqlcrud.org/}
@@ -37,4 +38,5 @@ export const buildGraphQLCRUDMutations = (model: Model) => {
 
   return mutations;
 };
+
 

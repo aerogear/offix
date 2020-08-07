@@ -98,3 +98,4 @@ testfile.txt
 .prettierrc
 
 website/build
+.vscode/

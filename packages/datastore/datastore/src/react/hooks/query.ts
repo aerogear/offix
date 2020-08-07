@@ -20,8 +20,9 @@ const createSubscribeToMore = (model: Model, dispatch: Dispatch<Action>) => {
 };
 
 const forceDelta = async (model: Model, state: ResultState, dispatch: Dispatch<Action>,  options?: IQueryOptions) => {
-    if (options?.forceDelta && model.replicator && !state.isDeltaForced) {
-        await model.replicator.forceDeltaQuery();
+    if (options?.forceDelta && model.replication && !state.isDeltaForced) {
+      // TODO
+      // await model.replicator.forceDeltaQuery();
         dispatch({ type: ActionType.DELTA_FORCED });
     }
 };

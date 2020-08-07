@@ -1,18 +1,20 @@
 import { ModelDeltaConfig } from "../api/ReplicationConfig";
-import { NetworkStatusEvent, NetworkStatus } from "../../network/NetworkStatus";
+import { NetworkStatusEvent } from "../../network/NetworkStatus";
 import { DocumentNode } from "graphql";
 import { Client, OperationResult, CombinedError } from "urql";
 import { convertFilterToGQLFilter } from "../utils/convertFilterToGQLFilter";
 import { createLogger } from "../../utils/logger";
 import { LocalStorage } from "../../storage";
 import { Model } from "../../Model";
+import { NetworkIndicator } from "../../network/NetworkIndicator";
+
 
 const logger = createLogger("deltareplicator");
 
 export interface DeltaReplicatorConfig {
   config: ModelDeltaConfig;
   client: Client;
-  networkInterface: NetworkStatus;
+  networkIndicator: NetworkIndicator;
   query: DocumentNode;
   storage: LocalStorage;
   model: Model;
@@ -24,16 +26,24 @@ export interface DeltaReplicatorConfig {
 export class DeltaReplicator {
   private options: DeltaReplicatorConfig;
   private filter: any;
-  private activePullInterval?: number | any;
+  private activePullInterval?: number | undefined;
+  // Some delta requests can take a while. We do not want to have two delta requests happening
   private performLock: boolean = false;
 
   constructor(options: DeltaReplicatorConfig) {
     this.options = options;
     // Subscribe to network updates and open and close replication
-    this.options.networkInterface.subscribe({
+    this.options.networkIndicator.subscribe({
       next: (message: NetworkStatusEvent) => {
         if (message.isOnline) {
-          this.start();
+          if (this.activePullInterval) {
+            // We just want to get extra delta when becoming online
+            this.perform();
+          } else {
+            this.start();
+          }
+        } else {
+          this.stop();
         }
       }
     });
@@ -45,13 +55,14 @@ export class DeltaReplicator {
     }
   }
 
+  public stop() {
+    clearInterval(this.activePullInterval);
+    this.activePullInterval = undefined;
+  }
+
   public async start() {
-    // If there is active pull available clear it
-    if (this.activePullInterval) {
-      clearInterval(this.activePullInterval);
-    }
     // Only when online
-    if (await this.options.networkInterface.isOnline()) {
+    if (await this.options.networkIndicator.isNetworkReachable()) {
       if (this.options.config.pullInterval) {
         this.perform().then(() => {
           this.activePullInterval = setInterval(() => {
@@ -78,43 +89,48 @@ export class DeltaReplicator {
     // Check if perform loc is turned
     if (!this.performLock) {
       this.performLock = true;
-      // TODO add limit
-      const result = await this.options.client.query(this.options.query, this.filter).toPromise();
-      this.processResult(result);
+      try {
+        const result = await this.options.client.query(this.options.query, this.filter).toPromise();
+        await this.processResult(result);
+      } catch (error) {
+        logger(`Replication error ${error}`);
+      } finally {
+        this.performLock = false;
+      }
     } else {
       logger("Delta already processing. Interval suspended");
     }
   }
 
-  private processResult(result: OperationResult<any>) {
+  private async processResult(result: OperationResult<any>) {
     if (result.error) {
-      this.performLock = false;
       throw result.error;
     }
     const model = this.options.model;
     // TODO this needs improvements on event level
     if (result.data && result.data.length > 0) {
-      result.data
-        .filter((d: any) => (d._deleted))
-        .forEach((d: any) => {
-          model.remove(d);
-        });
-
-      result.data
-        .filter((d: any) => (!d._deleted))
-        .forEach((d: any) => {
-          (async () => {
-            // TODO impove how we merge data together
-            const results = await model.update(d);
+      const db = await this.options.storage.createTransaction();
+      try {
+        for (const item of result.data) {
+          const filter = model.schema.getPrimaryKeyFilter(item);
+          if (item._deleted) {
+            await db.remove(model.getStoreName(), filter);
+          } else {
+            // TODO we need saveOrUpdate method
+            const results = await db.update(model.getStoreName(), filter);
             if (results.length === 0) {
               // no update was made, save the data instead
-              model.save(d);
+              await db.save(model.getStoreName(), filter);
               return;
             }
-          })();
-        });
-    } else {
-      logger("No data returned by delta query");
+          }
+        }
+      } catch (error) {
+        db.rollback();
+        throw error;
+      }
+
+      db.commit();
     }
   }
 }

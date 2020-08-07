@@ -1,9 +1,11 @@
 import { CRUDEvents, LocalStorage } from "./storage";
 import { StoreChangeEvent } from "./storage";
 import { ModelSchema } from "./ModelSchema";
-import { IModelReplicator } from "./replication";
 import { PushStream, ObservablePushStream } from "./utils/PushStream";
 import { Filter } from "./filters";
+import { ModelReplicationConfig } from "./replication/api/ReplicationConfig";
+import invariant from "tiny-invariant";
+import { ModelChangeReplication } from "./replication/mutations/MutationsQueue";
 
 export interface FieldOptions {
   /** GraphQL type */
@@ -46,18 +48,20 @@ export interface ModelConfig<T = unknown> {
  */
 export class Model<T = unknown> {
   public schema: ModelSchema<T>;
-  public replicator?: IModelReplicator;
+  public replicationConfig: ModelReplicationConfig | undefined;
+  public replication?: ModelChangeReplication;
   private storage: LocalStorage;
   private changeEventStream: PushStream<StoreChangeEvent>;
 
   constructor(
     schema: ModelSchema<T>,
-    storage: LocalStorage
+    storage: LocalStorage,
+    replicationConfig?: ModelReplicationConfig
   ) {
     this.changeEventStream = new ObservablePushStream();
     this.schema = schema;
     this.storage = storage;
-    // TODO set primary keys here or thru api
+    this.replicationConfig = replicationConfig;
     this.storage.addStore(this.schema);
   }
 
@@ -73,68 +77,72 @@ export class Model<T = unknown> {
     return this.schema.getStoreName();
   }
 
-  public async save(input: T): Promise<T> {
-    const data = await this.storage.save(this.schema.getStoreName(), input);
-    this.replicator?.replicate(data, CRUDEvents.ADD);
-    this.changeEventStream.publish({
-      eventType: CRUDEvents.ADD,
-      data,
-      storeName: this.getStoreName(),
-      eventSource: "user"
-    });
-    return data;
-  }
-
   public query(filter?: Filter<T>) {
     if (!filter) { return this.storage.query(this.schema.getStoreName()); }
 
     return this.storage.query(this.schema.getStoreName(), filter);
   }
 
-  public async update(input: Partial<T>, filter?: Filter<T>) {
-    if (!filter) {
-      // TODO Identify ID
-      return this.storage.update(this.schema.getStoreName(), input);
+  public async save(input: T): Promise<T> {
+    const db = await this.storage.createTransaction();
+    try {
+      const data = await db.save(this.schema.getStoreName(), input);
+      await this.replication?.saveChangeForReplication(this, data, CRUDEvents.ADD, db);
+      await db.commit();
+      const event = {
+        eventType: CRUDEvents.ADD,
+        data
+      };
+      this.changeEventStream.publish(event);
+      return data;
+    } catch (error) {
+      await db.rollback();
+      throw error;
     }
-
-    const data = await this.storage.update(this.schema.getStoreName(), input, filter);
-    this.replicator?.replicate(data, CRUDEvents.UPDATE);
-    this.changeEventStream.publish({
-      eventType: CRUDEvents.UPDATE,
-      data,
-      storeName: this.getStoreName(),
-      eventSource: "user"
-    });
-    return data;
   }
 
-  public async remove(filter?: Filter<T>) {
-    if (!filter) {
-      // TODO indentify and pass id directly
-      return this.storage.remove(this.schema.getStoreName());
+  public async update(input: Partial<T>, filter?: Filter<T>) {
+    invariant(filter, "filter needs to be provided for update");
+    const db = await this.storage.createTransaction();
+    try {
+      const data = await db.update(this.schema.getStoreName(), input, filter);
+      await this.replication?.saveChangeForReplication(this, data, CRUDEvents.UPDATE, db);
+      await db.commit();
+      const event = {
+        eventType: CRUDEvents.UPDATE,
+        data
+      };
+      this.changeEventStream.publish(event);
+      return data;
+    } catch (error) {
+      await db.rollback();
+      throw error;
     }
+  }
 
-    const data = await this.storage.remove(this.schema.getStoreName(), filter);
-    this.replicator?.replicate(data, CRUDEvents.DELETE);
-    this.changeEventStream.publish({
-      eventType: CRUDEvents.DELETE,
-      data,
-      storeName: this.getStoreName(),
-      eventSource: "user"
-    });
-    return data;
+  public async remove(filter: Filter<T>) {
+    invariant(filter, "filter needs to be provided for deletion");
+
+    const db = await this.storage.createTransaction();
+    try {
+      const data = await db.remove(this.schema.getStoreName(), filter);
+      await this.replication?.saveChangeForReplication(this, data, CRUDEvents.DELETE, db);
+      await db.commit();
+      const event = {
+        eventType: CRUDEvents.DELETE,
+        data
+      };
+      this.changeEventStream.publish(event);
+      return data;
+    } catch (error) {
+      await db.rollback();
+      throw error;
+    }
   }
 
   public subscribe(eventType: CRUDEvents, listener: (event: StoreChangeEvent) => void) {
     return this.changeEventStream.subscribe((event: StoreChangeEvent) => {
-        listener(event);
-      }, (event: StoreChangeEvent) => (event.eventType === eventType));
-  }
-
-  /**
-   * __Internal__ replicator setup
-   */
-  public setReplicator(replicator: IModelReplicator) {
-    this.replicator = replicator;
+      listener(event);
+    }, (event: StoreChangeEvent) => (event.eventType === eventType));
   }
 }

@@ -66,9 +66,8 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
       this.stores.forEach((store) => {
         if (existingStoreNames.contains(store.getName())) { return; }
         logger("Creating store", store.getStoreName());
-        // TODO hardcoded id and unused keypath
-        const keyPath = store.getKeyPath() || store.getPrimaryKey();
-        db.createObjectStore(store.getStoreName(), { keyPath });
+        const id = store.getPrimaryKey();
+        db.createObjectStore(store.getStoreName(), { keyPath: id });
       });
     };
   }

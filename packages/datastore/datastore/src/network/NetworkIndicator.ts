@@ -10,10 +10,8 @@ import { NetworkStatusEvent, NetworkStatus } from "./NetworkStatus";
  */
 export class NetworkIndicator implements NetworkStatus {
   public wsObservable?: Observable<{ isConnected: boolean }>;
-  private wsInitialized?: boolean;
-
+  private wsEnabled?: boolean;
   private isConnected?: boolean;
-  private online?: boolean;
   private networkStatus: NetworkStatus;
 
   /**
@@ -31,42 +29,42 @@ export class NetworkIndicator implements NetworkStatus {
    *
    * @param subscriptionClient client that can be used to control subscription state
    */
-  initialize(subscriptionClient?: SubscriptionClient) {
+  public initialize(subscriptionClient?: SubscriptionClient) {
     if (!subscriptionClient) {
-      this.wsInitialized = false;
+      this.wsEnabled = false;
       return;
     }
-
     this.wsObservable = new Observable((observer) => {
       subscriptionClient.onConnected(() => {
         observer.next({
           isConnected: true
         });
-        this.wsInitialized = true;
+        this.wsEnabled = true;
       });
       subscriptionClient.onDisconnected(() => observer.next({ isConnected: false }));
       subscriptionClient.onReconnected(() => observer.next({ isConnected: true }));
     });
     this.wsObservable.subscribe((x) => this.isConnected = x.isConnected);
-    this.networkStatus.subscribe((x: NetworkStatusEvent) => this.online = x.isOnline);
   }
 
-  public isNetworkReachable() {
-    if (this.wsInitialized) {
-      return this.online && this.isConnected
+  /**
+   * Using system indicator to check if app is connected
+   */
+  public async isOnline(): Promise<boolean> {
+    return this.networkStatus.isOnline();
+  }
+
+  /**
+   * Using subscriptions to check if app is connected (if subscriptions are enabled)
+   */
+  public async isNetworkReachable() {
+    if (this.wsEnabled && this.isConnected !== undefined) {
+      return await this.networkStatus.isOnline() && this.isConnected;
     } else {
-      this.online;
+      return await this.networkStatus.isOnline();
     }
   }
   public subscribe(observer: ZenObservable.Observer<NetworkStatusEvent>): ZenObservable.Subscription {
     return this.networkStatus.subscribe(observer);
-  }
-
-  public isWSConnected() {
-    return !!this.isConnected;
-  }
-
-  public async isOnline(): Promise<boolean> {
-    return this.networkStatus.isOnline();
   }
 }
