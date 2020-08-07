@@ -1,5 +1,5 @@
-import { PredicateFunction } from "../../predicates";
 import { ModelSchema } from "../../ModelSchema";
+import { Filter } from "../../filters";
 
 /**
  * This interface defines the API that is required
@@ -59,7 +59,7 @@ export interface StorageAdapter {
    * @param predicate A PredicateFunction to filter data
    * @returns A Promise of the query results
    */
-  query(storeName: string, predicate?: PredicateFunction): Promise<any | any[]>;
+  query(storeName: string, filter?: Filter): Promise<any | any[]>;
 
   /**
    * Update data matching predicate or all data if predicate is not specified
@@ -70,7 +70,7 @@ export interface StorageAdapter {
    * @param predicate A PredicateFunction to filter data
    * @returns A Promise of the updated data
    */
-  update(storeName: string, input: any, predicate?: PredicateFunction): Promise<any[]>;
+  update(storeName: string, input: any, filter?: Filter): Promise<any[]>;
 
   /**
    * Deletes data matching predicate or all from the store
@@ -79,5 +79,5 @@ export interface StorageAdapter {
    * @param predicate A PredicateFunction to filter data
    * @returns A Promise of the deleted data
    */
-  remove(storeName: string, predicate?: PredicateFunction): Promise<any[]>;
+  remove(storeName: string, filter?: Filter): Promise<any[]>;
 }

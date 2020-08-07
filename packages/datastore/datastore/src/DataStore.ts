@@ -2,7 +2,7 @@ import { Model } from "./Model";
 import { LocalStorage, StorageAdapter } from "./storage";
 import { IReplicator } from "./replication/api/Replicator";
 import { GraphQLCRUDReplicator } from "./replication/GraphQLReplicator";
-import { IndexedDBStorageAdapter } from "./storage/adapters/IndexedDBStorageAdapter";
+import { IndexedDBStorageAdapter } from "./storage/adapters/indexedDB/IndexedDBStorageAdapter";
 import { ModelSchema, DataSyncJsonSchema } from "./ModelSchema";
 import { DataStoreConfig } from "./DataStoreConfig";
 import { createLogger, enableLogger } from "./utils/logger";
