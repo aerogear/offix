@@ -38,5 +38,15 @@
         "primary": true
       }
     }
+  },
+  "Something": {
+    "name": "Something",
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "primary": true
+      }
+    }
   }
 }
