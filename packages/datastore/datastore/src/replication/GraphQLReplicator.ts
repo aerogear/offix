@@ -1,18 +1,30 @@
-
-import { IReplicator } from "./api/Replicator";
-import { LocalStorage, CRUDEvents } from "../storage";
+import { LocalStorage } from "../storage";
 import { Model } from "../Model";
 import { WebNetworkStatus } from "../network/WebNetworkStatus";
 import { NetworkIndicator } from "../network/NetworkIndicator";
-import { GlobalReplicationConfig, ModelReplicationConfig, MutationsConfig } from "./api/ReplicationConfig";
+import { GlobalReplicationConfig } from "./api/ReplicationConfig";
 import { createGraphQLClient } from "./utils/createGraphQLClient";
 import { Client } from "urql";
 import { MutationsReplicationQueue } from "./mutations/MutationsQueue";
-import { NetworkStatus } from "../network/NetworkStatus";
-import { buildGraphQLCRUDQueries } from ".";
+import invariant from "tiny-invariant";
+import { createLogger } from "../utils/logger";
 import { DeltaReplicator } from "./queries/DeltaReplicator";
-import { buildGraphQLCRUDMutations } from "./mutations/buildGraphQLCRUDMutations";
-import { DocumentNode } from "graphql";
+import { buildGraphQLCRUDQueries } from ".";
+import { buildGraphQLCRUDSubscriptions } from "./subscriptions/buildGraphQLCRUDSubscriptions";
+import { SubscriptionReplicator } from "./subscriptions/SubscriptionReplicator";
+
+const logger = createLogger("graphqlreplicator");
+
+/**
+ * Queue used to hold ongoing mutations
+ */
+export const MUTATION_QUEUE = "mutation_request_queue";
+
+/**
+ * Contains metadata for model
+ */
+export const MODEL_METADATA = "model_metadata";
+export const MODEL_METADATA_KEY = "storeName";
 
 /**
  * Defaults for replicating settings aggregated in single place
@@ -22,7 +34,6 @@ export const defaultConfig: GlobalReplicationConfig = {
   // Prevent specifying required fields
   client: {
   } as any,
-
   // Delta, Mutations and Subscriptions defaults
   delta: {
     enabled: true,
@@ -39,7 +50,7 @@ export const defaultConfig: GlobalReplicationConfig = {
 /**
  * Performs replication using GraphQL
  */
-export class GraphQLCRUDReplicator implements IReplicator {
+export class GraphQLReplicator {
   private client: Client;
   private config: GlobalReplicationConfig;
   private networkIndicator: NetworkIndicator;
@@ -51,6 +62,7 @@ export class GraphQLCRUDReplicator implements IReplicator {
     this.config = Object.assign({}, defaultConfig, globalReplicationConfig);
     const graphqlClient = createGraphQLClient(this.config.client);
     this.client = graphqlClient.client;
+
     let systemNetworkStatus;
     if (this.config.networkStatus) {
       systemNetworkStatus = this.config.networkStatus;
@@ -59,112 +71,60 @@ export class GraphQLCRUDReplicator implements IReplicator {
     } else {
       throw new Error("Missing network status interface ");
     }
-
     this.networkIndicator = new NetworkIndicator(systemNetworkStatus);
     this.networkIndicator.initialize(graphqlClient.subscriptionClient);
   }
 
-  public startModelReplication(model: Model, storage: LocalStorage, replicationConfig?: ModelReplicationConfig) {
-    let config: ModelReplicationConfig = this.config;
-    if (replicationConfig) {
-      config = Object.assign({}, this.config, replicationConfig);
+  public init(storage: LocalStorage) {
+    invariant(this.models.length === 0, "No models provided for replication");
+
+    if (this.config.mutations?.enabled) {
+      logger("Initializing mutation replication");
+      this.createMutationsReplication(storage);
     }
 
-    // Replication on model level gives more refined control how individual
-    // models are replicate and allows developers to directly control it.
-    const modelReplication = new ModelReplication(model, storage, this.client);
-    modelReplication.init(config, this.networkStatus);
-    model.setReplicator(modelReplication);
+    if (this.config.delta?.enabled) {
+      logger("Initializing delta replication");
+      for (const model of this.models) {
+        const queries = buildGraphQLCRUDQueries(model);
+        const deltaOptions = {
+          config: this.config.delta,
+          client: this.client,
+          networkIndicator: this.networkIndicator,
+          storage,
+          query: queries.sync,
+          model: model
+        };
+        const replicator = new DeltaReplicator(deltaOptions);
+        replicator.start();
+      }
+    }
+
+    if (this.config.liveupdates?.enabled) {
+      logger("Initializing subscription replication");
+      for (const model of this.models) {
+        const queries = buildGraphQLCRUDSubscriptions(model);
+        const subscrptionOptions = {
+          config: this.config.liveupdates,
+          client: this.client,
+          networkIndicator: this.networkIndicator,
+          storage,
+          queries: queries,
+          model: model
+        };
+        const replicator = new SubscriptionReplicator(subscrptionOptions);
+        replicator.start();
+      }
+    }
   }
 
-  public init(config: ModelReplicationConfig, networkInterface: NetworkStatus): void {
-    if (config.mutations?.enabled) {
-      this.createMutationsReplication(networkInterface, config.mutations);
-    }
-
-    if (config.delta?.enabled) {
-      const queries = buildGraphQLCRUDQueries(this.model);
-      const deltaOptions = {
-        config: config.delta,
-        client: this.client,
-        networkInterface,
-        storage: this.storage,
-        query: queries.sync,
-        model: this.model
-      };
-      const replicator = new DeltaReplicator(deltaOptions);
-      replicator.start();
-    }
-
-    if (config.liveupdates?.enabled) {
-      // const subscriptionQueries = buildGraphQLCRUDSubscriptions(this.model);
-      // TODOs
-    }
-  }
-
-  public forceDeltaQuery<T>(): Promise<void> {
-    //TODO
-    return Promise.resolve();
-  }
-
-  public resetReplication<T>(config: ModelReplicationConfig): void {
-    // TODO
-  }
-
-  public async replicate(data: any, eventType: CRUDEvents) {
-    if (!this.mutationQueue) {
-      return;
-    }
-
-    // Actual graphql queries need to be persisted at the time of request creation
-    // This will ensure consistency for situations when model changed (without migrating queue)
-    let mutationRequest;
-    const storeName = this.model.getStoreName();
-    if (CRUDEvents.ADD === eventType) {
-      mutationRequest = this.createMutationRequest(this.mutation.create, data, storeName, eventType);
-    }
-    else if (CRUDEvents.UPDATE === eventType) {
-      mutationRequest = this.createMutationRequest(this.mutation.update, data, storeName, eventType);
-    }
-    else if (CRUDEvents.DELETE === eventType) {
-      mutationRequest = this.createMutationRequest(this.mutation.delete, data, storeName, eventType);
-    } else {
-      logger("Invalid store event received");
-      throw new Error("Invalid store event received");
-    }
-
-    // Adding request to queue.
-    // Queue deals with: persistence, processing, offline, error handling, id mapping
-    // TODO await the completion of this request
-    this.mutationQueue.addMutationRequest(mutationRequest);
-  }
-
-  private createMutationsReplication(networkStatus: NetworkStatus, config: MutationsConfig) {
-    // TODO maybe we want this functions to be injected and replaced
-    // Later consideration how replication engine is build
-    this.mutation = buildGraphQLCRUDMutations(this.model);
+  private createMutationsReplication(storage: LocalStorage) {
     this.mutationQueue = new MutationsReplicationQueue({
-      storage: this.storage,
+      storage: storage,
       client: this.client,
-      networkStatus: networkStatus,
-      errorHandler: config.errorHandler,
-      resultProcessor: config.resultProcessor,
-      model: this.model
+      networkStatus: this.networkIndicator
     });
-    this.mutationQueue.init().then(() => {
-      this.mutationQueue?.process();
-    });
-  }
-
-  // TODO extract to simplify overriding replication
-  private createMutationRequest(mutation: DocumentNode, data: any, storeName: string, eventType: CRUDEvents) {
-    return {
-      mutation,
-      // TODO transform this to generic values
-      variables: { input: data },
-      storeName,
-      version: 1,
-      eventType
-    };
+    this.mutationQueue.addModels(this.models, this.config);
+    this.mutationQueue.init();
   }
 }

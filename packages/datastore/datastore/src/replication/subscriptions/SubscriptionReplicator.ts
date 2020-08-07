@@ -1,20 +1,18 @@
-import { ModelDeltaConfig } from "../api/ReplicationConfig";
-import { NetworkStatusEvent, NetworkStatus } from "../../network/NetworkStatus";
-import { DocumentNode } from "graphql";
-import { Client, OperationResult, CombinedError } from "urql";
-import { convertPredicateToFilter } from "../utils/convertPredicateToFilter";
+import { LiveUpdatesConfig } from "../api/ReplicationConfig";
+import { Client } from "urql";
 import { createLogger } from "../../utils/logger";
 import { LocalStorage } from "../../storage";
 import { Model } from "../../Model";
-import { DeltaReplicatorConfig } from "../queries/DeltaReplicator";
+import { NetworkIndicator } from "../../network/NetworkIndicator";
+import { ReplicatorSubscriptions } from "./ReplicatorSubscriptions";
 
 const logger = createLogger("deltareplicator");
 
 export interface SubscriptionReplicatorConfig {
-  config: ModelDeltaConfig;
+  config: LiveUpdatesConfig;
   client: Client;
-  networkInterface: NetworkStatus;
-  query: DocumentNode;
+  networkIndicator: NetworkIndicator;
+  queries: ReplicatorSubscriptions;
   storage: LocalStorage;
   model: Model;
 }
@@ -23,15 +21,14 @@ export interface SubscriptionReplicatorConfig {
  * Replication engine for delta queris
  */
 export class SubscriptionReplicator {
-  private options: DeltaReplicatorConfig;
-  private filter: any;
+  private options: SubscriptionReplicatorConfig;
 
-  constructor(options: DeltaReplicatorConfig) {
+  constructor(options: SubscriptionReplicatorConfig) {
     this.options = options;
-
   }
 
   public async start() {
-
+    logger("Subscription replication not implemented :)");
+    // TODO
   }
 }

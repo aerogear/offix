@@ -1,5 +1,3 @@
-
-import { DocumentNode } from "graphql";
 import { CRUDEvents } from "../..";
 
 /**
@@ -11,21 +9,15 @@ export interface MutationRequest {
    * Type of event/operation
    */
   eventType: CRUDEvents;
-  /**
-   * Version used to detect changes in structure
-   */
-  version: number;
-  /**
-   * Document mutation to be executed on server
-   */
-  mutation: DocumentNode;
-  /**
-   * Query variables used in client
-   */
-  variables: any;
 
   /**
-   * Primary key
+   * Data used to send by mutation
+   */
+  data: any;
+
+  /**
+   * Name of the store
    */
   storeName: string;
 }
+

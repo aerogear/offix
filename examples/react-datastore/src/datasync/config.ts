@@ -10,8 +10,8 @@ export const datastore = new DataStore({
       wsUrl: "ws://localhost:5400/graphql",
     },
     delta: { enabled: true },
-    mutations: { enabled: false },
-    liveupdates: { enabled: false }
+    mutations: { enabled: true },
+    liveupdates: { enabled: true }
   }
 });
 

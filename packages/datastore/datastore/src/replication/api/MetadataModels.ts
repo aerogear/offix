@@ -1,11 +1,11 @@
 import { ModelSchema } from "../../ModelSchema";
-import { MODEL_METADATA, MODEL_METADATA_KEY, MUTATION_QUEUE, MUTATION_QUEUE_KEY } from "./Replicator";
+import { MODEL_METADATA, MODEL_METADATA_KEY, MUTATION_QUEUE } from "../GraphQLReplicator";
 
 export const metadataModel = new ModelSchema<any>({
   name: MODEL_METADATA,
   type: "object",
-  namespace: "_",
-  keyPath: MODEL_METADATA_KEY,
+  namespace: "meta_",
+  version: 1,
   properties: {
     [MODEL_METADATA_KEY]: {
       type: "string",
@@ -15,16 +15,19 @@ export const metadataModel = new ModelSchema<any>({
   }
 });
 
-export const queueModel = new ModelSchema<any>({
+export const mutationQueueModel = new ModelSchema<any>({
   name: MUTATION_QUEUE,
   type: "object",
-  keyPath: MUTATION_QUEUE_KEY,
-  namespace: "_",
+  version: 1,
+  namespace: "meta_",
   properties: {
-    [MUTATION_QUEUE_KEY]: {
+    id: {
       type: "string",
       primary: true,
       index: true
+    },
+    queue: {
+      type: "array"
     }
   }
 });

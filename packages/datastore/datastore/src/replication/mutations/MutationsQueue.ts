@@ -1,50 +1,100 @@
 
-import travese from "traverse";
 import { MutationRequest } from "./MutationRequest";
 import { LocalStorage, CRUDEvents } from "../../storage";
 import { createLogger } from "../../utils/logger";
 import { Client, OperationResult, CombinedError } from "urql";
-import { NetworkStatus, NetworkStatusEvent } from "../../network/NetworkStatus";
-import { DocumentNode } from "graphql";
-import { ResultProcessor, UserErrorHandler } from "../api/ReplicationConfig";
+import { NetworkStatusEvent } from "../../network/NetworkStatus";
 import { Model } from "../../Model";
-import { queueModel } from "../api/MetadataModels";
+import { mutationQueueModel } from "../api/MetadataModels";
+import { NetworkIndicator } from "../../network/NetworkIndicator";
+import { ReplicatorMutations } from "./ReplicatorMutations";
+import { GlobalReplicationConfig, MutationsConfig } from "../api/ReplicationConfig";
+import { buildGraphQLCRUDMutations } from "./buildGraphQLCRUDMutations";
+import invariant from "tiny-invariant";
 
 const logger = createLogger("queue");
 
 interface MutationReplicationOptions {
   storage: LocalStorage;
-  model: Model;
   client: Client;
-  networkStatus: NetworkStatus;
-  errorHandler?: UserErrorHandler;
-  resultProcessor?: ResultProcessor;
+  networkStatus: NetworkIndicator;
 }
+
+/**
+ * Interface that is injected into model in order to add new items to replication engine
+ */
+export interface ModelChangeReplication {
+  /**
+   * Save replication request
+   * @param model
+   * @param data
+   * @param eventType
+   * @param store
+   */
+  saveChangeForReplication(model: Model, data: any, eventType: CRUDEvents, store: LocalStorage): Promise<void>;
+}
+/**
+ * Represents single row where we persist all items
+ * We use single row to ensure consistency
+ */
+const MUTATION_ROW_ID = "offline_changes";
 
 /**
  * Queue that manages replication of the mutations for all local edits.
  */
-// NOTE this queue was designed to be self sufficient and work in generic (GraphQL) cases as well
-// We can use this in future for interoperability between generic cases and datastore
-export class MutationsReplicationQueue {
-  private items: MutationRequest[];
+export class MutationsReplicationQueue implements ModelChangeReplication {
+  // Map of the storeName to the GraphQL documents
+  private modelMap: {
+    [name: string]: { documents: ReplicatorMutations; model: Model };
+  };
+  // Queue is open (available to process data) if needed
   private open: boolean;
+  // Queue is currently procesisng requests (used as semaphore to avoid processing multiple times)
+  private processing: boolean;
   private options: MutationReplicationOptions;
 
   constructor(options: MutationReplicationOptions) {
     logger("Mutation queue created");
-    this.items = [];
     this.options = options;
     this.open = false;
+    this.processing = false;
+    this.modelMap = {};
+  }
+
+  /**
+   * Add models that should be replicated to the server
+   *
+   * @param models
+   * @param globalConfig
+   */
+  public addModels(models: Model[], globalConfig: GlobalReplicationConfig) {
+    for (const model of models) {
+      let config: MutationsConfig | undefined = globalConfig.mutations;
+      if (model.replicationConfig) {
+        config = Object.assign({}, config, model.replicationConfig.mutations);
+      }
+      if (config?.enabled) {
+        let documents;
+        // Use Custom GraphQL queries
+        if (globalConfig.documentBuilders?.mutations) {
+          documents = globalConfig.documentBuilders?.mutations(model);
+        } else {
+          // Use GraphQLCRUD
+          documents = buildGraphQLCRUDMutations(model);
+        }
+        // Save queries for model
+        this.modelMap[`${model.getStoreName()}`] = { documents, model };
+
+        // Enable replication for this model
+        model.replication = this;
+      }
+    }
   }
 
   /**
    * Initialize networkstatus and Queue to make sure that it is in proper state after startup.
    */
-  public async init() {
-    this.open = await this.options.networkStatus.isOnline();
-    this.options.storage.query(queueModel.getStoreName());
-
+  public init() {
     // Subscribe to network updates and open and close replication
     this.options.networkStatus.subscribe({
       next: (message: NetworkStatusEvent) => {
@@ -57,124 +107,155 @@ export class MutationsReplicationQueue {
         this.open = false;
       }
     });
+
+    // Intentionally async to start replication in background
+    this.options.networkStatus.isNetworkReachable().then((result) => {
+      if (this.open === result) {
+        // No state change
+        return;
+      }
+
+      if (result === true) {
+        // Going online
+        this.process();
+      }
+      this.open = result;
+    });
   }
 
   /**
-   * Perform mutation request that will:
-   *
-   * - Add request to the array of the current requests
-   * - Save **all** requests to the store for this model
-   * - Process requests (subject to network availability)
-   * - Map id's
-   *
-   * @param request
+   * Save user change to bereplicated by engine
    */
-  public addMutationRequest(request: MutationRequest) {
-    this.items.push(request);
-    // Save entire queue
-    this.persistQueueTo();
+  public async saveChangeForReplication(model: Model, data: any, eventType: CRUDEvents, store: LocalStorage) {
+    // Actual graphql queries need to be persisted at the time of request creation
+    // This will ensure consistency for situations when model changed (without migrating queue)
+    const storeName = model.getStoreName();
+    const operations = this.modelMap[storeName];
+    invariant(!operations, "Missing GraphQL mutations for replication");
+
+    const mutationRequest = {
+      storeName,
+      data,
+      eventType
+    };
+    await this.enqueueRequest(mutationRequest);
     logger("Saved Queue. Preparing to process");
     this.process();
   }
 
   public async process() {
-    this.open = await this.options.networkStatus.isOnline();
     if (!this.open) {
       logger("Client offline. Stop processsing queue");
       return;
     }
-    // Clone queue
-    let currentItems = Object.assign([], this.items) as MutationRequest[];
-    while (this.open && currentItems.length !== 0) {
-      const isOnline = await this.options.networkStatus.isOnline();
-      if (isOnline) {
-        const item = currentItems.shift();
-        logger("Mutation queue processing - online");
-        const operationPromise = this.options.client.mutation(item?.mutation as DocumentNode, item?.variables).toPromise();
-        operationPromise.then((data) => {
-          this.resultProcessor(currentItems, item as MutationRequest, data);
-        }).catch((error: CombinedError) => {
-          const retry = this.errorHandler(error, item as MutationRequest);
-          if (retry) {
-            this.items[0] = retry;
-            // repeat request
-          } else {
-            logger("Unhandled error");
-            // TODO Id should be accesible easily
-            // TODO reset processing - while loop is not flexible here
-            this.clearQueueById(item?.variables.input.id);
-          };
-          currentItems = this.items;
-        });
-      } else {
-        this.open = false;
-        logger("Mutation queue processing stopped - offline");
+
+    if (this.processing) {
+      logger("Client is processing already. Stop processsing queue");
+      return;
+    }
+
+    this.processing = true;
+    while (this.open) {
+      const items = await this.options.storage.query(mutationQueueModel.getStoreName(), { id: MUTATION_ROW_ID });
+      if (!items || items?.items.length > 0) {
+        logger("Queue is empty");
+        break;
+      }
+
+      const item: MutationRequest = items.items[0];
+      logger("Mutation queue processing - online");
+      invariant(!this.modelMap[item.storeName], `Store is not setup for replication ${item.storeName}`);
+
+      const mutation = this.getMutationDocument(item);
+      try {
+        const result = await this.options.client.mutation(mutation, { input: item.data }).toPromise();
+        logger(`Mutation result ${result}`);
+        await this.resultProcessor(item, result);
+        await this.dequeueRequest();
+        logger("Mutation dequeued");
+      } catch (error) {
+        const retry = this.errorHandler(error, item);
+        if (!retry) {
+          await this.dequeueRequest();
+        }
+        // TODO invalidate any other changes that happened here
       }
     }
+    this.processing = false;
     // Work finished we can close queue
     this.open = false;
   }
 
+  private getMutationDocument({ storeName, eventType }: MutationRequest) {
+    let mutationDocument;
+    if (CRUDEvents.ADD === eventType) {
+      mutationDocument = this.modelMap[storeName].documents.create;
+    } else if (CRUDEvents.UPDATE === eventType) {
+      mutationDocument = this.modelMap[storeName].documents.update;
+    } else if (CRUDEvents.DELETE === eventType) {
+      mutationDocument = this.modelMap[storeName].documents.delete;
+    } else {
+      logger("Invalid store event received");
+      throw new Error("Invalid store event received");
+    }
+    return mutationDocument;
+  }
+
+  private async dequeueRequest() {
+    const storeName = mutationQueueModel.getStoreName();
+    const queue = await this.options.storage.query(storeName, { id: MUTATION_ROW_ID });
+    if (queue?.items instanceof Array) {
+      queue.items.shift();
+    }
+    this.options.storage.save(storeName, { id: MUTATION_ROW_ID, queue });
+  }
+
+
+  private async enqueueRequest(mutationRequest: MutationRequest) {
+    let items = await this.options.storage.query(mutationQueueModel.getStoreName(), { id: MUTATION_ROW_ID });
+    if (items?.items) {
+      items.push(mutationRequest);
+    }
+    else {
+      items = [mutationRequest];
+    }
+    this.options.storage.save(mutationQueueModel.getStoreName(), { id: MUTATION_ROW_ID, items });
+  }
 
   /**
-   * Handler error
+   * Handler for mutation error
    * @param error
    */
   private errorHandler(error: CombinedError, request: MutationRequest) {
     logger("error happend when processing request", error);
-    // TODO detect conflict error
-    if (this.options.errorHandler) {
+    const model = this.modelMap[request.storeName].model;
+    const userErrorHandler = model.replicationConfig?.mutations?.errorHandler;
+    if (userErrorHandler) {
       logger("error handled by user");
-      return this.options.errorHandler(error.networkError, error.graphQLErrors);
+      return userErrorHandler(error.networkError, error.graphQLErrors);
     }
 
     if (error.networkError !== undefined && error.graphQLErrors === undefined) {
-      // TODO add number of retries
-      // All auth errors should he handled by user error provider
-      logger("error replied due to network error");
-      return request;
+      logger("Error replied due to network error");
+      return true;
     }
 
-    return undefined;
+    return false;
   }
 
-  private persistQueueTo(storage: LocalStorage = this.options.storage) {
-    storage.save(queueModel.getStoreName(), { storeName: this.options.model.getStoreName(), items: this.items });
-  }
-
-  private async resultProcessor(queue: MutationRequest[], currentItem: MutationRequest, data: OperationResult<any>) {
-    // TODO generic handling or responses
-    // TODO hardcoded id and hacky way to get object
-    const clientSideId = currentItem.variables.id;
+  // TODO not finished
+  private async resultProcessor(currentItem: MutationRequest, data: OperationResult<any>) {
+    const model = this.modelMap[currentItem.storeName].model;
+    const primaryKey = model.schema.getPrimaryKey();
     const response = data.data[Object.keys(data.data)[0]];
-    if (currentItem.eventType === CRUDEvents.ADD) {
-      queue.forEach((item) => {
-        travese(item.variables).forEach(function(val) {
-          if (this.isLeaf && val === clientSideId) {
-            this.update(response.id);
-          }
-        });
-      });
+    if (response) {
+      // model.update(response, { [primaryKey]: response[primaryKey] })
     }
-
-    const transaction = await this.options.storage.createTransaction();
-    try {
-      transaction.update(currentItem.storeName, response, { id: clientSideId });
-      // TODO update version for conflicts.
-      this.persistQueueTo(transaction);
-    } catch (error) {
-      transaction.rollback();
-    }
-  }
-
-  private clearQueueById(id: string) {
-    const newItems = [];
-    for (const item of this.items) {
-      if (item.variables.data.id !== id) {
-        newItems.push(item);
+    const clientSideId = currentItem.data[primaryKey];
+    if (clientSideId) {
+      if (currentItem.eventType === CRUDEvents.ADD) {
+        // TODO update id's of the elements in the queue
       }
     }
-    this.items = newItems;
-    this.persistQueueTo();
   }
 }

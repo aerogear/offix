@@ -3,6 +3,7 @@ import { GraphQLClientConfig } from "./GraphQLClient";
 import { NetworkStatus } from "../../network/NetworkStatus";
 import { MutationRequest } from "../mutations/MutationRequest";
 import { Filter } from "../../filters";
+import { DocumentBuilders } from "./DocumentBuilders";
 
 /**
  * Configuration options for Delta Queries replication
@@ -25,7 +26,7 @@ export interface LiveUpdatesConfig {
  *
  * @returns MutationRequest if request should be repeated
  */
-export type UserErrorHandler = (networkError: any, graphqlError: any) => MutationRequest | undefined;
+export type UserErrorHandler = (networkError: any, graphqlError: any) => boolean;
 
 /**
  * Handle errors repeat request if needed
@@ -91,6 +92,11 @@ export interface GlobalReplicationConfig {
    * If you use react native you should override that with React Native specific interfaces.
    */
   networkStatus?: NetworkStatus;
+
+  /**
+   * Allows to override documents used for replication
+   */
+  documentBuilders?: DocumentBuilders;
 }
 
 
@@ -130,8 +136,7 @@ export interface ModelSubscriptionsConfig extends DeltaQueriesConfig {
 /**
  * Model specific configuration for replication
  */
-export interface ModelReplicationConfig {
-  // TODO add ability to change url for replication
+export interface ModelReplicationConfig extends GlobalReplicationConfig{
   delta?: ModelDeltaConfig;
   liveupdates?: ModelSubscriptionsConfig;
   mutations?: MutationsConfig;

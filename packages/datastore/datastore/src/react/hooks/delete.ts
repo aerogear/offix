@@ -6,7 +6,7 @@ import { Filter } from "../../filters";
 export const useRemove = <T>(model: Model<T>) => {
     const [state, dispatch] = useReducer(reducer, InitialState);
 
-    const remove = async (filter?: Filter<T>) => {
+    const remove = async (filter: Filter<T>) => {
         if (state.isLoading) { return; }
 
         dispatch({ type: ActionType.INITIATE_REQUEST });

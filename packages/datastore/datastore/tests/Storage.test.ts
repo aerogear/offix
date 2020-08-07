@@ -2,7 +2,7 @@ import "fake-indexeddb/auto";
 
 import { LocalStorage } from "../src/storage";
 import { IndexedDBStorageAdapter } from "../src/storage/adapters/indexedDB/IndexedDBStorageAdapter";
-import { ModelSchema, DataSyncJsonSchema } from "../src/ModelSchema";
+import { ModelSchema, ModelJsonSchema } from "../src/ModelSchema";
 
 describe("Test Transactions", () => {
     let storage: LocalStorage;
@@ -20,7 +20,7 @@ describe("Test Transactions", () => {
               primary: true
             }
           }
-        } as DataSyncJsonSchema<any>;
+        } as ModelJsonSchema<any>;
         const model = new ModelSchema<any>(schema);
         adapter.addStore(model);
         adapter.createStores();
