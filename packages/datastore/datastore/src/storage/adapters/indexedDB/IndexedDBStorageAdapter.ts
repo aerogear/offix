@@ -137,10 +137,10 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
   }
 
   public async remove(storeName: string, filter?: Filter) {
-    const store = await this.getStore(storeName);
     // TODO provide ability to delete from store by key (not fetching entire store which is innefficient)
     // detect if predicate is id or create separate method
     const targets = await this.query(storeName, filter);
+    const store = await this.getStore(storeName);
     await Promise.all(
       targets.map((t: any) => this.convertToPromise(store.delete(t.id)))
     );
