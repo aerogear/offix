@@ -14,7 +14,7 @@ export const EditTodo = ({ todo, toggleEdit }: EditTodoProps) => {
     editTodo({
       title: todo.title,
       description: todo.description,
-    }, (t) => t.id('eq', todo.id))
+    }, { id: todo.id })
     .then(() => toggleEdit())
     .catch((error: any) => {
       console.log(error);
