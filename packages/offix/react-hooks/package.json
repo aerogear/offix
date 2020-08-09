@@ -28,10 +28,10 @@
     "access": "public"
   },
   "devDependencies": {
-    "@size-limit/preset-small-lib": "4.5.5",
+    "@size-limit/preset-small-lib": "4.5.6",
     "@testing-library/react-hooks": "3.4.1",
     "@types/jest": "26.0.9",
-    "@types/react": "16.9.44",
+    "@types/react": "16.9.45",
     "@types/react-dom": "16.9.8",
     "apollo-cache": "1.3.5",
     "apollo-cache-inmemory": "1.6.6",
@@ -43,7 +43,7 @@
     "graphql": "15.3.0",
     "jest": "26.2.2",
     "react-test-renderer": "16.13.1",
-    "size-limit": "4.5.5",
+    "size-limit": "4.5.6",
     "ts-jest": "26.1.4",
     "typescript": "3.9.7"
   },
