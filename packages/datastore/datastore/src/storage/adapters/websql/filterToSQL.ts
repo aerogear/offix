@@ -16,14 +16,14 @@ const defaultOp = (op: string) => (
 
 // TODO contains
 const OperatorToSQLMap: OperatorToSQL = {
-    eq: defaultOp('='),
-    gt: defaultOp('>'),
-    ge: defaultOp('>='),
-    lt: defaultOp('<'),
-    le: defaultOp('<='),
-    ne: defaultOp('!='),
-    in: defaultOp('IN'),
-    contains: defaultOp(''),
+    eq: defaultOp("="),
+    gt: defaultOp(">"),
+    ge: defaultOp(">="),
+    lt: defaultOp("<"),
+    le: defaultOp("<="),
+    ne: defaultOp("!="),
+    in: defaultOp("IN"),
+    contains: defaultOp(""),
     startsWith: (key, value) => `${key} LIKE '${value}%'`,
     endsWith: (key, value) => `${key} LIKE '%${value}'`
 };
@@ -36,10 +36,10 @@ const transformOperatorsToSQL = (key: string, filter: any) => {
 
             const value = filter[op];
             return operator(key, value);
-        }).join(' AND ');
-}
+        }).join(" AND ");
+};
 
-const extractExpression = (filter: any, separator: 'AND' | 'OR' = 'AND'): string => {
+const extractExpression = (filter: any, separator: "AND" | "OR" = "AND"): string => {
     const keys = Object.keys(filter);
     const expression = keys.map(key => {
         if (!(filter[key] instanceof Object)) {
@@ -47,14 +47,14 @@ const extractExpression = (filter: any, separator: 'AND' | 'OR' = 'AND'): string
         }
 
         switch (key) {
-            case 'not':
+            case "not":
                 return `NOT ${extractExpression(filter[key])}`;
 
-            case 'and':
+            case "and":
                 return extractExpression(filter[key]);
 
-            case 'or':
-                return extractExpression(filter[key], 'OR');
+            case "or":
+                return extractExpression(filter[key], "OR");
 
             default:
                 return transformOperatorsToSQL(key, filter[key]);
@@ -62,7 +62,7 @@ const extractExpression = (filter: any, separator: 'AND' | 'OR' = 'AND'): string
     }).join(` ${separator} `);
 
     return `(${expression})`;
-}
+};
 
 export const filterToSQL = (filter?: Filter) => {
     if (!filter) { return ""; };
