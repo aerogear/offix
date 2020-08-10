@@ -1,5 +1,5 @@
 import { createPredicateFrom } from '../src/storage/adapters/indexedDB/Predicate';
-import { filterToSQL } from '../src/storage/adapters/websql/utils';
+import { filterToSQL } from '../src/storage/adapters/websql/filterToSQL';
 
 describe("Test IndexedDB filters", () => {
     test("Filter based on object fields", () => {
