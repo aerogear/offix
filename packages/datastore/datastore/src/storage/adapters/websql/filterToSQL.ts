@@ -28,23 +28,37 @@ const OperatorToSQLMap: OperatorToSQL = {
     endsWith: (key, value) => `${key} LIKE '%${value}'`
 };
 
+const extractExpression = (filter: any, separator: 'AND' | 'OR' = 'AND'): string => {
+    const keys = Object.keys(filter);
+    const expression = keys.map(key => {
+        if (!(filter[key] instanceof Object)) {
+            return OperatorToSQLMap.eq(key, filter[key]);
+        }
+
+        switch (key) {
+            case 'not':
+                return `NOT ${extractExpression(filter[key])}`;
+
+            case 'and':
+                return extractExpression(filter[key]);
+
+            case 'or':
+                return extractExpression(filter[key], 'OR');
+
+            default:
+                const op = Object.keys(filter[key])[0];
+                const operator = OperatorToSQLMap[(op as keyof AllOperators)];
+                invariant(operator, "Operator not supported");
+
+                const value = filter[key][op];
+                return operator(key, value);
+        }
+    }).join(` ${separator} `);
+
+    return `(${expression})`;
+}
+
 export const filterToSQL = (filter?: Filter) => {
     if (!filter) { return ""; };
-
-    const tokens: string[] = [];
-
-    Object.keys(filter).forEach((key) => {
-        if (!(filter[key] instanceof Object)) {
-            tokens.push(OperatorToSQLMap.eq(key, filter[key]));
-            return;
-        }
-        const op = Object.keys(filter[key])[0];
-        const operator = OperatorToSQLMap[(op as keyof AllOperators)];
-        invariant(operator, "Operator not supported");
-
-        const value = filter[key][op];
-        tokens.push(operator(key, value));
-    });
-
-    return `WHERE ${tokens.join(" AND ")} ?`;
+    return `WHERE ${extractExpression(filter)} ?`;
 };
