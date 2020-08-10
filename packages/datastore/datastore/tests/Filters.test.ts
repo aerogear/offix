@@ -65,6 +65,18 @@ describe.only("Test SQL filters", () => {
         expect(actualSQL).toEqual(expectedSQL);
     });
 
+    test("Multiple checks on one field", () => {
+        const filter = {
+            clickCount: {
+                gt: 9,
+                ne: 15
+            },
+        };
+        const expectedSQL = "WHERE (clickCount > 9 AND clickCount != 15) ?";
+        const actualSQL = filterToSQL(filter);
+        expect(actualSQL).toEqual(expectedSQL);
+    });
+
     test("Filter using expressions", () => {
         const filter = {
             or: {
