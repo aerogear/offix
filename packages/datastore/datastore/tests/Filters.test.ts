@@ -19,7 +19,7 @@ describe("Test IndexedDB filters", () => {
         const result = predicate.filter(list);
         expect(result).toEqual([list[0]]);
     });
-    
+
     test("Filter based on expressions", () => {
         const list = [
             { clickCount: 9, isTest: true },
@@ -34,7 +34,7 @@ describe("Test IndexedDB filters", () => {
                 }
             }
         });
-    
+
         const result = predicate.filter(list);
         expect(result).toEqual([list[0], list[2]]);
     });
@@ -46,11 +46,11 @@ describe.only("Test SQL filters", () => {
             clickCount: { eq: 5 },
             title: { eq: 'Test' }
         };
-        let expectedSQL = "WHERE clickCount = 5 AND title = 'Test' ?";
+        let expectedSQL = "WHERE (clickCount = 5 AND title = 'Test') ?";
         let actualSQL = filterToSQL(filter);
         expect(actualSQL).toEqual(expectedSQL);
 
-        expectedSQL = "WHERE title LIKE 'Test%' ?";
+        expectedSQL = "WHERE (title LIKE 'Test%') ?";
         actualSQL = filterToSQL({ title: { startsWith: 'Test' } });
         expect(actualSQL).toEqual(expectedSQL);
     });
@@ -60,10 +60,24 @@ describe.only("Test SQL filters", () => {
             clickCount: 5,
             title: 'Test'
         };
-        let expectedSQL = "WHERE clickCount = 5 AND title = 'Test' ?";
-        let actualSQL = filterToSQL(filter);
+        const expectedSQL = "WHERE (clickCount = 5 AND title = 'Test') ?";
+        const actualSQL = filterToSQL(filter);
         expect(actualSQL).toEqual(expectedSQL);
     });
 
-    test.todo("Filter using expressions");
+    test("Filter using expressions", () => {
+        const filter = {
+            or: {
+                title: 'Fun',
+                not: {
+                    clickCount: 5,
+                    title: 'Test'
+                }
+            }
+        };
+
+        const expectedSQL = "WHERE ((title = 'Fun' OR NOT (clickCount = 5 AND title = 'Test'))) ?";
+        const actualSQL = filterToSQL(filter);
+        expect(actualSQL).toEqual(expectedSQL);
+    });
 });
