@@ -28,6 +28,17 @@ const OperatorToSQLMap: OperatorToSQL = {
     endsWith: (key, value) => `${key} LIKE '%${value}'`
 };
 
+const transformOperatorsToSQL = (key: string, filter: any) => {
+    return Object.keys(filter)
+        .map((op) => {
+            const operator = OperatorToSQLMap[(op as keyof AllOperators)];
+            invariant(operator, "Operator not supported");
+
+            const value = filter[op];
+            return operator(key, value);
+        }).join(' AND ');
+}
+
 const extractExpression = (filter: any, separator: 'AND' | 'OR' = 'AND'): string => {
     const keys = Object.keys(filter);
     const expression = keys.map(key => {
@@ -46,12 +57,7 @@ const extractExpression = (filter: any, separator: 'AND' | 'OR' = 'AND'): string
                 return extractExpression(filter[key], 'OR');
 
             default:
-                const op = Object.keys(filter[key])[0];
-                const operator = OperatorToSQLMap[(op as keyof AllOperators)];
-                invariant(operator, "Operator not supported");
-
-                const value = filter[key][op];
-                return operator(key, value);
+                return transformOperatorsToSQL(key, filter[key]);
         }
     }).join(` ${separator} `);
 
