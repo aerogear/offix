@@ -14,7 +14,7 @@ const defaultOp = (op: string) => (
     }
 );
 
-// TODO contains
+// TODO contains is tricky, verify solution
 const OperatorToSQLMap: OperatorToSQL = {
     eq: defaultOp("="),
     gt: defaultOp(">"),
@@ -23,7 +23,7 @@ const OperatorToSQLMap: OperatorToSQL = {
     le: defaultOp("<="),
     ne: defaultOp("!="),
     in: defaultOp("IN"),
-    contains: defaultOp(""),
+    contains: (key, value) => `${key} LIKE '%${value}%'`,
     startsWith: (key, value) => `${key} LIKE '${value}%'`,
     endsWith: (key, value) => `${key} LIKE '%${value}'`
 };
