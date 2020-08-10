@@ -3,7 +3,8 @@ import { StorageAdapter } from "../../api/StorageAdapter";
 import { createLogger } from "../../../utils/logger";
 import { ModelSchema } from "../../../ModelSchema";
 import { Filter } from "../../../filters";
-import { prepareStatement, filterToSQL, flattenResultSet, getType } from "./utils";
+import { prepareStatement, flattenResultSet, getType } from "./utils";
+import { filterToSQL } from "./filterToSQL";
 
 const logger = createLogger("sqlite");
 
