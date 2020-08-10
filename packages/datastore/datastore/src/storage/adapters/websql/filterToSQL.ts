@@ -35,7 +35,7 @@ export const filterToSQL = (filter?: Filter) => {
 
     Object.keys(filter).forEach((key) => {
         if (!(filter[key] instanceof Object)) {
-            tokens.push(`eq=${filter[key]}`);
+            tokens.push(OperatorToSQLMap.eq(key, filter[key]));
             return;
         }
         const op = Object.keys(filter[key])[0];

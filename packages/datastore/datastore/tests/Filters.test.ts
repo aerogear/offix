@@ -55,7 +55,15 @@ describe.only("Test SQL filters", () => {
         expect(actualSQL).toEqual(expectedSQL);
     });
 
-    test.todo("Assume 'eq' operation");
+    test("Assume 'eq' operation", () => {
+        const filter = {
+            clickCount: 5,
+            title: 'Test'
+        };
+        let expectedSQL = "WHERE clickCount = 5 AND title = 'Test' ?";
+        let actualSQL = filterToSQL(filter);
+        expect(actualSQL).toEqual(expectedSQL);
+    });
 
     test.todo("Filter using expressions");
 });
