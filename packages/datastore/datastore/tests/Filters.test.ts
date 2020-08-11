@@ -1,4 +1,4 @@
-import { createPredicateFrom } from '../src/storage/adapters/indexedDB/Predicate';
+import { getPredicate } from '../src/storage/adapters/indexedDB/Predicate';
 import { filterToSQL } from '../src/storage/adapters/websql/filterToSQL';
 import { WebSQLAdapter, LocalStorage, ModelSchema } from '../src';
 
@@ -14,8 +14,8 @@ describe("Test IndexedDB filters", () => {
         const list = [
             { clickCount: 9 }, { clickCount: 4 }
         ];
-        const predicate = createPredicateFrom({ clickCount: { lt: 9, ne: 4 } });
-        const result = predicate.filter(list);
+        const predicate = getPredicate({ clickCount: { lt: 9, ne: 4 } });
+        const result = list.filter(predicate);
         expect(result.length).toEqual(0);
     });
 
@@ -23,8 +23,8 @@ describe("Test IndexedDB filters", () => {
         const list = [
             { clickCount: 9 }, { clickCount: 4 }
         ];
-        const predicate = createPredicateFrom({ clickCount: 9 });
-        const result = predicate.filter(list);
+        const predicate = getPredicate({ clickCount: 9 });
+        const result = list.filter(predicate);
         expect(result).toEqual([list[0]]);
     });
 
@@ -34,7 +34,7 @@ describe("Test IndexedDB filters", () => {
             { clickCount: 4, isTest: false },
             { clickCount: 4, isTest: true }
         ];
-        const predicate = createPredicateFrom({
+        const predicate = getPredicate({
             or: {
                 clickCount: { eq: 9 },
                 not: {
@@ -43,7 +43,7 @@ describe("Test IndexedDB filters", () => {
             }
         });
 
-        const result = predicate.filter(list);
+        const result = list.filter(predicate);
         expect(result).toEqual([list[0], list[2]]);
     });
 });
