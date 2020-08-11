@@ -1,5 +1,13 @@
 import { createPredicateFrom } from '../src/storage/adapters/indexedDB/Predicate';
 import { filterToSQL } from '../src/storage/adapters/websql/filterToSQL';
+import { WebSQLAdapter, LocalStorage, ModelSchema } from '../src';
+
+const openDatabase = require("websql");
+let sqlDb: any;
+window.openDatabase = (name: string, version: string, description: string, size: number, callback: any) => {
+    sqlDb = openDatabase(":memory:", version, description, size, callback);
+    return sqlDb;
+};
 
 describe("Test IndexedDB filters", () => {
     test("Filter based on object fields", () => {
@@ -40,7 +48,7 @@ describe("Test IndexedDB filters", () => {
     });
 });
 
-describe.only("Test SQL filters", () => {
+describe("Test SQL filters", () => {
     test("Filter using object fields", () => {
         const filter = {
             clickCount: { eq: 5 },
@@ -91,5 +99,61 @@ describe.only("Test SQL filters", () => {
         const expectedSQL = "WHERE ((title = 'Fun' OR NOT (clickCount = 5 AND title = 'Test'))) ?";
         const actualSQL = filterToSQL(filter);
         expect(actualSQL).toEqual(expectedSQL);
+    });
+
+    test("Test 'contains' check with strings", async () => {
+        const adapter = new WebSQLAdapter("offixdb", 1);
+        const storage = new LocalStorage(adapter);
+        const model = new ModelSchema<any>({
+            name: "Test",
+            type: "object",
+            properties: {
+              id: {
+                type: "string",
+                primary: true
+              },
+              comments: {
+                  type: "string"
+              }
+            }
+          });
+        storage.adapter.addStore(model);
+        await adapter.createStores();
+        
+        const storeName = model.getStoreName();
+        const target = await storage.save(storeName, { comments: "test-1 test-2" });
+        await storage.save(storeName, { comments: "test-3 test-4" });
+        const result = await storage.query(storeName, { comments: { contains: "test-1" }});
+
+        expect(result.length).toEqual(1);
+        expect(result[0].id).toEqual(target.id);
+    });
+
+    test.skip("Test 'contains' check with strings", async () => {
+        const adapter = new WebSQLAdapter("offixdb", 1);
+        const storage = new LocalStorage(adapter);
+        const model = new ModelSchema<any>({
+            name: "Test",
+            type: "object",
+            properties: {
+              id: {
+                type: "string",
+                primary: true
+              },
+              comments: {
+                  type: "array"
+              }
+            }
+          });
+        storage.adapter.addStore(model);
+        await adapter.createStores();
+        
+        const storeName = model.getStoreName();
+        const target = await storage.save(storeName, { comments: ["test-1" , "test-2"] });
+        await storage.save(storeName, { comments: ["test-3" , "test-4"] });
+
+        const result = await storage.query(storeName, { comments: { contains: "test-1" }});
+        expect(result.length).toEqual(1);
+        expect(result[0].id).toEqual(target.id);
     });
 });
