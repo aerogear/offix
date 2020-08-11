@@ -1,10 +1,8 @@
 import invariant from "tiny-invariant";
-import { generateId } from "../..";
 
 // TODO change to constants/enums
 export const prepareStatement = (input: any, type: string = "insert"): [string, any[]] => {
     if (type === "insert") {
-        input.id = generateId();
         const cols = Object.keys(input).join(",");
         const bindings = Object.keys(input).map(() => "?").join(",");
         const vals = Object.values(input);

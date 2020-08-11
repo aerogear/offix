@@ -66,5 +66,5 @@ const extractExpression = (filter: any, separator: "AND" | "OR" = "AND"): string
 
 export const filterToSQL = (filter?: Filter) => {
     if (!filter) { return ""; };
-    return `WHERE ${extractExpression(filter)} ?`;
+    return `WHERE ${extractExpression(filter)}`;
 };

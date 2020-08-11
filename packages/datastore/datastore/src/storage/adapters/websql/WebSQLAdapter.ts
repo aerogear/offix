@@ -5,6 +5,7 @@ import { ModelSchema } from "../../../ModelSchema";
 import { Filter } from "../../../filters";
 import { prepareStatement, flattenResultSet, getType } from "./utils";
 import { filterToSQL } from "./filterToSQL";
+import { generateId } from "../..";
 
 const logger = createLogger("sqlite");
 
@@ -47,19 +48,21 @@ export class WebSQLAdapter implements StorageAdapter {
   }
 
   public async save(storeName: string, input: any): Promise<any> {
+    input.id = generateId();
     const [cols, vals] = prepareStatement(input, "insert");
     const query = `INSERT INTO ${storeName} ${cols}`;
-    return this.transaction(query, vals);
+    await this.transaction(query, vals);
+    return (await this.query(storeName, { id: input.id }))[0];
   }
 
-  public async query(storeName: string, filter?: Filter): Promise<any> {
+  public async query(storeName: string, filter?: Filter): Promise<any[]> {
     if (!filter) {
       return await this.fetchAll(storeName);
     }
     const condition = filterToSQL(filter);
     const query = `SELECT * FROM ${storeName} ${condition}`;
     // @ts-ignore
-    const res = await this.readTransaction(query, [predicate.value]);
+    const res = await this.readTransaction(query, []);
     return res;
   }
 
@@ -68,14 +71,14 @@ export class WebSQLAdapter implements StorageAdapter {
     const [cols, vals] = prepareStatement(input, "update");
     const query = `UPDATE ${storeName} SET ${cols} ${condition}`;
     // @ts-ignore
-    return this.transaction(query, [...vals, predicate.value]);
+    return this.transaction(query, [...vals]);
   }
 
   public async remove(storeName: string, filter?: Filter): Promise<any> {
     const condition = filterToSQL(filter);
     const query = `DELETE FROM ${storeName} ${condition}`;
     // @ts-ignore
-    return this.transaction(query, [predicate.value]);
+    return this.transaction(query, []);
   }
 
   public getSQLiteInstance() {
