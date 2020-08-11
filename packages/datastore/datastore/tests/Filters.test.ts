@@ -54,11 +54,11 @@ describe("Test SQL filters", () => {
             clickCount: { eq: 5 },
             title: { eq: 'Test' }
         };
-        let expectedSQL = "WHERE (clickCount = 5 AND title = 'Test') ?";
+        let expectedSQL = "WHERE (clickCount = 5 AND title = 'Test')";
         let actualSQL = filterToSQL(filter);
         expect(actualSQL).toEqual(expectedSQL);
 
-        expectedSQL = "WHERE (title LIKE 'Test%') ?";
+        expectedSQL = "WHERE (title LIKE 'Test%')";
         actualSQL = filterToSQL({ title: { startsWith: 'Test' } });
         expect(actualSQL).toEqual(expectedSQL);
     });
@@ -68,7 +68,7 @@ describe("Test SQL filters", () => {
             clickCount: 5,
             title: 'Test'
         };
-        const expectedSQL = "WHERE (clickCount = 5 AND title = 'Test') ?";
+        const expectedSQL = "WHERE (clickCount = 5 AND title = 'Test')";
         const actualSQL = filterToSQL(filter);
         expect(actualSQL).toEqual(expectedSQL);
     });
@@ -80,7 +80,7 @@ describe("Test SQL filters", () => {
                 ne: 15
             },
         };
-        const expectedSQL = "WHERE (clickCount > 9 AND clickCount != 15) ?";
+        const expectedSQL = "WHERE (clickCount > 9 AND clickCount != 15)";
         const actualSQL = filterToSQL(filter);
         expect(actualSQL).toEqual(expectedSQL);
     });
@@ -96,7 +96,7 @@ describe("Test SQL filters", () => {
             }
         };
 
-        const expectedSQL = "WHERE ((title = 'Fun' OR NOT (clickCount = 5 AND title = 'Test'))) ?";
+        const expectedSQL = "WHERE ((title = 'Fun' OR NOT (clickCount = 5 AND title = 'Test')))";
         const actualSQL = filterToSQL(filter);
         expect(actualSQL).toEqual(expectedSQL);
     });
