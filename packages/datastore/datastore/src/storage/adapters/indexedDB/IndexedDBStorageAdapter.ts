@@ -3,7 +3,7 @@ import { generateId } from "../../LocalStorage";
 import { createLogger } from "../../../utils/logger";
 import { ModelSchema } from "../../../ModelSchema";
 import { Filter } from "../../../filters";
-import { createPredicateFrom } from "./Predicate";
+import { createPredicateFrom, getPredicate } from "./Predicate";
 
 const logger = createLogger("idb");
 
@@ -39,7 +39,7 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     openreq.onerror = () => this.rejectIDB(openreq.error);
     openreq.onsuccess = () => {
       const db = openreq.result;
-      db.onversionchange = function() {
+      db.onversionchange = function () {
         // FIXME critical to handle version changes
         this.close();
       };
@@ -115,13 +115,31 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     return this.convertToPromise<any>(store.get(key));
   }
 
-  public async query(storeName: string, filter?: Filter) {
+  public async query(storeName: string, filter?: Filter): Promise<any[]> {
     const store = await this.getStore(storeName);
-    const all = await this.convertToPromise<any[]>(store.getAll());
+    const cursorReq = store.openCursor();
+    const result: any[] = [];
 
-    if (!filter) { return all; }
-    const predicate = createPredicateFrom(filter);
-    return predicate.filter(all);
+    return new Promise((resolve, reject) => {
+      cursorReq.onsuccess = () => {
+        const cursor = cursorReq.result;
+        if (cursor) {
+          if (!filter) {
+            result.push(cursor.value);
+          } else {
+            const predicate = getPredicate(filter);
+            if (predicate(cursor.value)) {
+              result.push(cursor.value);
+            }
+          }
+          cursor.continue();
+        } else {
+          resolve(result);
+        }
+      }
+
+      cursorReq.onerror = () => reject(cursorReq.error);
+    });
   }
 
   public async update(storeName: string, input: any, filter?: Filter) {
