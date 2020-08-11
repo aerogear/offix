@@ -3,7 +3,7 @@ import { generateId } from "../../LocalStorage";
 import { createLogger } from "../../../utils/logger";
 import { ModelSchema } from "../../../ModelSchema";
 import { Filter } from "../../../filters";
-import { createPredicateFrom, getPredicate } from "./Predicate";
+import { getPredicate } from "./Predicate";
 
 const logger = createLogger("idb");
 
@@ -39,7 +39,7 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     openreq.onerror = () => this.rejectIDB(openreq.error);
     openreq.onsuccess = () => {
       const db = openreq.result;
-      db.onversionchange = function () {
+      db.onversionchange = function() {
         // FIXME critical to handle version changes
         this.close();
       };
@@ -136,7 +136,7 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
         } else {
           resolve(result);
         }
-      }
+      };
 
       cursorReq.onerror = () => reject(cursorReq.error);
     });
