@@ -9,6 +9,10 @@ const createSubscribeToMore = (model: Model, dispatch: Dispatch<Action>) => {
         // TODO subscribe to specific predicate
         const subscription = model.subscribe(eventType, (event) => {
             const newData = updateResult(event.data);
+            if (subscription.closed) {
+                // Important to check beacuse Componnent could be unmounted
+                return;
+            }
             dispatch({ type: ActionType.UPDATE_RESULT, data: newData });
         });
         return subscription;

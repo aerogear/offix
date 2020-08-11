@@ -1,6 +1,7 @@
 import Observable from "zen-observable";
 
 export interface Subscription {
+  closed: boolean;
   unsubscribe(): void;
 }
 
