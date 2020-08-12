@@ -1,6 +1,7 @@
 import gql from "graphql-tag";
 
 import { Model } from "../../Model";
+import { ReplicatorMutations } from "./ReplicatorMutations";
 
 /**
  * Builds GraphQL mutations for models following
@@ -36,7 +37,7 @@ export const buildGraphQLCRUDMutations = (model: Model) => {
                 }`
   };
 
-  return mutations;
+  return mutations as ReplicatorMutations;
 };
 
 

@@ -17,7 +17,7 @@ const logger = createLogger("queue");
 interface MutationReplicationOptions {
   storage: LocalStorage;
   client: Client;
-  networkStatus: NetworkIndicator;
+  networkIndicator: NetworkIndicator;
 }
 
 /**
@@ -94,9 +94,10 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
   /**
    * Initialize networkstatus and Queue to make sure that it is in proper state after startup.
    */
-  public init() {
+  public init(models: Model[], globalConfig: GlobalReplicationConfig) {
+    this.addModels(models, globalConfig);
     // Subscribe to network updates and open and close replication
-    this.options.networkStatus.subscribe({
+    this.options.networkIndicator.subscribe({
       next: (message: NetworkStatusEvent) => {
         this.open = message.isOnline;
         if (this.open) {
@@ -109,7 +110,7 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
     });
 
     // Intentionally async to start replication in background
-    this.options.networkStatus.isNetworkReachable().then((result) => {
+    this.options.networkIndicator.isNetworkReachable().then((result) => {
       if (this.open === result) {
         // No state change
         return;
