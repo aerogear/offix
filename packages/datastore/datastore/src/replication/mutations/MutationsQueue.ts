@@ -132,7 +132,7 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
     // This will ensure consistency for situations when model changed (without migrating queue)
     const storeName = model.getStoreName();
     const operations = this.modelMap[storeName];
-    invariant(!operations, "Missing GraphQL mutations for replication");
+    invariant(operations, "Missing GraphQL mutations for replication");
 
     const mutationRequest = {
       storeName,
@@ -165,7 +165,7 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
 
       const item: MutationRequest = items.items[0];
       logger("Mutation queue processing - online");
-      invariant(!this.modelMap[item.storeName], `Store is not setup for replication ${item.storeName}`);
+      invariant(this.modelMap[item.storeName], `Store is not setup for replication ${item.storeName}`);
 
       const mutation = this.getMutationDocument(item);
       try {
