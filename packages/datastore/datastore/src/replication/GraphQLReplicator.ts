@@ -76,7 +76,7 @@ export class GraphQLReplicator {
   }
 
   public init(storage: LocalStorage) {
-    invariant(this.models.length === 0, "No models provided for replication");
+    invariant(this.models.length, "No models provided for replication");
 
     if (this.config.mutations?.enabled) {
       logger("Initializing mutation replication");
