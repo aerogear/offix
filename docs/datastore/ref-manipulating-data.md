@@ -1,5 +1,5 @@
 ---
-id: datastore-manipulating-data
+id: manipulating-data
 title: Manipulating Data
 sidebar_label: Manipulating Data
 ---

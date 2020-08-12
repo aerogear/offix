@@ -1,5 +1,5 @@
 ---
-id: datastore-observing-changes
+id: observing-changes
 title: Observing Changes
 sidebar_label: Observing Changes
 ---

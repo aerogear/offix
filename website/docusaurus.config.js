@@ -38,7 +38,7 @@ module.exports = {
             })),
             {
               label: 'Master/Unreleased',
-              to: 'docs/next/getting-started',
+              to: 'docs/next/offix/getting-started',
             },
           ],
         },
