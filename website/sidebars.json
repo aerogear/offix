@@ -50,7 +50,11 @@
       {
         "type": "category",
         "label": "Local Operations",
-        "items": ["datastore/manipulating-data", "datastore/observing-changes"]
+        "items": [
+          "datastore/crud-operations",
+          "datastore/filters",
+          "datastore/observing-changes"
+        ]
       },
       {
         "type": "category",

@@ -1,7 +1,7 @@
 ---
 id: observing-changes
-title: Observing Changes
-sidebar_label: Observing Changes
+title: Subscribing to Local changes
+sidebar_label: Subscribing to Local changes
 ---
 
 ## Change Events
@@ -18,6 +18,6 @@ The change events that can occur are;
 import { TaskModel, CRUDEvents } from 'datastoreConfig';
 
 TaskModel.on(CRUDEvents.ADD, (event) => {
-    console.log(event); // { eventType, data }
+    console.dir(event); // { eventType, data }
 });
 ```
