@@ -7,15 +7,15 @@ export interface ReplicatorSubscriptions {
   /**
    * GraphQL create subscription document.
    */
-  new: string | DocumentNode;
+  new: any | DocumentNode;
 
   /**
    * GraphQL update subscription document.
    */
-  updated: string | DocumentNode;
+  updated: any | DocumentNode;
 
   /**
    * GraphQL delete subscription document.
    */
-  deleted: string | DocumentNode;
+  deleted: any | DocumentNode;
 }

@@ -27,6 +27,6 @@ export const buildGraphQLCRUDQueries = (model: Model) => {
               }
             }`
   };
-  return queries;
+  return queries as ReplicatorQueries;
 };
 

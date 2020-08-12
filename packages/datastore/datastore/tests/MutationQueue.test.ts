@@ -8,9 +8,11 @@ import { LocalStorage, CRUDEvents } from "../src/storage";
 import { IndexedDBStorageAdapter } from "../src/storage/adapters/indexedDB/IndexedDBStorageAdapter";
 import { WebNetworkStatus } from "../src/network/WebNetworkStatus";
 import { CombinedError } from "urql";
-import { metadataModel, queueModel } from "../src/replication/api/MetadataModels";
+import { metadataModel, mutationQueueModel } from "../src/replication/api/MetadataModels";
 import { ModelSchema } from "../src";
 import { readFileSync } from "fs";
+import { NetworkIndicator } from "../src/network/NetworkIndicator";
+import { GlobalReplicationConfig } from "../src/replication/api/ReplicationConfig";
 
 const DB_NAME = "test";
 const STORE_NAME = "user_Test";
@@ -22,96 +24,97 @@ const model = { getStoreName: () => STORE_NAME } as any;
 
 const windowEvents: any = {};
 window.addEventListener = jest.fn((event, cb) => {
-    windowEvents[event] = cb;
+  windowEvents[event] = cb;
 });
 const networkStatus = new WebNetworkStatus();
 networkStatus.isOnline = jest.fn();
+const networkIndicator = new NetworkIndicator(networkStatus);
+networkIndicator.initialize();
 
 const fireNetworkOnline = () => {
-    (networkStatus.isOnline as jest.Mock).mockResolvedValue(true);
-    windowEvents.online();
+  (networkStatus.isOnline as jest.Mock).mockResolvedValue(true);
+  windowEvents.online();
 };
 const fireNetworkOffline = () => {
-    (networkStatus.isOnline as jest.Mock).mockResolvedValue(false);
-    windowEvents.offline();
+  (networkStatus.isOnline as jest.Mock).mockResolvedValue(false);
+  windowEvents.offline();
 };
 
 const mockClienWithResponse = (response: Promise<any>, onMutation?: Function): any => {
-    return {
-        mutation: (...args: any[]) => {
-            if (onMutation) onMutation(...args);
-            return {
-                toPromise: async () => {
-                    if (await networkStatus.isOnline()) return response;
-                    return Promise.reject(new CombinedError({
-                        networkError: Error("something went wrong!")
-                    }));
-                }
-            }
+  return {
+    mutation: (...args: any[]) => {
+      if (onMutation) onMutation(...args);
+      return {
+        toPromise: async () => {
+          if (await networkStatus.isOnline()) return response;
+          return Promise.reject(new CombinedError({
+            networkError: Error("something went wrong!")
+          }));
         }
-    };
+      }
+    }
+  };
 };
 const buildQueue = (client: any) => {
-    return new MutationsReplicationQueue({
-        storage,
-        model,
-        client,
-        networkStatus
-    });
+  return new MutationsReplicationQueue({
+    storage,
+    client,
+    networkIndicator
+  });
 };
 const dummyRequest = {
-    eventType: CRUDEvents.ADD,
-    version: 1,
-    variables: { id: "2" },
-    storeName: STORE_NAME,
-    mutation: {} as any
+  eventType: CRUDEvents.ADD,
+  variables: { id: "2" },
+  storeName: STORE_NAME,
 };
 
 
 beforeAll(async () => {
-    adapter.addStore(schema);
-    adapter.addStore(queueModel);
-    adapter.addStore(metadataModel);
-    await adapter.createStores();
+  adapter.addStore(schema);
+  adapter.addStore(mutationQueueModel);
+  adapter.addStore(metadataModel);
+  await adapter.createStores();
 });
 
 // beforeEach(() => storage.remove(metadataModel.getName()));
 
-test("Queue works when online", (done) => {
-    const client = mockClienWithResponse(Promise.resolve({}), () => {
-        networkStatus.isOnline().then((isOnline) => {
-            expect(isOnline).toBe(true);
-            done();
-        });
+test("Queue is disabled when no config", async (done) => {
+  const client = mockClienWithResponse(Promise.resolve({}), () => {
+    networkStatus.isOnline().then((isOnline) => {
+      expect(isOnline).toBe(true);
+      done();
     });
-    const queue = buildQueue(client);
-
-    queue.init().then(() => {
-        fireNetworkOffline();
-        queue.addMutationRequest(dummyRequest);
-        fireNetworkOnline();
-    });
+  });
+  const queue = buildQueue(client);
+  queue.init([model], { mutations: { enabled: false } } as GlobalReplicationConfig);
+  queue.process().then(done);
 });
 
+test.skip("Queue is enabled", (done) => {
+  const client = mockClienWithResponse(Promise.resolve({}), () => {
+    networkStatus.isOnline().then((isOnline) => {
+      expect(isOnline).toBe(true);
+      done();
+    });
+  });
+  const queue = buildQueue(client);
+  queue.init([model], { mutations: { enabled: true } } as GlobalReplicationConfig);
+  storage.save(STORE_NAME, { id: "client_id", name: "test" }).then((value) => {
+    queue.saveChangeForReplication(model, value, CRUDEvents.ADD, storage);
+  })
+})
+
 test.skip("Update id after suscess response", (done) => {
-    const client = mockClienWithResponse(
-        Promise.resolve({ test: { id: 'server_id', name: 'test' } })
-    );
-    const queue = buildQueue(client);
+  const client = mockClienWithResponse(
+    Promise.resolve({ test: { id: 'server_id', name: 'test' } })
+  );
+  const queue = buildQueue(client);
 
-    storage.save(STORE_NAME, { id: "client_id", name: "test" })
-        .then((data) => {
-            queue.init().then(() => {
-                fireNetworkOnline();
-                queue.addMutationRequest({
-                    ...dummyRequest,
-                    eventType: CRUDEvents.ADD,
-                    variables: data
-                });
-            });
-        });
+  storage.save(STORE_NAME, { id: "client_id", name: "test" })
+    .then((data) => {
+      queue.init([model], { mutations: { enabled: true } } as GlobalReplicationConfig)
 
-    // TODO do this inside success event listener
-    // const result = await storage.query(STORE_NAME);
-    // expect(result[0].id).toEqual('server_id');
+      fireNetworkOnline();
+      queue.saveChangeForReplication(model, data, CRUDEvents.ADD, storage);
+    });
 });

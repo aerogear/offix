@@ -122,9 +122,8 @@ export class GraphQLReplicator {
     this.mutationQueue = new MutationsReplicationQueue({
       storage: storage,
       client: this.client,
-      networkStatus: this.networkIndicator
+      networkIndicator: this.networkIndicator
     });
-    this.mutationQueue.addModels(this.models, this.config);
-    this.mutationQueue.init();
+    this.mutationQueue.init(this.models, this.config);
   }
 }

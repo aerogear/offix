@@ -118,7 +118,7 @@ test("Update single entity in local store", async () => {
 test("Remove single entity from local store", async () => {
   const note = { title: "test", description: "description" };
   const savedNote = await NoteModel.save(note);
-  await NoteModel.remove();
+  await NoteModel.remove({ id: savedNote.id });
   const results = (await NoteModel.query({ id: savedNote.id }));
   expect(results.length).toEqual(0);
 });
