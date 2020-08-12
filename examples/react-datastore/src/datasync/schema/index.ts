@@ -1,8 +1,8 @@
-import { DataSyncJsonSchema } from "offix-datastore";
+import { ModelJsonSchema } from "offix-datastore";
 import jsonSchema from "./schema.json";
 
 type Schema<T = any> = {
-    [P in keyof T]: DataSyncJsonSchema<any>
+    [P in keyof T]: ModelJsonSchema<any>
 };
 
 export const schema = jsonSchema as Schema;
