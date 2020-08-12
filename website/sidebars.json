@@ -44,9 +44,41 @@
       }
     ],
     "Datastore": [
-      "datastore/getting-started",
-      "datastore/manipulating-data",
-      "datastore/observing-changes"
+      {
+        "type": "category",
+        "label": "Introduction",
+        "items": ["datastore/getting-started"]
+      },
+      {
+        "type": "category",
+        "label": "Local Operations",
+        "items": ["datastore/manipulating-data", "datastore/observing-changes"]
+      },
+      {
+        "type": "category",
+        "label": "Replication",
+        "items": []
+      },
+      {
+        "type": "category",
+        "label": "Platforms",
+        "items": []
+      },
+      {
+        "type": "category",
+        "label": "Server",
+        "items": []
+      },
+      {
+        "type": "category",
+        "label": "CLI",
+        "items": []
+      },
+      {
+        "type": "category",
+        "label": "Advanced Concepts",
+        "items": []
+      }
     ]
   }
 }
