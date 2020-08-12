@@ -4,11 +4,6 @@ title: Getting Started
 sidebar_label: Getting Started
 ---
 
-Offix DataStore is a Repository interface for on-device storage.
-GraphQL is used to synchronize the server and the local device storage.
-
-Currently, Offix DataStore can only be used locally with support for synchronization coming soon.
-
 ## Installing Offix DataStore
 
 Using [npm](https://www.npmjs.com/package/offix-datastore):
@@ -25,7 +20,7 @@ yarn add offix-datastore
 
 ## Using DataStore
 
-### Sample Schema
+### Sample GraphQL Schema
 
 Let's use the following sample schema for our app
 
@@ -39,12 +34,43 @@ type Task {
 
 ```
 
-### Create Models
+### Datastore Models
 
 To be able to store user tasks in DataStore, you need to create its DataStore model.
 The DataStore model provides the API to perform CRUD operations on `Task` in the DataStore.
 
 Let's create the Task DataStore model.
+
+* Define its json schema. [TODO link Schema API reference here]
+
+```JSON title="/src/schema.json"
+{
+  "Task": {
+    "name": "Task",
+    "version": 1,
+    "type": "object",
+    "primaryKey": "id",
+    "properties": {
+      "id": {
+        "type": "string",
+        "key": "id",
+        "isRequired": true,
+        "index": true,
+        "primary": true
+      },
+      "title": {
+        "type": "string",
+        "key": "title"
+      },
+      "numberOfDaysLeft": {
+        "type": "number",
+        "key": "numberOfDaysLeft"
+      }
+    }
+  },
+  ...
+}
+```
 
 * Define its `interface`
 
@@ -59,23 +85,27 @@ export interface Task {
 }
 ```
 
-* Use DataStore's create method to instantiate the `TaskModel` with the `Task` interface and schema fields.
+* Instantiate the `TaskModel` with the `Task` interface and its json schema.
 We will put all our datastore related config in "/src/datastoreConfig.ts"
 
 ```typescript title="/src/datastoreConfig.ts"
-const DB_NAME = "offix-datastore";
-const TASK_TABLE_NAME = "user_Task";
+import { DataStore, DataSyncJsonSchema } from "offix-datastore";
+import schema from "./schema.json";
 
-const datastore = new DataStore(DB_NAME);
-export const TaskModel = datastore.createModel<Task>(TASK_TABLE_NAME, {
-    id: {
-        type: "ID", // GraphQL Type
-        key: "id" // GraphQL key
+const datastore = new DataStore({
+  dbName: "offix-datastore",
+  replicationConfig: {
+    client: {
+      url: "http://localhost:4000/graphql",
+      wsUrl: "ws://localhost:4000/graphql",
     },
-    title: { type: "String", key: "title" },
-    description: { type: "String", key: "description" },
-    numberOfDaysLeft: { type: "Number", key: "numberOfDaysLeft" }
+    delta: { enabled: true },
+    mutations: { enabled: false },
+    liveupdates: { enabled: false }
+  }
 });
+
+export const TaskModel = datastore.setupModel<Task>(schema.Task as DataSyncJsonSchema<Task>);
 ```
 
 * Initialize the datastore
@@ -99,38 +129,8 @@ the schema version to trigger the creation of the "user_SubTask" table on the cl
 The `DataStore` constructor takes a schema version parameter(defaults to 1). 
 
 ```typescript
-const dataStore = new DataStore(DB_NAME, 2);
+const dataStore = new DataStore({
+  ...,
+  version: 2
+});
 ```
-
-## Using the CLI tool
-
-We provide a graphback plugin to generate required config for datastore.
-Read about graphback-cli [here](https://graphback.dev/docs/cli/graphback-cli).
-The plugin generates a `schema.json` for models annotated with `@datasync-client` in your graphql schema.
-Also, a `config.ts` file that instantiates all the models with default settings is generated.
-You can import models from `config.ts` and start coding! 
-
-### Installing the plugin
-
-For npm
-`npm install offix-datasync-client-plugin`
-or yarn
-`yarn add offix-datasync-client-plugin`
-
-Add the plugin to your `.graphqlrc.yml`
-
-```
-schema: './src/schema.graphql'
-extensions:
-  graphback:
-    # path to data model file(s)
-    model: './src/model/runtime.graphql'
-    plugins:
-      offix-datasync-client-plugin:
-        modelOutputDir: './src/datasync'
-```
-
-#### Plugin Options
-
-`modelOutputDir` - The path to the folder where the generated config files will be saved.
-This folder will be created if it doesn't exist.
