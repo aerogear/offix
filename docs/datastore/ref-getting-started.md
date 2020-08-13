@@ -34,6 +34,46 @@ type Task {
 
 ```
 
+### Configuring Datastore
+
+`DataStore` accepts a config object defined below and an optional `CustomEngines`
+
+```javascript title="DataStoreConfig"
+{
+  /**
+   * The Database name
+   */
+  dbName?: string;
+
+  /**
+  * The Schema Version number. Used to trigger a Schema upgrade
+  */
+  schemaVersion?: number;
+
+  /**
+   * Configuration for replication engine
+   */
+  replicationConfig?: GlobalReplicationConfig;
+}
+```
+
+```javascript title="CustomEngines"
+{
+  /**
+   * Custom storage adapter.
+   * By default DataStore will use IndexedDB that might not be available in every environment.
+   * If you wish to override adapter you can supply it here
+   */
+  storeAdapter?: StorageAdapter;
+
+  /**
+   * Custom replication mechanism that will replicate data.
+   * By default DataStore will be GraphQL (https://graphqlcrud.org) replication mechanism
+   */
+  replicator?: IReplicator;
+}
+```
+
 ### Datastore Models
 
 To be able to store user tasks in DataStore, you need to create its DataStore model.
