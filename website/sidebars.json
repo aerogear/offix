@@ -64,7 +64,7 @@
       {
         "type": "category",
         "label": "Platforms",
-        "items": []
+        "items": ["datastore/react"]
       },
       {
         "type": "category",

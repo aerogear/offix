@@ -29,3 +29,7 @@ If your server doesn't support GraphQLCrud, you can build your synchronization e
 Offix Datastore works on all devices so you can build seamless offline experience on any device.
 In the browser, Offix Datastore uses IndexedDB or WebSQL to persist data locally.
 On mobile, Offix Datastore uses SQLite.
+
+#### React Support
+
+Offix Datastore provides hooks to help React devs build offline apps quickly. See [TODO link react docs here].
