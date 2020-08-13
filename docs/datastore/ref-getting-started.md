@@ -136,6 +136,6 @@ The `DataStore` constructor takes a schema version parameter(defaults to 1).
 ```typescript
 const dataStore = new DataStore({
   ...,
-  version: 2
+  schemaVersion: 2
 });
 ```
