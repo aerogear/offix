@@ -13,6 +13,7 @@ export const useRemove = <T>(model: Model<T>) => {
         try {
             const results = await model.remove(filter);
             dispatch({ type: ActionType.REQUEST_COMPLETE, data: results });
+            return results;
         } catch (error) {
             dispatch({ type: ActionType.REQUEST_COMPLETE, error });
         }

@@ -13,6 +13,7 @@ export const useUpdate = <T>(model: Model<T>) => {
             const results = await (upsert ?
                 model.saveOrUpdate(input): model.updateById(input));
             dispatch({ type: ActionType.REQUEST_COMPLETE, data: results });
+            return results;
         } catch (error) {
             dispatch({ type: ActionType.REQUEST_COMPLETE, error });
         }

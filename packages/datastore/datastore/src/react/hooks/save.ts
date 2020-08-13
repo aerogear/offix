@@ -10,8 +10,9 @@ export const useSave = (model: Model) => {
 
         dispatch({ type: ActionType.INITIATE_REQUEST });
         try {
-            const results = await model.save(input);
-            dispatch({ type: ActionType.REQUEST_COMPLETE, data: results });
+            const result = await model.save(input);
+            dispatch({ type: ActionType.REQUEST_COMPLETE, data: result });
+            return result;
         } catch (error) {
             dispatch({ type: ActionType.REQUEST_COMPLETE, error });
         }
