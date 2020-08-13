@@ -80,6 +80,16 @@
         "type": "category",
         "label": "Advanced Concepts",
         "items": []
+      },
+      {
+        "type": "category",
+        "label": "API Reference",
+        "items": [
+          "datastore/datastore-api",
+          "datastore/model-api",
+          "datastore/replication-api",
+          "datastore/storage-api"
+        ]
       }
     ]
   }
