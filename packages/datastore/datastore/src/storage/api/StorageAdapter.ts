@@ -52,11 +52,11 @@ export interface StorageAdapter {
   save(storeName: string, input: any): Promise<any>;
 
   /**
-   * Queries data from the store matching the predicate.
-   * Returns all the data if predicate is not specified
+   * Queries data from the store matching the filter.
+   * Returns all the data if filter is not specified
    *
    * @param storeName The name of the store
-   * @param predicate A PredicateFunction to filter data
+   * @param fliter
    * @returns A Promise of the query results
    */
   query(storeName: string, filter?: Filter): Promise<any | any[]>;
@@ -64,12 +64,12 @@ export interface StorageAdapter {
   queryById(storeName: string, id: string): Promise<any>;
 
   /**
-   * Update data matching predicate or all data if predicate is not specified
+   * Update data matching filter or all data if filter is not specified
    * with input.
    *
    * @param storeName The name of the store
    * @param input The update to be made
-   * @param predicate A PredicateFunction to filter data
+   * @param filter
    * @returns A Promise of the updated data
    */
   update(storeName: string, input: any, filter?: Filter): Promise<any[]>;
@@ -77,10 +77,10 @@ export interface StorageAdapter {
   updateById(storeName: string, input: any, id: string): Promise<any>;
 
   /**
-   * Deletes data matching predicate or all from the store
+   * Deletes data matching filter or all from the store
    *
    * @param storeName The name of the store
-   * @param predicate A PredicateFunction to filter data
+   * @param filter
    * @returns A Promise of the deleted data
    */
   remove(storeName: string, filter?: Filter): Promise<any[]>;
