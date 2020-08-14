@@ -13,14 +13,14 @@ const logger = createLogger("idb");
  */
 export class IndexedDBStorageAdapter implements StorageAdapter {
   private indexedDB: Promise<IDBDatabase>;
-  private stores: ModelSchema[] = [];
+  private stores: ModelSchema[];
   private resolveIDB: any;
   private rejectIDB: any;
   private transaction?: IDBTransaction;
   private dbName: string;
   private schemaVersion: number;
 
-  constructor(dbName: string, schemaVersion: number, transaction?: IDBTransaction) {
+  constructor(dbName: string, schemaVersion: number, transaction?: IDBTransaction, stores: ModelSchema[] = []) {
     this.dbName = dbName;
     this.schemaVersion = schemaVersion;
     this.indexedDB = new Promise((resolve, reject) => {
@@ -28,6 +28,7 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
       this.rejectIDB = reject;
     });
     this.transaction = transaction;
+    this.stores = stores;
   }
   // TODO Wrong architecture. Store can be created on demand
   public addStore(config: ModelSchema) {
@@ -76,7 +77,7 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
   public async createTransaction() {
     const db = await this.indexedDB;
     const transaction = db.transaction((db.objectStoreNames as unknown as string[]), "readwrite");
-    return new IndexedDBStorageAdapter(this.dbName, this.schemaVersion, transaction);
+    return new IndexedDBStorageAdapter(this.dbName, this.schemaVersion, transaction, this.stores);
   }
 
   public commit() {
