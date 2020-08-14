@@ -30,13 +30,13 @@ function getIndexedDB() {
 }
 
 interface Note {
-  id?: string;
+  id: string;
   title: string;
   description: string;
 }
 
 interface Comment {
-  id?: string;
+  id: string;
   title: string;
   noteId: string;
 }
@@ -96,31 +96,26 @@ test("Save Note to local store", async () => {
 test("Query from local store", async () => {
   const note = { title: "test", description: "description" };
   const savedNote = await NoteModel.save(note);
-  const results = (await NoteModel.query({ title: note.title }));
-  expect(results[0]).toHaveProperty("id", savedNote.id);
+  const result = await NoteModel.queryById(savedNote.id);
+  expect(result).toHaveProperty("id", savedNote.id);
 });
 
-test("Update single entity in local store", async () => {
+test.only("Update single entity in local store", async () => {
   const note = { title: "test", description: "description" };
   const savedNote = await NoteModel.save(note);
   const newTitle = "updated note";
 
-  await NoteModel.update({
-    ...savedNote,
-    title: newTitle
-  }, { id: savedNote.id });
-
-  const updatedNote = (await NoteModel.query({ id: savedNote.id }))[0];
-
+  await NoteModel.updateById({ title: newTitle }, savedNote.id);
+  const updatedNote = await NoteModel.queryById(savedNote.id);
   expect(updatedNote.title).toEqual(newTitle);
 });
 
 test("Remove single entity from local store", async () => {
   const note = { title: "test", description: "description" };
   const savedNote = await NoteModel.save(note);
-  await NoteModel.remove({ id: savedNote.id });
-  const results = (await NoteModel.query({ id: savedNote.id }));
-  expect(results.length).toEqual(0);
+  await NoteModel.removeById(savedNote.id);
+  const result = await NoteModel.queryById(savedNote.id);
+  expect(result).toEqual(undefined);
 });
 
 test("Remove all entities matching predicate from local store", async () => {

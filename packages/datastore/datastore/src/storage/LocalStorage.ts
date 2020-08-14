@@ -58,14 +58,26 @@ export class LocalStorage {
     return this.adapter.query(storeName, filter);
   }
 
+  public queryById(storeName: string, id: string) {
+    return this.adapter.queryById(storeName, id);
+  }
+
   public async update(storeName: string, input: any, filter?: Filter): Promise<any> {
     const result = await this.adapter.update(storeName, input, filter);
     return result;
   }
 
+  public updateById(storeName: string, input: any, id: string) {
+    return this.adapter.updateById(storeName, input, id);
+  }
+
   public async remove(storeName: string, filter?: Filter): Promise<any | any[]> {
     const result = await this.adapter.remove(storeName, filter);
     return result;
+  }
+
+  public removeById(storeName: string, id: string) {
+    return this.adapter.removeById(storeName, id);
   }
 
   /**
