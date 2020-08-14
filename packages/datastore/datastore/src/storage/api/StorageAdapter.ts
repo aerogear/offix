@@ -61,6 +61,8 @@ export interface StorageAdapter {
    */
   query(storeName: string, filter?: Filter): Promise<any | any[]>;
 
+  queryById(storeName: string, id: string): Promise<any>;
+
   /**
    * Update data matching predicate or all data if predicate is not specified
    * with input.
@@ -72,6 +74,8 @@ export interface StorageAdapter {
    */
   update(storeName: string, input: any, filter?: Filter): Promise<any[]>;
 
+  updateById(storeName: string, input: any, id: string): Promise<any>;
+
   /**
    * Deletes data matching predicate or all from the store
    *
@@ -80,4 +84,6 @@ export interface StorageAdapter {
    * @returns A Promise of the deleted data
    */
   remove(storeName: string, filter?: Filter): Promise<any[]>;
+
+  removeById(storeName: string, id: string): Promise<any>;
 }
