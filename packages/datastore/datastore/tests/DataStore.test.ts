@@ -35,12 +35,6 @@ interface Note {
   description: string;
 }
 
-interface Comment {
-  id: string;
-  title: string;
-  noteId: string;
-}
-
 let NoteModel: Model<Note>;
 
 beforeEach(() => {
@@ -51,11 +45,6 @@ beforeEach(() => {
     name: "Note",
     type: "object",
     properties: schema.Note
-  });
-  dataStore.setupModel<Comment>({
-    name: "Comment",
-    type: "object",
-    properties: schema.Comment
   });
   dataStore.init();
 });
@@ -71,7 +60,6 @@ afterEach(async () => {
 test("Setup client db with provided models", async () => {
   const db = await getIndexedDB();
   expect(db.objectStoreNames).toContain("user_Note");
-  expect(db.objectStoreNames).toContain("user_Comment");
   db.close();
 });
 
@@ -100,7 +88,7 @@ test("Query from local store", async () => {
   expect(result).toHaveProperty("id", savedNote.id);
 });
 
-test.only("Update single entity in local store", async () => {
+test("Update single entity in local store", async () => {
   const note = { title: "test", description: "description" };
   const savedNote = await NoteModel.save(note);
   const newTitle = "updated note";
