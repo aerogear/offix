@@ -83,7 +83,11 @@ export class Model<T = unknown> {
     return this.storage.query(this.schema.getStoreName(), filter);
   }
 
-  public async save(input: T): Promise<T> {
+  public queryById(id: string) {
+    return this.storage.queryById(this.schema.getStoreName(), id);
+  }
+
+  public async save(input: Partial<T>): Promise<T> {
     const db = await this.storage.createTransaction();
     try {
       const data = await db.save(this.schema.getStoreName(), input);
@@ -120,6 +124,24 @@ export class Model<T = unknown> {
     }
   }
 
+  public async updateById(input: Partial<T>, id: string) {
+    const db = await this.storage.createTransaction();
+    try {
+      const data = await db.updateById(this.schema.getStoreName(), input, id);
+      await this.replication?.saveChangeForReplication(this, [data], CRUDEvents.UPDATE, db);
+      await db.commit();
+      const event = {
+        eventType: CRUDEvents.UPDATE,
+        data: [data]
+      };
+      this.changeEventStream.publish(event);
+      return data;
+    } catch (error) {
+      await db.rollback();
+      throw error;
+    }
+  }
+
   public async remove(filter: Filter<T>) {
     invariant(filter, "filter needs to be provided for deletion");
 
@@ -131,6 +153,24 @@ export class Model<T = unknown> {
       const event = {
         eventType: CRUDEvents.DELETE,
         data
+      };
+      this.changeEventStream.publish(event);
+      return data;
+    } catch (error) {
+      await db.rollback();
+      throw error;
+    }
+  }
+
+  public async removeById(id: string) {
+    const db = await this.storage.createTransaction();
+    try {
+      const data = await db.removeById(this.schema.getStoreName(), id);
+      await this.replication?.saveChangeForReplication(this, [data], CRUDEvents.DELETE, db);
+      await db.commit();
+      const event = {
+        eventType: CRUDEvents.DELETE,
+        data: [data]
       };
       this.changeEventStream.publish(event);
       return data;
