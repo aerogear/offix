@@ -4,6 +4,7 @@ import { createLogger } from "../../../utils/logger";
 import { ModelSchema } from "../../../ModelSchema";
 import { Filter } from "../../../filters";
 import { getPredicate } from "./Predicate";
+import { getPrimaryKey } from "../utils";
 
 const logger = createLogger("idb");
 
@@ -141,6 +142,11 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     });
   }
 
+  public async queryById(storeName: string, id: string) {
+    const store = await this.getStore(storeName);
+    return this.convertToPromise<any>(store.get(id));
+  }
+
   public async update(storeName: string, input: any, filter?: Filter) {
     const targets = await this.query(storeName, filter);
     const store = await this.getStore(storeName);
@@ -153,6 +159,13 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     return this.query(storeName, filter);
   }
 
+  public async updateById(storeName: string, input: any, id: string) {
+    const store = await this.getStore(storeName);
+    const primaryKey = getPrimaryKey(this.stores, storeName); // TODO keypath could be an array
+    await this.convertToPromise<IDBValidKey>(store.put({ ...input, [primaryKey]: id }));
+    return this.convertToPromise(store.get(id));
+  }
+
   public async remove(storeName: string, filter?: Filter) {
     // TODO provide ability to delete from store by key (not fetching entire store which is innefficient)
     // detect if predicate is id or create separate method
@@ -162,6 +175,13 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
       targets.map((t: any) => this.convertToPromise(store.delete(t.id)))
     );
     return targets;
+  }
+
+  public async removeById(storeName: string, id: string) {
+    const store = await this.getStore(storeName);
+    const target = await this.convertToPromise(store.get(id));
+    await this.convertToPromise(store.delete(id));
+    return target;
   }
 
   public getIndexedDBInstance() {

@@ -6,6 +6,7 @@ import { Filter } from "../../../filters";
 import { prepareStatement, flattenResultSet, getType } from "./utils";
 import { filterToSQL } from "./filterToSQL";
 import { generateId } from "../..";
+import { getPrimaryKey } from "../utils";
 
 const logger = createLogger("sqlite");
 
@@ -66,6 +67,14 @@ export class WebSQLAdapter implements StorageAdapter {
     return res;
   }
 
+  public async queryById(storeName: string, id: string) {
+    const key = getPrimaryKey(this.stores, storeName);
+    const query = `SELECT * FROM ${storeName} WHERE ${key} = ${id}`;
+    // @ts-ignore
+    const res = await this.readTransaction(query, []);
+    return res;
+  }
+
   public async update(storeName: string, input: any, filter?: Filter): Promise<any> {
     const condition = filterToSQL(filter);
     const [cols, vals] = prepareStatement(input, "update");
@@ -74,9 +83,24 @@ export class WebSQLAdapter implements StorageAdapter {
     return this.transaction(query, [...vals]);
   }
 
+  public async updateById(storeName: string, input: any, id: string) {
+    const [cols, vals] = prepareStatement(input, "update");
+    const key = getPrimaryKey(this.stores, storeName);;
+    const query = `UPDATE ${storeName} SET ${cols} ${key} = ${id}`;
+    // @ts-ignore
+    return this.transaction(query, [...vals]);
+  }
+
   public async remove(storeName: string, filter?: Filter): Promise<any> {
     const condition = filterToSQL(filter);
     const query = `DELETE FROM ${storeName} ${condition}`;
+    // @ts-ignore
+    return this.transaction(query, []);
+  }
+
+  public async removeById(storeName: string, id: string): Promise<any> {
+    const key = getPrimaryKey(this.stores, storeName);;
+    const query = `DELETE FROM ${storeName} ${key} ${id}`;
     // @ts-ignore
     return this.transaction(query, []);
   }
