@@ -46,7 +46,7 @@ The DataStore model provides the API to perform CRUD operations on `Task` in the
 
 Let's create the Task DataStore model.
 
-* Define its json schema. [TODO link Schema API reference here]
+* Define its json schema. See [json schema reference](model-api#Model-Json-Schema)
 
 ```JSON title="/src/schema.json"
 {

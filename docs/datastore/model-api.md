@@ -43,3 +43,20 @@ when the specified `CRUDEvent` is fired.
 | ----- | ---- | ----------- |
 | name | string | TODO |
 | namespace | ?string | TODO |
+| keyPath | ?string | TODO |
+| version | ?number | TODO |
+| indexes | ?string[] | TODO |
+| encrypted | ?string[] | TODO |
+| primaryKey | string | TODO |
+| type | "object" | TODO |
+| properties | [Fields](#Fields) | TODO |
+
+### Fields
+
+| Input | Type | Description |
+| ----- | ---- | ----------- |
+| index | ?boolean | TODO |
+| primary | ?boolean | TODO |
+| default | ?any | TODO |
+| encrypted | ?boolean | TODO |
+| key | ?string | GraphQL field name |
