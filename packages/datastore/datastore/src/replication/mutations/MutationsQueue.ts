@@ -139,7 +139,7 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
       data,
       eventType
     };
-    await this.enqueueRequest(mutationRequest);
+    await this.enqueueRequest(mutationRequest, store);
     logger("Saved Queue. Preparing to process");
     this.process();
   }
@@ -212,15 +212,15 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
   }
 
 
-  private async enqueueRequest(mutationRequest: MutationRequest) {
-    let items = await this.options.storage.query(mutationQueueModel.getStoreName(), { id: MUTATION_ROW_ID });
+  private async enqueueRequest(mutationRequest: MutationRequest, storage: LocalStorage = this.options.storage) {
+    let items = await storage.query(mutationQueueModel.getStoreName(), { id: MUTATION_ROW_ID });
     if (items?.items) {
       items.push(mutationRequest);
     }
     else {
       items = [mutationRequest];
     }
-    this.options.storage.save(mutationQueueModel.getStoreName(), { id: MUTATION_ROW_ID, items });
+    storage.save(mutationQueueModel.getStoreName(), { id: MUTATION_ROW_ID, items });
   }
 
   /**
