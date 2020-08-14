@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import { getPredicate } from '../src/storage/adapters/indexedDB/Predicate';
 import { filterToSQL } from '../src/storage/adapters/websql/filterToSQL';
 import { WebSQLAdapter, LocalStorage, ModelSchema } from '../src';

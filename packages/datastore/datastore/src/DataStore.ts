@@ -71,10 +71,10 @@ export class DataStore {
         // Add replication stores
         this.storage.addStore(mutationQueueModel);
         this.storage.addStore(metadataModel);
-        this.storage.createStores();
         this.replicator.init(this.storage);
       } else {
         logger("Replication configuration was not provided. Replication will be disabled");
       }}
-  }
+      this.storage.createStores();
+    }
 }
