@@ -77,6 +77,13 @@ export interface StorageAdapter {
   updateById(storeName: string, input: any, id: string): Promise<any>;
 
   /**
+   * Tries to update @param input in @param storeName
+   * If no document exists with the given primary key exists,
+   * @param input is saved to @param storeName
+   */
+  saveOrUpdate(storeName: string, input: any): Promise<any>;
+
+  /**
    * Deletes data matching filter or all from the store
    *
    * @param storeName The name of the store
