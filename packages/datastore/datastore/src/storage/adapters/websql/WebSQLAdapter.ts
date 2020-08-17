@@ -49,7 +49,8 @@ export class WebSQLAdapter implements StorageAdapter {
   }
 
   public async save(storeName: string, input: any): Promise<any> {
-    input.id = generateId();
+    const primaryKey = getPrimaryKey(this.stores, storeName);
+    input[primaryKey] = generateId();
     const [cols, vals] = prepareStatement(input, "insert");
     const query = `INSERT INTO ${storeName} ${cols}`;
     await this.transaction(query, vals);

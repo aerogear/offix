@@ -110,10 +110,10 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
 
   public async save(storeName: string, input: any) {
     const store = await this.getStore(storeName);
-    // TODO hardcoded id
-    const key = await this.convertToPromise<IDBValidKey>(store.add({ id: generateId(), ...input }));
-    // TODO - why we read the same object from store?
-    return this.convertToPromise<any>(store.get(key));
+    const primaryKey = getPrimaryKey(this.stores, storeName);
+    const data = { [primaryKey]: generateId(), ...input };
+    await this.convertToPromise<IDBValidKey>(store.add(data));
+    return data;
   }
 
   public async query(storeName: string, filter?: Filter): Promise<any[]> {
