@@ -120,7 +120,7 @@ export class Model<T = unknown> {
     } catch (error) {
       await db.rollback();
       throw error;
-    } 
+    }
   }
 
   public async update(input: Partial<T>, filter?: Filter<T>) {

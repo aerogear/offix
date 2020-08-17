@@ -165,7 +165,7 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     const primaryKey = getPrimaryKey(this.stores, storeName);
 
     const target = await this.convertToPromise<any>(store.get(id));
-    if (!target) throw new Error(`${id} was not found`);
+    if (!target) {throw new Error(`${id} was not found`);}
 
     const data = { ...target, ...input, [primaryKey]: target[primaryKey] };
     await this.convertToPromise<IDBValidKey>(store.put(data));
@@ -176,20 +176,20 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     const store = await this.getStore(storeName);
     const primaryKey = getPrimaryKey(this.stores, storeName);
     let target;
-    
+
     if (input[primaryKey]) {
       target = await this.convertToPromise<any>(store.get(input[primaryKey]));
     }
     if (!target) {
       // input doesn't exist, create it
-      const data = { ...input, [primaryKey]: generateId() };
-      await this.convertToPromise(store.put(data));
-      return data;
+      const saveData = { ...input, [primaryKey]: generateId() };
+      await this.convertToPromise(store.put(saveData));
+      return saveData;
     }
     // input exists, update it
-    const data = { ...target, ...input, [primaryKey]: target[primaryKey] };
-    await this.convertToPromise(store.put(data));
-    return data;
+    const updateData = { ...target, ...input, [primaryKey]: target[primaryKey] };
+    await this.convertToPromise(store.put(updateData));
+    return updateData;
   }
 
   public async remove(storeName: string, filter?: Filter) {
