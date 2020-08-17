@@ -81,6 +81,23 @@ test("Save Note to local store", async () => {
   expect(savedNote.title).toBe(note.title);
 });
 
+test("Save or Update should save to local store", async () => {
+  const note = { title: "test", description: "description" };
+  const savedNote = await NoteModel.saveOrUpdate(note);
+  expect(savedNote.id).toBeDefined();
+  expect(savedNote.title).toBe(note.title);
+});
+
+test("Save or Update should update local store", async () => {
+  const saved = await NoteModel.save({
+    title: "test",
+    description: "description"
+  });
+  const updated = await NoteModel.saveOrUpdate({ ...saved, title: 'updated' });
+  expect(saved.id).toBe(updated.id);
+  expect(updated.title).toBe('updated');
+});
+
 test("Query from local store", async () => {
   const note = { title: "test", description: "description" };
   const savedNote = await NoteModel.save(note);

@@ -175,8 +175,11 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
   public async saveOrUpdate(storeName: string, input: any) {
     const store = await this.getStore(storeName);
     const primaryKey = getPrimaryKey(this.stores, storeName);
-    const target = await this.convertToPromise<any>(store.get(input[primaryKey]));
-
+    let target;
+    
+    if (input[primaryKey]) {
+      target = await this.convertToPromise<any>(store.get(input[primaryKey]));
+    }
     if (!target) {
       // input doesn't exist, create it
       const data = { ...input, [primaryKey]: generateId() };
