@@ -61,6 +61,12 @@ export interface StorageAdapter {
    */
   query(storeName: string, filter?: Filter): Promise<any | any[]>;
 
+  /**
+   * Find document by primary key
+   *
+   * @param storeName
+   * @param id The primary key value of the document
+   */
   queryById(storeName: string, id: string): Promise<any>;
 
   /**
@@ -74,6 +80,14 @@ export interface StorageAdapter {
    */
   update(storeName: string, input: any, filter?: Filter): Promise<any[]>;
 
+  /**
+   * Update document with primary key matching @param id
+   *
+   * @param storeName
+   * @param input
+   * @param id
+   * @throws if document with @param id does not exist
+   */
   updateById(storeName: string, input: any, id: string): Promise<any>;
 
   /**
@@ -92,5 +106,11 @@ export interface StorageAdapter {
    */
   remove(storeName: string, filter?: Filter): Promise<any[]>;
 
+  /**
+   * Delete document with primary key matching @param id
+   *
+   * @param storeName
+   * @param id
+   */
   removeById(storeName: string, id: string): Promise<any>;
 }
