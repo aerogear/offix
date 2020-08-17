@@ -13,7 +13,7 @@ export function ToggleTodo ({ todo }: ToggleTodoProps) {
     editTodo({
       ...todo,
       completed: !todo.completed,
-    }, { id: todo.id })
+    })
     .then((res: any) => console.log(res))
     .catch((error: any) => console.log(error));
   };
