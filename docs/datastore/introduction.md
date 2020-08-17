@@ -22,7 +22,6 @@ synchronized with server as soon as the user is online.
 
 Offix Datastore supports synchronization with [GraphQL CRUD](https://graphqlcrud.org/) compatible servers by default.
 If your server doesn't support GraphQLCrud, you can build your synchronization engine.
-[TODO link how to build replication engine here]
 
 #### Browser and mobile support
 
