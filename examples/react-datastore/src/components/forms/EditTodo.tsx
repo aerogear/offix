@@ -12,15 +12,13 @@ export const EditTodo = ({ todo, toggleEdit }: EditTodoProps) => {
 
   const handleUpdate = (todo: ITodo) => {
     editTodo({
+      ...todo,
       title: todo.title,
       description: todo.description,
-    }, { id: todo.id })
+    })
     .then(() => toggleEdit())
     .catch((error: any) => {
       console.log(error);
-      if (error.offline) {
-        toggleEdit();
-      }
     });
   };
 
