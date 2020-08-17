@@ -1,17 +1,17 @@
 import { useReducer } from "react";
 import { Model } from "../../Model";
 import { reducer, InitialState, ActionType } from "../ReducerUtils";
-import { Filter } from "../../filters";
 
 export const useUpdate = <T>(model: Model<T>) => {
     const [state, dispatch] = useReducer(reducer, InitialState);
 
-    const update = async (input: any, filter?: Filter<T>) => {
+    const update = async (input: any, upsert: boolean = false) => {
         if (state.isLoading) { return; }
 
         dispatch({ type: ActionType.INITIATE_REQUEST });
         try {
-            const results = await model.update(input, filter);
+            const results = await (upsert ?
+                model.saveOrUpdate(input): model.updateById(input));
             dispatch({ type: ActionType.REQUEST_COMPLETE, data: results });
         } catch (error) {
             dispatch({ type: ActionType.REQUEST_COMPLETE, error });
