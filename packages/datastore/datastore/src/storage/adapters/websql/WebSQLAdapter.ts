@@ -92,6 +92,16 @@ export class WebSQLAdapter implements StorageAdapter {
     return this.transaction(query, [...vals]);
   }
 
+  public async saveOrUpdate(storeName: string, input: any) {
+    const primaryKey = getPrimaryKey(this.stores, storeName);
+    const [cols, vals] = prepareStatement(input, "insert");
+    const [updateCols] = prepareStatement(input, "update");
+    const query = `INSERT INTO ${storeName} ${cols}`
+      + ` ON CONFLICT(${primaryKey}) DO UPDATE SET ${updateCols}`;
+    // @ts-ignore
+    return this.transaction(query, [...vals]);
+  }
+
   public async remove(storeName: string, filter?: Filter): Promise<any> {
     const condition = filterToSQL(filter);
     const query = `DELETE FROM ${storeName} ${condition}`;
