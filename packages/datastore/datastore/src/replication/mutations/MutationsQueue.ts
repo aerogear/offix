@@ -159,14 +159,13 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
 
     this.processing = true;
     while (this.open) {
-      const storedMutations = await this.options.storage.query(mutationQueueModel.getStoreName(), { id: MUTATION_ROW_ID });
-      console.log(storedMutations);
-      if (!storedMutations || storedMutations?.length === 0 || storedMutations?.items.length === 0) {
+      const storedMutations = await this.getStoredMutations();
+      if (!storedMutations) {
         logger("Mutation Queue is empty - nothing to replicate");
         break;
       }
 
-      const item: MutationRequest = storedMutations.items[0];
+      const item: MutationRequest = storedMutations[0];
       logger("Mutation queue processing - online");
       invariant(this.modelMap[item.storeName], `Store is not setup for replication ${item.storeName}`);
 
@@ -188,6 +187,15 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
     this.processing = false;
     // Work finished we can close queue
     this.open = false;
+  }
+
+  private async getStoredMutations() {
+    const storedMutations = await this.options.storage.query(mutationQueueModel.getStoreName(), { id: MUTATION_ROW_ID });
+    if (storedMutations && storedMutations.length === 1) {
+      if (storedMutations[0].items.length !== 0) {
+        return storedMutations[0].items;
+      }
+    }
   }
 
   private getMutationDocument({ storeName, eventType }: MutationRequest) {
@@ -223,7 +231,7 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
     else {
       items = [mutationRequest];
     }
-    storage.save(mutationQueueModel.getStoreName(), { id: MUTATION_ROW_ID, items });
+    storage.saveOrUpdate(mutationQueueModel.getStoreName(), { id: MUTATION_ROW_ID, items });
   }
 
   /**
@@ -239,22 +247,35 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
       return userErrorHandler(error.networkError, error.graphQLErrors);
     }
 
+    if (error?.networkError?.message === "Failed to fetch") {
+      // workaround for lack of number of tries
+      this.open = false;
+      return true;
+    }
+
     if (error.networkError !== undefined && error.graphQLErrors === undefined) {
       logger("Error replied due to network error");
       return true;
     }
+
 
     return false;
   }
 
   // TODO not finished
   private async resultProcessor(currentItem: MutationRequest, data: OperationResult<any>) {
+    logger("Processing result from server");
+    if (data.error) {
+      throw data.error;
+    }
+
     const model = this.modelMap[currentItem.storeName].model;
     const primaryKey = model.schema.getPrimaryKey();
-    const response = data.data[Object.keys(data.data)[0]];
-    if (response) {
-      // model.update(response, { [primaryKey]: response[primaryKey] })
-    }
+
+    // const response = data.data[Object.keys(data.data)[0]];
+    // if (response) {
+    //   // model.update(response, { [primaryKey]: response[primaryKey] })
+    // }
     const clientSideId = currentItem.data[primaryKey];
     if (clientSideId) {
       if (currentItem.eventType === CRUDEvents.ADD) {
