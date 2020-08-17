@@ -160,10 +160,10 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     return this.query(storeName, filter);
   }
 
-  public async updateById(storeName: string, input: any, id: string) {
+  public async updateById(storeName: string, input: any) {
     const store = await this.getStore(storeName);
     const primaryKey = getPrimaryKey(this.stores, storeName);
-
+    const id = input[primaryKey];
     const target = await this.convertToPromise<any>(store.get(id));
     if (!target) {throw new Error(`${id} was not found`);}
 

@@ -81,14 +81,13 @@ export interface StorageAdapter {
   update(storeName: string, input: any, filter?: Filter): Promise<any[]>;
 
   /**
-   * Update document with primary key matching @param id
+   * Update document
    *
    * @param storeName
    * @param input
-   * @param id
-   * @throws if document with @param id does not exist
+   * @throws if document does not exist
    */
-  updateById(storeName: string, input: any, id: string): Promise<any>;
+  updateById(storeName: string, input: any): Promise<any>;
 
   /**
    * Tries to update @param input in @param storeName

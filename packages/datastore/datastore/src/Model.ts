@@ -142,10 +142,10 @@ export class Model<T = unknown> {
     }
   }
 
-  public async updateById(input: Partial<T>, id: string) {
+  public async updateById(input: Partial<T>) {
     const db = await this.storage.createTransaction();
     try {
-      const data = await db.updateById(this.schema.getStoreName(), input, id);
+      const data = await db.updateById(this.schema.getStoreName(), input);
       await this.replication?.saveChangeForReplication(this, [data], CRUDEvents.UPDATE, db);
       await db.commit();
       const event = {
