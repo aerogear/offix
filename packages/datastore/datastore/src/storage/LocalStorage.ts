@@ -71,6 +71,10 @@ export class LocalStorage {
     return this.adapter.updateById(storeName, input, id);
   }
 
+  public saveOrUpdate(storeName: string, input: any) {
+    return this.adapter.saveOrUpdate(storeName, input);
+  }
+
   public async remove(storeName: string, filter?: Filter): Promise<any | any[]> {
     const result = await this.adapter.remove(storeName, filter);
     return result;

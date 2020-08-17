@@ -105,6 +105,24 @@ export class Model<T = unknown> {
     }
   }
 
+  public async saveOrUpdate(input: Partial<T>): Promise<T> {
+    const db = await this.storage.createTransaction();
+    try {
+      const data = await db.saveOrUpdate(this.schema.getStoreName(), input);
+      await this.replication?.saveChangeForReplication(this, data, CRUDEvents.ADD, db);
+      await db.commit();
+      const event = {
+        eventType: CRUDEvents.ADD,
+        data
+      };
+      this.changeEventStream.publish(event);
+      return data;
+    } catch (error) {
+      await db.rollback();
+      throw error;
+    } 
+  }
+
   public async update(input: Partial<T>, filter?: Filter<T>) {
     invariant(filter, "filter needs to be provided for update");
     const db = await this.storage.createTransaction();
