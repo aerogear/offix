@@ -67,8 +67,8 @@ export class LocalStorage {
     return result;
   }
 
-  public updateById(storeName: string, input: any, id: string) {
-    return this.adapter.updateById(storeName, input, id);
+  public updateById(storeName: string, input: any) {
+    return this.adapter.updateById(storeName, input);
   }
 
   public saveOrUpdate(storeName: string, input: any) {

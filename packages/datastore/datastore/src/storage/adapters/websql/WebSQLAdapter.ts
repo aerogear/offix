@@ -84,9 +84,10 @@ export class WebSQLAdapter implements StorageAdapter {
     return this.transaction(query, [...vals]);
   }
 
-  public async updateById(storeName: string, input: any, id: string) {
+  public async updateById(storeName: string, input: any) {
     const [cols, vals] = prepareStatement(input, "update");
-    const key = getPrimaryKey(this.stores, storeName);;
+    const key = getPrimaryKey(this.stores, storeName);
+    const id = input[key];
     const query = `UPDATE ${storeName} SET ${cols} ${key} = ${id}`;
     // @ts-ignore
     return this.transaction(query, [...vals]);
