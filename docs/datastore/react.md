@@ -4,7 +4,7 @@ title: React - using Datastore Hooks
 sidebar_label: React
 ---
 
-Offix Datastore provides hooks for CRUD operations and subscription.
+Offix Datastore provides react hooks for CRUD operations and subscription.
 
 For a quick start see [sample react app](https://github.com/aerogear/offix/tree/master/examples/react-datastore).
 
@@ -165,7 +165,7 @@ const Task = ({ task }) => {
 ## useSubscription
 
 You can subscribe to specific events and receive changes data using this hook.
-Below, we listen for updates to the task and render them. The `data` returned
+We listen for updates to the task and render them. The `data` returned
 by `useSubscription` is the data carried by the change event.
 
 ```javascript

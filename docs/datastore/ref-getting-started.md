@@ -20,7 +20,7 @@ yarn add offix-datastore
 
 ## Using DataStore
 
-### Sample GraphQL Schema
+### Building your own GraphQL type
 
 Let's use the following sample schema for our app
 

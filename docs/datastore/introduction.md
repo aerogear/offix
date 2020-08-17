@@ -4,9 +4,9 @@ title: Introduction to Offix Datastore
 sidebar_label: Offix Datastore
 ---
 
-Welcome to the Offix Datastore guide! Offix Datastore is a database for
+Offix Datastore is an fully capable client side store  for
 JavaScript apps with real-time synchronization over GraphQL.
-Offix Datastore saves all your data locally while pushing them your server,
+Offix Datastore saves all your data locally and enables GraphQL replication mechanism to your generic GraphQL server,
 this way, you data is available with or without an internet connection.
 All changes made locally when offline are queued until an internet connection is available.
 
