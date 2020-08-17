@@ -9,7 +9,7 @@ import { Model } from "../../Model";
 import { NetworkIndicator } from "../../network/NetworkIndicator";
 
 
-const logger = createLogger("deltareplicator");
+const logger = createLogger("replicator-delta");
 
 export interface DeltaReplicatorConfig {
   config: ModelDeltaConfig;

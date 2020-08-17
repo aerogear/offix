@@ -65,16 +65,18 @@ export class DataStore {
    * Initialize datastore
    */
   public init() {
-    if (this.models)
-      {if (this.config.replicationConfig) {
+    if (this.models) {
+      if (this.config.replicationConfig) {
         this.replicator = new GraphQLReplicator(this.models, this.config.replicationConfig);
         // Add replication stores
         this.storage.addStore(mutationQueueModel);
         this.storage.addStore(metadataModel);
+        this.storage.createStores();
         this.replicator.init(this.storage);
       } else {
+        this.storage.createStores();
         logger("Replication configuration was not provided. Replication will be disabled");
-      }}
-      this.storage.createStores();
+      }
     }
+  }
 }
