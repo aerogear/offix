@@ -12,7 +12,7 @@ import { GlobalReplicationConfig, MutationsConfig } from "../api/ReplicationConf
 import { buildGraphQLCRUDMutations } from "./buildGraphQLCRUDMutations";
 import invariant from "tiny-invariant";
 
-const logger = createLogger("queue");
+const logger = createLogger("replicator-mutationqueue");
 
 interface MutationReplicationOptions {
   storage: LocalStorage;
@@ -48,15 +48,13 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
     [name: string]: { documents: ReplicatorMutations; model: Model };
   };
   // Queue is open (available to process data) if needed
-  private open: boolean;
+  private open?: boolean;
   // Queue is currently procesisng requests (used as semaphore to avoid processing multiple times)
   private processing: boolean;
   private options: MutationReplicationOptions;
 
   constructor(options: MutationReplicationOptions) {
-    logger("Mutation queue created");
     this.options = options;
-    this.open = false;
     this.processing = false;
     this.modelMap = {};
   }
@@ -99,6 +97,7 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
     // Subscribe to network updates and open and close replication
     this.options.networkIndicator.subscribe({
       next: (message: NetworkStatusEvent) => {
+        logger(`Network state changed: ${message}`);
         this.open = message.isOnline;
         if (this.open) {
           this.process();
@@ -111,7 +110,10 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
 
     // Intentionally async to start replication in background
     this.options.networkIndicator.isNetworkReachable().then((result) => {
-      if (this.open === result) {
+      if (this.open === undefined) {
+        // first time
+        this.open = result;
+      } else if (this.open === result) {
         // No state change
         return;
       }
@@ -157,13 +159,14 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
 
     this.processing = true;
     while (this.open) {
-      const items = await this.options.storage.query(mutationQueueModel.getStoreName(), { id: MUTATION_ROW_ID });
-      if (!items || items?.items.length > 0) {
-        logger("Queue is empty");
+      const storedMutations = await this.options.storage.query(mutationQueueModel.getStoreName(), { id: MUTATION_ROW_ID });
+      console.log(storedMutations);
+      if (!storedMutations || storedMutations?.length === 0 || storedMutations?.items.length === 0) {
+        logger("Mutation Queue is empty - nothing to replicate");
         break;
       }
 
-      const item: MutationRequest = items.items[0];
+      const item: MutationRequest = storedMutations.items[0];
       logger("Mutation queue processing - online");
       invariant(this.modelMap[item.storeName], `Store is not setup for replication ${item.storeName}`);
 

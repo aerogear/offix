@@ -6,7 +6,7 @@ import { Model } from "../../Model";
 import { NetworkIndicator } from "../../network/NetworkIndicator";
 import { ReplicatorSubscriptions } from "./ReplicatorSubscriptions";
 
-const logger = createLogger("deltareplicator");
+const logger = createLogger("replicator-subscriptions");
 
 export interface SubscriptionReplicatorConfig {
   config: LiveUpdatesConfig;

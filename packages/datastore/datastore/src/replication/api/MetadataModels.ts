@@ -1,5 +1,16 @@
 import { ModelSchema } from "../../ModelSchema";
-import { MODEL_METADATA, MODEL_METADATA_KEY, MUTATION_QUEUE } from "../GraphQLReplicator";
+
+/**
+ * Queue used to hold ongoing mutations
+ */
+export const MUTATION_QUEUE = "mutation_request_queue";
+
+/**
+ * Contains metadata for model
+ */
+export const MODEL_METADATA = "model_metadata";
+export const MODEL_METADATA_KEY = "storeName";
+
 
 export const metadataModel = new ModelSchema<any>({
   name: MODEL_METADATA,

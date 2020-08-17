@@ -13,18 +13,8 @@ import { buildGraphQLCRUDQueries } from ".";
 import { buildGraphQLCRUDSubscriptions } from "./subscriptions/buildGraphQLCRUDSubscriptions";
 import { SubscriptionReplicator } from "./subscriptions/SubscriptionReplicator";
 
-const logger = createLogger("graphqlreplicator");
+const logger = createLogger("replicator");
 
-/**
- * Queue used to hold ongoing mutations
- */
-export const MUTATION_QUEUE = "mutation_request_queue";
-
-/**
- * Contains metadata for model
- */
-export const MODEL_METADATA = "model_metadata";
-export const MODEL_METADATA_KEY = "storeName";
 
 /**
  * Defaults for replicating settings aggregated in single place
@@ -80,7 +70,12 @@ export class GraphQLReplicator {
 
     if (this.config.mutations?.enabled) {
       logger("Initializing mutation replication");
-      this.createMutationsReplication(storage);
+      this.mutationQueue = new MutationsReplicationQueue({
+        storage: storage,
+        client: this.client,
+        networkIndicator: this.networkIndicator
+      });
+      this.mutationQueue.init(this.models, this.config);
     }
 
     if (this.config.delta?.enabled) {
@@ -116,14 +111,5 @@ export class GraphQLReplicator {
         replicator.start();
       }
     }
-  }
-
-  private createMutationsReplication(storage: LocalStorage) {
-    this.mutationQueue = new MutationsReplicationQueue({
-      storage: storage,
-      client: this.client,
-      networkIndicator: this.networkIndicator
-    });
-    this.mutationQueue.init(this.models, this.config);
   }
 }
