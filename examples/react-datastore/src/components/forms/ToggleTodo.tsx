@@ -2,8 +2,8 @@ import React from 'react';
 import { QuickForm, BoolField } from 'uniforms-antd';
 
 import { ToggleTodoProps } from "../../types";
-import { schema } from '../../config/formSchema';
-import { useEditTodo } from '../../helpers/hooks';
+import { schema } from './formSchema';
+import { useEditTodo } from '../../datastore/generated/hooks';
 
 export function ToggleTodo ({ todo }: ToggleTodoProps) {
 
@@ -20,11 +20,11 @@ export function ToggleTodo ({ todo }: ToggleTodoProps) {
 
   return(
     <QuickForm schema={schema}>
-      <BoolField 
+      <BoolField
         label={todo.title}
         value={todo.completed}
         onChange={handleUpdate}
-        name="completed" 
+        name="completed"
       />
     </QuickForm>
   );

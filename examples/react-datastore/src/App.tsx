@@ -3,7 +3,7 @@ import { CRUDEvents } from 'offix-datastore';
 import { Button } from 'antd';
 import 'antd/dist/antd.css';
 
-import { useFindTodos } from './helpers/hooks';
+import { useFindTodos } from './datastore/generated/hooks';
 import { TodoList, AddTodo, Loading, Error, Header } from './components';
 
 const onTodoAdded = (currentData: any[], newData: any) => {

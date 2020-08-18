@@ -4,12 +4,12 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { EditTodo, ToggleTodo } from '../forms';
 import { TodoProps } from '../../types';
-import { useDeleteTodo } from '../../helpers/hooks';
+import { useDeleteTodo } from '../../datastore/generated/hooks';
 
 export const Todo = ({ todo }: TodoProps) => {
   const [edit, setEdit] = useState<boolean>(false);
   const { remove: deleteTodo } = useDeleteTodo();
-  
+
   const handleDelete = (e: FormEvent) => {
     e.preventDefault();
     deleteTodo({ id: todo.id })
