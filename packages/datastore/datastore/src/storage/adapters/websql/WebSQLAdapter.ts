@@ -47,7 +47,7 @@ export class WebSQLAdapter implements StorageAdapter {
     const [cols, vals] = prepareStatement(input, "insert");
     const query = `INSERT INTO ${storeName} ${cols}`;
     await this.transaction(query, vals);
-    return (await this.query(storeName, { id: input.id }))[0];
+    return input;
   }
 
   public async query(storeName: string, filter?: Filter): Promise<any[]> {

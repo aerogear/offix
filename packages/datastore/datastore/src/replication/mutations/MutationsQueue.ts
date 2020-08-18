@@ -180,8 +180,11 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
         const retry = this.errorHandler(error, item);
         if (!retry) {
           await this.dequeueRequest();
+          // TODO dequeue all related elements
+        } else {
+          // Network error
+          break;
         }
-        // TODO invalidate any other changes that happened here
       }
     }
     this.processing = false;
@@ -231,7 +234,8 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
     else {
       items = [mutationRequest];
     }
-    storage.saveOrUpdate(mutationQueueModel.getStoreName(), { id: MUTATION_ROW_ID, items });
+
+    storage.saveOrUpdate(mutationQueueModel.getStoreName(), mutationQueueModel.getPrimaryKey(), { id: MUTATION_ROW_ID, items });
   }
 
   /**

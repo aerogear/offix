@@ -7,6 +7,7 @@ import { createLogger } from "../../utils/logger";
 import { LocalStorage } from "../../storage";
 import { Model } from "../../Model";
 import { NetworkIndicator } from "../../network/NetworkIndicator";
+import { metadataModel, QueryMetadata } from "../api/MetadataModels";
 
 
 const logger = createLogger("replicator-delta");
@@ -63,6 +64,7 @@ export class DeltaReplicator {
   public async start() {
     // Only when online
     if (await this.options.networkIndicator.isNetworkReachable()) {
+      logger("Online. Delta executing delta");
       if (this.options.config.pullInterval) {
         this.perform().then(() => {
           this.activePullInterval = setInterval(() => {
@@ -79,10 +81,29 @@ export class DeltaReplicator {
             }
           }
         });
+      } else {
+        this.perform();
       }
     } else {
       logger("Offline. Delta suspended");
     }
+  }
+
+  private async saveLastSync(lastSync: string) {
+    const storeName = metadataModel.getStoreName();
+    const schema = this.options.model.schema;
+    const idKey = metadataModel.getPrimaryKey()
+    const objectToSave = { [idKey]: this.options.model.getStoreName(), lastSync };
+    console.log(objectToSave);
+
+    return await this.options.storage.saveOrUpdate(storeName, idKey, objectToSave);
+  }
+
+  private async loadLastSync(storage: LocalStorage = this.options.storage) {
+    const storeName = metadataModel.getStoreName();
+    const schema = this.options.model.schema;
+    let item: QueryMetadata = await storage.queryById(storeName, metadataModel.getPrimaryKey(), schema.getStoreName());
+    return item?.lastSync;
   }
 
   public async perform() {
@@ -90,7 +111,13 @@ export class DeltaReplicator {
     if (!this.performLock) {
       this.performLock = true;
       try {
-        const result = await this.options.client.query(this.options.query, this.filter).toPromise();
+        logger("Delta about to be fetched");
+        let lastSync = await this.loadLastSync();
+        if (!lastSync) {
+          lastSync = "0";
+        }
+        const filter = Object.assign({}, this.filter, { lastSync })
+        const result = await this.options.client.query(this.options.query, filter).toPromise();
         await this.processResult(result);
       } catch (error) {
         logger(`Replication error ${error}`);
@@ -102,16 +129,26 @@ export class DeltaReplicator {
     }
   }
 
+  // TODO extract to separate result processor
   private async processResult(result: OperationResult<any>) {
     if (result.error) {
+      logger("Delta error");
       throw result.error;
     }
     const model = this.options.model;
-    // TODO this needs improvements on event level
-    if (result.data && result.data.length > 0) {
+    if (result.data) {
+      logger("Delta retrieved from server");
+      const firstOperationName = Object.keys(result.data)[0]
+      if (!firstOperationName) {
+        logger("Delta returned result key");
+        return;
+      }
+      const deltaResult = result.data[firstOperationName]
+      // TODO
+      this.saveLastSync(deltaResult.lastSync)
       const db = await this.options.storage.createTransaction();
       try {
-        for (const item of result.data) {
+        for (const item of deltaResult.items) {
           const filter = model.schema.getPrimaryKeyFilter(item);
           if (item._deleted) {
             await db.remove(model.getStoreName(), filter);
