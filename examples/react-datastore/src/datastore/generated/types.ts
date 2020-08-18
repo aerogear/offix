@@ -7,6 +7,7 @@ export interface ITodo {
   completed?: boolean,
 };
 
+// TODO use Partial for updates
 export interface ITodoModel extends ITodo {
   id: string
 };

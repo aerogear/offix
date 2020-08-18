@@ -7,6 +7,13 @@ import { Filter } from "./filters";
  */
 export type Fields<T> = Record<keyof T, ModelSchemaProperties>;
 
+/**
+ * Represents generated schema with models
+ */
+export type GenetratedModelSchema = {
+  [model: string]: ModelJsonSchema<any>
+};
+
 export interface ModelSchemaProperties extends JSONSchema7 {
   index?: boolean;
   primary?: boolean;
@@ -70,6 +77,9 @@ export class ModelSchema<T = any>{
     return this.indexes;
   }
 
+  /**
+   * Get primary key name
+   */
   public getPrimaryKey(): string {
     return this.primaryKey;
   }

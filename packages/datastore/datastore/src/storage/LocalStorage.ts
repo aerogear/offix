@@ -1,14 +1,10 @@
-import { v1 as uuidv1 } from "uuid";
+
 import { StorageAdapter } from "./api/StorageAdapter";
 import { createLogger } from "../utils/logger";
 import { ModelSchema } from "../ModelSchema";
 import { Filter } from "../filters";
 
 const logger = createLogger("storage");
-
-export function generateId() {
-  return uuidv1();
-}
 
 /**
  * Implements local storage that saves data to specified adapter (underlying store)
@@ -49,17 +45,15 @@ export class LocalStorage {
   }
 
   public async save(storeName: string, input: any): Promise<any> {
-    // TODO id is hardcoded
-    const result = await this.adapter.save(storeName, { id: generateId(), ...input });
-    return result;
+    return await this.adapter.save(storeName, input);
   }
 
   public query(storeName: string, filter?: Filter): Promise<any | any[]> {
     return this.adapter.query(storeName, filter);
   }
 
-  public queryById(storeName: string, id: string) {
-    return this.adapter.queryById(storeName, id);
+  public queryById(storeName: string, idField: string, id: string) {
+    return this.adapter.queryById(storeName, idField, id);
   }
 
   public async update(storeName: string, input: any, filter?: Filter): Promise<any> {
@@ -67,12 +61,12 @@ export class LocalStorage {
     return result;
   }
 
-  public updateById(storeName: string, input: any) {
-    return this.adapter.updateById(storeName, input);
+  public updateById(storeName: string, idField: string, input: any) {
+    return this.adapter.updateById(storeName, idField, input);
   }
 
-  public saveOrUpdate(storeName: string, input: any) {
-    return this.adapter.saveOrUpdate(storeName, input);
+  public saveOrUpdate(storeName: string, idField: string, input: any) {
+    return this.adapter.saveOrUpdate(storeName, idField, input);
   }
 
   public async remove(storeName: string, filter?: Filter): Promise<any | any[]> {
@@ -80,8 +74,8 @@ export class LocalStorage {
     return result;
   }
 
-  public removeById(storeName: string, id: string) {
-    return this.adapter.removeById(storeName, id);
+  public removeById(storeName: string, idField: string, input: any) {
+    return this.adapter.removeById(storeName, idField, input);
   }
 
   /**

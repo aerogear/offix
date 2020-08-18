@@ -7,14 +7,14 @@ import { Filter } from "../../filters";
 const createSubscribeToMore = (model: Model, dispatch: Dispatch<Action>) => {
     return (eventType: CRUDEvents, updateResult: (data: any) => any, filter?: Filter) => {
         // TODO subscribe to specific predicate
-        const subscription = model.subscribe(eventType, (event) => {
+        const subscription = model.subscribe((event) => {
             const newData = updateResult(event.data);
             if (subscription.closed) {
                 // Important to check beacuse Componnent could be unmounted
                 return;
             }
             dispatch({ type: ActionType.UPDATE_RESULT, data: newData });
-        });
+        }, eventType);
         return subscription;
     };
 };

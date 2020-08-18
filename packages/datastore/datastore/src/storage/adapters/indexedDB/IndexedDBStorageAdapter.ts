@@ -1,10 +1,8 @@
 import { StorageAdapter } from "../../api/StorageAdapter";
-import { generateId } from "../../LocalStorage";
 import { createLogger } from "../../../utils/logger";
 import { ModelSchema } from "../../../ModelSchema";
 import { Filter } from "../../../filters";
 import { getPredicate } from "./Predicate";
-import { getPrimaryKey } from "../utils";
 
 const logger = createLogger("idb");
 
@@ -30,7 +28,6 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     this.transaction = transaction;
     this.stores = stores;
   }
-  // TODO Wrong architecture. Store can be created on demand
   public addStore(config: ModelSchema) {
     this.stores.push(config);
   }
@@ -41,7 +38,7 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     openreq.onerror = () => this.rejectIDB(openreq.error);
     openreq.onsuccess = () => {
       const db = openreq.result;
-      db.onversionchange = function() {
+      db.onversionchange = function () {
         // FIXME critical to handle version changes
         this.close();
       };
@@ -110,10 +107,8 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
 
   public async save(storeName: string, input: any) {
     const store = await this.getStore(storeName);
-    const primaryKey = getPrimaryKey(this.stores, storeName);
-    const data = { [primaryKey]: generateId(), ...input };
-    await this.convertToPromise<IDBValidKey>(store.add(data));
-    return data;
+    await this.convertToPromise<IDBValidKey>(store.add(input));
+    return input;
   }
 
   public async query(storeName: string, filter?: Filter): Promise<any[]> {
@@ -160,34 +155,32 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     return this.query(storeName, filter);
   }
 
-  public async updateById(storeName: string, input: any) {
+  public async updateById(storeName: string, idField: string, input: any) {
     const store = await this.getStore(storeName);
-    const primaryKey = getPrimaryKey(this.stores, storeName);
-    const id = input[primaryKey];
+    const id = input[idField];
     const target = await this.convertToPromise<any>(store.get(id));
-    if (!target) {throw new Error(`${id} was not found`);}
+    if (!target) { throw new Error(`${id} was not found`); }
 
-    const data = { ...target, ...input, [primaryKey]: target[primaryKey] };
+    const data = { ...target, ...input, [idField]: target[idField] };
     await this.convertToPromise<IDBValidKey>(store.put(data));
     return data;
   }
 
-  public async saveOrUpdate(storeName: string, input: any) {
+  public async saveOrUpdate(storeName: string, idField: string, input: any) {
     const store = await this.getStore(storeName);
-    const primaryKey = getPrimaryKey(this.stores, storeName);
     let target;
 
-    if (input[primaryKey]) {
-      target = await this.convertToPromise<any>(store.get(input[primaryKey]));
+    if (input[idField]) {
+      target = await this.convertToPromise<any>(store.get(input[idField]));
     }
     if (!target) {
       // input doesn't exist, create it
-      const saveData = { ...input, [primaryKey]: generateId() };
+      const saveData = input;
       await this.convertToPromise(store.put(saveData));
       return saveData;
     }
     // input exists, update it
-    const updateData = { ...target, ...input, [primaryKey]: target[primaryKey] };
+    const updateData = { ...target, ...input };
     await this.convertToPromise(store.put(updateData));
     return updateData;
   }
