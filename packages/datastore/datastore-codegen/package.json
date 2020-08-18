@@ -15,7 +15,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "26.0.10",
-    "@types/yargs": "^15.0.5",
+    "@types/yargs": "15.0.5",
     "jest": "26.4.0",
     "rimraf": "3.0.2",
     "ts-jest": "26.2.0",
@@ -24,6 +24,6 @@
   "dependencies": {
     "@graphback/core": "0.15.1",
     "graphql-metadata": "0.7.3",
-    "yargs": "^15.4.1"
+    "yargs": "15.4.1"
   }
 }
