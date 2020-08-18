@@ -5,8 +5,7 @@ import { ModelSchema } from "../../../ModelSchema";
 import { Filter } from "../../../filters";
 import { prepareStatement, flattenResultSet, getType } from "./utils";
 import { filterToSQL } from "./filterToSQL";
-import { generateId } from "../..";
-import { getPrimaryKey } from "../utils";
+
 
 const logger = createLogger("sqlite");
 
@@ -16,12 +15,8 @@ const logger = createLogger("sqlite");
 export class WebSQLAdapter implements StorageAdapter {
   private sqlite: Database;
   private stores: ModelSchema[] = [];
-  private dbName: string;
-  private schemaVersion: number;
 
   constructor(dbName: string, schemaVersion: number) {
-    this.dbName = dbName;
-    this.schemaVersion = schemaVersion;
     invariant("openDatabase" in window, "websql not supported");
     this.sqlite = window.openDatabase(
       dbName,
@@ -49,8 +44,6 @@ export class WebSQLAdapter implements StorageAdapter {
   }
 
   public async save(storeName: string, input: any): Promise<any> {
-    const primaryKey = getPrimaryKey(this.stores, storeName);
-    input[primaryKey] = generateId();
     const [cols, vals] = prepareStatement(input, "insert");
     const query = `INSERT INTO ${storeName} ${cols}`;
     await this.transaction(query, vals);
@@ -68,9 +61,8 @@ export class WebSQLAdapter implements StorageAdapter {
     return res;
   }
 
-  public async queryById(storeName: string, id: string) {
-    const key = getPrimaryKey(this.stores, storeName);
-    const query = `SELECT * FROM ${storeName} WHERE ${key} = ${id}`;
+  public async queryById(storeName: string, idField: string, id: string) {
+    const query = `SELECT * FROM ${storeName} WHERE ${idField} = ${id}`;
     // @ts-ignore
     const res = await this.readTransaction(query, []);
     return res;
@@ -84,21 +76,19 @@ export class WebSQLAdapter implements StorageAdapter {
     return this.transaction(query, [...vals]);
   }
 
-  public async updateById(storeName: string, input: any) {
+  public async updateById(storeName: string, idField: string, input: any) {
     const [cols, vals] = prepareStatement(input, "update");
-    const key = getPrimaryKey(this.stores, storeName);
-    const id = input[key];
-    const query = `UPDATE ${storeName} SET ${cols} ${key} = ${id}`;
+    const id = input[idField];
+    const query = `UPDATE ${storeName} SET ${cols} ${idField} = ${id}`;
     // @ts-ignore
     return this.transaction(query, [...vals]);
   }
 
-  public async saveOrUpdate(storeName: string, input: any) {
-    const primaryKey = getPrimaryKey(this.stores, storeName);
+  public async saveOrUpdate(storeName: string, idField: string, input: any) {
     const [cols, vals] = prepareStatement(input, "insert");
     const [updateCols] = prepareStatement(input, "update");
     const query = `INSERT INTO ${storeName} ${cols}`
-      + ` ON CONFLICT(${primaryKey}) DO UPDATE SET ${updateCols}`;
+      + ` ON CONFLICT(${idField}) DO UPDATE SET ${updateCols}`;
     // @ts-ignore
     return this.transaction(query, [...vals]);
   }
@@ -110,9 +100,8 @@ export class WebSQLAdapter implements StorageAdapter {
     return this.transaction(query, []);
   }
 
-  public async removeById(storeName: string, id: string): Promise<any> {
-    const key = getPrimaryKey(this.stores, storeName);;
-    const query = `DELETE FROM ${storeName} ${key} ${id}`;
+  public async removeById(storeName: string, idField: string, id: string): Promise<any> {
+    const query = `DELETE FROM ${storeName} ${idField} ${id}`;
     // @ts-ignore
     return this.transaction(query, []);
   }

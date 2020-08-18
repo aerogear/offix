@@ -8,6 +8,5 @@ export interface ReplicatorQueries {
   /**
    * GraphQL sync operation
    */
-  // TODO hack for wrong graphql package version clashes
   sync: DocumentNode | any;
 }

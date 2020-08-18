@@ -14,7 +14,7 @@ const defaultOp = (op: string) => (
     }
 );
 
-// TODO contains is tricky, verify solution
+
 const OperatorToSQLMap: OperatorToSQL = {
     eq: defaultOp("="),
     gt: defaultOp(">"),

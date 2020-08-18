@@ -9,8 +9,18 @@ import { DocumentBuilders } from "./DocumentBuilders";
  * Configuration options for Delta Queries replication
  */
 export interface DeltaQueriesConfig {
+  /**
+   * Enables delta queries
+   */
   enabled: boolean;
+  /**
+   * Pull interval in milliseconds
+   */
   pullInterval?: number;
+
+  /**
+   * Limit of the items pulled by query (by default 100)
+   */
   queryLimit?: number;
 }
 
@@ -18,13 +28,14 @@ export interface DeltaQueriesConfig {
  * Configuration options for Subscription replication
  */
 export interface LiveUpdatesConfig {
+  /**
+   * Enables live updates
+   */
   enabled: boolean;
 }
 
 /**
  * Handle errors repeat request if needed
- *
- * @returns MutationRequest if request should be repeated
  */
 export type UserErrorHandler = (networkError: any, graphqlError: any) => boolean;
 
@@ -136,7 +147,7 @@ export interface ModelSubscriptionsConfig extends DeltaQueriesConfig {
 /**
  * Model specific configuration for replication
  */
-export interface ModelReplicationConfig extends GlobalReplicationConfig{
+export interface ModelReplicationConfig extends GlobalReplicationConfig {
   delta?: ModelDeltaConfig;
   liveupdates?: ModelSubscriptionsConfig;
   mutations?: MutationsConfig;

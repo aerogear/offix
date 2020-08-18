@@ -59,7 +59,7 @@ export interface StorageAdapter {
    * @param fliter
    * @returns A Promise of the query results
    */
-  query(storeName: string, filter?: Filter): Promise<any | any[]>;
+  query(storeName: string, filter?: Filter): Promise<any[]>;
 
   /**
    * Find document by primary key
@@ -67,7 +67,7 @@ export interface StorageAdapter {
    * @param storeName
    * @param id The primary key value of the document
    */
-  queryById(storeName: string, id: string): Promise<any>;
+  queryById(storeName: string, idField: string, id: string): Promise<any>;
 
   /**
    * Update data matching filter or all data if filter is not specified
@@ -87,14 +87,14 @@ export interface StorageAdapter {
    * @param input
    * @throws if document does not exist
    */
-  updateById(storeName: string, input: any): Promise<any>;
+  updateById(storeName: string, idField: string, input: any): Promise<any>;
 
   /**
    * Tries to update @param input in @param storeName
    * If no document exists with the given primary key exists,
    * @param input is saved to @param storeName
    */
-  saveOrUpdate(storeName: string, input: any): Promise<any>;
+  saveOrUpdate(storeName: string, idField: string, input: any): Promise<any>;
 
   /**
    * Deletes data matching filter or all from the store
@@ -111,5 +111,5 @@ export interface StorageAdapter {
    * @param storeName
    * @param id
    */
-  removeById(storeName: string, id: string): Promise<any>;
+  removeById(storeName: string, idField: string, input: any): Promise<any>;
 }
