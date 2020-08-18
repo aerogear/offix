@@ -37,51 +37,17 @@ type Task {
 ### Configuring Datastore
 
 We have a [cli tool](cli.md) that generates DataStore config and Model JSON schema given a GraphQL schema.
-`DataStore` accepts a config object and an optional `CustomEngines`, see [api reference](datastore-api).
 
 ### Datastore Models
 
 To be able to store user tasks in DataStore, you need to create its DataStore model.
 The DataStore model provides the API to perform CRUD operations on `Task` in the DataStore.
+The [cli tool](cli.md) generates code configure each model defined in your graphql schema.
+Here we will assume that you generated the DataStore config files in `src/datastore`.
 
-Let's create the Task DataStore model.
+If you are using Typescript and you want your model to have types, you can create an interface;
 
-* Define its json schema. See [json schema reference](model-api#Model-Json-Schema)
-
-```JSON title="/src/schema.json"
-{
-  "Task": {
-    "name": "Task",
-    "version": 1,
-    "type": "object",
-    "primaryKey": "id",
-    "properties": {
-      "id": {
-        "type": "string",
-        "key": "id",
-        "isRequired": true,
-        "index": true,
-        "primary": true
-      },
-      "title": {
-        "type": "string",
-        "key": "title"
-      },
-      "numberOfDaysLeft": {
-        "type": "number",
-        "key": "numberOfDaysLeft"
-      }
-    }
-  },
-  ...
-}
-```
-
-* Define its `interface`
-
-```typescript title="/src/datastoreConfig.ts"
-import { DataStore } from 'offix-datastore';
-
+```typescript title="/src/datastore/types.ts"
 export interface Task {
     id?: string;
     title: string;
@@ -90,12 +56,12 @@ export interface Task {
 }
 ```
 
-* Instantiate the `TaskModel` with the `Task` interface and its json schema.
-We will put all our datastore related config in "/src/datastoreConfig.ts"
+and instantiate the `TaskModel` with the `Task` interface in the generated config file.
 
-```typescript title="/src/datastoreConfig.ts"
-import { DataStore, DataSyncJsonSchema } from "offix-datastore";
-import schema from "./schema.json";
+```typescript
+import { DataStore } from "offix-datastore";
+import schema from "./schema";
+import { Task } from "./types";
 
 const datastore = new DataStore({
   dbName: "offix-datastore",
@@ -103,19 +69,12 @@ const datastore = new DataStore({
     client: {
       url: "http://localhost:4000/graphql",
       wsUrl: "ws://localhost:4000/graphql",
-    },
-    delta: { enabled: true },
-    mutations: { enabled: false },
-    liveupdates: { enabled: false }
+    }
   }
 });
 
-export const TaskModel = datastore.setupModel<Task>(schema.Task as DataSyncJsonSchema<Task>);
-```
+export const TaskModel = datastore.setupModel<Task>(schema.Task);
 
-* Initialize the datastore
-
-```typescript title="/src/datastoreConfig.ts"
 datastore.init();
 ```
 
