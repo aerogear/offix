@@ -51,9 +51,9 @@
         "type": "category",
         "label": "Local Operations",
         "items": [
-          "datastore/crud-operations",
-          "datastore/filters",
-          "datastore/observing-changes"
+          "datastore/queries",
+          "datastore/edits",
+          "datastore/subscriptions"
         ]
       },
       {
