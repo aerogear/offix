@@ -6,12 +6,12 @@ sidebar_label: Edits
 
 ## Saving Data
 
-DataStore Models provides two methods to save data;
+The DataStore Models provides two methods to save data;
 
 * `save()`
 * [saveOrUpdate()](#save-or-update)
 
-`save()` generates a primary key (in this case, an `id`) if one is not provided.
+`save()` generates a primary key (in this case, an `id`), if one is not provided.
 
 ```typescript
 import { TaskModel } from './datastoreConfig';
@@ -41,10 +41,10 @@ TaskModel.updateById({
 
 ### Save Or Update
 
-DataStore provides a `saveOrUpdate` method to use for upserts.
-If the primary key(in this case an `id`) is provided, DataStore will
+The DataStore provides a `saveOrUpdate` method to use for upserts.
+If the primary key(in this case an `id`) is provided, the DataStore will
 try to update the existing document if it exists, if it does not exist
-or no primary key was provided, DataStore saves the data as a new document.
+or no primary key was provided, the DataStore saves the data as a new document.
 
 ```typescript
 TaskModel.saveOrUpdate({

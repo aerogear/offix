@@ -95,7 +95,7 @@ useEffect(() => {
 ## useLazyQuery
 
 This hook provides a lazy `query` function. The `query` function accepts
-a filter, an id or nothing in which case all documents are returned. 
+a filter, an id or nothing, in which case, all documents are returned. 
 
 ```javascript
 import { useLazyQuery } from "offix-datastore";

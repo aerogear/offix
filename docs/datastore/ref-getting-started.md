@@ -31,7 +31,6 @@ type Task {
     description: String
     numberOfDaysLeft: Number
 }
-
 ```
 
 ### Configuring Datastore
@@ -40,12 +39,12 @@ We have a [cli tool](cli.md) that generates DataStore config and Model JSON sche
 
 ### Datastore Models
 
-To be able to store user tasks in DataStore, you need to create its DataStore model.
+To be able to store user tasks in the DataStore, you need to create it's DataStore model.
 The DataStore model provides the API to perform CRUD operations on `Task` in the DataStore.
-The [cli tool](cli.md) generates code configure each model defined in your graphql schema.
+The [cli tool](cli.md) generates code to configure each model defined in your graphql schema.
 Here we will assume that you generated the DataStore config files in `src/datastore`.
 
-If you are using Typescript and you want your model to have types, you can create an interface;
+If you are using Typescript and you want your model to have types, you can create an interface:
 
 ```typescript title="/src/datastore/types.ts"
 export interface Task {
@@ -80,17 +79,17 @@ datastore.init();
 
 ## Schema Upgrades
 
-DataStore creates a table on the device for each model. 
+The DataStore creates a table on the device for each model. 
 When you push a new version of your app with models added, replaced or removed,
 the tables for the new models won't be created on the client device and the unused tables(for removed models)
 won't be deleted.
 
-To make DataStore acknowledge these changes, you need to increment the schema version.
+To make the DataStore acknowledge these changes, you need to increment the schema version.
 
 Using our sample app, suppose we add a `SubTask` model, we need to increment 
 the schema version to trigger the creation of the "user_SubTask" table on the client device.
 
-The `DataStore` constructor takes a schema version parameter(defaults to 1). 
+The `DataStore` constructor takes a schema version parameter (defaults to 1). 
 
 ```typescript
 const dataStore = new DataStore({
