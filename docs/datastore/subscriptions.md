@@ -1,7 +1,7 @@
 ---
-id: observing-changes
-title: Subscribing to Local changes
-sidebar_label: Subscribing to Local changes
+id: subscriptions
+title: Subscribing to Changes
+sidebar_label: Subscriptions
 ---
 
 ## Change Events
