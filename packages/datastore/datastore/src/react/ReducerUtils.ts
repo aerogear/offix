@@ -12,7 +12,6 @@ export interface Action {
 }
 
 export interface ResultState {
-    isDeltaForced?: boolean;
     isLoading: boolean;
     data?: any;
     error?: any;
@@ -32,9 +31,6 @@ export const reducer = (state: ResultState, action: Action) => {
             // Don't update result when request is loading
             if (state.isLoading) { return state; }
             return { ...state, data: action.data };
-
-        case ActionType.DELTA_FORCED:
-            return { ...state, isDeltaForced: true };
 
         default:
             return state;

@@ -19,19 +19,7 @@ const createSubscribeToMore = (model: Model, dispatch: Dispatch<Action>) => {
     };
 };
 
-const forceDelta = async (model: Model, state: ResultState, dispatch: Dispatch<Action>, options?: IQueryOptions) => {
-    if (options?.forceDelta && model.replication && !state.isDeltaForced) {
-        // TODO
-        // await model.replicator.forceDeltaQuery();
-        dispatch({ type: ActionType.DELTA_FORCED });
-    }
-};
-
-interface IQueryOptions {
-    forceDelta?: boolean;
-}
-
-export const useQuery = (model: Model, selector?: Filter | string, options?: IQueryOptions) => {
+export const useQuery = (model: Model, selector?: Filter | string) => {
     const [state, dispatch] = useReducer(reducer, InitialState);
     const subscribeToMore = useCallback(createSubscribeToMore(model, dispatch), [model, dispatch]);
 
@@ -41,7 +29,6 @@ export const useQuery = (model: Model, selector?: Filter | string, options?: IQu
 
             dispatch({ type: ActionType.INITIATE_REQUEST });
             try {
-                await forceDelta(model, state, dispatch, options);
                 let results;
                 if ((typeof selector) === "string") {
                     results = await model.queryById(selector as string);
@@ -53,12 +40,11 @@ export const useQuery = (model: Model, selector?: Filter | string, options?: IQu
                 dispatch({ type: ActionType.REQUEST_COMPLETE, error });
             }
         })();
-    }, [model, selector, options]);
-
+    }, [model, selector]);
     return { ...state, subscribeToMore };
 };
 
-export const useLazyQuery = (model: Model, options?: IQueryOptions) => {
+export const useLazyQuery = (model: Model) => {
     const [state, dispatch] = useReducer(reducer, InitialState);
 
     const query = async (selector?: Filter | string) => {
@@ -66,7 +52,6 @@ export const useLazyQuery = (model: Model, options?: IQueryOptions) => {
 
         dispatch({ type: ActionType.INITIATE_REQUEST });
         try {
-            await forceDelta(model, state, dispatch, options);
             let results;
             if ((typeof selector) === "string") {
                 results = await model.queryById(selector as string);
