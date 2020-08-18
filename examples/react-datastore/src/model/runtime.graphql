@@ -1,10 +1,11 @@
+scalar GraphbackObjectID
+
 """
 @model
 @datasync
-@datastore
 """
 type Todo {
-  id: ID!
+  _id: GraphbackObjectID!
   title: String
   description: String
   completed: Boolean
@@ -13,10 +14,9 @@ type Todo {
 """
 @model
 @datasync
-@datastore
 """
 type User {
-  id: ID!
+  _id: GraphbackObjectID!
   name: String
   # TODO
   # todos: [Todo!]!

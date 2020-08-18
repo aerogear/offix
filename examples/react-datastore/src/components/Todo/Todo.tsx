@@ -12,9 +12,9 @@ export const Todo = ({ todo }: TodoProps) => {
 
   const handleDelete = (e: FormEvent) => {
     e.preventDefault();
-    deleteTodo({ id: todo.id })
-    .then((res: any) => console.log(res))
-    .catch((error: any) => console.log(error));
+    deleteTodo(todo)
+      .then((res: any) => console.log(res))
+      .catch((error: any) => console.log(error));
   };
 
   if (edit) {
@@ -28,21 +28,21 @@ export const Todo = ({ todo }: TodoProps) => {
 
   return (
     <Row justify="space-between">
-        <Col>
-          <ToggleTodo todo={todo} />
-          <p>
-            <b>Description: </b><br/>
-            {todo.description}
-          </p>
-        </Col>
-        <Col>
-          <Button type="primary" onClick={() => setEdit(true)}>
-            <EditOutlined />
-          </Button>
-          <Button type="primary" onClick={handleDelete} danger>
-            <DeleteOutlined />
-          </Button>
-        </Col>
-      </Row>
+      <Col>
+        <ToggleTodo todo={todo} />
+        <p>
+          <b>Description: </b><br />
+          {todo.description}
+        </p>
+      </Col>
+      <Col>
+        <Button type="primary" onClick={() => setEdit(true)}>
+          <EditOutlined />
+        </Button>
+        <Button type="primary" onClick={handleDelete} danger>
+          <DeleteOutlined />
+        </Button>
+      </Col>
+    </Row>
   );
 };
