@@ -18,12 +18,12 @@ export const buildGraphQLCRUDQueries = (model: Model) => {
 
   const queries: ReplicatorQueries = {
     sync: gql`
-            query sync${modelName}($lastChanged: String!, $filter: ${modelName}Filter) {
-              find${modelName}s(lastChanged: $lastChanged, filter: $filter) {
+            query sync${modelName}($lastSync: GraphbackTimestamp!, $filter: ${modelName}Filter) {
+              sync${modelName}s(lastSync: $lastSync, filter: $filter) {
                   items {
                     ${graphQLFields}
                   }
-                  lastChanged
+                  lastSync
               }
             }`
   };
