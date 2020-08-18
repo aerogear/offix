@@ -8,11 +8,19 @@ export const MUTATION_QUEUE = "mutation_request_queue";
 /**
  * Contains metadata for model
  */
-export const MODEL_METADATA = "model_metadata";
+export const MODEL_METADATA = "query_info";
 export const MODEL_METADATA_KEY = "storeName";
 
 
-export const metadataModel = new ModelSchema<any>({
+export interface QueryMetadata {
+  storeName: string
+  lastSync: string
+}
+
+/**
+ * Used to save query metadata
+ */
+export const metadataModel = new ModelSchema<QueryMetadata>({
   name: MODEL_METADATA,
   type: "object",
   namespace: "meta_",
@@ -20,12 +28,17 @@ export const metadataModel = new ModelSchema<any>({
   properties: {
     [MODEL_METADATA_KEY]: {
       type: "string",
-      primary: true,
-      index: true
+      primary: true
+    },
+    lastSync: {
+      type: "string"
     }
   }
 });
 
+/**
+ * Model used for saving mutation requests in queue
+ */
 export const mutationQueueModel = new ModelSchema<any>({
   name: MUTATION_QUEUE,
   type: "object",
@@ -34,8 +47,7 @@ export const mutationQueueModel = new ModelSchema<any>({
   properties: {
     id: {
       type: "string",
-      primary: true,
-      index: true
+      primary: true
     },
     queue: {
       type: "array"
