@@ -50,8 +50,10 @@ const AddTask = () => {
 
 ## useQuery
 
-You can query using this hook, with or without filters. When no filter is supplied
+You can query using this hook, with or without filters or id. When no filter or id is supplied
 all the data is returned.
+
+Query using a filter;
 
 ```javascript
 import { useQuery } from "offix-datastore";
@@ -70,6 +72,13 @@ const Tasks = () => {
 }
 ```
 
+Query by id;
+
+```javascript
+const documentId = "";
+const { isLoading, error, data: tasks } = useQuery(TaskModel, documentId);
+```
+
 You can also subscribe to more changes using the `subscribeToMore` function
 
 ```javascript
@@ -85,7 +94,8 @@ useEffect(() => {
 
 ## useLazyQuery
 
-This hook provides a lazy `query` function.
+This hook provides a lazy `query` function. The `query` function accepts
+a filter, an id or nothing in which case all documents are returned. 
 
 ```javascript
 import { useLazyQuery } from "offix-datastore";
