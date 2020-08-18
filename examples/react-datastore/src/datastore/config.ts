@@ -9,7 +9,7 @@ export const datastore = new DataStore({
       url: "http://localhost:5400/graphql",
       wsUrl: "ws://localhost:5400/graphql",
     },
-    delta: { enabled: true, pullInterval: 3000 },
+    delta: { enabled: true, pullInterval: 20000 },
     mutations: { enabled: true },
     liveupdates: { enabled: true }
   }
@@ -21,9 +21,9 @@ export const UserModel = datastore.setupModel<IUser>(schema.User);
 datastore.init();
 
 // After init we can execute operations frely using hooks in components and plain js.
-const user = { name: "User" + new Date().getTime() };
-UserModel.save(user).then(async (result) => {
-  result.name = "NewUser";
-  await UserModel.updateById(result);
-  await UserModel.removeById(result.id as string);
-}).catch(console.log)
+// const user = { name: "User" + new Date().getTime() };
+// UserModel.save(user).then(async (result) => {
+//   result.name = "NewUser";
+//   await UserModel.updateById(result);
+//   await UserModel.removeById(result.id as string);
+// }).catch(console.log)
