@@ -47,8 +47,6 @@ try to update the existing document if it exists, if it does not exist
 or no primary key was provided, DataStore saves the data as a new document.
 
 ```typescript
-import { TaskModel } from './datastoreConfig';
-
 TaskModel.saveOrUpdate({
     id: documentId
     title: "Offix Test"
@@ -61,7 +59,5 @@ TaskModel.saveOrUpdate({
 ## Deleting Data
 
 ```typescript
-import { TaskModel } from './datastoreConfig';
-
 await TaskModel.removeById(documentId);
 ```

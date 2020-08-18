@@ -15,7 +15,7 @@ The change events that can occur are;
 - `DELETE` data is removed from the Store. The event contains the removed data
 
 ```typescript
-import { TaskModel, CRUDEvents } from 'datastoreConfig';
+import { CRUDEvents } from 'offix-datastore';
 
 TaskModel.on(CRUDEvents.ADD, (event) => {
     console.dir(event); // { eventType, data }

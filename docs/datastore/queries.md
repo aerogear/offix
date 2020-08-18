@@ -16,8 +16,6 @@ Here we can fetch all documents for a Model or a selection
 of the documents using filters.
 
 ```typescript
-import { TaskModel } from './datastoreConfig';
-
 TaskModel.query().then((data) => {}) // Retrieves all tasks
 ```
 
