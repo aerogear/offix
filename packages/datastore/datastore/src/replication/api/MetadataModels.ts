@@ -13,8 +13,8 @@ export const MODEL_METADATA_KEY = "storeName";
 
 
 export interface QueryMetadata {
-  storeName: string
-  lastSync: string
+  storeName: string;
+  lastSync: string;
 }
 
 /**
