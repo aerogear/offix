@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useCallback, Dispatch } from "react";
 import { Model } from "../../Model";
-import { reducer, InitialState, ActionType, Action, ResultState } from "../ReducerUtils";
+import { reducer, InitialState, ActionType, Action } from "../ReducerUtils";
 import { CRUDEvents } from "../../storage";
 import { Filter } from "../../filters";
 

@@ -89,23 +89,6 @@ export class DeltaReplicator {
     }
   }
 
-  private async saveLastSync(lastSync: string) {
-    const storeName = metadataModel.getStoreName();
-    const schema = this.options.model.schema;
-    const idKey = metadataModel.getPrimaryKey()
-    const objectToSave = { [idKey]: this.options.model.getStoreName(), lastSync };
-    console.log(objectToSave);
-
-    return await this.options.storage.saveOrUpdate(storeName, idKey, objectToSave);
-  }
-
-  private async loadLastSync(storage: LocalStorage = this.options.storage) {
-    const storeName = metadataModel.getStoreName();
-    const schema = this.options.model.schema;
-    let item: QueryMetadata = await storage.queryById(storeName, metadataModel.getPrimaryKey(), schema.getStoreName());
-    return item?.lastSync;
-  }
-
   public async perform() {
     // Check if perform loc is turned
     if (!this.performLock) {
@@ -116,7 +99,7 @@ export class DeltaReplicator {
         if (!lastSync) {
           lastSync = "0";
         }
-        const filter = Object.assign({}, this.filter, { lastSync })
+        const filter = Object.assign({}, this.filter, { lastSync });
         const result = await this.options.client.query(this.options.query, filter).toPromise();
         await this.processResult(result);
       } catch (error) {
@@ -138,14 +121,14 @@ export class DeltaReplicator {
     const model = this.options.model;
     if (result.data) {
       logger("Delta retrieved from server");
-      const firstOperationName = Object.keys(result.data)[0]
+      const firstOperationName = Object.keys(result.data)[0];
       if (!firstOperationName) {
         logger("Delta returned result key");
         return;
       }
-      const deltaResult = result.data[firstOperationName]
+      const deltaResult = result.data[firstOperationName];
       // TODO
-      this.saveLastSync(deltaResult.lastSync)
+      this.saveLastSync(deltaResult.lastSync);
       const db = await this.options.storage.createTransaction();
       try {
         for (const item of deltaResult.items) {
@@ -169,5 +152,19 @@ export class DeltaReplicator {
 
       db.commit();
     }
+  }
+
+  private async saveLastSync(lastSync: string) {
+    const storeName = metadataModel.getStoreName();
+    const idKey = metadataModel.getPrimaryKey();
+    const objectToSave = { [idKey]: this.options.model.getStoreName(), lastSync };
+    return await this.options.storage.saveOrUpdate(storeName, idKey, objectToSave);
+  }
+
+  private async loadLastSync(storage: LocalStorage = this.options.storage) {
+    const storeName = metadataModel.getStoreName();
+    const schema = this.options.model.schema;
+    const item: QueryMetadata = await storage.queryById(storeName, metadataModel.getPrimaryKey(), schema.getStoreName());
+    return item?.lastSync;
   }
 }

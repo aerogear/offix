@@ -20,7 +20,7 @@ export interface FieldOptions {
   format?: {};
 }
 
-const CLIENT_ID_PREFIX = "storeclient."
+const CLIENT_ID_PREFIX = "storeclient.";
 
 /**
  * Defines the properties expected in the Fields object for a model
