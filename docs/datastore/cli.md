@@ -4,7 +4,7 @@ title: Datastore CLI
 sidebar_label: Datastore CLI
 ---
 
-We provide a graphback plugin to generate required config for datastore.
+We provide a graphback plugin to generate required config for the DataStore.
 
 ## What is Graphback
 
@@ -19,7 +19,7 @@ Read about graphback-cli [here](https://graphback.dev/docs/cli/graphback-cli).
 ## Using the CLI tool
 
 The plugin generates a `schema.json` for models annotated with `@datasync-client` in your graphql schema.
-Also, a `config.ts` file that instantiates all the models with default settings is generated.
+It also generates a `config.ts` file that instantiates all the models with default settings is generated.
 You can import models from `config.ts` and start coding!
 
 ### Installing the plugin
