@@ -4,7 +4,7 @@ title: Queries
 sidebar_label: Queries
 ---
 
-DataStore Models provides two functions for executing queries.
+The DataStore Models provides two functions for executing queries.
 
 - [query()](#query)
   - [Operators](#operators)
@@ -27,65 +27,35 @@ We filter using expressions and operators.
 
 All supported operators:
 
-- 'ne' - Is value not equal to input
-- 'eq' - Is value equal to input
-- 'le' - Is value less than or equal to input
-- 'lt' - Is value strictly less than input
-- 'ge' - Is value greater than or equal to input
-- 'gt' - Is value strictly greater than input
-- 'in' - Does input array or string contain value
-- 'contains' - Is the input contained in value
-- 'startsWith' - Does value start with input
-- 'endsWith' - Does value end with input
+| Operator   | Value                                    |
+| ---------- |----------------------------------------- |
+| ne         | Input not equal to value                 |
+| eq         | Input equal to value                     |
+| le         | Input less than or equal to value        |
+| lt         | Input less than (strict) value           |
+| ge         | Input greater than or equal to value     |
+| gt         | Input greater than (strict) value        |
+| in         | Input array or string contained in value |
+| contains   | Value starts with input                  |
+| startsWith | Value starts with input                  |
+| endsWith   | Value ends with input                    |
 
+### Operator support:
 
-Mathematical operators supported:
+| Operator   | Mathematical             | String             | Date                     | Array                    | Boolean                  |
+| ---------- | :----------:             | :----------------: | :----------------------: | :----------------------: | :----------------------: |
+| ne         | :heavy_check_mark:       | :heavy_check_mark: | :heavy_check_mark:       | :heavy_check_mark:       | :heavy_check_mark:       |
+| eq         | :heavy_check_mark:       | :heavy_check_mark: | :heavy_check_mark:       | :heavy_check_mark:       | :heavy_check_mark:       |
+| le         | :heavy_check_mark:       | :heavy_check_mark: | :heavy_check_mark:       | :heavy_multiplication_x: | :heavy_multiplication_x: |
+| lt         | :heavy_check_mark:       | :heavy_check_mark: | :heavy_check_mark:       | :heavy_multiplication_x: | :heavy_multiplication_x: |
+| ge         | :heavy_check_mark:       | :heavy_check_mark: | :heavy_check_mark:       | :heavy_multiplication_x: | :heavy_multiplication_x: |
+| gt         | :heavy_check_mark:       | :heavy_check_mark: | :heavy_check_mark:       | :heavy_multiplication_x: | :heavy_multiplication_x: |
+| in         | :heavy_check_mark:       | :heavy_check_mark: | :heavy_check_mark:       | :heavy_check_mark:       | :heavy_check_mark:       |
+| contains   | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_check_mark:       | :heavy_multiplication_x: |
+| startsWith | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_check_mark:       | :heavy_multiplication_x: |
+| endsWith   | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_check_mark:       | :heavy_multiplication_x: |
 
-- 'ne'
-- 'eq'
-- 'le'
-- 'lt'
-- 'ge'
-- 'gt'
-- 'in'
-
-String Operators supported:
-
-- 'ne'
-- 'eq'
-- 'le'
-- 'lt'
-- 'ge'
-- 'gt'
-- 'in'
-- 'contains'
-- 'startsWith'
-- 'endsWith'
-
-Date Operators supported:
-
-- 'ne'
-- 'eq'
-- 'le'
-- 'lt'
-- 'ge'
-- 'gt'
-- 'in'
-
-Array Operators:
-
-- 'ne'
-- 'eq'
-- 'in'
-- 'contains'
-
-Boolean Operators: 
-
-- 'ne'
-- 'eq'
-- 'in'
-
-Examples:
+### Examples:
 
 ```typescript
 TaskModel.query({ title: "test" }); // Fetch all tasks where title = 'test' 
