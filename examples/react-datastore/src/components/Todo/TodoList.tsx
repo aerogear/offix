@@ -15,7 +15,7 @@ export const TodoList = ({ todos }: TodoListProps) => {
     <>
       {
         todos && todos.map((todo) => (
-          <Card key={todo.id} style={{ margin: ' 0.5em 0' }}>
+          <Card key={todo._id} style={{ margin: ' 0.5em 0' }}>
             <Todo
               todo={todo}
             />

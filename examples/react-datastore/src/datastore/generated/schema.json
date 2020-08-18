@@ -3,11 +3,10 @@
     "name": "Todo",
     "version": 1,
     "type": "object",
-    "primaryKey": "id",
     "properties": {
-      "id": {
+      "_id": {
         "type": "string",
-        "key": "id",
+        "key": "_id",
         "isRequired": true,
         "primary": true
       },
@@ -29,17 +28,16 @@
     "name": "User",
     "version": 1,
     "type": "object",
-    "primaryKey": "id",
     "properties": {
-      "id": {
+      "_id": {
         "type": "string",
-        "key": "id",
+        "key": "_id",
         "isRequired": true,
         "primary": true
       },
       "name": {
         "type": "string",
-        "key": "title"
+        "key": "name"
       }
     }
   }
