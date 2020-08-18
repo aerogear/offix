@@ -12,7 +12,7 @@ This section contains multiple tips and tricks for working with Offix.
 
 ## Implementing Custom Network Status checks
 
-To use your own custom network checks, implement the [NetworkStatus](NetworkStatus.ts)
+To use your own custom network checks, implement the [NetworkStatus](https://github.com/aerogear/offix/blob/master/packages/offix/offline/src/network/NetworkStatus.ts)
  interface which provides two functions;
 
 ```javascript
