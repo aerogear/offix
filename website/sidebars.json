@@ -1,32 +1,86 @@
 {
   "docs": {
-    "Getting Started": [
-      "getting-started",
-      "client-configuration"
+    "Offix": [
+      {
+        "type": "category",
+        "label": "Getting Started",
+        "items": ["offix/getting-started", "offix/client-configuration"]
+      },
+      {
+        "type": "category",
+        "label": "Offix Client",
+        "items": [
+          "offix/offline-client",
+          "offix/offix-cache",
+          "offix/conflict-client",
+          "offix/conflict-server"
+        ]
+      },
+      {
+        "type": "category",
+        "label": "Platforms",
+        "items": [
+          "offix/react",
+          "offix/react-native",
+          "offix/angular",
+          "offix/ionic"
+        ]
+      },
+      {
+        "type": "category",
+        "label": "Advanced topics",
+        "items": ["offix/cookbooks", "offix/offix-scheduler-introduction"]
+      },
+      {
+        "type": "category",
+        "label": "Releases",
+        "items": ["offix/release-notes"]
+      }
     ],
-    "Offix Client": [
-      "offline-client",
-      "offix-cache",
-      "conflict-client",
-      "conflict-server"
-    ],
-    "Offix DataStore": [
-      "datastore-getting-started",
-      "datastore-manipulating-data",
-      "datastore-observing-changes"
-    ],
-    "Platforms": [
-      "react",
-      "react-native",
-      "angular",
-      "ionic"
-    ],
-    "Advanced topics": [
-      "cookbooks",
-      "offix-scheduler-introduction"
-    ],
-    "Releases": [
-      "release-notes"
+    "Datastore": [
+      {
+        "type": "category",
+        "label": "Introduction",
+        "items": [
+          "datastore/introduction",
+          "datastore/getting-started",
+          "datastore/concepts"
+        ]
+      },
+      {
+        "type": "category",
+        "label": "Local Operations",
+        "items": [
+          "datastore/queries",
+          "datastore/edits",
+          "datastore/subscriptions"
+        ]
+      },
+      {
+        "type": "category",
+        "label": "Replication",
+        "items": []
+      },
+      {
+        "type": "category",
+        "label": "Platforms",
+        "items": ["datastore/react"]
+      },
+      {
+        "type": "category",
+        "label": "Server",
+        "items": []
+      },
+      {
+        "type": "category",
+        "label": "CLI",
+        "items": ["datastore/cli"]
+      },
+      {
+        "type": "category",
+        "label": "Advanced Concepts",
+        "items": []
+      }
     ]
   }
 }

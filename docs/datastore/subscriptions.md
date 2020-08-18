@@ -1,7 +1,7 @@
 ---
-id: datastore-observing-changes
-title: Observing Changes
-sidebar_label: Observing Changes
+id: subscriptions
+title: Subscribing to Changes
+sidebar_label: Subscriptions
 ---
 
 ## Change Events
@@ -15,9 +15,9 @@ The change events that can occur are;
 - `DELETE` data is removed from the Store. The event contains the removed data
 
 ```typescript
-import { TaskModel, CRUDEvents } from 'datastoreConfig';
+import { CRUDEvents } from 'offix-datastore';
 
 TaskModel.on(CRUDEvents.ADD, (event) => {
-    console.log(event); // { eventType, data }
+    console.dir(event); // { eventType, data }
 });
 ```

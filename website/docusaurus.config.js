@@ -10,7 +10,9 @@ module.exports = {
   organizationName: 'aerogear', // Usually your GitHub org/user name.
   projectName: 'offix', // Usually your repo name.
   themeConfig: {
-    disableDarkMode: true,
+    colorMode: {
+      disableSwitch: true
+    },
     prism: {
       theme: require('prism-react-renderer/themes/github'),
       defaultLanguage: 'javascript',
@@ -21,7 +23,7 @@ module.exports = {
         alt: 'Offix Logo',
         src: 'img/offix-logo.png',
       },
-      links: [
+      items: [
         {
           to: 'docs/gettingstarted',
           activeBasePath: 'docs',
@@ -38,7 +40,7 @@ module.exports = {
             })),
             {
               label: 'Master/Unreleased',
-              to: 'docs/next/getting-started',
+              to: 'docs/next/offix/getting-started',
             },
           ],
         },
