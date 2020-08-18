@@ -111,11 +111,10 @@ that you can use to subscribe to changes for that query.
 ## useUpdate
 
 The `useUpdate` works just like the `useSave` hook.
-The only difference is that you can also pass an update filter to the update function.
+The only difference is that the input to the `update` function must have its primary key defined.
 
 ```javascript
 import { useUpdate } from "offix-datastore";
-
 
 const EditTask = ({ task }) => {
     const [taskDetails, setTaskDetails] = useState(task);
@@ -123,7 +122,7 @@ const EditTask = ({ task }) => {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        const result = await update(taskDetails, { id: task.id });
+        const result = await update(taskDetails);
         setTaskDetails(result);
     }
 
@@ -142,6 +141,17 @@ const EditTask = ({ task }) => {
             <button type="submit">Submit</button>
         </form>
     )
+}
+```
+
+The `update` function accepts an optional `upsert` parameter(which is `false` by default) that can be used to
+perform a `saveOrUpdate` operation instead of an `update` operation.
+
+```Javascript
+async function handleSubmit(e) {
+    e.preventDefault();
+    const result = await update(taskDetails, true);
+    setTaskDetails(result);
 }
 ```
 
