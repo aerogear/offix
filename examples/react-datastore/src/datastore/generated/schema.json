@@ -9,7 +9,6 @@
         "type": "string",
         "key": "id",
         "isRequired": true,
-        "index": true,
         "primary": true
       },
       "title": {
@@ -23,6 +22,24 @@
       "completed": {
         "type": "boolean",
         "key": "completed"
+      }
+    }
+  },
+  "User": {
+    "name": "User",
+    "version": 1,
+    "type": "object",
+    "primaryKey": "id",
+    "properties": {
+      "id": {
+        "type": "string",
+        "key": "id",
+        "isRequired": true,
+        "primary": true
+      },
+      "name": {
+        "type": "string",
+        "key": "title"
       }
     }
   }

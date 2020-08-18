@@ -1,6 +1,6 @@
 import { Filter, useQuery, useSave, useUpdate, useRemove } from 'offix-datastore';
-import { TodoModel } from '../datasync/config';
-import { ITodo } from '../types';
+import { TodoModel } from '../config';
+import { ITodo } from './types';
 
 export const useFindTodos = (filter?: Filter<ITodo>) => useQuery(TodoModel, filter);
 

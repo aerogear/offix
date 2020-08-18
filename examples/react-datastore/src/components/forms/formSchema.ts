@@ -1,10 +1,10 @@
 import { GraphQLBridge } from 'uniforms-bridge-graphql';
 import { buildASTSchema } from 'graphql';
 import { loader } from 'graphql.macro';
-import { ITodo } from '../types';
+import { ITodo } from '../../datastore/generated/types';
 
 // import the grapqhl model
-const model = loader('../model/runtime.graphql');
+const model = loader('../../model/runtime.graphql');
 
 const validator = (model: ITodo) => {
   const details = [];

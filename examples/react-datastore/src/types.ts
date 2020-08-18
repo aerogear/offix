@@ -1,13 +1,4 @@
-export interface ITodo {
-  id?: string,
-  title: string,
-  description: string,
-  completed?: boolean,
-};
-
-export interface ITodoModel extends ITodo {
-  id: string
-};
+import { ITodo } from "./datastore/generated/types";
 
 export type TodoProps = {
   todo: ITodo,

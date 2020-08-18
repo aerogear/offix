@@ -7,9 +7,10 @@ import {
   SubmitField
 } from 'uniforms-antd';
 
-import { AddTodoProps, ITodo } from '../../types';
-import { schema } from '../../config/formSchema';
-import { useAddTodo } from '../../helpers/hooks';
+import { AddTodoProps } from '../../types';
+import { schema } from './formSchema';
+import { useAddTodo } from '../../datastore/generated/hooks';
+import { ITodo } from '../../datastore/generated/types';
 
 export const AddTodo = ({ cancel }: AddTodoProps) => {
 
