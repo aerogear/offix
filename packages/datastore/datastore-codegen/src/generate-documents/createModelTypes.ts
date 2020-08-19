@@ -1,6 +1,6 @@
 import { ModelDefinition } from "@graphback/core";
-import { GraphQLOutputType, isNonNullType, getNullableType, isCompositeType } from "graphql";
-import { convertToTsType } from "./utils";
+import { GraphQLOutputType, isNonNullType, getNullableType } from "graphql";
+import { convertToTsType } from "../utils";
 
 const isPrimaryKey = (fieldName: string, type: GraphQLOutputType) => {
     if (isNonNullType(type)) {

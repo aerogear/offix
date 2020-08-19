@@ -1,10 +1,9 @@
 import { GraphbackPlugin, GraphbackCoreMetadata } from "@graphback/core";
 import { writeFileSync } from "fs";
 import { IOffixDataSyncPluginConfig } from "./OffixDataSyncConfig";
-import { createJsonSchema } from "./json_schema";
+import { createJsonSchema, createModelType } from "./generate-documents";
 import { isDataSyncClientModel, makeDirIfNotExists } from "./utils";
 import { validateOffixDataSyncPluginConfig } from "./OffixDataSyncPluginValidator";
-import { createModelType } from "./generateTypes";
 
 export const OFFIX_DATASYNC_PLUGIN_NAME = "OffixDataSyncPlugin";
 
