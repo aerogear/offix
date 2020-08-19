@@ -11,8 +11,7 @@ export const OFFIX_DATASYNC_PLUGIN_NAME = "OffixDataSyncPlugin";
 /**
  * This a graphback plugin which generates:
  * - model json schema
- * - model typings (comming soon)
- * - datasync config file
+ * - model typings
  * which are required by the offix-datasync for
  * every model annotated with @datasync-client in schema.
  */

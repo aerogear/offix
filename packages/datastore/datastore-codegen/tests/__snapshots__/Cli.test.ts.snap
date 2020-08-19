@@ -9,7 +9,7 @@ exports[`generate 1`] = `
 }
 
 export type NoteCreate = Omit<Note, \\"id\\">;
-export type NoteChange = Pick<Note, \\"id\\"> && Partial<NoteCreate>;
+export type NoteChange =  Pick<Note, \\"id\\"> && Partial<NoteCreate>;
 
 export interface Comment {
     id: string;
@@ -19,7 +19,7 @@ export interface Comment {
 }
 
 export type CommentCreate = Omit<Comment, \\"id\\">;
-export type CommentChange = Pick<Comment, \\"id\\"> && Partial<CommentCreate>;
+export type CommentChange =  Pick<Comment, \\"id\\"> && Partial<CommentCreate>;
 "
 `;
 
