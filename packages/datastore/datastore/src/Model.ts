@@ -169,7 +169,7 @@ export class Model<T = unknown> {
    */
   public async updateById(input: Partial<T>) {
     const primaryKey = this.schema.getPrimaryKey();
-    invariant((input as any)[primaryKey], "Missing primary key for update")
+    invariant((input as any)[primaryKey], "Missing primary key for update");
 
     const db = await this.storage.createTransaction();
     try {
@@ -221,7 +221,7 @@ export class Model<T = unknown> {
    */
   public async removeById(input: any) {
     const primaryKey = this.schema.getPrimaryKey();
-    invariant((input as any)[primaryKey], "Missing primary key for delete")
+    invariant((input as any)[primaryKey], "Missing primary key for delete");
 
     const db = await this.storage.createTransaction();
     try {
@@ -272,7 +272,7 @@ export class Model<T = unknown> {
     if (!input[primaryKey]) {
       input[primaryKey] = CLIENT_ID_PREFIX + uuidv4();
     }
-    return input
+    return input;
   }
 }
 
