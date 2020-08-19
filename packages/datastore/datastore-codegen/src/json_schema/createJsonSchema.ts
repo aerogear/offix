@@ -18,7 +18,7 @@ const getFieldParameters = (fieldName: string, type: GraphQLOutputType): any => 
         type = getNullableType(type);
         options.isRequired = true;
     }
-    if (type.toString() === "ID" || fieldName === "id" || fieldName === "_id") {
+    if (type.toString() === "ID") {
         options.index = true;
         options.primary = true;
     }
