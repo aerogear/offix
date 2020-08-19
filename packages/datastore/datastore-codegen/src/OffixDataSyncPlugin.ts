@@ -4,6 +4,7 @@ import { IOffixDataSyncPluginConfig } from "./OffixDataSyncConfig";
 import { createJsonSchema } from "./json_schema";
 import { isDataSyncClientModel, makeDirIfNotExists } from "./utils";
 import { validateOffixDataSyncPluginConfig } from "./OffixDataSyncPluginValidator";
+import { createModelType } from "./generateTypes";
 
 export const OFFIX_DATASYNC_PLUGIN_NAME = "OffixDataSyncPlugin";
 
@@ -27,13 +28,12 @@ export class OffixDataSyncPlugin extends GraphbackPlugin {
     public createResources(metadata: GraphbackCoreMetadata): void {
         const { modelOutputDir } = this.pluginConfig;
         const documents = this.getDocuments(metadata);
-        const dataSyncConfig = this.getDataSyncConfig(metadata);
 
         makeDirIfNotExists(modelOutputDir);
         makeDirIfNotExists(`${modelOutputDir}/schema`);
         writeFileSync(`${modelOutputDir}/schema/schema.json`, JSON.stringify(documents.json, null, 2));
         writeFileSync(`${modelOutputDir}/schema/index.ts`, documents.schemaExport);
-        writeFileSync(`${modelOutputDir}/config.ts`, dataSyncConfig);
+        writeFileSync(`${modelOutputDir}/types.ts`, documents.types);
     }
 
     public getDocuments(metadata: GraphbackCoreMetadata) {
@@ -57,40 +57,13 @@ type Schema<T = any> = {
 export const schema = jsonSchema as Schema;
 `;
 
-        // TODO generate types
+        const modelTypes = models.map(model => createModelType(model)).join("\n");
 
         return {
             json: jsonSchema,
+            types: modelTypes,
             schemaExport
         };
-    }
-
-    public getDataSyncConfig(metadata: GraphbackCoreMetadata) {
-        const modelInitLines: string[] = [];
-
-        metadata.getModelDefinitions()
-            .filter(model => isDataSyncClientModel(model))
-            .forEach((model) => {
-                const name = model.graphqlType.name;
-                modelInitLines.push(`export const ${name}Model = datastore.setupModel(schema.${name});`);
-            });
-
-        const configCode = `import { DataStore } from 'offix-datastore';
-import { schema } from './schema';
-
-export const datastore = new DataStore({
-    dbName: "offix-datasync",
-    clientConfig: {
-      url: "http://localhost:4000/graphql",
-      wsUrl: "ws://localhost:4000/graphql",
-    }
-});
-
-${modelInitLines.join("\n")}
-
-datastore.init();
-`;
-        return configCode;
     }
 
     public getPluginName(): string {
