@@ -14,11 +14,13 @@ export interface GenetratedModelSchema {
 }
 
 export interface ModelSchemaProperties extends JSONSchema7 {
-  /** Index field, whether or not the
+  /**
+   * Index field, whether or not the
    * field should be indexed
    */
   index?: boolean;
-  /** Primary key field flag if the field is
+  /**
+   * Primary key field flag if the field is
    * the primary key
    */
   primary?: boolean;
@@ -26,8 +28,8 @@ export interface ModelSchemaProperties extends JSONSchema7 {
    * Default value for the field
    */
   default?: any;
-  /** Flag for if the field should be encrypted
-   * i.e. password field
+  /**
+   * Flag for if the field should be encrypted
    */
   encrypted?: boolean;
   /**
@@ -41,7 +43,8 @@ export declare class ModelJsonSchema<T> {
    * Model name
    */
   name: string;
-  /** Namespace for the field in storage
+  /**
+   * Namespace for the field in storage
    * default is `user_<Model name>`
    */
   namespace?: string;
@@ -101,14 +104,6 @@ export class ModelSchema<T = any>{
     this.primaryKey = extractPrimary(this.fields, schema.primaryKey);
     this.indexes = extractIndexes(this.fields, schema.indexes);
     this.encrypted = extractEncryptedFields(this.fields, schema.encrypted);
-  }
-
-  /**
-   * Method to fill the object with default values
-   *
-   */
-  public fill(): void {
-    throw new Error("Method not yet implemented");
   }
 
   /**
