@@ -1,0 +1,101 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`generate 1`] = `
+"export interface Note {
+    id: string;
+    title: string;
+    description: string;
+    comments: string[]
+}
+
+export type NoteCreate = Omit<Note, \\"id\\">;
+export type NoteChange = Pick<Note, \\"id\\"> && Partial<NoteCreate>;
+
+export interface Comment {
+    id: string;
+    title: string;
+    description: string;
+    noteComment: string
+}
+
+export type CommentCreate = Omit<Comment, \\"id\\">;
+export type CommentChange = Pick<Comment, \\"id\\"> && Partial<CommentCreate>;
+"
+`;
+
+exports[`generate 2`] = `
+"{
+  \\"Note\\": {
+    \\"name\\": \\"Note\\",
+    \\"version\\": 1,
+    \\"type\\": \\"object\\",
+    \\"primaryKey\\": \\"id\\",
+    \\"properties\\": {
+      \\"id\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"id\\",
+        \\"isRequired\\": true,
+        \\"index\\": true,
+        \\"primary\\": true
+      },
+      \\"title\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"title\\",
+        \\"isRequired\\": true
+      },
+      \\"description\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"description\\",
+        \\"isRequired\\": true
+      },
+      \\"comments\\": {
+        \\"type\\": \\"string[]\\",
+        \\"key\\": \\"comments\\",
+        \\"isRequired\\": true
+      }
+    }
+  },
+  \\"Comment\\": {
+    \\"name\\": \\"Comment\\",
+    \\"version\\": 1,
+    \\"type\\": \\"object\\",
+    \\"primaryKey\\": \\"id\\",
+    \\"properties\\": {
+      \\"id\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"id\\",
+        \\"isRequired\\": true,
+        \\"index\\": true,
+        \\"primary\\": true
+      },
+      \\"title\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"title\\",
+        \\"isRequired\\": true
+      },
+      \\"description\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"description\\",
+        \\"isRequired\\": true
+      },
+      \\"noteComment\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"noteComment\\",
+        \\"isRequired\\": true
+      }
+    }
+  }
+}"
+`;
+
+exports[`generate 3`] = `
+"import { ModelJsonSchema } from \\"offix-datastore\\";
+import jsonSchema from \\"./schema.json\\";
+
+type Schema<T = any> = {
+    [P in keyof T]: ModelJsonSchema<any>
+};
+
+export const schema = jsonSchema as Schema;
+"
+`;

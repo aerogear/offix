@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "jest",
+    "test": "yarn build&&jest",
     "lint-fix": "eslint \"./src/*\" --fix"
   },
   "license": "MIT",
