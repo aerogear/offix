@@ -119,5 +119,5 @@ export interface StorageAdapter {
    *
    * @param storeName
    */
-  deleteStore(storeName: string): Promise<void>
+  deleteStore(storeName: string): Promise<void>;
 }

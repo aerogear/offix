@@ -1,6 +1,5 @@
 import invariant from "tiny-invariant";
 import { JSONSchema7 } from "json-schema";
-import { Filter } from "./filters";
 
 /**
  * Defines the properties expected in the Fields object for a model
