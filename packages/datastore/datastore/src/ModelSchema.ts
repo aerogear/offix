@@ -84,15 +84,6 @@ export class ModelSchema<T = any>{
     return this.primaryKey;
   }
 
-  public getPrimaryKeyFilter(data: any): Filter {
-    if (data[this.primaryKey]) {
-      return { [this.primaryKey]: data[this.primaryKey] };
-    } else {
-      throw new Error("Primary key not included in data");
-    }
-
-  }
-
   public getFields(): Fields<T> {
     return this.fields;
   }

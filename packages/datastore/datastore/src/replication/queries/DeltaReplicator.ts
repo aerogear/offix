@@ -132,15 +132,15 @@ export class DeltaReplicator {
       const db = await this.options.storage.createTransaction();
       try {
         for (const item of deltaResult.items) {
-          const filter = model.schema.getPrimaryKeyFilter(item);
+          const idField = model.schema.getPrimaryKey();
           if (item._deleted) {
-            await db.remove(model.getStoreName(), filter);
+            logger("Delta deleting item");
+            await db.removeById(model.getStoreName(), idField, item);
           } else {
-            // TODO we need saveOrUpdate method
-            const results = await db.update(model.getStoreName(), filter);
+            logger("Delta updating item");
+            const results = await db.saveOrUpdate(model.getStoreName(), idField, item);
             if (results.length === 0) {
-              // no update was made, save the data instead
-              await db.save(model.getStoreName(), filter);
+              logger("Failed to update items in database");
               return;
             }
           }
