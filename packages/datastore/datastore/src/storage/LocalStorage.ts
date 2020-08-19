@@ -69,8 +69,8 @@ export class LocalStorage {
     return this.adapter.saveOrUpdate(storeName, idField, input);
   }
 
-  public async remove(storeName: string, filter?: Filter): Promise<any | any[]> {
-    const result = await this.adapter.remove(storeName, filter);
+  public async remove(storeName: string, idField: string, filter?: Filter): Promise<any | any[]> {
+    const result = await this.adapter.remove(storeName, idField, filter);
     return result;
   }
 
@@ -78,27 +78,8 @@ export class LocalStorage {
     return this.adapter.removeById(storeName, idField, input);
   }
 
-  /**
-   * Write metadata store.
-   * This particular store is not going to notify model listeners
-   * and can only exist as full write.
-   * @param storeName
-   * @param input
-   */
-  public async writeMetadata(storeName: string, input: any): Promise<any> {
-    const result = await this.adapter.save(storeName, input);
-
-    return result;
-  }
-
-  /**
-   * Read metadata store.
-   * This particular store is not going to notify model listeners
-   * and can only exist as full write.
-   * @param storeName
-   */
-  public async readMetadata(storeName: any): Promise<any> {
-    return this.adapter.query(storeName);
+  public deleteStore(storeName: string) {
+    return this.adapter.deleteStore(storeName);
   }
 
   /**

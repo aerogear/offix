@@ -7,6 +7,7 @@ import { Filter } from "../../filters";
  * It defines an interface that a device specific implementation must support.
 */
 export interface StorageAdapter {
+
   /**
    * Creates an instance of the StorageAdapter in transaction mode
    */
@@ -103,7 +104,7 @@ export interface StorageAdapter {
    * @param filter
    * @returns A Promise of the deleted data
    */
-  remove(storeName: string, filter?: Filter): Promise<any[]>;
+  remove(storeName: string, idField: string, filter?: Filter): Promise<any[]>;
 
   /**
    * Delete document with primary key matching @param id
@@ -112,4 +113,11 @@ export interface StorageAdapter {
    * @param id
    */
   removeById(storeName: string, idField: string, input: any): Promise<any>;
+
+  /**
+   * Delete all data in the store
+   *
+   * @param storeName
+   */
+  deleteStore(storeName: string): Promise<void>
 }

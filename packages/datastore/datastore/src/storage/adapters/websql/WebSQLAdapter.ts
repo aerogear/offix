@@ -93,9 +93,15 @@ export class WebSQLAdapter implements StorageAdapter {
     return this.transaction(query, [...vals]);
   }
 
-  public async remove(storeName: string, filter?: Filter): Promise<any> {
+  public async remove(storeName: string, idField: string, filter?: Filter): Promise<any> {
     const condition = filterToSQL(filter);
     const query = `DELETE FROM ${storeName} ${condition}`;
+    // @ts-ignore
+    return this.transaction(query, []);
+  }
+
+  public async deleteStore(storeName: string): Promise<any> {
+    const query = `DELETE FROM ${storeName}`;
     // @ts-ignore
     return this.transaction(query, []);
   }
