@@ -7,6 +7,9 @@ import { ModelReplicationConfig } from "./replication/api/ReplicationConfig";
 import invariant from "tiny-invariant";
 import { ModelChangeReplication } from "./replication/mutations/MutationsQueue";
 import { v4 as uuidv4 } from "uuid";
+import { createLogger } from "./utils/logger";
+
+const logger = createLogger("model");
 
 /**
  * Options that describe model field
@@ -258,6 +261,58 @@ export class Model<T = unknown> {
       return true;
     });
   }
+
+  /**
+   * Process remote changes
+   *
+   * @param result result from delta
+   */
+  public async processRemoteChanges(deltaResult: any[]): Promise<void> {
+    if (!deltaResult || deltaResult.length === 0) {
+      logger("Delta processing: No changes");
+      return;
+    }
+
+    const db = await this.storage.createTransaction();
+    try {
+      const store = this.schema.getStoreName();
+      const primaryKey = this.schema.getPrimaryKey()
+      for (const item of deltaResult) {
+        let data;
+        let eventType;
+        if (item._deleted) {
+          logger("Delta processing: deleting item");
+          data = await await db.removeById(store, primaryKey, item);
+          eventType = CRUDEvents.DELETE;
+        } else {
+          const exist = await db.queryById(store, primaryKey, item[primaryKey]);
+          if (exist) {
+            logger("Delta processing: updating item");
+            eventType = CRUDEvents.UPDATE;
+            data = await db.updateById(this.schema.getStoreName(), primaryKey, item);
+          } else {
+            logger("Delta processing: adding item");
+            eventType = CRUDEvents.ADD;
+            data = await db.save(this.schema.getStoreName(), item);
+          }
+          if (!data) {
+            logger("Failed to update items in database");
+            return;
+          }
+        }
+        const event = {
+          eventType,
+          // TODO this should be non array
+          data: [data]
+        };
+        this.changeEventStream.publish(event);
+      }
+    } catch (error) {
+      db.rollback();
+    }
+    db.commit();
+  }
+
 
   /**
    * Checks if model has client side id.
