@@ -95,7 +95,7 @@ export class Model<T = unknown> {
 
   public async save(input: Partial<T>): Promise<T> {
     const db = await this.storage.createTransaction();
-    this.setupPrimaryKeyIfNeeded(input);
+    input = this.addPrimaryKeyIfNeeded(input);
     try {
       const data = await db.save(this.schema.getStoreName(), input);
       await this.replication?.saveChangeForReplication(this, data, CRUDEvents.ADD, db);
@@ -120,7 +120,7 @@ export class Model<T = unknown> {
    */
   public async saveOrUpdate(input: Partial<T>): Promise<T> {
     const db = await this.storage.createTransaction();
-    this.setupPrimaryKeyIfNeeded(input);
+    input = this.addPrimaryKeyIfNeeded(input);
     try {
       const data = await db.saveOrUpdate(this.schema.getStoreName(), this.schema.getPrimaryKey(), input);
       await this.replication?.saveChangeForReplication(this, data, CRUDEvents.ADD, db);
@@ -168,6 +168,9 @@ export class Model<T = unknown> {
    * @param input
    */
   public async updateById(input: Partial<T>) {
+    const primaryKey = this.schema.getPrimaryKey();
+    invariant((input as any)[primaryKey], "Missing primary key for update")
+
     const db = await this.storage.createTransaction();
     try {
       const data = await db.updateById(this.schema.getStoreName(), this.schema.getPrimaryKey(), input);
@@ -217,6 +220,9 @@ export class Model<T = unknown> {
    * We need to pass entire object to ensure it's consistency (version)
    */
   public async removeById(input: any) {
+    const primaryKey = this.schema.getPrimaryKey();
+    invariant((input as any)[primaryKey], "Missing primary key for delete")
+
     const db = await this.storage.createTransaction();
     try {
       const data = await db.removeById(this.schema.getStoreName(), this.schema.getPrimaryKey(), input);
@@ -261,12 +267,12 @@ export class Model<T = unknown> {
     return this.schema.getPrimaryKey().startsWith(CLIENT_ID_PREFIX);
   }
 
-  private setupPrimaryKeyIfNeeded(input: any) {
+  private addPrimaryKeyIfNeeded(input: any) {
     const primaryKey = this.schema.getPrimaryKey();
-    if ((input[primaryKey]) === undefined) {
+    if (!input[primaryKey]) {
       input[primaryKey] = CLIENT_ID_PREFIX + uuidv4();
     }
+    return input
   }
-
 }
 

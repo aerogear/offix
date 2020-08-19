@@ -34,11 +34,11 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
 
   public createStores() {
     logger("Creating stores", this.dbName, this.schemaVersion);
-    const openreq = indexedDB.open(this.dbName, this.schemaVersion);
+    const openreq = window.indexedDB.open(this.dbName, this.schemaVersion);
     openreq.onerror = () => this.rejectIDB(openreq.error);
     openreq.onsuccess = () => {
       const db = openreq.result;
-      db.onversionchange = function() {
+      db.onversionchange = function () {
         // FIXME critical to handle version changes
         this.close();
       };
@@ -49,7 +49,7 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
       const db = openreq.result;
       const existingStoreNames = db.objectStoreNames;
 
-      db.onerror = (event) => {
+      db.onerror = (event: any) => {
         logger("error", event);
       };
 
@@ -138,7 +138,7 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     });
   }
 
-  public async queryById(storeName: string, id: string) {
+  public async queryById(storeName: string, idField: string, id: string) {
     const store = await this.getStore(storeName);
     return this.convertToPromise<any>(store.get(id));
   }
@@ -196,7 +196,7 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     return targets;
   }
 
-  public async removeById(storeName: string, id: string) {
+  public async removeById(storeName: string, idField: string, id: string) {
     const store = await this.getStore(storeName);
     const target = await this.convertToPromise(store.get(id));
     await this.convertToPromise(store.delete(id));

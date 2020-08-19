@@ -118,7 +118,7 @@ test("Update single entity in local store", async () => {
 test("Remove single entity from local store", async () => {
   const note = { title: "test", description: "description" };
   const savedNote = await NoteModel.save(note);
-  await NoteModel.removeById(savedNote.id);
+  await NoteModel.removeById(savedNote);
   const result = await NoteModel.queryById(savedNote.id);
   expect(result).toEqual(undefined);
 });
@@ -135,13 +135,13 @@ test("Observe local store events", async () => {
   const note = { title: "test", description: "description" };
   expect.assertions(3);
 
-  NoteModel.subscribe(CRUDEvents.ADD, (event) => {
+  NoteModel.subscribe((event) => {
     expect(event.eventType).toEqual(CRUDEvents.ADD);
     expect(event.data.title).toEqual(note.title);
-  });
-  NoteModel.subscribe(CRUDEvents.UPDATE, (event) => {
+  }, CRUDEvents.ADD);
+  NoteModel.subscribe((event) => {
     expect(event.eventType).toEqual(CRUDEvents.UPDATE);
-  });
+  }, CRUDEvents.UPDATE);
 
   await NoteModel.save(note);
   await NoteModel.update({ title: "changed" }, { title: "test" });

@@ -123,14 +123,14 @@ describe("Test SQL filters", () => {
           });
         storage.adapter.addStore(model);
         await adapter.createStores();
-        
+
         const storeName = model.getStoreName();
         const target = await storage.save(storeName, { comments: "test-1 test-2" });
         await storage.save(storeName, { comments: "test-3 test-4" });
         const result = await storage.query(storeName, { comments: { contains: "test-1" }});
 
         expect(result.length).toEqual(1);
-        expect(result[0].id).toEqual(target.id);
+        expect(result[0].comments).toEqual(target.comments);
     });
 
     test.skip("Test 'contains' check with strings", async () => {
@@ -151,13 +151,13 @@ describe("Test SQL filters", () => {
           });
         storage.adapter.addStore(model);
         await adapter.createStores();
-        
+
         const storeName = model.getStoreName();
         const target = await storage.save(storeName, { comments: ["test-1" , "test-2"] });
         await storage.save(storeName, { comments: ["test-3" , "test-4"] });
 
         const result = await storage.query(storeName, { comments: { contains: "test-1" }});
         expect(result.length).toEqual(1);
-        expect(result[0].id).toEqual(target.id);
+        expect(result[0].comments).toEqual(target.comments);
     });
 });
