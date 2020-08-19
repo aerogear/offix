@@ -195,10 +195,10 @@ export class Model<T = unknown> {
    */
   public async remove(filter: Filter<T>) {
     invariant(filter, "filter needs to be provided for deletion");
-
     const db = await this.storage.createTransaction();
     try {
-      const data = await db.remove(this.schema.getStoreName(), filter);
+      const primaryKey = this.schema.getPrimaryKey();
+      const data = await db.remove(this.schema.getStoreName(), primaryKey, filter);
       await this.replication?.saveChangeForReplication(this, data, CRUDEvents.DELETE, db);
       await db.commit();
       const event = {

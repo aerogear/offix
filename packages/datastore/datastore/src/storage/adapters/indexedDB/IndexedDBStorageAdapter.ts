@@ -10,7 +10,7 @@ const logger = createLogger("idb");
  * Web Storage Implementation for DataStore using IndexedDB
  */
 export class IndexedDBStorageAdapter implements StorageAdapter {
-  private indexedDB: Promise<IDBDatabase>;
+  public indexedDB: Promise<IDBDatabase>;
   private stores: ModelSchema[];
   private resolveIDB: any;
   private rejectIDB: any;
@@ -185,21 +185,26 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     return updateData;
   }
 
-  public async remove(storeName: string, filter?: Filter) {
+  public async remove(storeName: string, idField: string, filter?: Filter) {
     // TODO provide ability to delete from store by key (not fetching entire store which is innefficient)
     // detect if predicate is id or create separate method
     const targets = await this.query(storeName, filter);
     const store = await this.getStore(storeName);
     await Promise.all(
-      targets.map((t: any) => this.convertToPromise(store.delete(t.id)))
+      targets.map((t: any) => this.convertToPromise(store.delete(t[idField])))
     );
     return targets;
   }
 
-  public async removeById(storeName: string, idField: string, id: string) {
+  public async deleteStore(storeName: string): Promise<any> {
     const store = await this.getStore(storeName);
-    const target = await this.convertToPromise(store.get(id));
-    await this.convertToPromise(store.delete(id));
+    return this.convertToPromise(store.clear());
+  }
+
+  public async removeById(storeName: string, idField: string, input: any) {
+    const store = await this.getStore(storeName);
+    const target = await this.convertToPromise(store.get(input[idField]));
+    await this.convertToPromise(store.delete(input[idField]));
     return target;
   }
 
