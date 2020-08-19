@@ -43,8 +43,7 @@ export declare class ModelJsonSchema<T> {
    * Model name
    */
   name: string;
-  /**
-   * Namespace for the field in storage
+  /** Namespace for the field in storage
    * default is `user_<Model name>`
    */
   namespace?: string;
