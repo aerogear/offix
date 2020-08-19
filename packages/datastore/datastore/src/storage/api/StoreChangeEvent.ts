@@ -14,5 +14,6 @@ export interface StoreChangeEvent {
   /**
    * The data that was affected by the change
    */
+  // TODO this should be single object instead of array after we remove bulk updates.
   data: any;
 }

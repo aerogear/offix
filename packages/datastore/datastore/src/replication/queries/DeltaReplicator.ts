@@ -121,36 +121,16 @@ export class DeltaReplicator {
     const model = this.options.model;
     if (result.data) {
       logger("Delta retrieved from server");
-      const firstOperationName = Object.keys(result.data)[0];
-      if (!firstOperationName) {
-        logger("Delta returned result key");
+      const keys = Object.keys(result.data);
+      if (keys.length !== 1) {
+        logger(`Invalid GraphQL result. Please review your network requests: ${JSON.stringify(result.data)}`);
         return;
       }
+      const firstOperationName = keys[0];
       const deltaResult = result.data[firstOperationName];
-      // TODO
-      this.saveLastSync(deltaResult.lastSync);
-      const db = await this.options.storage.createTransaction();
-      try {
-        for (const item of deltaResult.items) {
-          const idField = model.schema.getPrimaryKey();
-          if (item._deleted) {
-            logger("Delta deleting item");
-            await db.removeById(model.getStoreName(), idField, item);
-          } else {
-            logger("Delta updating item");
-            const results = await db.saveOrUpdate(model.getStoreName(), idField, item);
-            if (results.length === 0) {
-              logger("Failed to update items in database");
-              return;
-            }
-          }
-        }
-      } catch (error) {
-        db.rollback();
-        throw error;
-      }
 
-      db.commit();
+      await model.processRemoteChanges(deltaResult.items);
+      await this.saveLastSync(deltaResult.lastSync);
     }
   }
 

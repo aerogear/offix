@@ -172,7 +172,6 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
       const mutation = this.getMutationDocument(item);
       try {
         const result = await this.options.client.mutation(mutation, { input: item.data }).toPromise();
-        logger(`Mutation result ${result}`);
         await this.resultProcessor(item, result);
         await this.dequeueRequest();
         logger("Mutation dequeued");
