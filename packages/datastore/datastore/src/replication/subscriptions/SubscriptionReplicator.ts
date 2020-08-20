@@ -6,7 +6,7 @@ import { Model } from "../../Model";
 import { NetworkIndicator } from "../../network/NetworkIndicator";
 import { ReplicatorSubscriptions } from "./ReplicatorSubscriptions";
 import { convertFilterToGQLFilter } from "../utils/convertFilterToGQLFilter";
-import { pipe, subscribe } from 'wonka';
+import { pipe, subscribe } from "wonka";
 import { DocumentNode } from "graphql";
 
 const logger = createLogger("replicator-subscriptions");
@@ -41,14 +41,14 @@ export class SubscriptionReplicator {
     logger("Attempting subscribing to the changes");
     this.options.networkIndicator.wsObservable?.subscribe(({ isConnected }) => {
       if (this.wsConnected === undefined) {
-        this.wsConnected = isConnected
+        this.wsConnected = isConnected;
       } else if (this.wsConnected === isConnected) {
         // No state change
         return;
       }
 
       if (isConnected) {
-        this.subscribeToChanges(this.options.queries.new, CRUDEvents.ADD)
+        this.subscribeToChanges(this.options.queries.new, CRUDEvents.ADD);
         this.subscribeToChanges(this.options.queries.updated, CRUDEvents.UPDATE);
         this.subscribeToChanges(this.options.queries.deleted, CRUDEvents.DELETE);
       }
@@ -61,7 +61,7 @@ export class SubscriptionReplicator {
       this.options.client.subscription(query, { filter: this.filter }),
       subscribe(async (result) => {
         if (result.error) {
-          logger(`Subscription callback failed: ${JSON.stringify(result.error)}`)
+          logger(`Subscription callback failed: ${JSON.stringify(result.error)}`);
           return;
         }
         if (result.data) {
