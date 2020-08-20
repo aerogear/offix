@@ -46,14 +46,10 @@ export class OffixDataSyncPlugin extends GraphbackPlugin {
         const modelTypes = models.map(model => createModelType(model)).join("\n");
 
         // TODO use actual model type instead of any for ModelJsonSchema
-        const exports = `import { ModelJsonSchema } from "offix-datastore";
+        const exports = `import { GeneratedModelSchema } from "offix-datastore";
 import jsonSchema from "./schema.json";
 
-type Schema<T = any> = {
-    [P in keyof T]: ModelJsonSchema<any>
-};
-
-export const schema = jsonSchema as Schema;
+export const schema = jsonSchema as GeneratedModelSchema;
 
 export * from "./types";
 `;
