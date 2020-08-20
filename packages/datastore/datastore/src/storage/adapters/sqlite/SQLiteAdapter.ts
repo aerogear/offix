@@ -1,4 +1,3 @@
-import invariant from "tiny-invariant";
 // @ts-ignore
 import SQLite from "react-native-sqlite-2";
 import { StorageAdapter } from "../../api/StorageAdapter";
