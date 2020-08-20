@@ -2,7 +2,7 @@ import { ModelDefinition } from "@graphback/core";
 import { GraphQLOutputType, isNonNullType, getNullableType } from "graphql";
 import { convertToTsType } from "../utils";
 
-const isPrimaryKey = (fieldName: string, type: GraphQLOutputType) => {
+const isPrimaryKey = (type: GraphQLOutputType) => {
     if (isNonNullType(type)) {
         type = getNullableType(type);
     }
@@ -14,8 +14,8 @@ const getPrimaryKey = (model: ModelDefinition) => {
     const fieldMap = model.graphqlType.getFields();
 
     return Object.keys(fieldMap)
-        .find((fieldName) => (isPrimaryKey(fieldName, fieldMap[fieldName].type)))
-}
+        .find((fieldName) => (isPrimaryKey(fieldMap[fieldName].type)));
+};
 
 const getField = (fieldName: string, type: GraphQLOutputType) => {
     if (isNonNullType(type)) {
