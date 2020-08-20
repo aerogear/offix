@@ -117,7 +117,9 @@ export class SQLiteAdapter implements StorageAdapter {
   }
 
   createTransaction(): Promise<StorageAdapter> {
-    throw new Error("Method not implemented.");
+    return new Promise((resolve) => {
+      resolve(this);
+    });
   }
   commit(): Promise<void> {
     throw new Error("Method not implemented.");
@@ -196,9 +198,7 @@ export class SQLiteAdapter implements StorageAdapter {
       };
       return `${name} ${type}`;
     }).join(",");
-    const st = `CREATE TABLE IF NOT EXISTS ${store.getStoreName()} (${query})`;
-    console.log(st);
-    return st;
+    return `CREATE TABLE IF NOT EXISTS ${store.getStoreName()} (${query})`;
   }
 
   private convertToPromise<T>(statement: string, args: any[]) {
