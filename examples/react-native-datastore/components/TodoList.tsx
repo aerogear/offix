@@ -18,8 +18,8 @@ export const TodoList = ({ todos }: { todos:  Array<ITodo> }) => {
       {
         // map through todos and render
         // each todo item
-        todos && todos.map((todo: any) => (
-          <View key={todo.id}>
+        todos && todos.map((todo: any, index) => (
+          <View key={index}>
             <Todo
               todo={todo}
               editTodo={() => console.log("edit")}

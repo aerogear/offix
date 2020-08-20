@@ -18,14 +18,14 @@ import {
   StatusBar,
   Button,
   Modal,
+  Alert,
 } from 'react-native';
-import { useFindTodos, useAddTodo } from './datastore/generated/hooks';
+import { useFindTodos } from './datastore/generated/hooks';
 
 // import { Colors} from 'react-native/Libraries/NewAppScreen';
 import { CRUDEvents } from 'offix-datastore';
 
 import { Loading, Error, TodoList, AddTodo, TodoModal } from './components';
-import { ToggleModal } from './components/ToggleModal';
 
 declare const global: {HermesInternal: null | {}};
 
@@ -50,12 +50,15 @@ const onTodoRemoved = (currentData: any[], removedData: any[]) => {
     .filter(
       (d) => removedData.findIndex((newD) => newD.id === d.id)
     );
-}
+};
+
+const Separator = () => (
+  <View style={styles.separator} />
+);
 
 const App = () => {
   const [modalActive, setModalActive] = useState(false);
   const  { isLoading: loading, error, data, subscribeToMore } = useFindTodos();
-  const { save: addTodo } = useAddTodo();
 
    useEffect(() => {
     const subscriptions = [
@@ -67,17 +70,18 @@ const App = () => {
   }, [data, subscribeToMore]);
 
   const toggleModal = () => {
-    console.log("modal", modalActive);
-    // setModalActive(!modalActive);
+    setModalActive(!modalActive);
   };
 
-  // if (loading) return <Loading />;
+  if (loading) return <Loading />;
 
-  // if (error) return <Error message={error.message} />;
+  if (error) return <Error message={error.message} />;
+
+  console.log(data);
 
   return (
     <>
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View>
           <Text>OFFIX TODO React</Text>
           <Text>A simple todo app using offix and graphback</Text>
@@ -87,29 +91,36 @@ const App = () => {
           subtitle=""
           active={modalActive}
           close={toggleModal}
-          Component={() => <AddTodo addTodo={addTodo} cancel={toggleModal} />}
+          Component={() => <AddTodo cancel={toggleModal} />}
         />
-        <Modal>
-          <View>
-            <Button title="Add" onPress={(ev) => console.log("pressed", ev)} />
-            <Button title="Cancel" onPress={toggleModal} />
-          </View>
-        </Modal>
+        <Separator />
+        <View>
+          <Button title="Add" onPress={toggleModal} />
+        </View>
+        <Separator />
         <View>
           <TodoList todos={data} />
         </View>
-      </View>
+      </SafeAreaView>
     </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex:1,
-    flexDirection: 'column',
-    marginTop: 75,
-    alignItems: 'center',
-  }
+    flex: 1,
+    justifyContent: 'center',
+    marginHorizontal: 16,
+  },
+  title: {
+    textAlign: 'center',
+    marginVertical: 8,
+  },
+  separator: {
+    marginVertical: 8,
+    borderBottomColor: '#737373',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
 })
 
 // const styles = StyleSheet.create({

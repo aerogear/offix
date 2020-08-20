@@ -1,33 +1,22 @@
 import React, {useState} from 'react';
 import {View, Button, TextInput, StyleSheet} from 'react-native';
+import { useAddTodo } from '../datastore/generated/hooks';
+import { ITodo } from '../datastore/generated/types';
+import { TodoModel } from '../datastore/config';
 
-export const AddTodo = ({addTodo, cancel}) => {
-  const [title, setTitle] = useState();
-  const [description, setDescription] = useState();
+export const AddTodo = ({ cancel }: any) => {
+  const [title, setTitle] = useState<string>();
+  const [description, setDescription] = useState<string>();
+  const { save: addTodo } = useAddTodo();
 
-  const handleSubmit = e => {
-    e.preventDefault();
-
-    addTodo({
-      variables: {
-        title,
-        description,
-        version: 1,
-        completed: false,
-      },
+  const handleSubmit = () => {
+    TodoModel.save({
+      title,
+      description,
+      completed: false,
     })
-      .then(cancel)
-      .catch(handleError);
-  };
-
-  const handleError = error => {
-    // if (error.offline) {
-    //   error.watchOfflineChange();
-    // } else {
-    //   console.log(error);
-    // }
-    console.log(error);
-    cancel();
+    .then(() => cancel())
+    .catch((error: any) => console.log(error));
   };
 
   return (
