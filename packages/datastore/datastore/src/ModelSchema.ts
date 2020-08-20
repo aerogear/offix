@@ -14,28 +14,78 @@ export interface GenetratedModelSchema {
 }
 
 export interface ModelSchemaProperties extends JSONSchema7 {
+  /**
+   * Index field, whether or not the
+   * field should be indexed
+   */
   index?: boolean;
+  /**
+   * Primary key field flag if the field is
+   * the primary key
+   */
   primary?: boolean;
+  /**
+   * Default value for the field
+   */
   default?: any;
+  /**
+   * Flag for if the field should be encrypted
+   */
   encrypted?: boolean;
   /**
-   * GraphQL field name.
-   * It is used for graphql query generation
+   * GraphQL field name used for graphql query generation
    */
   key?: string;
 }
 
 export declare class ModelJsonSchema<T> {
+  /**
+   * Model name
+   */
   name: string;
+  /**
+   * Namespace for the field in storage
+   * default is `user_<Model name>`
+   */
   namespace?: string;
+  /**
+   * Model version number
+   */
   version?: number;
+  /**
+   * Array of indexed fields
+   */
   indexes?: string[];
+  /**
+   * Array of encrypted fields
+   */
   encrypted?: string[];
+  /**
+   * Primary key reference
+   */
   primaryKey?: string;
+  /**
+   * JsonSchema requirement
+   * This is hardcoded to "object"
+   */
   type: "object";
+  /**
+   * List of all the fields and their specific
+   * options i.e
+   * id: {
+   *  primary: true,
+   *  ... other options
+   * }
+   */
   properties?: Fields<T>;
 };
 
+/**
+ * ModelSchema class used to convert
+ * JsonSchema options into schema that
+ * can be used in the DataStore Models
+ *
+ */
 export class ModelSchema<T = any>{
   private name: string;
   private namespace: string;
@@ -56,52 +106,92 @@ export class ModelSchema<T = any>{
     this.encrypted = extractEncryptedFields(this.fields, schema.encrypted);
   }
 
-  public fill(): void {
-    // TODO fill object with default values
-  }
-
+  /**
+   * Getter method for name
+   *
+   */
   public getName(): string {
     return this.name;
   }
 
+  /**
+   * Getter method for namesapce
+   *
+   */
   public getNamespace(): string {
     return this.namespace;
   }
 
+  /**
+   * Computed method for store name
+   * which is a combination of the
+   * namespace and the model name
+   *
+   */
   public getStoreName(): string {
     return `${this.namespace}_${this.name}`;
   }
 
+  /**
+   * Get the model index fields
+   *
+   */
   public getIndexes(): string[] {
     return this.indexes;
   }
 
   /**
    * Get primary key name
+   *
    */
   public getPrimaryKey(): string {
     return this.primaryKey;
   }
 
+  /**
+   * Get all the the model fields
+   *
+   */
   public getFields(): Fields<T> {
     return this.fields;
   }
 
+  /**
+   * Get the model version
+   *
+   */
   public getVersion(): number {
     return this.version;
   }
 
+  /**
+   * Get the encrypted fields
+   *
+   */
   public getEncryptedFields(): string[] {
     return this.encrypted;
   }
 };
 
+/**
+ * Helper function to extract the fields from the json schema
+ *
+ * @param schema json schema object
+ */
 function extractFields<T = any>(schema: ModelJsonSchema<T>): Fields<T> {
+  // simple validation
   invariant(schema.properties, "Datasync: Properties cannot be undefined");
   return schema.properties;
 }
 
+/**
+ * Helper function to extract the indexes from the json schema
+ *
+ * @param schema json schema object
+ */
 function extractIndexes<T = any>(fields: Fields<T>, indexes?: string[]): string[] {
+  // if no index array, iterate through
+  // the fields and check for `index: true`
   if (!indexes) {
     return Object.keys(fields)
       .filter((key: string) => {
@@ -112,6 +202,9 @@ function extractIndexes<T = any>(fields: Fields<T>, indexes?: string[]): string[
       });
   }
   indexes.forEach((index) => {
+    // check to see if the item in the
+    // index array is a field inside the
+    // json schema
     invariant(index in fields,
       `Datasync: ${index} in the indexes array is missing
       from the properties field in the model schema`
@@ -120,10 +213,19 @@ function extractIndexes<T = any>(fields: Fields<T>, indexes?: string[]): string[
   return indexes;
 }
 
+/**
+ * Helper function to extract the fields from the json schema
+ *
+ * @param schema json schema object
+ */
 function extractPrimary<T = any>(fields: Fields<T>, primaryKey?: string): string {
+  // if primary key is not specified
+  // iterate through fields for primary key
   if (!primaryKey) {
     const obj = Object.keys(fields)
       .find((key: string) => fields[key as keyof T].primary);
+    // primary key is required, so throw error if
+    // not provided
     invariant(obj, "Datasync: no primary key provided. Please specify a primary key");
     return obj;
   }
@@ -134,12 +236,23 @@ function extractPrimary<T = any>(fields: Fields<T>, primaryKey?: string): string
   return primaryKey;
 }
 
+/**
+ * Helper function to extract the encrypted fields from the json schema
+ *
+ * @param schema json schema object
+ */
 function extractEncryptedFields<T = any>(fields: Fields<T>, encrypted?: string[]): string[] {
+  // if an array is not specified,
+  // iterate through fields to check for
+  // encrypted fields
   if (!encrypted) {
     return Object.keys(fields)
       .filter((key) => fields[key as keyof T].encrypted);
   }
   encrypted.forEach((enc) => {
+    // validation to ensure that
+    // encrypted fields exist
+    // in the schema properties
     invariant(enc in fields,
       `Datasync: ${enc} in the encrypted fields array is missing
       from the properties field in the model schema`
@@ -148,6 +261,12 @@ function extractEncryptedFields<T = any>(fields: Fields<T>, encrypted?: string[]
   return encrypted;
 }
 
+/**
+ * Simple factory method, this can be expanded upon to
+ * add additional validation if required
+ *
+ * @param schema json schema object
+ */
 export function createModelSchema<T = any>(schema: ModelJsonSchema<T>): ModelSchema<T> {
   const modelSchema = new ModelSchema<T>(schema);
   return modelSchema;
