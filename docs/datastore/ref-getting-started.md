@@ -24,7 +24,11 @@ yarn add offix-datastore
 
 Let's use the following sample schema for our app
 
-```
+```graphql
+"""
+  @model
+  @datasync
+"""
 type Task {
     id: ID!
     title: String
@@ -42,25 +46,13 @@ We have a [cli tool](cli.md) that generates DataStore config and Model JSON sche
 To be able to store user tasks in the DataStore, you need to create it's DataStore model.
 The DataStore model provides the API to perform CRUD operations on `Task` in the DataStore.
 The [cli tool](cli.md) generates code to configure each model defined in your graphql schema.
-Here we will assume that you generated the DataStore config files in `src/datastore`.
+Here we will assume that you generated the DataStore config files in `src/datastore/generated`.
 
-If you are using Typescript and you want your model to have types, you can create an interface:
+Instantiate the `TaskModel` with the `Task` interface and json schema.
 
-```typescript title="/src/datastore/types.ts"
-export interface Task {
-    id?: string;
-    title: string;
-    description: string;
-    numberOfDaysLeft: number;
-}
-```
-
-and instantiate the `TaskModel` with the `Task` interface in the generated config file.
-
-```typescript
+```typescript title="src/datastore/config.ts"
 import { DataStore } from "offix-datastore";
-import schema from "./schema";
-import { Task } from "./types";
+import { schema, Task } from "./generated";
 
 const datastore = new DataStore({
   dbName: "offix-datastore",

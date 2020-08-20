@@ -4,56 +4,39 @@ title: Datastore CLI
 sidebar_label: Datastore CLI
 ---
 
-We provide a graphback plugin to generate required config for the DataStore.
+The Datastore CLI tool will generate JSON Schema files and types for your data models.
 
-## What is Graphback
+## Installing the CLI tool
 
-Graphback simplifies application development by generating a production-ready API
-from data models to access data from one or more data sources.
-Graphback uses GraphQL and GraphQLCRUD to make it easy get the data you need,
-and follows the convention over configuration paradigm to to reduce the amount of
-setup and boilerplate costs associated with creating GraphQL applications.
+You can install `datastore-cli` globally with npm:
 
-Read about graphback-cli [here](https://graphback.dev/docs/cli/graphback-cli).
+`npm install -g datastore-cli`
 
-## Using the CLI tool
+or with yarn:
 
-The plugin generates a `schema.json` for models annotated with `@datasync-client` in your graphql schema.
-It also generates a `config.ts` file that instantiates all the models with default settings is generated.
-You can import models from `config.ts` and start coding!
+`yarn global add datastore-cli`
 
-### Installing the plugin
 
-For npm
-`npm install --save-dev graphback-cli offix-datasync-client-plugin`
-or yarn
-`yarn add --dev graphback-cli offix-datasync-client-plugin`
+## Usage
 
-Create your `.graphqlrc.yml`
+You need a graphql schema containing your data models. We will use this sample graphql schema `model.graphql`:
 
-```
-schema: './src/schema.graphql'
-extensions:
-  graphback:
-    # path to data model file(s)
-    model: './src/model/runtime.graphql'
-    plugins:
-      offix-datasync-client-plugin:
-        modelOutputDir: './src/datasync'
+```graphql
+"""
+  @model
+  @datasync
+"""
+type Task {
+    id: ID!
+    title: String
+    description: String
+    numberOfDaysLeft: Number
+}
 ```
 
-#### Plugin Options
+The `@model` indicates that `Task` is a data model. `@datasync` indicates that `Task` has `datasync` enabled.
 
-`modelOutputDir` - The path to the folder where the generated config files will be saved.
-This folder will be created if it doesn't exist.
 
-`config.ts` will be generated in `<modelsOutputDir>/config.ts`.
-Import models from this from this file in your code and start coding.
+## Running the Datastore CLI
 
-### Running the graphback generator
-
-For npm,
-`npm graphback generate`
-
-for yarn,
-`yarn graphback generate`
+`datastore-cli generate --schema ./path/to/models --outputPath ./path/to/output/dir`
