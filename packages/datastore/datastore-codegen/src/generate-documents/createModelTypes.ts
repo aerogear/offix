@@ -8,7 +8,7 @@ const isPrimaryKey = (type: GraphQLOutputType) => {
     }
 
     return (type.toString() === "ID");
-}
+};
 
 const getPrimaryKey = (model: ModelDefinition) => {
     const fieldMap = model.graphqlType.getFields();
@@ -25,7 +25,7 @@ const getField = (fieldName: string, type: GraphQLOutputType) => {
     }
 
     return `${fieldName}: ${convertToTsType(type)}`;
-}
+};
 
 const getModelProperties = (model: ModelDefinition) => {
     const fieldMap = model.graphqlType.getFields();
@@ -48,4 +48,4 @@ export const createModelType = (model: ModelDefinition) => {
 export type ${modelName}Create = ${primaryKey ? `Omit<${modelName}, "${primaryKey}">` : modelName};
 export type ${modelName}Change =  ${primaryKey ? `Pick<${modelName}, "id"> && ` : ""}Partial<${modelName}Create>;
 `;
-}
+};
