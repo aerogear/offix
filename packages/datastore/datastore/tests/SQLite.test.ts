@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { WebSQLAdapter } from "../src/storage/adapters/websql/WebSQLAdapter";
+import { WebSQLAdapter } from "../src/storage/adapters/sqlite/WebSQLAdapter";
 import { ModelSchema } from "../src/ModelSchema";
 import { readFileSync } from "fs";
 import { LocalStorage } from "../src";
