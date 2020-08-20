@@ -129,7 +129,7 @@ export class DeltaReplicator {
       const firstOperationName = keys[0];
       const deltaResult = result.data[firstOperationName];
 
-      await model.processRemoteChanges(deltaResult.items);
+      await model.processDeltaChanges(deltaResult.items);
       await this.saveLastSync(deltaResult.lastSync);
     }
   }
