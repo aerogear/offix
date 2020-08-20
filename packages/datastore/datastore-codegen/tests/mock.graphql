@@ -1,6 +1,6 @@
 """
   @model
-  @datasync-client
+  @datasync
 """
 type Note {
   id: ID!
@@ -14,7 +14,7 @@ type Note {
 
 """
   @model
-  @datasync-client
+  @datasync
 """
 type Comment {
   id: ID!

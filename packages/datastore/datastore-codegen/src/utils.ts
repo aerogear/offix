@@ -9,7 +9,7 @@ import {
 import { mkdirSync } from "fs";
 
 export const isDataSyncClientModel = (model: ModelDefinition) => {
-    return parseMetadata("datasync-client", model.graphqlType);
+    return parseMetadata("datasync", model.graphqlType);
 };
 
 export const makeDirIfNotExists = (path: string) => {
