@@ -28,7 +28,6 @@ export class OffixDataSyncPlugin extends GraphbackPlugin {
         const documents = this.getDocuments(metadata);
 
         makeDirIfNotExists(modelOutputDir);
-        makeDirIfNotExists(`${modelOutputDir}/schema`);
         writeFileSync(`${modelOutputDir}/schema.json`, JSON.stringify(documents.json, null, 2));
         writeFileSync(`${modelOutputDir}/index.ts`, documents.exports);
         writeFileSync(`${modelOutputDir}/types.ts`, documents.types);
