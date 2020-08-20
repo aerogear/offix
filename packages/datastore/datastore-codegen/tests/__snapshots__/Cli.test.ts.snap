@@ -101,5 +101,7 @@ type Schema<T = any> = {
 };
 
 export const schema = jsonSchema as Schema;
+
+export * from \\"./types\\";
 "
 `;
