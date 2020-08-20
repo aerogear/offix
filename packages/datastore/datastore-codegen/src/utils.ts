@@ -32,8 +32,16 @@ export const convertToTsType = (type: GraphQLType): string => {
     if (isListType(type)) {
         return `${convertToTsType(getNamedType(type))}[]`;
     }
-    if (isCompositeType(type) || type.toString() === "ID") {
+    if (isCompositeType(type) || type.toString() === "ID" || type.toString() === "GraphbackObjectID") {
         return "string";
     }
-    return type.name.toLowerCase();
+
+    let tsType = type.name.toLowerCase();
+    if (tsType === "int" || tsType === "float") {
+        tsType = "number";
+    } else if (tsType !== "string" && tsType !== "boolean") {
+        tsType = "any";
+    }
+
+    return tsType;
 };

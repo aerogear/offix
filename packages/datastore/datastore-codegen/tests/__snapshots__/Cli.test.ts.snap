@@ -2,7 +2,7 @@
 
 exports[`generate 1`] = `
 "export interface Note {
-    id: string;
+    _id: string;
     title: string;
     description: string;
     comments: string[]
@@ -10,11 +10,11 @@ exports[`generate 1`] = `
     _deleted?: boolean;
 }
 
-export type NoteCreate = Omit<Note, \\"id\\">;
+export type NoteCreate = Omit<Note, \\"_id\\">;
 export type NoteChange =  Pick<Note, \\"id\\"> && Partial<NoteCreate>;
 
 export interface Comment {
-    id: string;
+    _id: string;
     title: string;
     description: string;
     noteComment: string
@@ -22,7 +22,7 @@ export interface Comment {
     _deleted?: boolean;
 }
 
-export type CommentCreate = Omit<Comment, \\"id\\">;
+export type CommentCreate = Omit<Comment, \\"_id\\">;
 export type CommentChange =  Pick<Comment, \\"id\\"> && Partial<CommentCreate>;
 "
 `;
@@ -35,28 +35,10 @@ exports[`generate 2`] = `
     \\"type\\": \\"object\\",
     \\"primaryKey\\": \\"id\\",
     \\"properties\\": {
-      \\"id\\": {
-        \\"type\\": \\"string\\",
-        \\"key\\": \\"id\\",
-        \\"isRequired\\": true,
-        \\"index\\": true,
-        \\"primary\\": true
-      },
-      \\"title\\": {
-        \\"type\\": \\"string\\",
-        \\"key\\": \\"title\\",
-        \\"isRequired\\": true
-      },
-      \\"description\\": {
-        \\"type\\": \\"string\\",
-        \\"key\\": \\"description\\",
-        \\"isRequired\\": true
-      },
-      \\"comments\\": {
-        \\"type\\": \\"string[]\\",
-        \\"key\\": \\"comments\\",
-        \\"isRequired\\": true
-      }
+      \\"type\\": \\"string[]\\",
+      \\"key\\": \\"comments\\",
+      \\"isRequired\\": true,
+      \\"primary\\": true
     }
   },
   \\"Comment\\": {
@@ -65,42 +47,20 @@ exports[`generate 2`] = `
     \\"type\\": \\"object\\",
     \\"primaryKey\\": \\"id\\",
     \\"properties\\": {
-      \\"id\\": {
-        \\"type\\": \\"string\\",
-        \\"key\\": \\"id\\",
-        \\"isRequired\\": true,
-        \\"index\\": true,
-        \\"primary\\": true
-      },
-      \\"title\\": {
-        \\"type\\": \\"string\\",
-        \\"key\\": \\"title\\",
-        \\"isRequired\\": true
-      },
-      \\"description\\": {
-        \\"type\\": \\"string\\",
-        \\"key\\": \\"description\\",
-        \\"isRequired\\": true
-      },
-      \\"noteComment\\": {
-        \\"type\\": \\"string\\",
-        \\"key\\": \\"noteComment\\",
-        \\"isRequired\\": true
-      }
+      \\"type\\": \\"string\\",
+      \\"key\\": \\"noteComment\\",
+      \\"isRequired\\": true,
+      \\"primary\\": true
     }
   }
 }"
 `;
 
 exports[`generate 3`] = `
-"import { ModelJsonSchema } from \\"offix-datastore\\";
+"import { GeneratedModelSchema } from \\"offix-datastore\\";
 import jsonSchema from \\"./schema.json\\";
 
-type Schema<T = any> = {
-    [P in keyof T]: ModelJsonSchema<any>
-};
-
-export const schema = jsonSchema as Schema;
+export const schema = jsonSchema as GeneratedModelSchema;
 
 export * from \\"./types\\";
 "
