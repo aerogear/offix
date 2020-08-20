@@ -31,6 +31,6 @@ export const createModelType = (model: ModelDefinition) => {
 }
 
 export type ${modelName}Create = ${primaryKey ? `Omit<${modelName}, "${primaryKey}">` : modelName};
-export type ${modelName}Change =  ${primaryKey ? `Pick<${modelName}, "id"> && ` : ""}Partial<${modelName}Create>;
+export type ${modelName}Change =  ${primaryKey ? `Pick<${modelName}, "${primaryKey}"> & ` : ""}Partial<${modelName}Create>;
 `;
 };
