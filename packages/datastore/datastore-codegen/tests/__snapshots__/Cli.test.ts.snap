@@ -6,6 +6,8 @@ exports[`generate 1`] = `
     title: string;
     description: string;
     comments: string[]
+    _version?: number;
+    _deleted?: boolean;
 }
 
 export type NoteCreate = Omit<Note, \\"id\\">;
@@ -16,6 +18,8 @@ export interface Comment {
     title: string;
     description: string;
     noteComment: string
+    _version?: number;
+    _deleted?: boolean;
 }
 
 export type CommentCreate = Omit<Comment, \\"id\\">;
