@@ -9,7 +9,7 @@ export type Fields<T> = Record<keyof T, ModelSchemaProperties>;
 /**
  * Represents generated schema with models
  */
-export interface GenetratedModelSchema {
+export interface GeneratedModelSchema {
   [model: string]: ModelJsonSchema<any>;
 }
 
