@@ -1,22 +1,21 @@
-// TODO unify this interface names/comments
+export interface Todo {
+    _id: string;
+    title?: string;
+    description?: string;
+    completed?: boolean
+    _version?: number;
+    _deleted?: boolean;
+}
 
-export interface ITodo {
-  _id?: string,
-  title: string,
-  description: string,
-  completed?: boolean,
-};
+export type TodoCreate = Omit<Todo, "_id">;
+export type TodoChange =  Pick<Todo, "_id"> & Partial<TodoCreate>;
 
-// TODO use Partial for updates
-export interface ITodoModel extends ITodo {
-  _id: string
-};
+export interface User {
+    _id: string;
+    name?: string
+    _version?: number;
+    _deleted?: boolean;
+}
 
-export interface IUser {
-  _id?: string,
-  name: string,
-};
-
-export interface IUserModel extends IUser {
-  _id: string
-};
+export type UserCreate = Omit<User, "_id">;
+export type UserChange =  Pick<User, "_id"> & Partial<UserCreate>;

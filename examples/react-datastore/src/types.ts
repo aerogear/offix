@@ -1,11 +1,11 @@
-import { ITodo } from "./datastore/generated/types";
+import { Todo } from "./datastore/generated";
 
 export type TodoProps = {
-  todo: ITodo,
+  todo: Todo,
 };
 
 export type TodoListProps = {
-  todos: Array<ITodo>,
+  todos: Array<Todo>,
 };
 
 export type AddTodoProps = {
@@ -13,12 +13,12 @@ export type AddTodoProps = {
 };
 
 export type EditTodoProps = {
-  todo: ITodo,
+  todo: Todo,
   toggleEdit: () => void,
 };
 
 export type ToggleTodoProps = {
-  todo: ITodo,
+  todo: Todo,
 };
 
 export type HookState = {

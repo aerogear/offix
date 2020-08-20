@@ -3,6 +3,7 @@
     "name": "Todo",
     "version": 1,
     "type": "object",
+    "primaryKey": "_id",
     "properties": {
       "_id": {
         "type": "string",
@@ -28,6 +29,7 @@
     "name": "User",
     "version": 1,
     "type": "object",
+    "primaryKey": "_id",
     "properties": {
       "_id": {
         "type": "string",

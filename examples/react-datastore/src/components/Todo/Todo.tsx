@@ -4,7 +4,7 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { EditTodo, ToggleTodo } from '../forms';
 import { TodoProps } from '../../types';
-import { useDeleteTodo } from '../../datastore/generated/hooks';
+import { useDeleteTodo } from '../../datastore/hooks';
 
 export const Todo = ({ todo }: TodoProps) => {
   const [edit, setEdit] = useState<boolean>(false);
