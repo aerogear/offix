@@ -275,7 +275,7 @@ export class Model<T = unknown> {
 
     const db = this.storage;
     const store = this.schema.getStoreName();
-    const primaryKey = this.schema.getPrimaryKey()
+    const primaryKey = this.schema.getPrimaryKey();
     for (const item of dataResult) {
       let data;
       let eventType;
@@ -323,7 +323,7 @@ export class Model<T = unknown> {
     try {
       logger("Retrieved object from subscription");
       const store = this.schema.getStoreName();
-      const primaryKey = this.schema.getPrimaryKey()
+      const primaryKey = this.schema.getPrimaryKey();
       if (type === CRUDEvents.ADD) {
         await this.storage.save(this.schema.getStoreName(), dataResult);
       }
