@@ -11,11 +11,11 @@ test("generate", async () => {
     const schemaPath = join(__dirname, './mock.graphql');
 
     await exec(`node ${cliExec} generate --schema ${schemaPath} --outputPath output/`);
-    const schema = readFileSync("./output/schema/schema.json").toString();
-    const schemaIndex = readFileSync("./output/schema/index.ts").toString();
+    const schema = readFileSync("./output/schema.json").toString();
+    const index = readFileSync("./output/index.ts").toString();
     const types = readFileSync("./output/types.ts").toString();
 
     expect(types).toMatchSnapshot();
     expect(schema).toMatchSnapshot();
-    expect(schemaIndex).toMatchSnapshot();
+    expect(index).toMatchSnapshot();
 });

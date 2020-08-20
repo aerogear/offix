@@ -12,7 +12,7 @@ export const OFFIX_DATASYNC_PLUGIN_NAME = "OffixDataSyncPlugin";
  * - model json schema
  * - model typings
  * which are required by the offix-datasync for
- * every model annotated with @datasync-client in schema.
+ * every model annotated with @datasync in schema.
  */
 export class OffixDataSyncPlugin extends GraphbackPlugin {
     private pluginConfig: Required<IOffixDataSyncPluginConfig>;
@@ -29,8 +29,8 @@ export class OffixDataSyncPlugin extends GraphbackPlugin {
 
         makeDirIfNotExists(modelOutputDir);
         makeDirIfNotExists(`${modelOutputDir}/schema`);
-        writeFileSync(`${modelOutputDir}/schema/schema.json`, JSON.stringify(documents.json, null, 2));
-        writeFileSync(`${modelOutputDir}/schema/index.ts`, documents.schemaExport);
+        writeFileSync(`${modelOutputDir}/schema.json`, JSON.stringify(documents.json, null, 2));
+        writeFileSync(`${modelOutputDir}/index.ts`, documents.exports);
         writeFileSync(`${modelOutputDir}/types.ts`, documents.types);
     }
 
@@ -43,9 +43,10 @@ export class OffixDataSyncPlugin extends GraphbackPlugin {
         // concatenate all the json documents
         const jsonSchema = modelJsonSchemas
             .reduce((prev, cur) => ({ ...prev, [cur.name]: cur }), {});
+        const modelTypes = models.map(model => createModelType(model)).join("\n");
 
         // TODO use actual model type instead of any for ModelJsonSchema
-        const schemaExport = `import { ModelJsonSchema } from "offix-datastore";
+        const exports = `import { ModelJsonSchema } from "offix-datastore";
 import jsonSchema from "./schema.json";
 
 type Schema<T = any> = {
@@ -53,14 +54,15 @@ type Schema<T = any> = {
 };
 
 export const schema = jsonSchema as Schema;
+
+export * from "./types";
 `;
 
-        const modelTypes = models.map(model => createModelType(model)).join("\n");
 
         return {
             json: jsonSchema,
             types: modelTypes,
-            schemaExport
+            exports
         };
     }
 
