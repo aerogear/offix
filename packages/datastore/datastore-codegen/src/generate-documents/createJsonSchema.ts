@@ -22,9 +22,8 @@ const getFieldParameters = (fieldName: string, type: GraphQLOutputType): any => 
     return { type: convertToTsType(type), ...options };
 };
 
-const getModelProperties = (model: ModelDefinition) => {
+const getModelProperties = (model: ModelDefinition, primaryKey: string) => {
     const fieldMap = model.graphqlType.getFields();
-    const primaryKey = getPrimaryKey(model.graphqlType).name;
 
     return Object.keys(fieldMap)
         .map(fieldName => {
@@ -32,17 +31,19 @@ const getModelProperties = (model: ModelDefinition) => {
             if (fieldName === primaryKey) {
                 fieldOptions.primary = true;
             }
-            return fieldOptions;
+            return { [fieldName]: fieldOptions };
         })
         .reduce((prev, current) => ({ ...prev, ...current }), {});
 };
 
 export const createJsonSchema = (model: ModelDefinition) => {
+    const primaryKey = getPrimaryKey(model.graphqlType).name;
+
     return {
         name: model.graphqlType.name,
         version: 1,
         type: "object",
-        primaryKey: "id",
-        properties: getModelProperties(model)
+        primaryKey: primaryKey,
+        properties: getModelProperties(model, primaryKey)
     };
 };

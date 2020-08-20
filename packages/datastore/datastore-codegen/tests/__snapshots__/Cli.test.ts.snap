@@ -33,24 +33,58 @@ exports[`generate 2`] = `
     \\"name\\": \\"Note\\",
     \\"version\\": 1,
     \\"type\\": \\"object\\",
-    \\"primaryKey\\": \\"id\\",
+    \\"primaryKey\\": \\"_id\\",
     \\"properties\\": {
-      \\"type\\": \\"string[]\\",
-      \\"key\\": \\"comments\\",
-      \\"isRequired\\": true,
-      \\"primary\\": true
+      \\"_id\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"_id\\",
+        \\"isRequired\\": true,
+        \\"primary\\": true
+      },
+      \\"title\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"title\\",
+        \\"isRequired\\": true
+      },
+      \\"description\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"description\\",
+        \\"isRequired\\": true
+      },
+      \\"comments\\": {
+        \\"type\\": \\"string[]\\",
+        \\"key\\": \\"comments\\",
+        \\"isRequired\\": true
+      }
     }
   },
   \\"Comment\\": {
     \\"name\\": \\"Comment\\",
     \\"version\\": 1,
     \\"type\\": \\"object\\",
-    \\"primaryKey\\": \\"id\\",
+    \\"primaryKey\\": \\"_id\\",
     \\"properties\\": {
-      \\"type\\": \\"string\\",
-      \\"key\\": \\"noteComment\\",
-      \\"isRequired\\": true,
-      \\"primary\\": true
+      \\"_id\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"_id\\",
+        \\"isRequired\\": true,
+        \\"primary\\": true
+      },
+      \\"title\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"title\\",
+        \\"isRequired\\": true
+      },
+      \\"description\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"description\\",
+        \\"isRequired\\": true
+      },
+      \\"noteComment\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"noteComment\\",
+        \\"isRequired\\": true
+      }
     }
   }
 }"
