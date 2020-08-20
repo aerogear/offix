@@ -3,7 +3,7 @@ import { QuickForm, BoolField } from 'uniforms-antd';
 
 import { ToggleTodoProps } from "../../types";
 import { schema } from './formSchema';
-import { useEditTodo } from '../../datastore/generated/hooks';
+import { useEditTodo } from '../../datastore/hooks';
 
 export function ToggleTodo ({ todo }: ToggleTodoProps) {
 

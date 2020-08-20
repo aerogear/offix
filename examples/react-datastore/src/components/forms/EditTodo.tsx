@@ -4,14 +4,14 @@ import { AutoForm, TextField, LongTextField, SubmitField } from 'uniforms-antd';
 
 import { schema } from './formSchema';
 import { EditTodoProps } from '../../types';
-import { useEditTodo } from '../../datastore/generated/hooks';
-import { ITodo } from '../../datastore/generated/types';
+import { useEditTodo } from '../../datastore/hooks';
+import { Todo } from '../../datastore/generated';
 
 export const EditTodo = ({ todo, toggleEdit }: EditTodoProps) => {
 
   const { update: editTodo } = useEditTodo();
 
-  const handleUpdate = (todo: ITodo) => {
+  const handleUpdate = (todo: Todo) => {
     editTodo({
       ...todo,
       title: todo.title,
