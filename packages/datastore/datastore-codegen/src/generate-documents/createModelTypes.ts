@@ -41,6 +41,8 @@ export const createModelType = (model: ModelDefinition) => {
 
     return `export interface ${modelName} {
     ${getModelProperties(model)}
+    _version?: number;
+    _deleted?: boolean;
 }
 
 export type ${modelName}Create = ${primaryKey ? `Omit<${modelName}, "${primaryKey}">` : modelName};
