@@ -49,6 +49,7 @@
   },
   "dependencies": {
     "graphql-tag": "2.11.0",
+    "react-native-sqlite-2": "^3.1.0",
     "subscriptions-transport-ws": "0.9.18",
     "tiny-invariant": "1.1.0",
     "traverse": "0.6.6",
