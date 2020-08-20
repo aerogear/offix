@@ -135,7 +135,7 @@ export class WebSQLAdapter implements StorageAdapter {
 
   private async getStoreNames(): Promise<string[]> {
     const res = await this.readTransaction(
-      "SELECT name FROM sqlite_master WHERE name LIKE 'user_%'",
+      "SELECT name FROM sqlite_master WHERE name NOT LIKE 'sqlite_%'",
       []
     );
     return res.map((r) => r.name);
