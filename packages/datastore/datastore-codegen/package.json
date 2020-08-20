@@ -16,7 +16,7 @@
   "devDependencies": {
     "@types/jest": "26.0.10",
     "@types/yargs": "15.0.5",
-    "jest": "26.4.0",
+    "jest": "26.4.1",
     "rimraf": "3.0.2",
     "ts-jest": "26.2.0",
     "typescript": "3.9.7"
