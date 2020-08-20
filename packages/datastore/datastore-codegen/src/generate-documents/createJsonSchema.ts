@@ -1,4 +1,4 @@
-import { ModelDefinition } from "@graphback/core";
+import { ModelDefinition, getPrimaryKey } from "@graphback/core";
 import {
     isNonNullType,
     GraphQLOutputType,
@@ -18,21 +18,22 @@ const getFieldParameters = (fieldName: string, type: GraphQLOutputType): any => 
         type = getNullableType(type);
         options.isRequired = true;
     }
-    if (type.toString() === "ID") {
-        options.index = true;
-        options.primary = true;
-    }
 
     return { type: convertToTsType(type), ...options };
 };
 
 const getModelProperties = (model: ModelDefinition) => {
     const fieldMap = model.graphqlType.getFields();
+    const primaryKey = getPrimaryKey(model.graphqlType).name;
 
     return Object.keys(fieldMap)
-        .map(fieldName => ({
-            [fieldName]: getFieldParameters(fieldName, fieldMap[fieldName].type)
-        }))
+        .map(fieldName => {
+            const fieldOptions = getFieldParameters(fieldName, fieldMap[fieldName].type);
+            if (fieldName === primaryKey) {
+                fieldOptions.primary = true;
+            }
+            return fieldOptions;
+        })
         .reduce((prev, current) => ({ ...prev, ...current }), {});
 };
 

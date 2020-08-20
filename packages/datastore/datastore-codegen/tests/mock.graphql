@@ -1,9 +1,11 @@
+scalar GraphbackObjectID
+
 """
   @model
   @datasync
 """
 type Note {
-  id: ID!
+  _id: GraphbackObjectID!
   title: String!
   description: String!
   """
@@ -17,7 +19,7 @@ type Note {
   @datasync
 """
 type Comment {
-  id: ID!
+  _id: GraphbackObjectID!
   title: String!
   description: String!
   """
