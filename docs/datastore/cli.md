@@ -22,12 +22,14 @@ or with yarn:
 You need a graphql schema containing your data models. We will use this sample graphql schema `model.graphql`:
 
 ```graphql
+scalar GraphQLObjectID
+
 """
   @model
   @datasync
 """
 type Task {
-    id: ID!
+    _id: GraphQLObjectID!
     title: String
     description: String
     numberOfDaysLeft: Number
@@ -35,6 +37,7 @@ type Task {
 ```
 
 The `@model` indicates that `Task` is a data model. `@datasync` indicates that `Task` has `datasync` enabled.
+The scalar `GraphQLObjectID` is the id type. `_id` will be used as the primary key in your local database.
 
 
 ## Running the Datastore CLI

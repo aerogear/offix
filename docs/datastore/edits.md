@@ -20,7 +20,7 @@ TaskModel.save({
     title: "Write Docs",
     description: "Write Offix Docs",
 }).then((data) => {
-    console.log(data); // { id: '...', title, description }
+    console.log(data); // { _id: '...', title, description }
 })
 ```
 
@@ -31,7 +31,7 @@ import { TaskModel } from './datastoreConfig';
 
 // update the title of task to "Offix Test"
 TaskModel.updateById({
-    id: documentId
+    _id: documentId
     title: "Offix Test"
 })
 .then((data) => {
@@ -48,7 +48,7 @@ or no primary key was provided, the DataStore saves the data as a new document.
 
 ```typescript
 TaskModel.saveOrUpdate({
-    id: documentId
+    _id: documentId
     title: "Offix Test"
 })
 .then((data) => {

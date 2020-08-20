@@ -25,12 +25,14 @@ yarn add offix-datastore
 Let's use the following sample schema for our app
 
 ```graphql
+scalar GraphQLObjectID
+
 """
   @model
   @datasync
 """
 type Task {
-    id: ID!
+    _id: GraphQLObjectID!
     title: String
     description: String
     numberOfDaysLeft: Number
