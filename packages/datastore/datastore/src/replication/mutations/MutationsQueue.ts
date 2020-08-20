@@ -135,7 +135,13 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
     const storeName = model.getStoreName();
     const operations = this.modelMap[storeName];
     invariant(operations, "Missing GraphQL mutations for replication");
-
+    // TODO ugly hack to not send client side id
+    if (eventType === CRUDEvents.ADD && model.hasClientID()) {
+      // Do not sent id to server
+      delete data._id
+    }
+    // TODO temporary hacks till we get version generated
+    data._version = 1;
     const mutationRequest = {
       storeName,
       data,

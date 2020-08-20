@@ -1,5 +1,5 @@
 import { ModelSubscriptionsConfig } from "../api/ReplicationConfig";
-import { Client, OperationResult } from "urql";
+import { Client } from "urql";
 import { createLogger } from "../../utils/logger";
 import { LocalStorage, CRUDEvents } from "../../storage";
 import { Model } from "../../Model";
@@ -59,7 +59,7 @@ export class SubscriptionReplicator {
   private subscribeToChanges(query: DocumentNode, type: CRUDEvents) {
     return pipe(
       this.options.client.subscription(query, { filter: this.filter }),
-      subscribe(async (result) => {
+      subscribe((result) => {
         if (result.error) {
           logger(`Subscription callback failed: ${JSON.stringify(result.error)}`);
           return;
@@ -73,7 +73,7 @@ export class SubscriptionReplicator {
           }
           const firstOperationName = keys[0];
           const subsriptionData = result.data[firstOperationName];
-          await this.options.model.processSubscriptionChanges(subsriptionData, type);
+          this.options.model.processSubscriptionChanges(subsriptionData, type);
         }
       })
     );

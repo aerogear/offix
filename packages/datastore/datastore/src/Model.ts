@@ -233,6 +233,7 @@ export class Model<T = unknown> {
       await db.commit();
       const event = {
         eventType: CRUDEvents.DELETE,
+        // TODO Why array here?
         data: [data]
       };
       this.changeEventStream.publish(event);
@@ -277,6 +278,8 @@ export class Model<T = unknown> {
     const store = this.schema.getStoreName();
     const primaryKey = this.schema.getPrimaryKey();
     for (const item of dataResult) {
+      // Remove GraphQL internal information
+      delete item.__typename
       let data;
       let eventType;
       if (item._deleted) {
@@ -321,6 +324,8 @@ export class Model<T = unknown> {
       return;
     }
     try {
+      // Remove GraphQL internal information
+      delete dataResult.__typename
       logger("Retrieved object from subscription");
       const store = this.schema.getStoreName();
       const primaryKey = this.schema.getPrimaryKey();
