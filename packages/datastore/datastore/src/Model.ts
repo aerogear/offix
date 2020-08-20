@@ -267,50 +267,84 @@ export class Model<T = unknown> {
    *
    * @param result result from delta
    */
-  public async processRemoteChanges(deltaResult: any[]): Promise<void> {
-    if (!deltaResult || deltaResult.length === 0) {
+  public async processDeltaChanges(dataResult: any[], type?: CRUDEvents): Promise<void> {
+    if (!dataResult || dataResult.length === 0) {
       logger("Delta processing: No changes");
       return;
     }
 
-    const db = await this.storage.createTransaction();
+    const db = this.storage;
+    const store = this.schema.getStoreName();
+    const primaryKey = this.schema.getPrimaryKey()
+    for (const item of dataResult) {
+      let data;
+      let eventType;
+      if (item._deleted) {
+        logger("Delta processing: deleting item");
+        data = await await db.removeById(store, primaryKey, item);
+        eventType = CRUDEvents.DELETE;
+      } else {
+        const exist = await db.queryById(store, primaryKey, item[primaryKey]);
+        if (exist) {
+          logger("Delta processing: updating item");
+          eventType = CRUDEvents.UPDATE;
+          data = await db.updateById(this.schema.getStoreName(), primaryKey, item);
+        } else {
+          logger("Delta processing: adding item");
+          eventType = CRUDEvents.ADD;
+          data = await db.save(this.schema.getStoreName(), item);
+        }
+        if (!data) {
+          logger("Failed to update items in database");
+          return;
+        }
+      }
+      const event = {
+        eventType,
+        // TODO this should be non array
+        data: data
+      };
+      this.changeEventStream.publish(event);
+    }
+  }
+
+  /**
+   * **Internal method**
+   *
+   * Process remote changes
+   *
+   * @param result result from subscription
+   */
+  public async processSubscriptionChanges(dataResult: any, type: CRUDEvents): Promise<void> {
+    if (!dataResult) {
+      logger("Subscription returned no result. If you see this something is wrong.");
+      return;
+    }
     try {
+      logger("Retrieved object from subscription");
       const store = this.schema.getStoreName();
       const primaryKey = this.schema.getPrimaryKey()
-      for (const item of deltaResult) {
-        let data;
-        let eventType;
-        if (item._deleted) {
-          logger("Delta processing: deleting item");
-          data = await await db.removeById(store, primaryKey, item);
-          eventType = CRUDEvents.DELETE;
-        } else {
-          const exist = await db.queryById(store, primaryKey, item[primaryKey]);
-          if (exist) {
-            logger("Delta processing: updating item");
-            eventType = CRUDEvents.UPDATE;
-            data = await db.updateById(this.schema.getStoreName(), primaryKey, item);
-          } else {
-            logger("Delta processing: adding item");
-            eventType = CRUDEvents.ADD;
-            data = await db.save(this.schema.getStoreName(), item);
-          }
-          if (!data) {
-            logger("Failed to update items in database");
-            return;
-          }
-        }
-        const event = {
-          eventType,
-          // TODO this should be non array
-          data: [data]
-        };
-        this.changeEventStream.publish(event);
+      if (type === CRUDEvents.ADD) {
+        await this.storage.save(this.schema.getStoreName(), dataResult);
       }
+
+      if (type === CRUDEvents.UPDATE) {
+        await this.storage.updateById(this.schema.getStoreName(), primaryKey, dataResult);
+      }
+
+      if (type === CRUDEvents.DELETE) {
+        await await this.storage.removeById(store, primaryKey, dataResult);
+      }
+      const event = {
+        eventType: type,
+        // TODO this should be non array
+        data: dataResult
+      };
+      this.changeEventStream.publish(event);
+
     } catch (error) {
-      db.rollback();
+      logger("Error when processing subscription" + JSON.stringify(error));
     }
-    db.commit();
   }
 
 

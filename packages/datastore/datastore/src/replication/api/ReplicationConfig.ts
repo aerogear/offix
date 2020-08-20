@@ -137,11 +137,6 @@ export interface ModelSubscriptionsConfig extends DeltaQueriesConfig {
   * PFilterthat will be be transformed to remote GraphQL query
   */
   filter?: Filter;
-
-  /**
-  * Allow users to specify error handler that will check error type and repeat operations
-  */
-  errorHandler?: PullErrorHandler;
 };
 
 /**
