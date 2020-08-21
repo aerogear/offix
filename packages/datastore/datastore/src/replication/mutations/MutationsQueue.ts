@@ -192,8 +192,6 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
       }
     }
     this.processing = false;
-    // Work finished we can close queue
-    this.open = false;
   }
 
   private async getStoredMutations() {
@@ -260,12 +258,6 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
       this.open = false;
       return true;
     }
-
-    if (error.networkError !== undefined && error.graphQLErrors === undefined) {
-      logger("Error replied due to network error");
-      return true;
-    }
-
 
     return false;
   }

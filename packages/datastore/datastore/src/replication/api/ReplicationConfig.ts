@@ -36,11 +36,15 @@ export interface LiveUpdatesConfig {
 
 /**
  * Handle errors repeat request if needed
+ *
+ * @returns true if request should be repeated
  */
 export type UserErrorHandler = (networkError: any, graphqlError: any) => boolean;
 
 /**
  * Handle errors repeat request if needed
+ *
+ * @returns true if request should be repeated
  */
 export type PullErrorHandler = (networkError: any, graphqlError: any) => boolean;
 
