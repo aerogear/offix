@@ -11,7 +11,7 @@ const onAdded = (currentData: any[], newData: any[]) => {
 
 const onChanged = (currentData: any[], newData: any[], primaryKey: string) => {
     if (!currentData) {return [];}
-
+    // What happens to data that get's updated and falls outside original query filter?
     return currentData.map((d) => {
         const index = newData.findIndex((newD) => newD[primaryKey] === d[primaryKey]);
         if (index === -1) {return d;}
@@ -45,7 +45,6 @@ export const updateResult = (state: ResultState, event: StoreChangeEvent, primar
 
 const createSubscribeToMore = (state: ResultState, model: Model, dispatch: Dispatch<Action>) => {
     return (eventsToWatch?: CRUDEvents[], customEventHandler?: (state: ResultState, data: any) => any) => {
-        // TODO subscribe to specific document
         const subscription = model.subscribe((event) => {
             let newData;
 
