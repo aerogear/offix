@@ -20,7 +20,7 @@ export class SQLiteAdapter implements StorageAdapter {
     this.sqlite = SQLite.openDatabase(
       dbName,
       schemaVersion.toString(),
-      "Offix datastore", 
+      "Offix datastore",
       5 * 1024 * 1024
     );
   }
