@@ -15,7 +15,7 @@ const onTodoChanged = (currentData: any[], newData: any[]) => {
   if (!currentData) return [];
 
   return currentData.map((d) => {
-    const index = newData.findIndex((newD) => newD.id === d.id);
+    const index = newData.findIndex((newD) => newD._id === d._id);
     if (index === -1) return d;
     return newData[index];
   });
@@ -25,7 +25,7 @@ const onTodoRemoved = (currentData: any[], removedData: any[]) => {
   if (!currentData) return [];
   return currentData
     .filter(
-      (d) => removedData.findIndex((newD) => newD.id === d.id)
+      (d) => removedData.findIndex((newD) => newD._id === d._id)
     );
 }
 
