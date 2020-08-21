@@ -44,7 +44,7 @@ export const updateResult = (state: ResultState, event: StoreChangeEvent, primar
 };
 
 const createSubscribeToMore = (state: ResultState, model: Model, dispatch: Dispatch<Action>) => {
-    return (eventsToWatch: CRUDEvents[], customEventHandler?: (state: ResultState, data: any) => any) => {
+    return (eventsToWatch?: CRUDEvents[], customEventHandler?: (state: ResultState, data: any) => any) => {
         // TODO subscribe to specific document
         const subscription = model.subscribe((event) => {
             let newData;

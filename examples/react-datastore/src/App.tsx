@@ -11,7 +11,7 @@ function App() {
   const [addView, setAddView] = useState<boolean>(false);
   const  { isLoading: loading, error, data, subscribeToMore } = useFindTodos();
   useEffect(() => {
-    const subscription = subscribeToMore([CRUDEvents.ADD, CRUDEvents.UPDATE, CRUDEvents.DELETE]);
+    const subscription = subscribeToMore();
     return () => subscription.unsubscribe();
   }, [data, subscribeToMore]);
 
