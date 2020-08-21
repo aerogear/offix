@@ -205,14 +205,14 @@ by `useSubscription` is the data carried by the change event.
 
 ```javascript
 const Task = ({ task }) => {
-    // Listen for updates on this task
-    const { data } = useSubscription(TaskModel, [CRUDEvents.UPDATE], task);
-    task = data[0] || task; // data is undefined when no events have been fired
+    const { data } = useSubscription(TaskModel, [CRUDEvents.UPDATE]);
+    // data is undefined when no events have been fired
+    const task = data ? data.find((d) => (d._id === task._id)) : task;
 
     return <div>{task.title}</div>
 }
 ```
 
-We can listen to a events on all documents
+We can listen to all events on all documents
 
-`const { data } = useSubscription(TaskModel, [CRUDEvents.UPDATE]);`
+`const { data } = useSubscription(TaskModel);`
