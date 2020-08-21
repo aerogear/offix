@@ -84,7 +84,18 @@ You can also subscribe to more changes using the `subscribeToMore` function
 ```javascript
 const { isLoading, error, data: tasks, subscribeToMore } = useQuery(TaskModel, filter);
 useEffect(() => {
-    const subscription = subscribeToMore(CRUDEvents.ADD, (newData) => {
+    const subscription = subscribeToMore([CRUDEvents.ADD, CRUDEvents.UPDATE, CRUDEvents.DELETE]);
+    return () => subscription.unsubscribe();
+}, []);
+```
+
+Offix Datastore reponds to events and updates your Application state for you. You can also override
+Datastore's event handlers.
+
+```javascript
+const { isLoading, error, data: tasks, subscribeToMore } = useQuery(TaskModel, filter);
+useEffect(() => {
+    const subscription = subscribeToMore([CRUDEvents.ADD], (newData) => {
         if (!tasks) return [newData];
         return [...tasks, newData];
     });
@@ -115,8 +126,8 @@ const Tasks = () => {
 }
 ```
 
-The `query` function also returns a `subscribeToMore` function
-that you can use to subscribe to changes for that query. 
+The `useLazyQuery` hook also provides a `subscribeToMore` function
+that you can use to subscribe to events on your data.
 
 ## useUpdate
 
@@ -184,14 +195,14 @@ const Task = ({ task }) => {
 
 ## useSubscription
 
-You can subscribe to specific events and receive changes data using this hook.
+You can subscribe to multiple events and receive changes data using this hook.
 We listen for updates to the task and render them. The `data` returned
 by `useSubscription` is the data carried by the change event.
 
 ```javascript
 const Task = ({ task }) => {
     // Listen for updates on this task
-    const { data } = useSubscription(TaskModel, CRUDEvents.UPDATE, task);
+    const { data } = useSubscription(TaskModel, [CRUDEvents.UPDATE], task);
     task = data[0] || task; // data is undefined when no events have been fired
 
     return <div>{task.title}</div>
