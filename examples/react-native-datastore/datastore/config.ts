@@ -1,6 +1,6 @@
-import { DataStore, SQLiteAdapter } from 'offix-datastore';
+import { DataStore } from 'offix-datastore';
+import { SQLiteAdapter } from 'offix-datastore/dist/storage/adapters/sqlite/SQLiteAdapter';
 import { NativeNetworkStatus } from './network/NativeNetworkStatus';
-// import { SQLiteAdapter } from './sqlite/SQLiteAdapter';
 import { schema } from './generated';
 import { IUser, ITodo } from './generated/types';
 
