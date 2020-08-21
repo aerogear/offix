@@ -6,7 +6,7 @@ import 'antd/dist/antd.css';
 import { useFindTodos } from './datastore/hooks';
 import { TodoList, AddTodo, Loading, Error, Header } from './components';
 
-const onTodoAdded = (currentData: any[], newData: any) => {
+const onTodoAdded = (currentData: any[], newData: any[]) => {
   if (!currentData) return newData;
   return [...currentData, ...newData];
 }
