@@ -51,6 +51,9 @@ export const mutationQueueModel = new ModelSchema<any>({
     },
     queue: {
       type: "array"
+    },
+    items: {
+      type: "array"
     }
   }
 });
