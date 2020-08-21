@@ -17,7 +17,7 @@ The change events that can occur are;
 ```typescript
 import { CRUDEvents } from 'offix-datastore';
 
-TaskModel.on(CRUDEvents.ADD, (event) => {
+TaskModel.on([CRUDEvents.ADD], (event) => {
     console.dir(event); // { eventType, data }
 });
 ```

@@ -79,15 +79,19 @@ const documentId = "";
 const { isLoading, error, data: tasks } = useQuery(TaskModel, documentId);
 ```
 
-You can also subscribe to more changes using the `subscribeToMore` function
+You can also subscribe to changes using the `subscribeToMore` function.
 
 ```javascript
 const { isLoading, error, data: tasks, subscribeToMore } = useQuery(TaskModel, filter);
 useEffect(() => {
-    const subscription = subscribeToMore([CRUDEvents.ADD, CRUDEvents.UPDATE, CRUDEvents.DELETE]);
+    const subscription = subscribeToMore();
     return () => subscription.unsubscribe();
 }, []);
 ```
+
+`subscribeToMore` can take an array of events to watch
+
+`const subscription = subscribeToMore([CRUDEvents.ADD, CRUDEvents.UPDATE]);`
 
 Offix Datastore reponds to events and updates your Application state for you. You can also override
 Datastore's event handlers.
@@ -208,3 +212,7 @@ const Task = ({ task }) => {
     return <div>{task.title}</div>
 }
 ```
+
+We can listen to a events on all documents
+
+`const { data } = useSubscription(TaskModel, [CRUDEvents.UPDATE]);`
