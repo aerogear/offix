@@ -18,7 +18,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/bson": "^4.0.2",
+    "@types/bson": "4.0.2",
     "@types/jest": "26.0.10",
     "@types/yargs": "15.0.5",
     "jest": "26.4.1",
