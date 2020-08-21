@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { View, Button, TextInput } from 'react-native';
+import { TodoModel } from '../../datastore/config';
+import { ITodo } from '../../datastore/generated/types';
 
-export const EditTodo = ({ todo, editTodo, toggleEdit }) => {
+export const EditTodo = ({ todo, toggleEdit }: { todo: ITodo, toggleEdit: Function }) => {
   const [title, setTitle] = useState(todo.title);
   const [description, setDescription] = useState(todo.description);
 
@@ -12,31 +14,17 @@ export const EditTodo = ({ todo, editTodo, toggleEdit }) => {
     return [t, d];
   };
 
-  const handleUpdate = (e) => {
-    e.preventDefault();
+  const handleUpdate = () => {
 
     // get serialized inputs
     const [t, d] = validate();
 
+    const filter = { _id: todo._id };
     // execute mutation
-    editTodo({
-      variables: {
-        ...todo,
-        title: t,
-        description: d,
-      },
-    }).then(toggleEdit)
-    .catch(handleError);
+    TodoModel.update({ title: t, description: d}, filter)
+    .then(toggleEdit)
+    .catch((err: any) => console.log(err, '[update] error occured'));
   };
-
-  const handleError = (error) => {
-    if (error.offline) {
-      error.watchOfflineChange();
-    } else {
-      console.log(error);
-    }
-    toggleEdit;
-  }
 
   return (
     <View>
@@ -50,17 +38,9 @@ export const EditTodo = ({ todo, editTodo, toggleEdit }) => {
         placeholder={todo.description}
         onChangeText={text => setDescription(text)}
       />
-      {/* <div className="form-group">
-        <label className="form-label" htmlFor="title-edit">Title</label>
-        <input id="title-edit" name="title" type="text" className="form-input"  />
-      </div> */}
-      {/* <div className="form-group">
-        <label className="form-label" htmlFor="desc-edit">Description</label>
-        <textarea id="desc-edit" name="description" className="form-input mb-4" ref={descRef} placeholder={todo.description} />
-      </div> */}
       <View>
         <Button title="Edit" onPress={handleUpdate} />
-        <Button title="Cancel" onPress={toggleEdit} />
+        <Button title="Cancel" onPress={() => toggleEdit()} />
       </View>
     </View>
   );

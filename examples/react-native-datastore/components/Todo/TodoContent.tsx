@@ -1,44 +1,27 @@
 import React from 'react';
 import { View, Text, Button } from 'react-native';
+import { TodoModel } from '../../datastore/config';
+import { ITodo } from '../../datastore/generated/types';
 
-export const TodoContent = ({ todo, editTodo, deleteTodo, toggleEdit }) => {
-  const handleUpdate = (e) => {
-    e.preventDefault();
-
-    // execute mutation
-    editTodo({
-      variables: {
-        ...todo,
-        completed: !todo.completed,
-      },
-    }).then(res => console.log(res))
-    .catch(error => console.log(error));
-  };
-
-  const handleDelete = (e) => {
-    e.preventDefault();
-    // execute mutation
-    deleteTodo({ 
-      variables: {
-        ...todo
-      } 
-    }).then(res => console.log(res))
-    .catch(error => console.log(error));
+export const TodoContent = ({ todo, toggleEdit }: { todo: ITodo, toggleEdit: Function}) => {
+  
+  const handleDelete = () => {
+    console.log(todo);
+    TodoModel.remove({
+      _id: todo._id
+    })
+      .then(() => console.log('Deleted'))
+      .catch((err: any) => console.log('Some error occured', err));
   };
 
   return (
     <View>
       <View>
-        {/* <label className="form-checkbox">
-          <input type="checkbox" checked={todo.completed} onChange={handleUpdate} />
-          <i className="form-icon" />
-          <span className={todo.completed ? 'todo-completed' : ''}>{todo.title}</span>
-        </label> */}
         <Text>{todo.title}</Text>
         <Text>Status: {todo.completed ? 'Completed' : 'Pending'}</Text>
       </View>
       <View>
-        <Button title="Edit" onPress={toggleEdit} />
+        <Button title="Edit" onPress={() => toggleEdit()} />
         <Button title="Delete" onPress={handleDelete} />
       </View>
     </View>

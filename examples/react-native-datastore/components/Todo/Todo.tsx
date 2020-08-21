@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 import { TodoContent } from './TodoContent';
 import { EditTodo } from './EditTodo';
+import { ITodo } from '../../datastore/generated/types';
 
-
-export const Todo = ({ todo, editTodo, deleteTodo }) => {
+export const Todo = ({ todo }: { todo: ITodo }) => {
   const [edit, setEdit] = useState(false);
   
   if (edit) {
     return (
       <EditTodo
         todo={todo}
-        editTodo={editTodo}
         toggleEdit={() => setEdit(!edit)}
       />
     );
@@ -19,8 +18,6 @@ export const Todo = ({ todo, editTodo, deleteTodo }) => {
   return (
     <TodoContent
       todo={todo}
-      editTodo={editTodo}
-      deleteTodo={deleteTodo}
       toggleEdit={() => setEdit(!edit)}
     />
   );
