@@ -1,7 +1,7 @@
 {
     "extends": "../../../tsconfig.json",
     "include": [
-      "./src/**/*.ts", "*.d.ts"
+      "./src/**/*.ts"
     ],
     "compilerOptions": {
       "esModuleInterop": true,
@@ -16,4 +16,3 @@
       "target": "ES6"
     }
   }
-  
