@@ -4,16 +4,16 @@ import { CRUDEvents } from "../..";
 import { InitialState, reducer, ActionType } from "../ReducerUtils";
 import { Filter } from "../../filters";
 
-export const useSubscription = (model: Model, eventType: CRUDEvents, filter?: Filter) => {
+export const useSubscription = (model: Model, eventTypes: CRUDEvents[], filter?: Filter) => {
   const [state, dispatch] = useReducer(reducer, InitialState);
 
   useEffect(() => {
     // TODO subcribe using predicate
     const subscription = model.subscribe((event) => {
       dispatch({ type: ActionType.REQUEST_COMPLETE, data: event.data });
-    }, eventType);
+    }, eventTypes);
     return () => subscription.unsubscribe();
-  }, [model, eventType, filter]);
+  }, [model, eventTypes, filter]);
 
   return state;
 };
