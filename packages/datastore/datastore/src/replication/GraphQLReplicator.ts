@@ -1,7 +1,7 @@
 import { LocalStorage } from "../storage";
 import { Model } from "../Model";
-import { WebNetworkStatus } from "../network/WebNetworkStatus";
-import { NetworkIndicator } from "../network/NetworkIndicator";
+import { WebNetworkStatus } from "./network/WebNetworkStatus";
+import { NetworkIndicator } from "./network/NetworkIndicator";
 import { GlobalReplicationConfig } from "./api/ReplicationConfig";
 import { createGraphQLClient } from "./utils/createGraphQLClient";
 import { Client } from "urql";

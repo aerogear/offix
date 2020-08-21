@@ -3,7 +3,7 @@ import { Client } from "urql";
 import { createLogger } from "../../utils/logger";
 import { LocalStorage, CRUDEvents } from "../../storage";
 import { Model } from "../../Model";
-import { NetworkIndicator } from "../../network/NetworkIndicator";
+import { NetworkIndicator } from "../network/NetworkIndicator";
 import { ReplicatorSubscriptions } from "./ReplicatorSubscriptions";
 import { convertFilterToGQLFilter } from "../utils/convertFilterToGQLFilter";
 import { pipe, subscribe } from "wonka";

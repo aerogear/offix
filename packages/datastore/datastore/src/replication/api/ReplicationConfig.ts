@@ -1,6 +1,6 @@
 
 import { GraphQLClientConfig } from "./GraphQLClient";
-import { NetworkStatus } from "../../network/NetworkStatus";
+import { NetworkStatus } from "../network/NetworkStatus";
 import { MutationRequest } from "../mutations/MutationRequest";
 import { Filter } from "../../filters";
 import { DocumentBuilders } from "./DocumentBuilders";
