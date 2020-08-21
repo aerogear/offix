@@ -5,7 +5,7 @@
   ],
   "compilerOptions": {
     "esModuleInterop": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "outDir": "./dist/",
     "declarationDir": "./types",
     "lib": [
