@@ -105,7 +105,7 @@ export class Model<T = unknown> {
       await db.commit();
       const event = {
         eventType: CRUDEvents.ADD,
-        data
+        data: [data]
       };
       this.changeEventStream.publish(event);
       return data;
@@ -130,7 +130,7 @@ export class Model<T = unknown> {
       await db.commit();
       const event = {
         eventType: CRUDEvents.ADD,
-        data
+        data: [data]
       };
       this.changeEventStream.publish(event);
       return data;
@@ -305,7 +305,7 @@ export class Model<T = unknown> {
       const event = {
         eventType,
         // TODO this should be non array
-        data: data
+        data: [data]
       };
       this.changeEventStream.publish(event);
     }
@@ -343,7 +343,7 @@ export class Model<T = unknown> {
       const event = {
         eventType: type,
         // TODO this should be non array
-        data: dataResult
+        data: [dataResult]
       };
       this.changeEventStream.publish(event);
 
