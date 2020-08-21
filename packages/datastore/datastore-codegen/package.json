@@ -1,11 +1,14 @@
 {
-  "name": "datastore-cli",
+  "name": "@offix/cli",
   "version": "0.1.2",
   "description": "CLI tool for Datastore",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
   "typescript": {
     "definition": "types/index.d.ts"
+  },
+  "bin": {
+    "offix": "dist/index.js"
   },
   "scripts": {
     "build": "tsc",
