@@ -1,12 +1,12 @@
 import { ModelDeltaConfig } from "../api/ReplicationConfig";
-import { NetworkStatusEvent } from "../../network/NetworkStatus";
+import { NetworkStatusEvent } from "../network/NetworkStatus";
 import { DocumentNode } from "graphql";
 import { Client, OperationResult, CombinedError } from "urql";
 import { convertFilterToGQLFilter } from "../utils/convertFilterToGQLFilter";
 import { createLogger } from "../../utils/logger";
 import { LocalStorage } from "../../storage";
 import { Model } from "../../Model";
-import { NetworkIndicator } from "../../network/NetworkIndicator";
+import { NetworkIndicator } from "../network/NetworkIndicator";
 import { metadataModel, QueryMetadata } from "../api/MetadataModels";
 
 

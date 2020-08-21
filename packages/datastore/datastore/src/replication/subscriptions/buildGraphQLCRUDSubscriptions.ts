@@ -32,7 +32,7 @@ export const buildGraphQLCRUDSubscriptions = (model: Model): ReplicatorSubscript
             }`,
     deleted: gql`
             subscription deleted${modelName}($filter: ${modelName}SubscriptionFilter) {
-                delete${modelName}(filter: $filter) {
+                deleted${modelName}(filter: $filter) {
                     ${graphQLFields}
                 }
             }`
