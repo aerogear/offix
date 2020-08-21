@@ -140,8 +140,7 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
       // Do not sent id to server
       delete data._id;
     }
-    // TODO temporary hacks till we get version generated
-    data._version = 1;
+
     const mutationRequest = {
       storeName,
       data,
