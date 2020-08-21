@@ -1,7 +1,7 @@
 {
   "name": "@offix/cli",
   "version": "0.1.2",
-  "description": "CLI tool for Datastore",
+  "description": "CLI tool for Offix and Datastore",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
   "typescript": {
@@ -15,6 +15,9 @@
     "debug": "yarn build&&node dist/index generate --schema tests/mock.graphql --outputPath output/",
     "test": "yarn build&&jest",
     "lint-fix": "eslint \"./src/*\" --fix"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "license": "MIT",
   "devDependencies": {
