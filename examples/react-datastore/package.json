@@ -30,6 +30,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "generate": "offix generate --schema ./src/model/runtime.graphql --outputPath ./src/datastore/generated",
     "linkdatastore": "cd ../../packages/datastore/datastore && yarn link && cd - && yarn link offix-datastore && rm -Rf ./node_modules/react && && rm -Rf ./node_modules/react-dom",
     "linkdatastorecli": "cd ../../packages/datastore/cli && yarn link && cd - && yarn link @offix/cli"
   },
