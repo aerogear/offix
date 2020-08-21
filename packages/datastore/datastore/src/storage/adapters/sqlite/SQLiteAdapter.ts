@@ -122,10 +122,12 @@ export class SQLiteAdapter implements StorageAdapter {
     });
   }
   commit(): Promise<void> {
-    throw new Error("[Commit] Method not implemented.");
+    logger("[Commit] Method not implemented.");
+    return Promise.resolve();
   }
   rollback(): Promise<void> {
-    throw new Error("[Rollback] Method not implemented.");
+    logger("[Rollback] Method not implemented.");
+    return Promise.resolve();
   }
 
   isTransactionOpen(): boolean {
