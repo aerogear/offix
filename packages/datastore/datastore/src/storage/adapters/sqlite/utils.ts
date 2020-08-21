@@ -45,6 +45,7 @@ export const flattenResultSet = (rows: SQLResultSetRowList): any[] => {
 };
 
 export function serializeData(input: any): any {
+  // eslint-disable-next-line
   console.log("input", input);
   return traverse(input).map(function(item) {
     // we only want to serialize the nodes
@@ -58,7 +59,7 @@ export function serializeData(input: any): any {
 
 export function deserializeData(data: any): any {
   return traverse(data).map(function(d) {
-    if (typeof d === 'string') {
+    if (typeof d === "string") {
       const item = d.split("serialized:");
       if (item.length > 1) {
         this.update(JSON.parse(item[1]));
