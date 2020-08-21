@@ -7,8 +7,10 @@ import { useFindTodos } from './datastore/hooks';
 import { TodoList, AddTodo, Loading, Error, Header } from './components';
 
 const onTodoAdded = (currentData: any[], newData: any) => {
-  if (!currentData) return [newData];
-      return [...currentData, newData];
+  console.log(JSON.stringify(newData));
+  if (!currentData) return newData;
+      return currentData.push(newData[0]);
+
 }
 
 const onTodoChanged = (currentData: any[], newData: any[]) => {
