@@ -138,10 +138,10 @@ test("Observe local store events", async () => {
   NoteModel.subscribe((event) => {
     expect(event.eventType).toEqual(CRUDEvents.ADD);
     expect(event.data[0].title).toEqual(note.title);
-  }, CRUDEvents.ADD);
+  }, [CRUDEvents.ADD]);
   NoteModel.subscribe((event) => {
     expect(event.eventType).toEqual(CRUDEvents.UPDATE);
-  }, CRUDEvents.UPDATE);
+  }, [CRUDEvents.UPDATE]);
 
   await NoteModel.save(note);
   await NoteModel.update({ title: "changed" }, { title: "test" });

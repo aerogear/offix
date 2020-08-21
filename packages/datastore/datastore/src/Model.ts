@@ -252,12 +252,12 @@ export class Model<T = unknown> {
    * @param eventType - allows you to specify what event type you are interested in.
    * @param listener
    */
-  public subscribe(listener: (event: StoreChangeEvent) => void, eventType?: CRUDEvents) {
+  public subscribe(listener: (event: StoreChangeEvent) => void, eventTypes?: CRUDEvents[]) {
     return this.changeEventStream.subscribe((event: StoreChangeEvent) => {
       listener(event);
     }, (event: StoreChangeEvent) => {
-      if (eventType) {
-        return event.eventType === eventType;
+      if (eventTypes) {
+        return eventTypes.includes(event.eventType);
       }
       return true;
     });
