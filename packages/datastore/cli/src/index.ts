@@ -19,4 +19,4 @@ export const cmd = () => {
     .demandCommand(1)
     .help()
     .argv;
-}
+};
