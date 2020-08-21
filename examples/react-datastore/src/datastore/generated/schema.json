@@ -22,6 +22,16 @@
       "completed": {
         "type": "boolean",
         "key": "completed"
+      },
+      "_version": {
+        "type": "string",
+        "key": "_version",
+        "isRequired": true
+      },
+      "_deleted": {
+        "type": "string",
+        "key": "_version",
+        "isRequired": true
       }
     }
   },
@@ -39,7 +49,18 @@
       },
       "name": {
         "type": "string",
-        "key": "name"
+        "key": "name",
+        "isRequired": true
+      },
+      "_version": {
+        "type": "string",
+        "key": "_version",
+        "isRequired": true
+      },
+      "_deleted": {
+        "type": "string",
+        "key": "_version",
+        "isRequired": true
       }
     }
   }

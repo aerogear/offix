@@ -17,7 +17,7 @@ type Todo {
 """
 type User {
   _id: GraphbackObjectID!
-  name: String
+  name: String!
   # TODO
   # todos: [Todo!]!
 }

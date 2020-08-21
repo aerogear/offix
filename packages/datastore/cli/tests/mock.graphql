@@ -35,3 +35,8 @@ type Query {
 type Mutation {
   likeNote(id: ID!): Note!
 }
+
+""" @model """
+type Whatever {
+  _id:  GraphbackObjectID!
+}
