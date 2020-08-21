@@ -51,3 +51,9 @@ Lastly, run the following commands from the React example folder.
 ```
 yarn start
 ```
+
+## Adding more models
+
+1. Edit runtime.graphql file in `src/model/runtime.graphql`
+2. Generate models yarn generate
+3. Review new models
