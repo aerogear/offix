@@ -18,7 +18,7 @@ For simplicity, a GraphQL Serve in-memory server has been provided. You can make
 command:
 
 ```
-npx graphql-serve serve --port=<PORT-NUMBER>
+yarn startServer
 ```
 
 Alternatively, you can implement your own backend server.
@@ -37,7 +37,7 @@ const wsLink = new WebSocketLink({
 });
 
 const httpLink = new HttpLink({
-    uri: 'http://<YOUR-SERVER-ADDRESS-HERE>', 
+    uri: 'http://<YOUR-SERVER-ADDRESS-HERE>',
 });
 
 ...
