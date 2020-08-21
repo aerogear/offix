@@ -1,6 +1,6 @@
 {
   "name": "@offix/cli",
-  "version": "0.1.3",
+  "version": "0.2.1",
   "description": "CLI tool for Offix and Datastore",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
