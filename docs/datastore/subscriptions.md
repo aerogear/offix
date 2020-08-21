@@ -14,10 +14,22 @@ The change events that can occur are;
 - `UPDATE` data is updated in the Store. The event payload is the updated data
 - `DELETE` data is removed from the Store. The event payload is the removed data
 
+You can subscribe to all change events on a Model.
+
 ```typescript
 import { CRUDEvents } from 'offix-datastore';
 
-TaskModel.on([CRUDEvents.ADD], (event) => {
+TaskModel.on((event) => {
     console.dir(event); // { eventType, data }
 });
+```
+
+You can also subscribe to specific events
+
+```typescript
+import { CRUDEvents } from 'offix-datastore';
+
+TaskModel.on((event) => {
+    console.dir(event); // { eventType, data }
+}, [CRUDEvents.ADD]);
 ```
