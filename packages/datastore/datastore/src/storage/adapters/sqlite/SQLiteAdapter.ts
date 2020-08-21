@@ -20,7 +20,8 @@ export class SQLiteAdapter implements StorageAdapter {
     this.sqlite = SQLite.openDatabase(
       dbName,
       schemaVersion.toString(),
-      "Offix datastore", 5 * 1024 * 1024
+      "Offix datastore", 
+      5 * 1024 * 1024
     );
   }
 
@@ -121,13 +122,14 @@ export class SQLiteAdapter implements StorageAdapter {
     });
   }
   commit(): Promise<void> {
-    throw new Error("Method not implemented.");
+    throw new Error("[Commit] Method not implemented.");
   }
   rollback(): Promise<void> {
-    throw new Error("Method not implemented.");
+    throw new Error("[Rollback] Method not implemented.");
   }
+
   isTransactionOpen(): boolean {
-    throw new Error("Method not implemented.");
+    throw new Error("[isOpen] Method not implemented.");
   }
 
   private async fetchAll(storeName: string) {
