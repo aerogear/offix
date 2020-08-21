@@ -86,6 +86,10 @@ export class Model<T = unknown> {
     return this.schema.getStoreName();
   }
 
+  public getSchema() {
+    return this.schema;
+  }
+
   public query(filter?: Filter<T>) {
     if (!filter) { return this.storage.query(this.schema.getStoreName()); }
 
