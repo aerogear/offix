@@ -279,7 +279,7 @@ export class Model<T = unknown> {
     const primaryKey = this.schema.getPrimaryKey();
     for (const item of dataResult) {
       // Remove GraphQL internal information
-      delete item.__typename
+      delete item.__typename;
       let data;
       let eventType;
       if (item._deleted) {
@@ -325,7 +325,7 @@ export class Model<T = unknown> {
     }
     try {
       // Remove GraphQL internal information
-      delete dataResult.__typename
+      delete dataResult.__typename;
       logger("Retrieved object from subscription");
       const store = this.schema.getStoreName();
       const primaryKey = this.schema.getPrimaryKey();

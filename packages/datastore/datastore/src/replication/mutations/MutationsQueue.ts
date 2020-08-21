@@ -138,7 +138,7 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
     // TODO ugly hack to not send client side id
     if (eventType === CRUDEvents.ADD && model.hasClientID()) {
       // Do not sent id to server
-      delete data._id
+      delete data._id;
     }
     // TODO temporary hacks till we get version generated
     data._version = 1;

@@ -6,12 +6,12 @@ import "fake-indexeddb/auto";
 import { MutationsReplicationQueue } from "../src/replication/mutations/MutationsQueue";
 import { LocalStorage, CRUDEvents } from "../src/storage";
 import { IndexedDBStorageAdapter } from "../src/storage/adapters/indexedDB/IndexedDBStorageAdapter";
-import { WebNetworkStatus } from "../src/network/WebNetworkStatus";
+import { WebNetworkStatus } from "../src/replication/network/WebNetworkStatus";
 import { CombinedError } from "urql";
 import { metadataModel, mutationQueueModel } from "../src/replication/api/MetadataModels";
 import { ModelSchema } from "../src";
 import { readFileSync } from "fs";
-import { NetworkIndicator } from "../src/network/NetworkIndicator";
+import { NetworkIndicator } from "../src/replication/network/NetworkIndicator";
 import { GlobalReplicationConfig } from "../src/replication/api/ReplicationConfig";
 
 const DB_NAME = "test";
