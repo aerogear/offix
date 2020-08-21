@@ -6,40 +6,13 @@ import 'antd/dist/antd.css';
 import { useFindTodos } from './datastore/hooks';
 import { TodoList, AddTodo, Loading, Error, Header } from './components';
 
-const onTodoAdded = (currentData: any[], newData: any[]) => {
-  if (!currentData) return newData;
-  return [...currentData, ...newData];
-}
-
-const onTodoChanged = (currentData: any[], newData: any[]) => {
-  if (!currentData) return [];
-
-  return currentData.map((d) => {
-    const index = newData.findIndex((newD) => newD._id === d._id);
-    if (index === -1) return d;
-    return newData[index];
-  });
-}
-
-const onTodoRemoved = (currentData: any[], removedData: any[]) => {
-  if (!currentData) return [];
-  return currentData
-    .filter(
-      (d) => removedData.findIndex((newD) => newD._id === d._id)
-    );
-}
-
 function App() {
 
   const [addView, setAddView] = useState<boolean>(false);
   const  { isLoading: loading, error, data, subscribeToMore } = useFindTodos();
   useEffect(() => {
-    const subscriptions = [
-      subscribeToMore(CRUDEvents.ADD, (newData) => onTodoAdded(data, newData)),
-      subscribeToMore(CRUDEvents.UPDATE, (newData) => onTodoChanged(data, newData)),
-      subscribeToMore(CRUDEvents.DELETE, (newData) => onTodoRemoved(data, newData)),
-    ];
-    return () => subscriptions.forEach(s => s.unsubscribe());
+    const subscription = subscribeToMore([CRUDEvents.ADD, CRUDEvents.UPDATE, CRUDEvents.DELETE]);
+    return () => subscription.unsubscribe();
   }, [data, subscribeToMore]);
 
   if (loading) return <Loading />;
