@@ -1,6 +1,6 @@
 /* eslint-disable */
 const baseConfig = require("../../../jest.config");
-const packageName = "datastore-codegen";
+const packageName = "cli";
 
 module.exports = {
   ...baseConfig,
