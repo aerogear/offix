@@ -9,34 +9,34 @@ const onAdded = (currentData: any[], newData: any[]) => {
     return [...currentData, ...newData];
 };
 
-const onChanged = (currentData: any[], newData: any[]) => {
+const onChanged = (currentData: any[], newData: any[], primaryKey: string) => {
     if (!currentData) {return [];}
 
     return currentData.map((d) => {
-        const index = newData.findIndex((newD) => newD._id === d._id);
+        const index = newData.findIndex((newD) => newD[primaryKey] === d[primaryKey]);
         if (index === -1) {return d;}
         return newData[index];
     });
 };
 
-const onRemoved = (currentData: any[], removedData: any[]) => {
+const onRemoved = (currentData: any[], removedData: any[], primaryKey: string) => {
     if (!currentData) {return [];}
     return currentData
         .filter(
-            (d) => removedData.findIndex((newD) => newD._id === d._id)
+            (d) => removedData.findIndex((newD) => newD[primaryKey] === d[primaryKey])
         );
 };
 
-const updateResult = (state: ResultState, event: StoreChangeEvent) => {
+export const updateResult = (state: ResultState, event: StoreChangeEvent, primaryKey: string) => {
     switch (event.eventType) {
         case CRUDEvents.ADD:
             return onAdded(state.data, event.data);
 
         case CRUDEvents.UPDATE:
-            return onChanged(state.data, event.data);
+            return onChanged(state.data, event.data, primaryKey);
 
         case CRUDEvents.DELETE:
-            return onRemoved(state.data, event.data);
+            return onRemoved(state.data, event.data, primaryKey);
 
         default:
             throw new Error(`Invalid event ${event.eventType} received`);
@@ -52,7 +52,7 @@ const createSubscribeToMore = (state: ResultState, model: Model, dispatch: Dispa
             if (customEventHandler) {
                 newData = customEventHandler(state, event.data);
             }
-            newData = updateResult(state, event);
+            newData = updateResult(state, event, model.getSchema().getPrimaryKey());
 
             if (!subscription.closed) {
                 // Important to check beacuse Componnent could be unmounted
