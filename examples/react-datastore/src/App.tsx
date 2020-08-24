@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { CRUDEvents } from 'offix-datastore';
 import { Button } from 'antd';
 import 'antd/dist/antd.css';
 
