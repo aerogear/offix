@@ -46,7 +46,6 @@ export const flattenResultSet = (rows: SQLResultSetRowList): any[] => {
 
 export function serializeData(input: any): any {
   // eslint-disable-next-line
-  console.log("input", input);
   return traverse(input).map(function(item) {
     // we only want to serialize the nodes
     // and not the root object
