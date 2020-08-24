@@ -21,5 +21,5 @@ export class WebSQLAdapter extends AbstractSQLAdapter implements StorageAdapter 
     }
     return this.update(storeName, input, { [idField]: input[idField] });
   }
-  
+
 }
