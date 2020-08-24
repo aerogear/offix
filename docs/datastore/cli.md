@@ -8,13 +8,13 @@ The Datastore CLI tool will generate JSON Schema files and types for your data m
 
 ## Installing the CLI tool
 
-You can install `datastore-cli` globally with npm:
+You can install `@offix/cli` npm:
 
-`npm install -g datastore-cli`
+`npm install --save-dev @offix/cli`
 
 or with yarn:
 
-`yarn global add datastore-cli`
+`yarn add --dev @offix/cli`
 
 
 ## Usage
@@ -42,4 +42,13 @@ The scalar `GraphQLObjectID` is the id type. `_id` will be used as the primary k
 
 ## Running the Datastore CLI
 
-`datastore-cli generate --schema ./path/to/models --outputPath ./path/to/output/dir`
+With yarn:
+
+`yarn offix generate ./path/to/models ./path/to/output/dir`
+
+or with npx:
+
+`npx offix generate ./path/to/models ./path/to/output/dir`
+
+By default, `@offix/cli` assumes your models are in `./src/models` and
+generates the output files in `./src/datasync/generated`.
