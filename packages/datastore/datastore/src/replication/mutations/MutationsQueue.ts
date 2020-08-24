@@ -198,7 +198,7 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
   }
 
   private async getStoredMutations() {
-    const storedMutations = await this.options.storage.query(mutationQueueModel.getStoreName(), { id: MUTATION_ROW_ID });
+    const storedMutations = await this.options.storage.queryById(mutationQueueModel.getStoreName(), "id", MUTATION_ROW_ID);
     if (storedMutations && storedMutations.length === 1) {
       if (storedMutations[0].items.length !== 0) {
         return storedMutations[0].items;
