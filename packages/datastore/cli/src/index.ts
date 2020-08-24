@@ -13,7 +13,7 @@ export const cmd = () => {
       (y) => {
         y.positional("schema", {
           describe: "The schema path",
-          default: "./src/models/mock.graphql",
+          default: "./src/models/",
           type: "string"
         }).positional("outputPath", {
           describe: "The output dir path",

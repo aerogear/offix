@@ -1,9 +1,9 @@
 import { GraphbackPluginEngine } from "@graphback/core";
-import { readFileSync } from "fs";
 import { OffixDataSyncPlugin } from "./OffixDataSyncPlugin";
+import { loadSchema } from "./utils";
 
 export const generate = (schemaPath: string, outputPath: string) => {
-    const schema = readFileSync(schemaPath).toString();
+    const schema = loadSchema(schemaPath);
     const pluginEngine = new GraphbackPluginEngine({
         schema,
         plugins: [
