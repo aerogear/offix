@@ -22,6 +22,7 @@ export const buildGraphQLCRUDQueries = (model: Model) => {
               sync${modelName}s(lastSync: $lastSync, filter: $filter) {
                   items {
                     ${graphQLFields}
+                    _deleted
                   }
                   lastSync
               }
