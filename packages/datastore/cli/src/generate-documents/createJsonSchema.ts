@@ -40,11 +40,6 @@ const getModelProperties = (model: ModelDefinition, primaryKey: string) => {
     key: "_version",
     isRequired: true
   };
-  generatedProperties._deleted = {
-    type: "string",
-    key: "_version",
-    isRequired: true
-  };
   return generatedProperties;
 };
 
