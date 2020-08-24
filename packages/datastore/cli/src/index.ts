@@ -11,8 +11,14 @@ export const cmd = () => {
       "generate",
       "Generate Datastore config",
       {
-        schema: { describe: "The schema path" },
-        outputPath: { describe: "The output dir path" }
+        schema: {
+          describe: "The schema path",
+          default: "./src/models/mock.graphql"
+        },
+        outputPath: {
+          describe: "The output dir path",
+          default: "./src/datasync/generated"
+        }
       },
       (argv) => generate(argv.schema as string, argv.outputPath as string)
     )
