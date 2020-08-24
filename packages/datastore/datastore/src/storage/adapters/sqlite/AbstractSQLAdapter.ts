@@ -57,7 +57,7 @@ export abstract class AbstractSQLAdapter implements StorageAdapter {
   }
 
   public async queryById(storeName: string, idField: string, id: string) {
-    const escapedId = (typeof id === 'string') ? `"${id}"` : id;
+    const escapedId = (typeof id === "string") ? `"${id}"` : id;
     const query = `SELECT * FROM ${storeName} WHERE ${idField} = ${escapedId}`;
     // @ts-ignore
     const res = await this.readTransaction(query, []);
@@ -75,7 +75,7 @@ export abstract class AbstractSQLAdapter implements StorageAdapter {
   public async updateById(storeName: string, idField: string, input: any) {
     const [cols, vals] = prepareStatement(serializeData(input), "update");
     const id = input[idField];
-    const escapedId = (typeof id === 'string') ? `"${id}"` : id;
+    const escapedId = (typeof id === "string") ? `"${id}"` : id;
     const query = `UPDATE ${storeName} SET ${cols} ${idField} = ${escapedId}`;
     // @ts-ignore
     return this.transaction(query, [...vals]);
@@ -105,7 +105,7 @@ export abstract class AbstractSQLAdapter implements StorageAdapter {
   }
 
   public async removeById(storeName: string, idField: string, id: string): Promise<any> {
-    const escapedId = (typeof id === 'string') ? `"${id}"` : id;
+    const escapedId = (typeof id === "string") ? `"${id}"` : id;
     const query = `DELETE FROM ${storeName} ${idField} ${escapedId}`;
     // @ts-ignore
     return this.transaction(query, []);
