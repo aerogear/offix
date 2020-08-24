@@ -8,17 +8,18 @@ export const cmd = () => {
   // eslint-disable-next-line no-unused-expressions
   yargs
     .command(
-      "generate",
+      "generate [schema] [outputPath]",
       "Generate Datastore config",
-      {
-        schema: {
+      (y) => {
+        y.positional("schema", {
           describe: "The schema path",
-          default: "./src/models/mock.graphql"
-        },
-        outputPath: {
+          default: "./src/models/mock.graphql",
+          type: "string"
+        }).positional("outputPath", {
           describe: "The output dir path",
-          default: "./src/datasync/generated"
-        }
+          default: "./src/datasync/generated",
+          type: "string"
+        });
       },
       (argv) => generate(argv.schema as string, argv.outputPath as string)
     )
