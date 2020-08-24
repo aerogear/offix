@@ -11,6 +11,7 @@ import { ReplicatorMutations } from "./ReplicatorMutations";
 import { GlobalReplicationConfig, MutationsConfig } from "../api/ReplicationConfig";
 import { buildGraphQLCRUDMutations } from "./buildGraphQLCRUDMutations";
 import invariant from "tiny-invariant";
+import { getFirstOperationData } from "../utils/getFirstOperationData";
 
 const logger = createLogger("replicator-mutationqueue");
 
@@ -135,12 +136,6 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
     const storeName = model.getStoreName();
     const operations = this.modelMap[storeName];
     invariant(operations, "Missing GraphQL mutations for replication");
-    // TODO ugly hack to not send client side id
-    if (eventType === CRUDEvents.ADD && model.hasClientID()) {
-      // Do not sent id to server
-      delete data._id;
-    }
-
     const mutationRequest = {
       storeName,
       data,
@@ -175,8 +170,16 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
       invariant(this.modelMap[item.storeName], `Store is not setup for replication ${item.storeName}`);
 
       const mutation = this.getMutationDocument(item);
+
+      const model = this.modelMap[item.storeName].model;
+      let variables = { input: item.data }
+      if (item.eventType === CRUDEvents.ADD) {
+        // Do not sent id to server - workaround for
+        // https://github.com/aerogear/graphback/issues/1900
+        variables = { input: { ...item.data, _id: undefined } }
+      }
       try {
-        const result = await this.options.client.mutation(mutation, { input: item.data }).toPromise();
+        const result = await this.options.client.mutation(mutation, variables).toPromise();
         await this.resultProcessor(item, result);
         await this.dequeueRequest();
         logger("Mutation dequeued");
@@ -184,9 +187,10 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
         const retry = this.errorHandler(error, item);
         if (!retry) {
           await this.dequeueRequest();
+          // TODO revert object
           // TODO dequeue all related elements
         } else {
-          // Network error
+          // Network error no action
           break;
         }
       }
@@ -195,10 +199,10 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
   }
 
   private async getStoredMutations() {
-    const storedMutations = await this.options.storage.query(mutationQueueModel.getStoreName(), { id: MUTATION_ROW_ID });
-    if (storedMutations && storedMutations.length === 1) {
-      if (storedMutations[0].items.length !== 0) {
-        return storedMutations[0].items;
+    let data = await this.options.storage.queryById(mutationQueueModel.getStoreName(), "id", MUTATION_ROW_ID);
+    if (data) {
+      if (data.items.length !== 0) {
+        return data.items;
       }
     }
   }
@@ -219,25 +223,27 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
   }
 
   private async dequeueRequest() {
-    const storeName = mutationQueueModel.getStoreName();
-    const queue = await this.options.storage.query(storeName, { id: MUTATION_ROW_ID });
-    if (queue?.items instanceof Array) {
-      queue.items.shift();
+    logger("Removing request from the queue");
+    const items = await this.getStoredMutations();
+    if (items && items instanceof Array) {
+      items.shift();
+      const storeName = mutationQueueModel.getStoreName();
+      const saved = await this.options.storage.saveOrUpdate(storeName, "id", { id: MUTATION_ROW_ID, items });
+      invariant(saved, "Store should be saved after mutation is rejected")
+    } else {
+      logger("Should not happen");
     }
-    this.options.storage.save(storeName, { id: MUTATION_ROW_ID, queue });
   }
 
-
   private async enqueueRequest(mutationRequest: MutationRequest, storage: LocalStorage = this.options.storage) {
-    let items = await storage.query(mutationQueueModel.getStoreName(), { id: MUTATION_ROW_ID });
-    if (items?.items) {
+    let items = await this.getStoredMutations();
+    if (items && items instanceof Array) {
       items.push(mutationRequest);
-    }
-    else {
+    } else {
       items = [mutationRequest];
     }
 
-    storage.saveOrUpdate(mutationQueueModel.getStoreName(), mutationQueueModel.getPrimaryKey(), { id: MUTATION_ROW_ID, items });
+    await storage.saveOrUpdate(mutationQueueModel.getStoreName(), 'id', { id: MUTATION_ROW_ID, items });
   }
 
   /**
@@ -258,7 +264,6 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
       this.open = false;
       return true;
     }
-
     return false;
   }
 
@@ -271,16 +276,27 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
 
     const model = this.modelMap[currentItem.storeName].model;
     const primaryKey = model.schema.getPrimaryKey();
-
-    // const response = data.data[Object.keys(data.data)[0]];
-    // if (response) {
-    //   // model.update(response, { [primaryKey]: response[primaryKey] })
-    // }
-    const clientSideId = currentItem.data[primaryKey];
-    if (clientSideId) {
-      if (currentItem.eventType === CRUDEvents.ADD) {
-        // TODO update id's of the elements in the queue
-      }
+    const returnedData = getFirstOperationData(data);
+    if (!returnedData) {
+      // Should not happen for valid queries/server
+      throw new Error("Missing data from query.")
     }
+    if (currentItem.eventType === CRUDEvents.ADD) {
+      // TODO handling for ADD works but it really convoluted
+      await this.options.storage.removeById(model.getStoreName(), primaryKey, currentItem.data);
+      await this.options.storage.save(model.getStoreName(), returnedData);
+
+      model.changeEventStream.publish({
+        eventType: CRUDEvents.DELETE,
+        data: [currentItem]
+      })
+      // model.changeEventStream.publish({
+      //   eventType: CRUDEvents.ADD,
+      //   data: [returnedData]
+      // })
+    }
+    // No need for handling for deletes and updates
+    // TODO rewrite id's on the queue
+    // TODO handle conflicts
   }
 }

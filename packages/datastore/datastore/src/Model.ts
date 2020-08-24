@@ -59,8 +59,8 @@ export class Model<T = unknown> {
   public schema: ModelSchema<T>;
   public replicationConfig: ModelReplicationConfig | undefined;
   public replication?: ModelChangeReplication;
+  public changeEventStream: PushStream<StoreChangeEvent>;
   private storage: LocalStorage;
-  private changeEventStream: PushStream<StoreChangeEvent>;
 
   constructor(
     schema: ModelSchema<T>,
