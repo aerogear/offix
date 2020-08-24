@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`generate 1`] = `
+exports[`generate with arguments 1`] = `
 "export interface Note {
     _id: string;
     title: string;
@@ -27,7 +27,7 @@ export type CommentChange =  Pick<Comment, \\"_id\\"> & Partial<CommentCreate>;
 "
 `;
 
-exports[`generate 2`] = `
+exports[`generate with arguments 2`] = `
 "{
   \\"Note\\": {
     \\"name\\": \\"Note\\",
@@ -110,7 +110,127 @@ exports[`generate 2`] = `
 }"
 `;
 
-exports[`generate 3`] = `
+exports[`generate with arguments 3`] = `
+"import { GeneratedModelSchema } from \\"offix-datastore\\";
+import jsonSchema from \\"./schema.json\\";
+
+export const schema = jsonSchema as GeneratedModelSchema;
+
+export * from \\"./types\\";
+"
+`;
+
+exports[`generate with defaults 1`] = `
+"export interface Note {
+    _id: string;
+    title: string;
+    description: string;
+    comments: string[]
+    _version: number;
+    _deleted: boolean;
+}
+
+export type NoteCreate = Omit<Note, \\"_id\\">;
+export type NoteChange =  Pick<Note, \\"_id\\"> & Partial<NoteCreate>;
+
+export interface Comment {
+    _id: string;
+    title: string;
+    description: string;
+    noteComment: string
+    _version: number;
+    _deleted: boolean;
+}
+
+export type CommentCreate = Omit<Comment, \\"_id\\">;
+export type CommentChange =  Pick<Comment, \\"_id\\"> & Partial<CommentCreate>;
+"
+`;
+
+exports[`generate with defaults 2`] = `
+"{
+  \\"Note\\": {
+    \\"name\\": \\"Note\\",
+    \\"version\\": 1,
+    \\"type\\": \\"object\\",
+    \\"primaryKey\\": \\"_id\\",
+    \\"properties\\": {
+      \\"_id\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"_id\\",
+        \\"isRequired\\": true,
+        \\"primary\\": true
+      },
+      \\"title\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"title\\",
+        \\"isRequired\\": true
+      },
+      \\"description\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"description\\",
+        \\"isRequired\\": true
+      },
+      \\"comments\\": {
+        \\"type\\": \\"string[]\\",
+        \\"key\\": \\"comments\\",
+        \\"isRequired\\": true
+      },
+      \\"_version\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"_version\\",
+        \\"isRequired\\": true
+      },
+      \\"_deleted\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"_version\\",
+        \\"isRequired\\": true
+      }
+    }
+  },
+  \\"Comment\\": {
+    \\"name\\": \\"Comment\\",
+    \\"version\\": 1,
+    \\"type\\": \\"object\\",
+    \\"primaryKey\\": \\"_id\\",
+    \\"properties\\": {
+      \\"_id\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"_id\\",
+        \\"isRequired\\": true,
+        \\"primary\\": true
+      },
+      \\"title\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"title\\",
+        \\"isRequired\\": true
+      },
+      \\"description\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"description\\",
+        \\"isRequired\\": true
+      },
+      \\"noteComment\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"noteComment\\",
+        \\"isRequired\\": true
+      },
+      \\"_version\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"_version\\",
+        \\"isRequired\\": true
+      },
+      \\"_deleted\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"_version\\",
+        \\"isRequired\\": true
+      }
+    }
+  }
+}"
+`;
+
+exports[`generate with defaults 3`] = `
 "import { GeneratedModelSchema } from \\"offix-datastore\\";
 import jsonSchema from \\"./schema.json\\";
 

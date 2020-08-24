@@ -14,7 +14,7 @@ export const isDataSyncClientModel = (model: ModelDefinition) => {
 
 export const makeDirIfNotExists = (path: string) => {
     try {
-        mkdirSync(path);
+        mkdirSync(path, { recursive: true });
     } catch (error) {
         // nothing to do here, the directory already exists
     }
