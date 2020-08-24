@@ -155,7 +155,7 @@ export abstract class AbstractSQLAdapter implements StorageAdapter {
         reject(error);
         return false;
       };
-      this.sqlite.transaction((tx) => {
+      this.sqlite.transaction((tx: SQLTransaction) => {
         tx.executeSql(
           query,
           [...args],
@@ -176,7 +176,7 @@ export abstract class AbstractSQLAdapter implements StorageAdapter {
         reject(error);
         return false;
       };
-      this.sqlite.readTransaction((tx) => {
+      this.sqlite.readTransaction((tx: SQLTransaction) => {
         tx.executeSql(
           query,
           [...args],
@@ -210,7 +210,7 @@ export abstract class AbstractSQLAdapter implements StorageAdapter {
         reject(err);
         return false;
       };
-      this.sqlite.transaction((tx) => {
+      this.sqlite.transaction((tx: SQLTransaction) => {
         tx.executeSql(
           statement,
           args,
