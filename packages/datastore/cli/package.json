@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "debug": "yarn build&&node dist/index generate",
+    "debug": "yarn build && node dist/index generate",
     "test": "yarn build&&jest",
     "lint-fix": "eslint \"./src/*\" --fix"
   },
