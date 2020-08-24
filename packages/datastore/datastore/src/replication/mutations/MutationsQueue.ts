@@ -135,13 +135,24 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
     // This will ensure consistency for situations when model changed (without migrating queue)
     const storeName = model.getStoreName();
     const operations = this.modelMap[storeName];
+
     invariant(operations, "Missing GraphQL mutations for replication");
-    const mutationRequest = {
+    let mutationRequest = {
       storeName,
       data,
       eventType
     };
-    await this.enqueueRequest(mutationRequest, store);
+    if (Array.isArray(data)) {
+      // handling multiple updates to different objects for single model
+      // we need to decompose them into individual changes
+      for (const element of data) {
+        mutationRequest.data = element;
+        await this.enqueueRequest(mutationRequest, store);
+      }
+    } else {
+      await this.enqueueRequest(mutationRequest, store);
+    }
+
     logger("Saved Queue. Preparing to process");
     this.process();
   }
@@ -177,6 +188,9 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
         // Do not sent id to server - workaround for
         // https://github.com/aerogear/graphback/issues/1900
         variables = { input: { ...item.data, _id: undefined } }
+      } else {
+        // Do not sent _deleted
+        variables.input._deleted = undefined;
       }
       try {
         const result = await this.options.client.mutation(mutation, variables).toPromise();
@@ -267,7 +281,6 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
     return false;
   }
 
-  // TODO not finished
   private async resultProcessor(currentItem: MutationRequest, data: OperationResult<any>) {
     logger("Processing result from server");
     if (data.error) {
@@ -286,10 +299,11 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
       await this.options.storage.removeById(model.getStoreName(), primaryKey, currentItem.data);
       await this.options.storage.save(model.getStoreName(), returnedData);
 
-      model.changeEventStream.publish({
-        eventType: CRUDEvents.DELETE,
-        data: [currentItem]
-      })
+      // Still working on this
+      // model.changeEventStream.publish({
+      //   eventType: CRUDEvents.DELETE,
+      //   data: [currentItem]
+      // })
       // model.changeEventStream.publish({
       //   eventType: CRUDEvents.ADD,
       //   data: [returnedData]
