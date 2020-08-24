@@ -5,7 +5,7 @@ import { ToggleTodoProps } from "../../types";
 import { schema } from './formSchema';
 import { useEditTodo } from '../../datastore/hooks';
 
-export function ToggleTodo ({ todo }: ToggleTodoProps) {
+export function ToggleTodo({ todo }: ToggleTodoProps) {
 
   const { update: editTodo } = useEditTodo();
 
@@ -14,11 +14,11 @@ export function ToggleTodo ({ todo }: ToggleTodoProps) {
       ...todo,
       completed: !todo.completed,
     })
-    .then((res: any) => console.log(res))
-    .catch((error: any) => console.log(error));
+      .then((res: any) => console.log("response", res))
+      .catch((error: any) => console.log("error", error));
   };
 
-  return(
+  return (
     <QuickForm schema={schema}>
       <BoolField
         label={todo.title}
