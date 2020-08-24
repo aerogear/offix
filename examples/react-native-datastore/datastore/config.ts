@@ -13,7 +13,7 @@ export const datastore = new DataStore({
     },
     networkStatus: new NativeNetworkStatus(),
     delta: { enabled: true, pullInterval: 20000 },
-    mutations: { enabled: true },
+    mutations: { enabled: false },
     liveupdates: { enabled: true }
   }
 }, {
