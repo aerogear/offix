@@ -13,4 +13,13 @@ export class WebSQLAdapter extends AbstractSQLAdapter implements StorageAdapter 
       "Offix datastore", 5 * 1024 * 1024
     ));
   }
+
+  public async saveOrUpdate(storeName: string, idField: string, input: any) {
+    const store = await this.queryById(storeName, idField, input[idField]);
+    if (!store.length) {
+      return this.save(storeName, input);
+    }
+    return this.update(storeName, input, { [idField]: input[idField] });
+  }
+  
 }
