@@ -61,7 +61,3 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
-
-#Native builds
-/ios
-/android
