@@ -10,7 +10,7 @@ const logger = createLogger("sqlite");
 /**
  * Web Storage Implementation for DataStore using IndexedDB
  */
-export abstract class AbstractSQLAdapter implements StorageAdapter {
+export abstract class BaseSQLAdapter implements StorageAdapter {
   private sqlite: Database;
   private stores: ModelSchema[] = [];
 

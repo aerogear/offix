@@ -1,12 +1,12 @@
 // @ts-ignore
 import SQLite from "react-native-sqlite-2";
 import { StorageAdapter } from "../../api/StorageAdapter";
-import { AbstractSQLAdapter } from "./AbstractSQLAdapter";
+import { BaseSQLAdapter } from "./BaseSQLAdapter";
 
 /**
  * Web Storage Implementation for DataStore using IndexedDB
  */
-export class SQLiteAdapter extends AbstractSQLAdapter implements StorageAdapter {
+export class SQLiteAdapter extends BaseSQLAdapter implements StorageAdapter {
   constructor(dbName: string, schemaVersion: number) {
     super(SQLite.openDatabase(
       dbName,
