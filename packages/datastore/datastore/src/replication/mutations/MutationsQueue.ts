@@ -137,7 +137,7 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
     const operations = this.modelMap[storeName];
 
     invariant(operations, "Missing GraphQL mutations for replication");
-    let mutationRequest = {
+    const mutationRequest = {
       storeName,
       data,
       eventType
@@ -182,12 +182,11 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
 
       const mutation = this.getMutationDocument(item);
 
-      const model = this.modelMap[item.storeName].model;
-      let variables = { input: item.data }
+      let variables = { input: item.data };
       if (item.eventType === CRUDEvents.ADD) {
         // Do not sent id to server - workaround for
         // https://github.com/aerogear/graphback/issues/1900
-        variables = { input: { ...item.data, _id: undefined } }
+        variables = { input: { ...item.data, _id: undefined } };
       } else {
         // Do not sent _deleted
         variables.input._deleted = undefined;
@@ -213,7 +212,7 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
   }
 
   private async getStoredMutations() {
-    let data = await this.options.storage.queryById(mutationQueueModel.getStoreName(), "id", MUTATION_ROW_ID);
+    const data = await this.options.storage.queryById(mutationQueueModel.getStoreName(), "id", MUTATION_ROW_ID);
     if (data) {
       if (data.items.length !== 0) {
         return data.items;
@@ -243,7 +242,7 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
       items.shift();
       const storeName = mutationQueueModel.getStoreName();
       const saved = await this.options.storage.saveOrUpdate(storeName, "id", { id: MUTATION_ROW_ID, items });
-      invariant(saved, "Store should be saved after mutation is rejected")
+      invariant(saved, "Store should be saved after mutation is rejected");
     } else {
       logger("Should not happen");
     }
@@ -257,7 +256,7 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
       items = [mutationRequest];
     }
 
-    await storage.saveOrUpdate(mutationQueueModel.getStoreName(), 'id', { id: MUTATION_ROW_ID, items });
+    await storage.saveOrUpdate(mutationQueueModel.getStoreName(), "id", { id: MUTATION_ROW_ID, items });
   }
 
   /**
@@ -292,18 +291,31 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
     const returnedData = getFirstOperationData(data);
     if (!returnedData) {
       // Should not happen for valid queries/server
-      throw new Error("Missing data from query.")
+      throw new Error("Missing data from query.");
     }
     if (currentItem.eventType === CRUDEvents.ADD) {
       // TODO handling for ADD works but it really convoluted
       await this.options.storage.removeById(model.getStoreName(), primaryKey, currentItem.data);
-      await this.options.storage.save(model.getStoreName(), returnedData);
+      try {
+        await this.options.storage.save(model.getStoreName(), returnedData);
+        model.changeEventStream.publish({
+          eventType: CRUDEvents.ID_SWAP,
+          data: [
+            {
+              previous: currentItem.data,
+              current: returnedData
+            }
+          ]
+        });
+      } catch (error) {
+        // if key already exists then live update has already saved the result
+        // in this case, emit a delete event for the old document
+        model.changeEventStream.publish({
+          eventType: CRUDEvents.DELETE,
+          data: [currentItem.data]
+        });
+      }
 
-      // Still working on this
-      // model.changeEventStream.publish({
-      //   eventType: CRUDEvents.DELETE,
-      //   data: [currentItem]
-      // })
       // model.changeEventStream.publish({
       //   eventType: CRUDEvents.ADD,
       //   data: [returnedData]

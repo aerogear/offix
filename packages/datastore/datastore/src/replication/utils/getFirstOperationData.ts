@@ -15,4 +15,4 @@ export const getFirstOperationData = (result: any) => {
     const firstOperationName = keys[0];
     return result.data[firstOperationName];
   }
-}
+};

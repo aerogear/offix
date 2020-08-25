@@ -13,6 +13,11 @@ export enum CRUDEvents {
   UPDATE = "UPDATE",
 
   /**
+   * Document primary key was updated with server version
+   */
+  ID_SWAP = "ID_SWAP",
+
+  /**
    * Data was deleted from local database
    */
   DELETE = "DELETE"
