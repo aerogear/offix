@@ -4,7 +4,6 @@ export interface Todo {
     description?: string;
     completed?: boolean
     _version: number;
-    _deleted: boolean;
 }
 
 export type TodoCreate = Omit<Todo, "_id">;
@@ -14,7 +13,6 @@ export interface User {
     _id: string;
     name: string
     _version: number;
-    _deleted: boolean;
 }
 
 export type UserCreate = Omit<User, "_id">;

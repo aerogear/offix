@@ -5,22 +5,32 @@ import { CRUDEvents, StoreChangeEvent } from "../../storage";
 import { Filter } from "../../filters";
 
 const onAdded = (currentData: any[], newData: any[]) => {
-    if (!currentData) {return newData;}
+    if (!currentData) { return newData; }
     return [...currentData, ...newData];
 };
 
 const onChanged = (currentData: any[], newData: any[], primaryKey: string) => {
-    if (!currentData) {return [];}
+    if (!currentData) { return []; }
     // What happens to data that get's updated and falls outside original query filter?
     return currentData.map((d) => {
         const index = newData.findIndex((newD) => newD[primaryKey] === d[primaryKey]);
-        if (index === -1) {return d;}
+        if (index === -1) { return d; }
         return newData[index];
     });
 };
 
+const onIdSwapped = (currentData: any[], newData: any[], primaryKey: string) => {
+    if (!currentData) { return []; }
+
+    return currentData.map((d) => {
+        const index = newData.findIndex((newD) => newD.previous[primaryKey] === d[primaryKey]);
+        if (index === -1) { return d; }
+        return newData[index].current;
+    });
+};
+
 const onRemoved = (currentData: any[], removedData: any[], primaryKey: string) => {
-    if (!currentData) {return [];}
+    if (!currentData) { return []; }
     return currentData
         .filter(
             (d) => removedData.findIndex((newD) => newD[primaryKey] === d[primaryKey])
@@ -34,6 +44,9 @@ export const updateResult = (state: ResultState, event: StoreChangeEvent, primar
 
         case CRUDEvents.UPDATE:
             return onChanged(state.data, event.data, primaryKey);
+
+        case CRUDEvents.ID_SWAP:
+            return onIdSwapped(state.data, event.data, primaryKey);
 
         case CRUDEvents.DELETE:
             return onRemoved(state.data, event.data, primaryKey);

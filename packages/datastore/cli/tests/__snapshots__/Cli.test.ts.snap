@@ -7,7 +7,6 @@ exports[`generate with defaults 1`] = `
     description: string;
     comments: string[]
     _version: number;
-    _deleted: boolean;
 }
 
 export type NoteCreate = Omit<Note, \\"_id\\">;
@@ -19,7 +18,6 @@ export interface Comment {
     description: string;
     noteComment: string
     _version: number;
-    _deleted: boolean;
 }
 
 export type CommentCreate = Omit<Comment, \\"_id\\">;
@@ -60,11 +58,6 @@ exports[`generate with defaults 2`] = `
         \\"type\\": \\"string\\",
         \\"key\\": \\"_version\\",
         \\"isRequired\\": true
-      },
-      \\"_deleted\\": {
-        \\"type\\": \\"string\\",
-        \\"key\\": \\"_version\\",
-        \\"isRequired\\": true
       }
     }
   },
@@ -99,11 +92,6 @@ exports[`generate with defaults 2`] = `
         \\"type\\": \\"string\\",
         \\"key\\": \\"_version\\",
         \\"isRequired\\": true
-      },
-      \\"_deleted\\": {
-        \\"type\\": \\"string\\",
-        \\"key\\": \\"_version\\",
-        \\"isRequired\\": true
       }
     }
   }
@@ -127,7 +115,6 @@ exports[`generate with positional arguments 1`] = `
     description: string;
     comments: string[]
     _version: number;
-    _deleted: boolean;
 }
 
 export type NoteCreate = Omit<Note, \\"_id\\">;
@@ -139,7 +126,6 @@ export interface Comment {
     description: string;
     noteComment: string
     _version: number;
-    _deleted: boolean;
 }
 
 export type CommentCreate = Omit<Comment, \\"_id\\">;
@@ -180,11 +166,6 @@ exports[`generate with positional arguments 2`] = `
         \\"type\\": \\"string\\",
         \\"key\\": \\"_version\\",
         \\"isRequired\\": true
-      },
-      \\"_deleted\\": {
-        \\"type\\": \\"string\\",
-        \\"key\\": \\"_version\\",
-        \\"isRequired\\": true
       }
     }
   },
@@ -216,11 +197,6 @@ exports[`generate with positional arguments 2`] = `
         \\"isRequired\\": true
       },
       \\"_version\\": {
-        \\"type\\": \\"string\\",
-        \\"key\\": \\"_version\\",
-        \\"isRequired\\": true
-      },
-      \\"_deleted\\": {
         \\"type\\": \\"string\\",
         \\"key\\": \\"_version\\",
         \\"isRequired\\": true

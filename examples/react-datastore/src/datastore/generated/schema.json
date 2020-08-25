@@ -27,11 +27,6 @@
         "type": "string",
         "key": "_version",
         "isRequired": true
-      },
-      "_deleted": {
-        "type": "string",
-        "key": "_version",
-        "isRequired": true
       }
     }
   },
@@ -53,11 +48,6 @@
         "isRequired": true
       },
       "_version": {
-        "type": "string",
-        "key": "_version",
-        "isRequired": true
-      },
-      "_deleted": {
         "type": "string",
         "key": "_version",
         "isRequired": true

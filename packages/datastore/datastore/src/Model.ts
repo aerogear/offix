@@ -59,8 +59,8 @@ export class Model<T = unknown> {
   public schema: ModelSchema<T>;
   public replicationConfig: ModelReplicationConfig | undefined;
   public replication?: ModelChangeReplication;
+  public changeEventStream: PushStream<StoreChangeEvent>;
   private storage: LocalStorage;
-  private changeEventStream: PushStream<StoreChangeEvent>;
 
   constructor(
     schema: ModelSchema<T>,
@@ -101,12 +101,10 @@ export class Model<T = unknown> {
   }
 
   public async save(input: Partial<T>): Promise<T> {
-    const db = await this.storage.createTransaction();
     input = this.addPrimaryKeyIfNeeded(input);
     try {
-      const data = await db.save(this.schema.getStoreName(), input);
-      await this.replication?.saveChangeForReplication(this, data, CRUDEvents.ADD, db);
-      await db.commit();
+      const data = await this.storage.save(this.schema.getStoreName(), input);
+      await this.replication?.saveChangeForReplication(this, data, CRUDEvents.ADD, this.storage);
       const event = {
         eventType: CRUDEvents.ADD,
         data: [data]
@@ -114,7 +112,6 @@ export class Model<T = unknown> {
       this.changeEventStream.publish(event);
       return data;
     } catch (error) {
-      await db.rollback();
       throw error;
     }
   }
@@ -126,12 +123,10 @@ export class Model<T = unknown> {
    * @param input
    */
   public async saveOrUpdate(input: Partial<T>): Promise<T> {
-    const db = await this.storage.createTransaction();
     input = this.addPrimaryKeyIfNeeded(input);
     try {
-      const data = await db.saveOrUpdate(this.schema.getStoreName(), this.schema.getPrimaryKey(), input);
-      await this.replication?.saveChangeForReplication(this, data, CRUDEvents.ADD, db);
-      await db.commit();
+      const data = await this.storage.saveOrUpdate(this.schema.getStoreName(), this.schema.getPrimaryKey(), input);
+      await this.replication?.saveChangeForReplication(this, data, CRUDEvents.ADD, this.storage);
       const event = {
         eventType: CRUDEvents.ADD,
         data: [data]
@@ -139,7 +134,6 @@ export class Model<T = unknown> {
       this.changeEventStream.publish(event);
       return data;
     } catch (error) {
-      await db.rollback();
       throw error;
     }
   }
@@ -152,11 +146,9 @@ export class Model<T = unknown> {
    */
   public async update(input: Partial<T>, filter?: Filter<T>) {
     invariant(filter, "filter needs to be provided for update");
-    const db = await this.storage.createTransaction();
     try {
-      const data = await db.update(this.schema.getStoreName(), input, filter);
-      await this.replication?.saveChangeForReplication(this, data, CRUDEvents.UPDATE, db);
-      await db.commit();
+      const data = await this.storage.update(this.schema.getStoreName(), input, filter);
+      await this.replication?.saveChangeForReplication(this, data, CRUDEvents.UPDATE, this.storage);
       const event = {
         eventType: CRUDEvents.UPDATE,
         data
@@ -164,7 +156,6 @@ export class Model<T = unknown> {
       this.changeEventStream.publish(event);
       return data;
     } catch (error) {
-      await db.rollback();
       throw error;
     }
   }
@@ -178,11 +169,9 @@ export class Model<T = unknown> {
     const primaryKey = this.schema.getPrimaryKey();
     invariant((input as any)[primaryKey], "Missing primary key for update");
 
-    const db = await this.storage.createTransaction();
     try {
-      const data = await db.updateById(this.schema.getStoreName(), this.schema.getPrimaryKey(), input);
-      await this.replication?.saveChangeForReplication(this, data, CRUDEvents.UPDATE, db);
-      await db.commit();
+      const data = await this.storage.updateById(this.schema.getStoreName(), this.schema.getPrimaryKey(), input);
+      await this.replication?.saveChangeForReplication(this, data, CRUDEvents.UPDATE, this.storage);
       const event = {
         eventType: CRUDEvents.UPDATE,
         data: [data]
@@ -190,7 +179,6 @@ export class Model<T = unknown> {
       this.changeEventStream.publish(event);
       return data;
     } catch (error) {
-      await db.rollback();
       throw error;
     }
   }
@@ -202,12 +190,10 @@ export class Model<T = unknown> {
    */
   public async remove(filter: Filter<T>) {
     invariant(filter, "filter needs to be provided for deletion");
-    const db = await this.storage.createTransaction();
     try {
       const primaryKey = this.schema.getPrimaryKey();
-      const data = await db.remove(this.schema.getStoreName(), primaryKey, filter);
-      await this.replication?.saveChangeForReplication(this, data, CRUDEvents.DELETE, db);
-      await db.commit();
+      const data = await this.storage.remove(this.schema.getStoreName(), primaryKey, filter);
+      await this.replication?.saveChangeForReplication(this, data, CRUDEvents.DELETE, this.storage);
       const event = {
         eventType: CRUDEvents.DELETE,
         data
@@ -215,7 +201,6 @@ export class Model<T = unknown> {
       this.changeEventStream.publish(event);
       return data;
     } catch (error) {
-      await db.rollback();
       throw error;
     }
   }
@@ -230,11 +215,9 @@ export class Model<T = unknown> {
     const primaryKey = this.schema.getPrimaryKey();
     invariant((input as any)[primaryKey], "Missing primary key for delete");
 
-    const db = await this.storage.createTransaction();
     try {
-      const data = await db.removeById(this.schema.getStoreName(), this.schema.getPrimaryKey(), input);
-      await this.replication?.saveChangeForReplication(this, data, CRUDEvents.DELETE, db);
-      await db.commit();
+      const data = await this.storage.removeById(this.schema.getStoreName(), this.schema.getPrimaryKey(), input);
+      await this.replication?.saveChangeForReplication(this, data, CRUDEvents.DELETE, this.storage);
       const event = {
         eventType: CRUDEvents.DELETE,
         // TODO Why array here?
@@ -243,7 +226,6 @@ export class Model<T = unknown> {
       this.changeEventStream.publish(event);
       return data;
     } catch (error) {
-      await db.rollback();
       throw error;
     }
   }
