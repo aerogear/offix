@@ -1,4 +1,5 @@
 import invariant from "tiny-invariant";
+import traverse from "traverse";
 
 // TODO change to constants/enums
 export const prepareStatement = (input: any, type: string = "insert"): [string, any[]] => {
@@ -42,3 +43,26 @@ export const flattenResultSet = (rows: SQLResultSetRowList): any[] => {
     }
     return result;
 };
+
+export function serializeData(input: any): any {
+  // eslint-disable-next-line
+  return traverse(input).map(function(item) {
+    // we only want to serialize the nodes
+    // and not the root object
+    if (this.isRoot) { return; }
+    if ((Array.isArray(item) || typeof item === "object")) {
+      this.update(`serialized:${JSON.stringify(item)}`);
+    }
+  });
+}
+
+export function deserializeData(data: any): any {
+  return traverse(data).map(function(d) {
+    if (typeof d === "string") {
+      const item = d.split("serialized:");
+      if (item.length > 1) {
+        this.update(JSON.parse(item[1]));
+      }
+    }
+  });
+}

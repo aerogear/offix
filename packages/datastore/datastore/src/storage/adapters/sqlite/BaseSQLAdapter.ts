@@ -1,28 +1,21 @@
-import invariant from "tiny-invariant";
 import { StorageAdapter } from "../../api/StorageAdapter";
 import { createLogger } from "../../../utils/logger";
 import { ModelSchema } from "../../../ModelSchema";
 import { Filter } from "../../../filters";
-import { prepareStatement, flattenResultSet, getType } from "./utils";
+import { prepareStatement, flattenResultSet, getType, serializeData, deserializeData } from "./utils";
 import { filterToSQL } from "./filterToSQL";
-
 
 const logger = createLogger("sqlite");
 
 /**
  * Web Storage Implementation for DataStore using IndexedDB
  */
-export class WebSQLAdapter implements StorageAdapter {
+export abstract class BaseSQLAdapter implements StorageAdapter {
   private sqlite: Database;
   private stores: ModelSchema[] = [];
 
-  constructor(dbName: string, schemaVersion: number) {
-    invariant("openDatabase" in window, "websql not supported");
-    this.sqlite = window.openDatabase(
-      dbName,
-      schemaVersion.toString(),
-      "Offix datastore", 5 * 1024 * 1024
-    );
+  constructor(sqlite: Database) {
+    this.sqlite = sqlite;
   }
 
   public addStore(config: ModelSchema) {
@@ -34,7 +27,7 @@ export class WebSQLAdapter implements StorageAdapter {
     for await (const storeName of existingStoreNames) {
       const existingModelStoreName = this.stores.find(((store) => (storeName === store.getName())));
       if (existingModelStoreName) { return; }
-      await this.transaction("DROP TABLE ?", [existingModelStoreName]);
+      await this.transaction(`DROP TABLE IF EXISTS ${existingModelStoreName}`, []);
     }
     for await (const store of this.stores) {
       if (existingStoreNames.includes(store.getName())) { return; }
@@ -44,49 +37,54 @@ export class WebSQLAdapter implements StorageAdapter {
   }
 
   public async save(storeName: string, input: any): Promise<any> {
-    const [cols, vals] = prepareStatement(input, "insert");
+    const serialized = serializeData(input);
+    const [cols, vals] = prepareStatement(serialized, "insert");
     const query = `INSERT INTO ${storeName} ${cols}`;
     await this.transaction(query, vals);
-    return input;
+    return serialized;
   }
 
   public async query(storeName: string, filter?: Filter): Promise<any[]> {
     if (!filter) {
-      return await this.fetchAll(storeName);
+      const data = await this.fetchAll(storeName);
+      return deserializeData(data);
     }
     const condition = filterToSQL(filter);
     const query = `SELECT * FROM ${storeName} ${condition}`;
     // @ts-ignore
     const res = await this.readTransaction(query, []);
-    return res;
+    return deserializeData(res);
   }
 
   public async queryById(storeName: string, idField: string, id: string) {
-    const query = `SELECT * FROM ${storeName} WHERE ${idField} = ${id}`;
+    const escapedId = (typeof id === "string") ? `"${id}"` : id;
+    const query = `SELECT * FROM ${storeName} WHERE ${idField} = ${escapedId}`;
     // @ts-ignore
     const res = await this.readTransaction(query, []);
-    return res;
+    return deserializeData(res);
   }
 
   public async update(storeName: string, input: any, filter?: Filter): Promise<any> {
     const condition = filterToSQL(filter);
-    const [cols, vals] = prepareStatement(input, "update");
+    const [cols, vals] = prepareStatement(serializeData(input), "update");
     const query = `UPDATE ${storeName} SET ${cols} ${condition}`;
     // @ts-ignore
     return this.transaction(query, [...vals]);
   }
 
   public async updateById(storeName: string, idField: string, input: any) {
-    const [cols, vals] = prepareStatement(input, "update");
+    const [cols, vals] = prepareStatement(serializeData(input), "update");
     const id = input[idField];
-    const query = `UPDATE ${storeName} SET ${cols} ${idField} = ${id}`;
+    const escapedId = (typeof id === "string") ? `"${id}"` : id;
+    const query = `UPDATE ${storeName} SET ${cols} ${idField} = ${escapedId}`;
     // @ts-ignore
     return this.transaction(query, [...vals]);
   }
 
   public async saveOrUpdate(storeName: string, idField: string, input: any) {
-    const [cols, vals] = prepareStatement(input, "insert");
-    const [updateCols] = prepareStatement(input, "update");
+    const serializedInput = serializeData(input);
+    const [cols, vals] = prepareStatement(serializedInput, "insert");
+    const [updateCols] = prepareStatement(serializedInput, "update");
     const query = `INSERT INTO ${storeName} ${cols}`
       + ` ON CONFLICT(${idField}) DO UPDATE SET ${updateCols}`;
     // @ts-ignore
@@ -107,7 +105,8 @@ export class WebSQLAdapter implements StorageAdapter {
   }
 
   public async removeById(storeName: string, idField: string, id: string): Promise<any> {
-    const query = `DELETE FROM ${storeName} ${idField} ${id}`;
+    const escapedId = (typeof id === "string") ? `"${id}"` : id;
+    const query = `DELETE FROM ${storeName} ${idField} ${escapedId}`;
     // @ts-ignore
     return this.transaction(query, []);
   }
@@ -117,16 +116,21 @@ export class WebSQLAdapter implements StorageAdapter {
   }
 
   createTransaction(): Promise<StorageAdapter> {
-    throw new Error("Method not implemented.");
+    return new Promise((resolve) => {
+      resolve(this);
+    });
   }
   commit(): Promise<void> {
-    throw new Error("Method not implemented.");
+    logger("[Commit] Method not implemented.");
+    return Promise.resolve();
   }
   rollback(): Promise<void> {
-    throw new Error("Method not implemented.");
+    logger("[Rollback] Method not implemented.");
+    return Promise.resolve();
   }
+
   isTransactionOpen(): boolean {
-    throw new Error("Method not implemented.");
+    throw new Error("[isOpen] Method not implemented.");
   }
 
   private async fetchAll(storeName: string) {
@@ -135,7 +139,7 @@ export class WebSQLAdapter implements StorageAdapter {
 
   private async getStoreNames(): Promise<string[]> {
     const res = await this.readTransaction(
-      "SELECT name FROM sqlite_master WHERE name LIKE 'user_%'",
+      "SELECT name FROM sqlite_master WHERE name NOT LIKE 'android_%' AND name NOT LIKE 'sqlite_%'",
       []
     );
     return res.map((r) => r.name);
@@ -151,7 +155,7 @@ export class WebSQLAdapter implements StorageAdapter {
         reject(error);
         return false;
       };
-      this.sqlite.transaction((tx) => {
+      this.sqlite.transaction((tx: SQLTransaction) => {
         tx.executeSql(
           query,
           [...args],
@@ -172,7 +176,7 @@ export class WebSQLAdapter implements StorageAdapter {
         reject(error);
         return false;
       };
-      this.sqlite.readTransaction((tx) => {
+      this.sqlite.readTransaction((tx: SQLTransaction) => {
         tx.executeSql(
           query,
           [...args],
@@ -206,7 +210,7 @@ export class WebSQLAdapter implements StorageAdapter {
         reject(err);
         return false;
       };
-      this.sqlite.transaction((tx) => {
+      this.sqlite.transaction((tx: SQLTransaction) => {
         tx.executeSql(
           statement,
           args,
