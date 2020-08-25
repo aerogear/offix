@@ -1,11 +1,11 @@
-import { AbstractSQLAdapter } from "./AbstractSQLAdapter";
+import { BaseSQLAdapter } from "./BaseSQLAdapter";
 import { StorageAdapter } from "../../api/StorageAdapter";
 
 
 /**
  * Web Storage Implementation for DataStore using IndexedDB
  */
-export class WebSQLAdapter extends AbstractSQLAdapter implements StorageAdapter {
+export class WebSQLAdapter extends BaseSQLAdapter implements StorageAdapter {
   constructor(dbName: string, schemaVersion: number) {
     super(window.openDatabase(
       dbName,
