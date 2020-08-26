@@ -64,7 +64,10 @@
       {
         "type": "category",
         "label": "Platforms",
-        "items": ["datastore/react"]
+        "items": [
+          "datastore/react",
+          "datastore/react-native"
+        ]
       },
       {
         "type": "category",
