@@ -3,7 +3,7 @@
  */
 
 import "fake-indexeddb/auto";
-import { MutationsReplicationQueue, getQueueUpdates } from "../src/replication/mutations/MutationsQueue";
+import { MutationsReplicationQueue } from "../src/replication/mutations/MutationsQueue";
 import { LocalStorage, CRUDEvents } from "../src/storage";
 import { IndexedDBStorageAdapter } from "../src/storage/adapters/indexedDB/IndexedDBStorageAdapter";
 import { WebNetworkStatus } from "../src/replication/network/WebNetworkStatus";
@@ -14,6 +14,8 @@ import { readFileSync } from "fs";
 import { NetworkIndicator } from "../src/replication/network/NetworkIndicator";
 import { GlobalReplicationConfig } from "../src/replication/api/ReplicationConfig";
 import { MutationRequest } from "../src/replication/mutations/MutationRequest";
+import { QueueUpdateProcessor } from "../src/replication/mutations/QueueUpdateProcessor";
+import { ObservablePushStream } from "../src/utils/PushStream";
 
 const DB_NAME = "test";
 const STORE_NAME = "user_Test";
@@ -21,12 +23,11 @@ const jsonSchema = JSON.parse(readFileSync(`${__dirname}/schema.json`).toString(
 const adapter = new IndexedDBStorageAdapter(DB_NAME, 1);
 const storage = new LocalStorage(adapter);
 const schema = new ModelSchema<any>(jsonSchema.Test);
-const model = { getStoreName: () => STORE_NAME } as any;
-const ModelMap = {
-  clientStore: {
-    getSchema: () => ({ getPrimaryKey: () => "id" })
-  }
-};
+const model = {
+  changeEventStream: new ObservablePushStream(),
+  getSchema: () => schema,
+  getStoreName: () => STORE_NAME,
+} as any;
 
 const windowEvents: any = {};
 window.addEventListener = jest.fn((event, cb) => {
@@ -67,11 +68,6 @@ const buildQueue = (client: any) => {
     client,
     networkIndicator
   });
-};
-const dummyRequest = {
-  eventType: CRUDEvents.ADD,
-  variables: { id: "2" },
-  storeName: STORE_NAME,
 };
 
 
@@ -125,81 +121,135 @@ test.skip("Update id after suscess response", (done) => {
     });
 });
 
-test("Construct queue updates", () => {
-  const items: MutationRequest[] = [
-    {
-      storeName: "clientStore",
+describe.only("Test QueueUpdateProcessor", () => {
+  const modelMap = {
+    [STORE_NAME]: ({ documents: {}, model } as any)
+  };
+
+  function buildQueueUpdateProcessor(currentItem: MutationRequest, serverData: any) {
+    return new QueueUpdateProcessor(
+      modelMap, currentItem, serverData, storage
+    );
+  }
+
+  beforeEach(() => {
+    model.changeEventStream.finishSubscriptions();
+    return storage.save(STORE_NAME, { id: "test" });
+  });
+  afterEach(() => storage.remove(STORE_NAME, "id"));
+
+  test("Update queue items", async () => {
+    const items: MutationRequest[] = [
+      {
+        storeName: STORE_NAME,
+        data: {
+          id: "test",
+          test: {
+            test: ["client"]
+          }
+        },
+        eventType: CRUDEvents.ADD
+      }
+    ];
+    const processor = buildQueueUpdateProcessor({
+      storeName: STORE_NAME,
       data: {
-        id: "test",
-        test: {
-          test: ["client"]
-        }
+        id: "client"
       },
       eventType: CRUDEvents.ADD
-    }
-  ];
+    }, { id: "server" });
+    await processor.updateQueue(items);
+    expect(items[0].data.test.test[0]).toEqual("server");
+  });
 
-  const result = getQueueUpdates(items, ModelMap, "client", "server", "id");
-  expect(result[0].storeName).toEqual("clientStore");
-  expect(result[0].update.test.test[0]).toEqual("server");
-});
-
-test("Only use latest change when constructing queue updates", () => {
-  const items: MutationRequest[] = [
-    {
-      storeName: "clientStore",
+  test("Only use latest change", (done) => {
+    const items: MutationRequest[] = [
+      {
+        storeName: STORE_NAME,
+        data: {
+          id: "test",
+          test: {
+            test: ["client"]
+          }
+        },
+        eventType: CRUDEvents.ADD
+      },
+      {
+        storeName: STORE_NAME,
+        data: {
+          id: "test",
+          test: {
+            test: ["somethingelse"]
+          }
+        },
+        eventType: CRUDEvents.UPDATE
+      },
+      {
+        storeName: STORE_NAME,
+        data: {
+          id: "test",
+          random: "a random field"
+        },
+        eventType: CRUDEvents.UPDATE
+      }
+    ];
+    const processor = buildQueueUpdateProcessor({
+      storeName: STORE_NAME,
       data: {
-        id: "test",
-        test: {
-          test: ["client"]
-        }
+        id: "client"
       },
       eventType: CRUDEvents.ADD
-    },
-    {
-      storeName: "clientStore",
-      data: {
-        id: "test",
-        test: {
-          test: ["somethingelse"]
-        }
-      },
-      eventType: CRUDEvents.UPDATE
-    },
-    {
-      storeName: "clientStore",
-      data: {
-        id: "test",
-        random: "a random field"
-      },
-      eventType: CRUDEvents.UPDATE
-    }
-  ];
-  const result = getQueueUpdates(items, ModelMap, "client", "server", "id");
-  expect(result[0].storeName).toEqual("clientStore");
-  expect(result[0].update.test.test[0]).toEqual("somethingelse");
-});
+    }, { id: "server" });
 
-test("Remove queue update if it has been deleted", () => {
-  const items: MutationRequest[] = [
-    {
-      storeName: "clientStore",
+    model
+      .changeEventStream
+      .subscribe((event: any) => {
+        if (
+          event.data.id === "client" ||
+          event.data.id === "server" ||
+          event.eventType === CRUDEvents.ID_SWAP
+        ) { return; }
+        expect(event.data[0].id).toEqual("test");
+        expect(event.data[0].test.test[0]).toEqual("somethingelse");
+        expect(event.data[0].random).toEqual(items[2].data.random);
+        expect(event.eventType).toEqual(CRUDEvents.UPDATE);
+        done();
+      });
+
+    processor.updateQueue(items);
+  });
+
+  test("Don't update deleted items", async () => {
+    const items: MutationRequest[] = [
+      {
+        storeName: STORE_NAME,
+        data: {
+          id: "test",
+          test: {
+            test: ["client"]
+          }
+        },
+        eventType: CRUDEvents.ADD
+      },
+      {
+        storeName: STORE_NAME,
+        data: {
+          id: "test"
+        },
+        eventType: CRUDEvents.DELETE
+      }
+    ];
+    const processor = buildQueueUpdateProcessor({
+      storeName: STORE_NAME,
       data: {
-        id: "test",
-        test: {
-          test: ["client"]
-        }
+        id: "client"
       },
       eventType: CRUDEvents.ADD
-    },
-    {
-      storeName: "clientStore",
-      data: {
-        id: "test"
-      },
-      eventType: CRUDEvents.DELETE
-    }
-  ];
-  const result = getQueueUpdates(items, ModelMap, "client", "server", "id");
-  expect(result.length).toEqual(0);
+    }, { id: "server" });
+
+    await storage.remove(
+      STORE_NAME, model.getSchema().getPrimaryKey());
+    await processor.updateQueue(items);
+    // this will throw an error it tries to update a deleted item
+  });
 });
