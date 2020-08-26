@@ -328,6 +328,10 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
           returnedData[primaryKey],
           primaryKey
         );
+
+        // persist queue. No need to await here since we will await trx.commit
+        transaction.saveOrUpdate(mutationQueueModel.getStoreName(), "id", { id: MUTATION_ROW_ID, items });
+
         // persist updated items
         const promises = itemUpdates.map(async (item: any) => {
           const itemModel = this.modelMap[item.storeName].model;
