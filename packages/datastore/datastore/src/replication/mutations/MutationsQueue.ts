@@ -12,6 +12,7 @@ import { GlobalReplicationConfig, MutationsConfig } from "../api/ReplicationConf
 import { buildGraphQLCRUDMutations } from "./buildGraphQLCRUDMutations";
 import invariant from "tiny-invariant";
 import { getFirstOperationData } from "../utils/getFirstOperationData";
+import traverse from "traverse";
 
 const logger = createLogger("replicator-mutationqueue");
 
@@ -295,6 +296,7 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
     }
     if (currentItem.eventType === CRUDEvents.ADD) {
       // TODO handling for ADD works but it really convoluted
+      // Local updates lost here
       await this.options.storage.removeById(model.getStoreName(), primaryKey, currentItem.data);
       try {
         await this.options.storage.save(model.getStoreName(), returnedData);
@@ -316,13 +318,80 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
         });
       }
 
-      // model.changeEventStream.publish({
-      //   eventType: CRUDEvents.ADD,
-      //   data: [returnedData]
-      // })
+      const items: MutationRequest[] = await this.getStoredMutations();
+      const itemUpdates = getQueueUpdates(
+        items,
+        this.modelMap,
+        currentItem.data[primaryKey],
+        returnedData[primaryKey],
+        primaryKey
+      );
+      // persist updated items
+      const promises = itemUpdates.map(async (item: any) => {
+        const itemModel = this.modelMap[item.storeName].model;
+        const itemKey = itemModel.getSchema().getPrimaryKey();
+        const result = await this.options.storage.updateById(item.storeName, itemKey, item.update);
+        return { storeName: itemModel.getStoreName(), data: result };
+      });
+
+      const events: any = {};
+      (await Promise.all(promises)).forEach((result) => {
+        if (events[result.storeName]) {
+          events[result.storeName].push(result.data);
+          return;
+        }
+        events[result.storeName] = [result.data];
+      });
+
+      Object.keys(events).forEach((key) => {
+        const itemModel = this.modelMap[key].model;
+        itemModel.changeEventStream.publish({
+          eventType: CRUDEvents.UPDATE,
+          data: events[key]
+        });
+      });
     }
     // No need for handling for deletes and updates
     // TODO rewrite id's on the queue
     // TODO handle conflicts
   }
+}
+
+export function getQueueUpdates(items: MutationRequest[], modelMap: any, clientKey: string, serverKey: string, primaryKey: string) {
+  const itemUpdates: any = {};
+
+  let documentRoot: any;
+  traverse(items)
+    .forEach(function(value) {
+      if (this.level < 3) { return; }
+      if (this.level === 3 && this.parent?.key === "data") {
+        documentRoot = this;
+      }
+
+      if (value === clientKey) {
+        this.update(serverKey);
+        if (this.key === primaryKey) { return; } // id has already been swapped
+      }
+
+      const item = documentRoot.parent.parent.node;
+      const data = item.data;
+      const storeName = item.storeName;
+      const itemPrimaryKey = modelMap[storeName].getSchema().getPrimaryKey();
+      const id = data[itemPrimaryKey];
+
+      if (item.eventType === CRUDEvents.DELETE) {
+        delete itemUpdates[id];
+        return;
+      }
+
+      itemUpdates[id] = {
+        storeName, update: {
+          ...(itemUpdates[id] ? itemUpdates[id].update : {}),
+          [itemPrimaryKey]: id,
+          [documentRoot.key]: documentRoot.node
+        }
+      };
+    });
+
+  return Object.keys(itemUpdates).map((key) => itemUpdates[key]);;
 }

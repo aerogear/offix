@@ -3,7 +3,7 @@
  */
 
 import "fake-indexeddb/auto";
-import { MutationsReplicationQueue } from "../src/replication/mutations/MutationsQueue";
+import { MutationsReplicationQueue, getQueueUpdates } from "../src/replication/mutations/MutationsQueue";
 import { LocalStorage, CRUDEvents } from "../src/storage";
 import { IndexedDBStorageAdapter } from "../src/storage/adapters/indexedDB/IndexedDBStorageAdapter";
 import { WebNetworkStatus } from "../src/replication/network/WebNetworkStatus";
@@ -13,6 +13,7 @@ import { ModelSchema } from "../src";
 import { readFileSync } from "fs";
 import { NetworkIndicator } from "../src/replication/network/NetworkIndicator";
 import { GlobalReplicationConfig } from "../src/replication/api/ReplicationConfig";
+import { MutationRequest } from "../src/replication/mutations/MutationRequest";
 
 const DB_NAME = "test";
 const STORE_NAME = "user_Test";
@@ -21,6 +22,11 @@ const adapter = new IndexedDBStorageAdapter(DB_NAME, 1);
 const storage = new LocalStorage(adapter);
 const schema = new ModelSchema<any>(jsonSchema.Test);
 const model = { getStoreName: () => STORE_NAME } as any;
+const ModelMap = {
+  clientStore: {
+    getSchema: () => ({ getPrimaryKey: () => "id" })
+  }
+};
 
 const windowEvents: any = {};
 window.addEventListener = jest.fn((event, cb) => {
@@ -117,4 +123,83 @@ test.skip("Update id after suscess response", (done) => {
       fireNetworkOnline();
       queue.saveChangeForReplication(model, data, CRUDEvents.ADD, storage);
     });
+});
+
+test("Construct queue updates", () => {
+  const items: MutationRequest[] = [
+    {
+      storeName: "clientStore",
+      data: {
+        id: "test",
+        test: {
+          test: ["client"]
+        }
+      },
+      eventType: CRUDEvents.ADD
+    }
+  ];
+
+  const result = getQueueUpdates(items, ModelMap, "client", "server", "id");
+  expect(result[0].storeName).toEqual("clientStore");
+  expect(result[0].update.test.test[0]).toEqual("server");
+});
+
+test("Only use latest change when constructing queue updates", () => {
+  const items: MutationRequest[] = [
+    {
+      storeName: "clientStore",
+      data: {
+        id: "test",
+        test: {
+          test: ["client"]
+        }
+      },
+      eventType: CRUDEvents.ADD
+    },
+    {
+      storeName: "clientStore",
+      data: {
+        id: "test",
+        test: {
+          test: ["somethingelse"]
+        }
+      },
+      eventType: CRUDEvents.UPDATE
+    },
+    {
+      storeName: "clientStore",
+      data: {
+        id: "test",
+        random: "a random field"
+      },
+      eventType: CRUDEvents.UPDATE
+    }
+  ];
+  const result = getQueueUpdates(items, ModelMap, "client", "server", "id");
+  expect(result[0].storeName).toEqual("clientStore");
+  expect(result[0].update.test.test[0]).toEqual("somethingelse");
+});
+
+test("Remove queue update if it has been deleted", () => {
+  const items: MutationRequest[] = [
+    {
+      storeName: "clientStore",
+      data: {
+        id: "test",
+        test: {
+          test: ["client"]
+        }
+      },
+      eventType: CRUDEvents.ADD
+    },
+    {
+      storeName: "clientStore",
+      data: {
+        id: "test"
+      },
+      eventType: CRUDEvents.DELETE
+    }
+  ];
+  const result = getQueueUpdates(items, ModelMap, "client", "server", "id");
+  expect(result.length).toEqual(0);
 });
