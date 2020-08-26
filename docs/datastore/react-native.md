@@ -4,7 +4,8 @@ title: React Native - using Datastore for Mobile
 sidebar_label: React Native
 ---
 
-Offix Datastore provides support for `indexeddb` as default. It is necessary to override the default storage and network implementations. 
+Offix Datastore provides support for `indexeddb` by default.
+When using datastore in React Native is necessary to override the default storage and network implementations. 
 
 ## Storage
 
