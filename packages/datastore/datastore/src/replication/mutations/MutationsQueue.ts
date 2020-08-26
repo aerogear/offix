@@ -296,63 +296,69 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
     }
     if (currentItem.eventType === CRUDEvents.ADD) {
       // TODO handling for ADD works but it really convoluted
+      const transaction = await this.options.storage.createTransaction();
       // Local updates lost here
-      await this.options.storage.removeById(model.getStoreName(), primaryKey, currentItem.data);
       try {
-        await this.options.storage.save(model.getStoreName(), returnedData);
-        model.changeEventStream.publish({
-          eventType: CRUDEvents.ID_SWAP,
-          data: [
-            {
-              previous: currentItem.data,
-              current: returnedData
-            }
-          ]
+        await transaction.removeById(model.getStoreName(), primaryKey, currentItem.data);
+        try {
+          await transaction.save(model.getStoreName(), returnedData);
+          model.changeEventStream.publish({
+            eventType: CRUDEvents.ID_SWAP,
+            data: [
+              {
+                previous: currentItem.data,
+                current: returnedData
+              }
+            ]
+          });
+        } catch (error) {
+          // if key already exists then live update has already saved the result
+          // in this case, emit a delete event for the old document
+          model.changeEventStream.publish({
+            eventType: CRUDEvents.DELETE,
+            data: [currentItem.data]
+          });
+        }
+
+        const items: MutationRequest[] = await this.getStoredMutations();
+        const itemUpdates = getQueueUpdates(
+          items,
+          this.modelMap,
+          currentItem.data[primaryKey],
+          returnedData[primaryKey],
+          primaryKey
+        );
+        // persist updated items
+        const promises = itemUpdates.map(async (item: any) => {
+          const itemModel = this.modelMap[item.storeName].model;
+          const itemKey = itemModel.getSchema().getPrimaryKey();
+          const result = await transaction.updateById(item.storeName, itemKey, item.update);
+          return { storeName: itemModel.getStoreName(), data: result };
+        });
+
+        const events: any = {};
+        (await Promise.all(promises)).forEach((result) => {
+          if (events[result.storeName]) {
+            events[result.storeName].push(result.data);
+            return;
+          }
+          events[result.storeName] = [result.data];
+        });
+
+        await transaction.commit();
+
+        Object.keys(events).forEach((key) => {
+          const itemModel = this.modelMap[key].model;
+          itemModel.changeEventStream.publish({
+            eventType: CRUDEvents.UPDATE,
+            data: events[key]
+          });
         });
       } catch (error) {
-        // if key already exists then live update has already saved the result
-        // in this case, emit a delete event for the old document
-        model.changeEventStream.publish({
-          eventType: CRUDEvents.DELETE,
-          data: [currentItem.data]
-        });
+        await transaction.rollback();
       }
-
-      const items: MutationRequest[] = await this.getStoredMutations();
-      const itemUpdates = getQueueUpdates(
-        items,
-        this.modelMap,
-        currentItem.data[primaryKey],
-        returnedData[primaryKey],
-        primaryKey
-      );
-      // persist updated items
-      const promises = itemUpdates.map(async (item: any) => {
-        const itemModel = this.modelMap[item.storeName].model;
-        const itemKey = itemModel.getSchema().getPrimaryKey();
-        const result = await this.options.storage.updateById(item.storeName, itemKey, item.update);
-        return { storeName: itemModel.getStoreName(), data: result };
-      });
-
-      const events: any = {};
-      (await Promise.all(promises)).forEach((result) => {
-        if (events[result.storeName]) {
-          events[result.storeName].push(result.data);
-          return;
-        }
-        events[result.storeName] = [result.data];
-      });
-
-      Object.keys(events).forEach((key) => {
-        const itemModel = this.modelMap[key].model;
-        itemModel.changeEventStream.publish({
-          eventType: CRUDEvents.UPDATE,
-          data: events[key]
-        });
-      });
     }
     // No need for handling for deletes and updates
-    // TODO rewrite id's on the queue
     // TODO handle conflicts
   }
 }
