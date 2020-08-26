@@ -1,5 +1,5 @@
 /**
- * Config for OffixDataSync plugin
+ * Config for OffixDataStore plugin
  */
 export interface IOffixDataStorePluginConfig {
     /**

@@ -1,7 +1,7 @@
 {
   "appId": "com.example.offixdatastore",
-  "appName": "react-offix",
-  "bundledWebRuntime": false,
+  "appName": "offix-datastore-demo",
+  "bundledWebRuntime": true,
   "npmClient": "yarn",
   "webDir": "build",
   "plugins": {

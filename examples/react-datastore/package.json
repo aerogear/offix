@@ -5,6 +5,7 @@
   "dependencies": {
     "@ant-design/icons": "^4.2.1",
     "@apollo/react-hooks": "^3.1.5",
+    "@capacitor-community/sqlite": "^2.4.0",
     "@capacitor/android": "2.4.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -23,7 +24,8 @@
     "uniforms": "3.0.0-alpha.5",
     "uniforms-antd": "3.0.0-alpha.5",
     "uniforms-bridge-graphql": "3.0.0-alpha.5",
-    "uuidv4": "^6.1.1"
+    "uuidv4": "^6.1.1",
+    "@capacitor/core": "^2.4.0"
   },
   "scripts": {
     "start": "SKIP_PREFLIGHT_CHECK=true react-scripts start",
@@ -52,7 +54,6 @@
   },
   "devDependencies": {
     "@capacitor/cli": "^2.4.0",
-    "@capacitor/core": "^2.4.0",
     "@offix/cli": "0.2.1",
     "graphback-cli": "0.16.0-beta1",
     "graphql-serve": "0.16.0-beta1"
