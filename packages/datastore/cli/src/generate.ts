@@ -1,5 +1,5 @@
 import { GraphbackPluginEngine } from "@graphback/core";
-import { OffixDataSyncPlugin } from "./OffixDataSyncPlugin";
+import { OffixDataStorePlugin } from "./OffixDataStorePlugin";
 import { loadSchema } from "./utils";
 
 export const generate = (schemaPath: string, outputPath: string) => {
@@ -7,7 +7,7 @@ export const generate = (schemaPath: string, outputPath: string) => {
     const pluginEngine = new GraphbackPluginEngine({
         schema,
         plugins: [
-            new OffixDataSyncPlugin({ modelOutputDir: outputPath })
+            new OffixDataStorePlugin({ modelOutputDir: outputPath })
         ]
     });
     pluginEngine.createResources();

@@ -180,7 +180,7 @@ export class ModelSchema<T = any>{
  */
 function extractFields<T = any>(schema: ModelJsonSchema<T>): Fields<T> {
   // simple validation
-  invariant(schema.properties, "Datasync: Properties cannot be undefined");
+  invariant(schema.properties, "Properties cannot be undefined");
   return schema.properties;
 }
 
@@ -206,7 +206,7 @@ function extractIndexes<T = any>(fields: Fields<T>, indexes?: string[]): string[
     // index array is a field inside the
     // json schema
     invariant(index in fields,
-      `Datasync: ${index} in the indexes array is missing
+      `${index} in the indexes array is missing
       from the properties field in the model schema`
     );
   });
@@ -226,11 +226,11 @@ function extractPrimary<T = any>(fields: Fields<T>, primaryKey?: string): string
       .find((key: string) => fields[key as keyof T].primary);
     // primary key is required, so throw error if
     // not provided
-    invariant(obj, "Datasync: no primary key provided. Please specify a primary key");
+    invariant(obj, "DataStore: no primary key provided. Please specify a primary key");
     return obj;
   }
   invariant(primaryKey in fields,
-    `Datasync: ${primaryKey} provided does not exist in
+    `DataStore: ${primaryKey} provided does not exist in
     the properties of the modelschema`
   );
   return primaryKey;
@@ -254,7 +254,7 @@ function extractEncryptedFields<T = any>(fields: Fields<T>, encrypted?: string[]
     // encrypted fields exist
     // in the schema properties
     invariant(enc in fields,
-      `Datasync: ${enc} in the encrypted fields array is missing
+      `DataStore: ${enc} in the encrypted fields array is missing
       from the properties field in the model schema`
     );
   });
