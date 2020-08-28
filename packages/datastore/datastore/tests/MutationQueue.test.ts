@@ -121,7 +121,7 @@ test.skip("Update id after suscess response", (done) => {
     });
 });
 
-describe.only("Test QueueUpdateProcessor", () => {
+describe("Test QueueUpdateProcessor", () => {
   const modelMap = {
     [STORE_NAME]: ({ documents: {}, model } as any)
   };
