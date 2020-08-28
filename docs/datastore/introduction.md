@@ -31,4 +31,4 @@ On mobile, Offix Datastore uses SQLite.
 
 #### React Support
 
-Offix Datastore provides hooks to help React devs build offline apps quickly. See [TODO link react docs here].
+Offix Datastore provides hooks to help React devs build offline apps quickly. See [React docs](react.md) and [React Native](react-native.md).
