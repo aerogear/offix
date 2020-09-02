@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "4.5.7",
-    "@types/fetch-mock": "7.3.2",
+    "@types/fetch-mock": "7.3.3",
     "@types/graphql": "14.2.3",
     "@types/jest": "26.0.12",
     "@types/node": "12.12.54",
