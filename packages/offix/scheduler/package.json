@@ -28,7 +28,7 @@
     "fake-indexeddb": "3.1.2",
     "jest": "26.4.2",
     "json-server": "0.16.1",
-    "node-fetch": "2.6.0",
+    "node-fetch": "2.6.1",
     "size-limit": "4.5.7",
     "ts-jest": "26.3.0",
     "typescript": "3.9.7"
