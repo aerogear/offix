@@ -1,11 +1,11 @@
 import { GraphbackPlugin, GraphbackCoreMetadata } from "@graphback/core";
 import { writeFileSync } from "fs";
-import { IOffixDataSyncPluginConfig } from "./OffixDataSyncConfig";
+import { IOffixDataStorePluginConfig } from "./OffixDataStoreConfig";
 import { createJsonSchema, createModelType } from "./generate-documents";
 import { isDataSyncClientModel, makeDirIfNotExists } from "./utils";
-import { validateOffixDataSyncPluginConfig } from "./OffixDataSyncPluginValidator";
+import { validateOffixDataStorePluginConfig } from "./OffixDataStorePluginValidator";
 
-export const OFFIX_DATASYNC_PLUGIN_NAME = "OffixDataSyncPlugin";
+export const OFFIX_DATASYNC_PLUGIN_NAME = "OffixDataStorePlugin";
 
 /**
  * This a graphback plugin which generates:
@@ -14,13 +14,13 @@ export const OFFIX_DATASYNC_PLUGIN_NAME = "OffixDataSyncPlugin";
  * which are required by the offix-datasync for
  * every model annotated with @datasync in schema.
  */
-export class OffixDataSyncPlugin extends GraphbackPlugin {
-    private pluginConfig: Required<IOffixDataSyncPluginConfig>;
+export class OffixDataStorePlugin extends GraphbackPlugin {
+    private pluginConfig: Required<IOffixDataStorePluginConfig>;
 
-    constructor(config?: IOffixDataSyncPluginConfig) {
+    constructor(config?: IOffixDataStorePluginConfig) {
         super();
-        validateOffixDataSyncPluginConfig(config);
-        this.pluginConfig = config as Required<IOffixDataSyncPluginConfig>;
+        validateOffixDataStorePluginConfig(config);
+        this.pluginConfig = config as Required<IOffixDataStorePluginConfig>;
     }
 
     public createResources(metadata: GraphbackCoreMetadata): void {

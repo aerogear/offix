@@ -1,0 +1,13 @@
+{
+  "appId": "com.example.offixdatastore",
+  "appName": "offix-datastore-demo",
+  "bundledWebRuntime": true,
+  "npmClient": "yarn",
+  "webDir": "build",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {}
+}

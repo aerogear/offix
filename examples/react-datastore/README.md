@@ -57,3 +57,19 @@ yarn start
 1. Edit runtime.graphql file in `src/model/runtime.graphql`
 2. Generate models yarn generate
 3. Review new models
+
+
+## Running as native capacitor application
+
+
+yarn build
+yarn cap add ios
+yarn cap copy ios
+yarn cap open ios
+
+
+yarn build
+yarn cap add android
+// Swap main activity https://github.com/capacitor-community/sqlite
+yarn cap copy android
+yarn cap open android

@@ -1,7 +1,7 @@
 /**
- * Config for OffixDataSync plugin
+ * Config for OffixDataStore plugin
  */
-export interface IOffixDataSyncPluginConfig {
+export interface IOffixDataStorePluginConfig {
     /**
      * The output dir path.
      * The json schema will be written to ${modelOutputDir}/schema.json

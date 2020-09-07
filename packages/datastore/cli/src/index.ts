@@ -2,7 +2,7 @@ import yargs from "yargs";
 import { generate } from "./generate";
 
 export { generate };
-export { OffixDataSyncPlugin as Plugin } from "./OffixDataSyncPlugin";
+export { OffixDataStorePlugin as Plugin } from "./OffixDataStorePlugin";
 
 export const cmd = () => {
   // eslint-disable-next-line no-unused-expressions

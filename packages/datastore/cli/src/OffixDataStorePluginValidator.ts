@@ -1,7 +1,7 @@
-import { IOffixDataSyncPluginConfig } from "./OffixDataSyncConfig";
+import { IOffixDataStorePluginConfig } from "./OffixDataStoreConfig";
 
 
-export const validateOffixDataSyncPluginConfig = (config?: IOffixDataSyncPluginConfig) => {
+export const validateOffixDataStorePluginConfig = (config?: IOffixDataStorePluginConfig) => {
     if (!config) {
         throw new Error("Please supply Datasync-client plugin config");
     }
