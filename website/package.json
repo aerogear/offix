@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@docusaurus/core": "2.0.0-alpha.63",
-    "@docusaurus/preset-classic": "2.0.0-alpha.63",
+    "@docusaurus/preset-classic": "2.0.0-alpha.64",
     "gsap": "3.5.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
