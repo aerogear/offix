@@ -38,7 +38,7 @@
     "apollo-client": "2.6.10",
     "apollo-link": "1.2.14",
     "apollo-link-http": "1.5.17",
-    "cross-fetch": "3.0.5",
+    "cross-fetch": "3.0.6",
     "fake-indexeddb": "3.1.2",
     "graphql": "15.3.0",
     "jest": "26.4.2",
