@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "4.6.0",
-    "@types/jest": "26.0.13",
+    "@types/jest": "26.0.14",
     "@types/json-schema": "7.0.6",
     "@types/react-dom": "16.9.8",
     "@types/traverse": "0.6.32",
