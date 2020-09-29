@@ -34,7 +34,7 @@
     "@types/node": "12.12.62",
     "jest": "26.4.2",
     "size-limit": "4.6.0",
-    "ts-jest": "26.4.0",
+    "ts-jest": "26.4.1",
     "typescript": "3.9.7"
   },
   "peerDependencies": {
