@@ -10,11 +10,11 @@ import { convertToTsType } from "../utils";
 const getFieldParameters = (fieldName: string, type: GraphQLOutputType): any => {
   const options: any = {};
 
-  // TODO handle relationships
 
   options.key = fieldName;
 
   if (isNonNullType(type)) {
+
     type = getNullableType(type);
     options.isRequired = true;
   }
@@ -24,6 +24,16 @@ const getFieldParameters = (fieldName: string, type: GraphQLOutputType): any => 
 
 const getModelProperties = (model: ModelDefinition, primaryKey: string) => {
   const fieldMap = model.graphqlType.getFields();
+  // TODO filter out  fields that are relationship fields
+
+  // const relationship = parseRelationshipAnnotation(field.description as string);
+  // if (relationship) {
+  //   if(relationship.kind === "oneToMany"){
+
+  //   }
+  // }
+
+
 
   const generatedProperties = Object.keys(fieldMap)
     .map(fieldName => {
@@ -45,6 +55,9 @@ const getModelProperties = (model: ModelDefinition, primaryKey: string) => {
 
 export const createJsonSchema = (model: ModelDefinition) => {
   const primaryKey = getPrimaryKey(model.graphqlType).name;
+
+  const modelProperties = getModelProperties(model, primaryKey);
+  // TODO add relationships properties based on the annotations:
 
   return {
     name: model.graphqlType.name,

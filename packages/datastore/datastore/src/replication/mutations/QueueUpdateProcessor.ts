@@ -4,6 +4,7 @@ import { LocalStorage, CRUDEvents } from "../../storage";
 import { Model } from "../../Model";
 import traverse from "traverse";
 
+// TODO remove this
 /**
  * Swaps all client ids for server ids in queue
  * and updates corresponding item in LocalStorage

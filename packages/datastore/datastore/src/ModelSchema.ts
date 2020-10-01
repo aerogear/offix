@@ -32,6 +32,12 @@ export interface ModelSchemaProperties extends JSONSchema7 {
    * Flag for if the field should be encrypted
    */
   encrypted?: boolean;
+
+  /**
+   * Contains name of the model that is in relation
+   */
+  relationTo?: string
+
   /**
    * GraphQL field name used for graphql query generation
    */
@@ -78,6 +84,11 @@ export declare class ModelJsonSchema<T> {
    * }
    */
   properties?: Fields<T>;
+
+  /**
+   * Contains list of the relationship fields
+   */
+  relationships?: string[];
 };
 
 /**
@@ -115,8 +126,21 @@ export class ModelSchema<T = any>{
   }
 
   /**
+   * Getter method for name
+   */
+  public getNonRelationshipFields(): Fields<T> {
+    const nonRelationFields: any = [];
+    for (const field in this.fields) {
+      if (!this.fields[field].relationTo) {
+        nonRelationFields.push(this.fields[field])
+      }
+    }
+
+    return nonRelationFields;
+  }
+
+  /**
    * Getter method for namesapce
-   *
    */
   public getNamespace(): string {
     return this.namespace;

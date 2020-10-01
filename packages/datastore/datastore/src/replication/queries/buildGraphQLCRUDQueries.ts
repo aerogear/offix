@@ -8,7 +8,7 @@ import { ReplicatorQueries } from "./ReplicatorQueries";
  * the [GraphQLCRUD specification]{@link https://graphqlcrud.org/}
  */
 export const buildGraphQLCRUDQueries = (model: Model) => {
-  const fields: any = model.getFields();
+  const fields: any = model.schema.getNonRelationshipFields();
   const fieldsBuilder: string[] = Object.keys(fields).map((key) => {
     const graphQLKey = fields[key].key;
     return graphQLKey;

@@ -38,7 +38,7 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
     openreq.onerror = () => this.rejectIDB(openreq.error);
     openreq.onsuccess = () => {
       const db = openreq.result;
-      db.onversionchange = function() {
+      db.onversionchange = function () {
         // FIXME critical to handle version changes
         this.close();
       };
@@ -113,29 +113,18 @@ export class IndexedDBStorageAdapter implements StorageAdapter {
 
   public async query(storeName: string, filter?: Filter): Promise<any[]> {
     const store = await this.getStore(storeName);
-    const cursorReq = store.openCursor();
     const result: any[] = [];
+    const predicate = getPredicate(filter);
+    const all = await this.convertToPromise<any[]>(store.getAll());
 
-    return new Promise((resolve, reject) => {
-      cursorReq.onsuccess = () => {
-        const cursor = cursorReq.result;
-        if (cursor) {
-          if (!filter) {
-            result.push(cursor.value);
-          } else {
-            const predicate = getPredicate(filter);
-            if (predicate(cursor.value)) {
-              result.push(cursor.value);
-            }
-          }
-          cursor.continue();
-        } else {
-          resolve(result);
-        }
-      };
+    if (!filter) { return all; }
 
-      cursorReq.onerror = () => reject(cursorReq.error);
-    });
+    for (const element of all) {
+      if (predicate(element)) {
+        result.push(element);
+      }
+    }
+    return result;
   }
 
   public async queryById(storeName: string, idField: string, id: string) {

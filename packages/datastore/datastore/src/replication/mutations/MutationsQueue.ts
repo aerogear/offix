@@ -297,7 +297,10 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
       throw new Error("Missing data from query.");
     }
     if (currentItem.eventType === CRUDEvents.ADD) {
-      // TODO handling for ADD works but it really convoluted
+      // TODO Swap the ID basing on information about model relationships.
+
+      // TODO ignore transations completely - they are not efficient and still
+      // not guarantee writes.
       const transaction = await this.options.storage.createTransaction();
       try {
         const queueUpdateProcessor = new QueueUpdateProcessor(
