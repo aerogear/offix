@@ -9,7 +9,7 @@
     "docs": "docusaurus docs:version"
   },
   "dependencies": {
-    "@docusaurus/core": "2.0.0-alpha.64",
+    "@docusaurus/core": "2.0.0-alpha.65",
     "@docusaurus/preset-classic": "2.0.0-alpha.64",
     "gsap": "3.5.1",
     "react": "16.13.1",
