@@ -7,7 +7,7 @@ import {mutateOptions} from './helpers';
 import {View, Text, Button, StyleSheet} from 'react-native';
 
 const App = () => {
-  const {loading, error, data, subscribeToMore} = useQuery(GET_TODOS);
+  const {loading, error, data, subscribeToUpdates} = useQuery(GET_TODOS);
   const [addTodo] = useOfflineMutation(ADD_TODO, mutateOptions.add);
   const [modalActive, setModalActive] = useState(false);
 
@@ -42,7 +42,7 @@ const App = () => {
       </View>
 
       <View>
-        <TodoList todos={data.findAllTodos} subscribeToMore={subscribeToMore} />
+        <TodoList todos={data.findAllTodos} subscribeToUpdates={subscribeToUpdates} />
       </View>
     </View>
   );

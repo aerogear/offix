@@ -12,24 +12,24 @@ export interface Action {
 }
 
 export interface ResultState {
-    isLoading: boolean;
+    loading: boolean;
     data?: any;
     error?: any;
 }
 
-export const InitialState: ResultState = { isLoading: false };
+export const InitialState: ResultState = { loading: false };
 
 export const reducer = (state: ResultState, action: Action) => {
     switch (action.type) {
         case ActionType.INITIATE_REQUEST:
-            return { ...state, isLoading: true, error: null };
+            return { ...state, loading: true, error: null };
 
         case ActionType.REQUEST_COMPLETE:
-            return { ...state, isLoading: false, data: action.data, error: action.error };
+            return { ...state, loading: false, data: action.data, error: action.error };
 
         case ActionType.UPDATE_RESULT:
             // Don't update result when request is loading
-            if (state.isLoading) { return state; }
+            if (state.loading) { return state; }
             return { ...state, data: action.data };
 
         default:

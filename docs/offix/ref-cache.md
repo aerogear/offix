@@ -127,7 +127,7 @@ const { createSubscriptionOptions } = require('offix-cache');
 const subscriptionOptions = createSubscriptionOptions(options);
 ```
 
-To use this helper we then pass this `subscriptionOptions` variable to the `subscribeToMore` function of our `ObservableQuery`.
+To use this helper we then pass this `subscriptionOptions` variable to the `subscribeToUpdates` function of our `ObservableQuery`.
 
 ```javascript
 const query =
@@ -137,7 +137,7 @@ const query =
     query: GET_TASKS
   };
 
-query.subscribeToMore(subscriptionOptions);
+query.subscribeToUpdates(subscriptionOptions);
 ```
 
 The cache will now be kept up to date with automatic data deduplication being performed.
@@ -158,7 +158,7 @@ export const editSubscriptionOptions = createSubscriptionOptions({
 
 ### Multiple Subscriptions
 
-`offix-cache` also provides the ability to automatically call `subscribeToMore` on your `ObservableQuery`. This can be useful in a situation where you may have multiple subscriptions which can affect one single query. For example, if you have a `TaskAdded`, `TaskDeleted` and a `TaskUpdated` subscription you would need three separate `subscribeToMore` function calls. This can become tedious as your number of subscriptions grow. To combat this, we can use the `subscribeToMoreHelper` function from offix-cache to automatically handle this for us by passing it an array of subscriptions and their corresponding queries which need to be updated.
+`offix-cache` also provides the ability to automatically call `subscribeToUpdates` on your `ObservableQuery`. This can be useful in a situation where you may have multiple subscriptions which can affect one single query. For example, if you have a `TaskAdded`, `TaskDeleted` and a `TaskUpdated` subscription you would need three separate `subscribeToUpdates` function calls. This can become tedious as your number of subscriptions grow. To combat this, we can use the `subscribeToUpdatesHelper` function from offix-cache to automatically handle this for us by passing it an array of subscriptions and their corresponding queries which need to be updated.
 
 ```javascript
 const { CacheOperation } = require('offix-cache');
@@ -188,5 +188,5 @@ const query =
     query: GET_TASKS
   };
 
-subscribeToMoreHelper(query, [addOptions, deleteOptions, updateOptions]);
+subscribeToUpdatesHelper(query, [addOptions, deleteOptions, updateOptions]);
 ```

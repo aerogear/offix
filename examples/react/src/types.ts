@@ -11,7 +11,7 @@ export type TodoProps = {
 
 export type TodoListProps = {
   todos: Array<ITodo>,
-  subscribeToMore: (options: any) => void,
+  subscribeToUpdates: (options: any) => void,
 };
 
 export type AddTodoProps = {

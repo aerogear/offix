@@ -7,7 +7,7 @@ export const useRemove = <T>(model: Model<T>) => {
     const [state, dispatch] = useReducer(reducer, InitialState);
 
     const remove = async (filter: Filter<T>) => {
-        if (state.isLoading) { return; }
+        if (state.loading) { return; }
 
         dispatch({ type: ActionType.INITIATE_REQUEST });
         try {

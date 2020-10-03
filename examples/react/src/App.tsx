@@ -13,13 +13,13 @@ function App() {
 
   const isOnline = useNetworkStatus();
   const [addView, setAddView] = useState<boolean>(false);
-  const { loading, error, data, subscribeToMore } = useQuery(GET_TODOS);
+  const { loading, error, data, subscribeToUpdates } = useQuery(GET_TODOS);
 
   useEffect(() => {
-    subscribeToMore(subscriptionOptions.add);
-    subscribeToMore(subscriptionOptions.edit);
-    subscribeToMore(subscriptionOptions.remove);
-  }, [subscribeToMore]);
+    subscribeToUpdates(subscriptionOptions.add);
+    subscribeToUpdates(subscriptionOptions.edit);
+    subscribeToUpdates(subscriptionOptions.remove);
+  }, [subscribeToUpdates]);
 
   if (loading) return <Loading />;
 
@@ -59,7 +59,7 @@ function App() {
               <>
                 <TodoList 
                   todos={data.findAllTodos} 
-                  subscribeToMore={subscribeToMore} 
+                  subscribeToUpdates={subscribeToUpdates} 
                 />
               </>
             )
