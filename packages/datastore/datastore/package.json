@@ -54,7 +54,7 @@
     "tiny-invariant": "1.1.0",
     "traverse": "0.6.6",
     "urql": "1.10.1",
-    "uuid": "8.3.0",
+    "uuid": "8.3.1",
     "websql": "1.0.0",
     "wonka": "4.0.14",
     "zen-observable": "0.8.15"
