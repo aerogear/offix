@@ -24,7 +24,7 @@
     "@types/bson": "4.0.2",
     "@types/jest": "26.0.14",
     "@types/yargs": "15.0.7",
-    "jest": "26.5.0",
+    "jest": "26.5.2",
     "rimraf": "3.0.2",
     "ts-jest": "26.4.1",
     "typescript": "3.9.7"
