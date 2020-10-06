@@ -6,7 +6,7 @@ export const useUpdate = <T>(model: Model<T>) => {
     const [state, dispatch] = useReducer(reducer, InitialState);
 
     const update = async (input: any, upsert: boolean = false) => {
-        if (state.isLoading) { return; }
+        if (state.loading) { return; }
         if (state.data) { return; }
 
         dispatch({ type: ActionType.INITIATE_REQUEST });

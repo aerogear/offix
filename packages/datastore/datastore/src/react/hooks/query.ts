@@ -56,7 +56,7 @@ export const updateResult = (state: ResultState, event: StoreChangeEvent, primar
     }
 };
 
-const createSubscribeToMore = (state: ResultState, model: Model, dispatch: Dispatch<Action>) => {
+const createSubscribeToUpdates = (state: ResultState, model: Model, dispatch: Dispatch<Action>) => {
     return (eventsToWatch?: CRUDEvents[], customEventHandler?: (state: ResultState, data: any) => any) => {
         const subscription = model.subscribe((event) => {
             let newData;
@@ -77,13 +77,13 @@ const createSubscribeToMore = (state: ResultState, model: Model, dispatch: Dispa
 
 export const useQuery = (model: Model, selector?: Filter | string) => {
     const [state, dispatch] = useReducer(reducer, InitialState);
-    const subscribeToMore = useCallback(
-        createSubscribeToMore(state, model, dispatch), [state, model, dispatch]
+    const subscribeToUpdates = useCallback(
+        createSubscribeToUpdates(state, model, dispatch), [state, model, dispatch]
     );
 
     useEffect(() => {
         (async () => {
-            if (state.isLoading) { return; }
+            if (state.loading) { return; }
 
             dispatch({ type: ActionType.INITIATE_REQUEST });
             try {
@@ -99,17 +99,17 @@ export const useQuery = (model: Model, selector?: Filter | string) => {
             }
         })();
     }, [model, selector]);
-    return { ...state, subscribeToMore };
+    return { ...state, subscribeToUpdates };
 };
 
 export const useLazyQuery = (model: Model) => {
     const [state, dispatch] = useReducer(reducer, InitialState);
-    const subscribeToMore = useCallback(
-        createSubscribeToMore(state, model, dispatch), [state, model, dispatch]
+    const subscribeToUpdates = useCallback(
+        createSubscribeToUpdates(state, model, dispatch), [state, model, dispatch]
     );
 
     const query = async (selector?: Filter | string) => {
-        if (state.isLoading) { return; }
+        if (state.loading) { return; }
 
         dispatch({ type: ActionType.INITIATE_REQUEST });
         try {
@@ -125,5 +125,5 @@ export const useLazyQuery = (model: Model) => {
         }
     };
 
-    return { ...state, query, subscribeToMore };
+    return { ...state, query, subscribeToUpdates };
 };

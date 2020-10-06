@@ -1,5 +1,5 @@
 import { SubscribeToMoreOptions, OperationVariables, ObservableQuery } from "apollo-client";
-import { QueryWithVariables, CacheUpdatesQuery, SubscribeToMoreUpdateFunction } from "./api/CacheUpdates";
+import { QueryWithVariables, CacheUpdatesQuery, SubscribeToUpdatesUpdateFunction } from "./api/CacheUpdates";
 import { DocumentNode } from "graphql";
 import { CacheOperation } from "./api/CacheOperation";
 import { CacheItem } from "./api/CacheUpdates";
@@ -14,11 +14,11 @@ export interface SubscriptionHelperOptions {
 }
 
 /**
- * Helper function which can be used to call subscribeToMore for multiple SubscriptionHelperOptions
- * @param observableQuery the query which you would like to call subscribeToMore on.
+ * Helper function which can be used to call subscribeToUpdates for multiple SubscriptionHelperOptions
+ * @param observableQuery the query which you would like to call subscribeToUpdates on.
  * @param arrayOfHelperOptions the array of `SubscriptionHelperOptions`
  */
-export const subscribeToMoreHelper = (observableQuery: ObservableQuery,
+export const subscribeToUpdatesHelper = (observableQuery: ObservableQuery,
                                       arrayOfHelperOptions: SubscriptionHelperOptions[]) => {
   for (const option of arrayOfHelperOptions) {
     observableQuery.subscribeToMore(createSubscriptionOptions(option));
@@ -86,7 +86,7 @@ export const createSubscriptionOptions = (options: SubscriptionHelperOptions): S
  * @param operationType The type of operation being performed
  * @param idField The id field the item keys off
  */
-const getUpdateQueryFunction = (operationType: CacheOperation, idField = "id"): SubscribeToMoreUpdateFunction => {
+const getUpdateQueryFunction = (operationType: CacheOperation, idField = "id"): SubscribeToUpdatesUpdateFunction => {
   if (operationType === CacheOperation.ADD) {
     return addSubscriptionItem({ idField });
   }

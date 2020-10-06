@@ -18,9 +18,9 @@ export interface CacheUpdates {
 }
 
 /**
- * Definition of function used for subscribeToMore cache updates
+ * Definition of function used for subscribeToUpdates cache updates
  */
-export type SubscribeToMoreUpdateFunction = (array: [CacheItem], newItem?: CacheItem) => CacheItem[];
+export type SubscribeToUpdatesUpdateFunction = (array: [CacheItem], newItem?: CacheItem) => CacheItem[];
 
 export interface CacheItem {
   [key: string]: any;

@@ -11,7 +11,7 @@ For a quick start see [sample react app](https://github.com/aerogear/offix/tree/
 ## useSave
 
 The `useSave` hook provides a lazy `save` function,
-a loading indicator `isLoading` and an `error` state variable.
+a loading indicator `loading` and an `error` state variable.
 The `save` function accepts the input and returns a promise of the save result.
 
 ```javascript
@@ -22,7 +22,7 @@ const AddTask = () => {
     const [taskDetails, setTaskDetails] = useState({
         title: "", description: "", numberOfDaysLeft: 0
     });
-    const { isLoading, error, save } = useSave(TaskModel);
+    const { loading, error, save } = useSave(TaskModel);
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -60,9 +60,9 @@ import { useQuery } from "offix-datastore";
 
 const Tasks = () => {
     const [filter, setFilter] = useState();
-    const { isLoading, error, data: tasks } = useQuery(TaskModel, filter);
+    const { loading, error, data: tasks } = useQuery(TaskModel, filter);
 
-    if (isLoading) return <div>Loading ....</div>
+    if (loading) return <div>Loading ....</div>
     if (error) return <div>{error.message}</div>
 
     return (
@@ -76,30 +76,30 @@ Query by id;
 
 ```javascript
 const documentId = "";
-const { isLoading, error, data: tasks } = useQuery(TaskModel, documentId);
+const { loading, error, data: tasks } = useQuery(TaskModel, documentId);
 ```
 
-You can also subscribe to changes using the `subscribeToMore` function.
+You can also subscribe to changes using the `subscribeToUpdates` function.
 
 ```javascript
-const { isLoading, error, data: tasks, subscribeToMore } = useQuery(TaskModel, filter);
+const { loading, error, data: tasks, subscribeToUpdates } = useQuery(TaskModel, filter);
 useEffect(() => {
-    const subscription = subscribeToMore();
+    const subscription = subscribeToUpdates();
     return () => subscription.unsubscribe();
 }, []);
 ```
 
-`subscribeToMore` can take an array of events to watch
+`subscribeToUpdates` can take an array of events to watch
 
-`const subscription = subscribeToMore([CRUDEvents.ADD, CRUDEvents.UPDATE]);`
+`const subscription = subscribeToUpdates([CRUDEvents.ADD, CRUDEvents.UPDATE]);`
 
 Offix Datastore reponds to events and updates your Application state for you. You can also override
 Datastore's event handlers.
 
 ```javascript
-const { isLoading, error, data: tasks, subscribeToMore } = useQuery(TaskModel, filter);
+const { loading, error, data: tasks, subscribeToUpdates } = useQuery(TaskModel, filter);
 useEffect(() => {
-    const subscription = subscribeToMore([CRUDEvents.ADD], (newData) => {
+    const subscription = subscribeToUpdates([CRUDEvents.ADD], (newData) => {
         if (!tasks) return [newData];
         return [...tasks, newData];
     });
@@ -116,11 +116,11 @@ a filter, an id or nothing, in which case, all documents are returned.
 import { useLazyQuery } from "offix-datastore";
 
 const Tasks = () => {
-    const { isLoading, error, data: tasks, query } = useLazyQuery(TaskModel);
+    const { loading, error, data: tasks, query } = useLazyQuery(TaskModel);
 
     useEffect(() => query(), []);
 
-    if (isLoading) return <div>Loading ....</div>
+    if (loading) return <div>Loading ....</div>
     if (error) return <div>{error.message}</div>
 
     return (
@@ -130,7 +130,7 @@ const Tasks = () => {
 }
 ```
 
-The `useLazyQuery` hook also provides a `subscribeToMore` function
+The `useLazyQuery` hook also provides a `subscribeToUpdates` function
 that you can use to subscribe to events on your data.
 
 ## useUpdate
@@ -143,7 +143,7 @@ import { useUpdate } from "offix-datastore";
 
 const EditTask = ({ task }) => {
     const [taskDetails, setTaskDetails] = useState(task);
-    const { isLoading, error, update } = useUpdate(TaskModel);
+    const { loading, error, update } = useUpdate(TaskModel);
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -186,7 +186,7 @@ async function handleSubmit(e) {
 import { useRemove } from "offix-datastore";
 
 const Task = ({ task }) => {
-    const { isLoading, remove } = useRemove(TaskModel);
+    const { loading, remove } = useRemove(TaskModel);
     
     const deleteTask = async () => {
         await remove(task);

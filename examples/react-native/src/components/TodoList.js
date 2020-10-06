@@ -6,14 +6,14 @@ import { Todo } from './Todo/Todo';
 import { EDIT_TODO, DELETE_TODO } from '../gql/queries';
 import { mutateOptions, subscriptionOptions } from '../helpers';
 
-export const TodoList = ({ todos, subscribeToMore }) => {
+export const TodoList = ({ todos, subscribeToUpdates }) => {
   const [editTodo] = useOfflineMutation(EDIT_TODO, mutateOptions.edit);
   const [deleteTodo] = useOfflineMutation(DELETE_TODO, mutateOptions.remove);
 
   useEffect(() => {
-    subscribeToMore(subscriptionOptions.add);
-    subscribeToMore(subscriptionOptions.edit);
-    subscribeToMore(subscriptionOptions.remove);
+    subscribeToUpdates(subscriptionOptions.add);
+    subscribeToUpdates(subscriptionOptions.edit);
+    subscribeToUpdates(subscriptionOptions.remove);
   }, []);
 
   if (todos.length === 0) return <Empty />;
@@ -29,7 +29,7 @@ export const TodoList = ({ todos, subscribeToMore }) => {
               todo={todo}
               editTodo={editTodo}
               deleteTodo={deleteTodo}
-              subscribeToMore={subscribeToMore}
+              subscribeToUpdates={subscribeToUpdates}
             />
           </View>
         ))

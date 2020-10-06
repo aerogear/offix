@@ -8,11 +8,11 @@ import { TodoList, AddTodo, Loading, Error, Header } from './components';
 function App() {
 
   const [addView, setAddView] = useState<boolean>(false);
-  const  { isLoading: loading, error, data, subscribeToMore } = useFindTodos();
+  const  { loading, error, data, subscribeToUpdates } = useFindTodos();
   useEffect(() => {
-    const subscription = subscribeToMore();
+    const subscription = subscribeToUpdates();
     return () => subscription.unsubscribe();
-  }, [data, subscribeToMore]);
+  }, [data, subscribeToUpdates]);
 
   if (loading) return <Loading />;
 
