@@ -5,8 +5,8 @@ exports[`generate with defaults 1`] = `
     _id: string;
     title: string;
     description: string;
-    comments: string[]
-    _version: number;
+    comments: string[]   _version: number;
+    
 }
 
 export type NoteCreate = Omit<Note, \\"_id\\">;
@@ -16,8 +16,8 @@ export interface Comment {
     _id: string;
     title: string;
     description: string;
-    noteComment: string
-    _version: number;
+    noteComment: string   _version: number;
+    
 }
 
 export type CommentCreate = Omit<Comment, \\"_id\\">;
@@ -113,8 +113,8 @@ exports[`generate with positional arguments 1`] = `
     _id: string;
     title: string;
     description: string;
-    comments: string[]
-    _version: number;
+    comments: string[]   _version: number;
+    
 }
 
 export type NoteCreate = Omit<Note, \\"_id\\">;
@@ -124,8 +124,8 @@ export interface Comment {
     _id: string;
     title: string;
     description: string;
-    noteComment: string
-    _version: number;
+    noteComment: string   _version: number;
+    
 }
 
 export type CommentCreate = Omit<Comment, \\"_id\\">;
