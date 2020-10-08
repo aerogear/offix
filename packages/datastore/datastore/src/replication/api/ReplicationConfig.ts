@@ -84,7 +84,7 @@ export interface GlobalReplicationConfig {
   /**
    * URQL client specific configuration used to replication
    */
-  client: GraphQLClientConfig;
+  client?: GraphQLClientConfig;
 
   /**
    * Configuration for fetching delta changes from server
