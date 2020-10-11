@@ -32,7 +32,7 @@
     "@size-limit/preset-small-lib": "4.6.0",
     "@types/jest": "26.0.14",
     "@types/node": "12.12.67",
-    "jest": "26.5.2",
+    "jest": "26.5.3",
     "size-limit": "4.6.0",
     "ts-jest": "26.4.1",
     "typescript": "3.9.7"
