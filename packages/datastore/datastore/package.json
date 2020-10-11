@@ -40,7 +40,7 @@
     "debug": "4.2.0",
     "fake-indexeddb": "3.1.2",
     "isomorphic-unfetch": "3.1.0",
-    "jest": "26.5.2",
+    "jest": "26.5.3",
     "react": "16.13.1",
     "size-limit": "4.6.0",
     "supports-color": "7.2.0",
