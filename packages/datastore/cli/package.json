@@ -21,6 +21,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@graphback/datasync": "1.1.0-alpha1",
     "@types/bson": "4.0.2",
     "@types/jest": "26.0.14",
     "@types/yargs": "15.0.8",
@@ -30,7 +31,7 @@
     "typescript": "3.9.7"
   },
   "dependencies": {
-    "@graphback/core": "0.16.2",
+    "@graphback/core": "1.1.0-alpha1",
     "@graphql-tools/load-files": "6.2.4",
     "@graphql-tools/merge": "6.2.4",
     "graphql": "^15.3.0",
