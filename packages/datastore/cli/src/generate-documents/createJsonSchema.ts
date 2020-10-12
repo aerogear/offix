@@ -6,11 +6,8 @@ import {
 } from "graphql";
 import { convertToTsType } from "../utils";
 
-
-const getFieldParameters = (fieldName: string, type: GraphQLOutputType): any => {
+const getFieldParameters = (fieldName: string, type: GraphQLOutputType, ): any => {
   const options: any = {};
-
-  // TODO handle relationships
 
   options.key = fieldName;
 
@@ -24,15 +21,33 @@ const getFieldParameters = (fieldName: string, type: GraphQLOutputType): any => 
 
 const getModelProperties = (model: ModelDefinition, primaryKey: string) => {
   const fieldMap = model.graphqlType.getFields();
+  const keys = Object.keys(fieldMap);
 
-  const generatedProperties = Object.keys(fieldMap)
+  const relationships = model.relationships
+    .filter(r => !keys.includes(r.ownerField.name))
+    .map(r => {
+      const fieldOptions = getFieldParameters(
+        r.relationForeignKey!,
+        r.relationType
+      );
+      fieldOptions.relationship = r.relationType;
+      return { [r.relationForeignKey!]: fieldOptions };
+    });
+  const relNames = model.relationships.map(r => r.ownerField.name);
+
+  const generatedProperties = keys
+    .filter(fieldName => !relNames.includes(fieldName))
     .map(fieldName => {
-      const fieldOptions = getFieldParameters(fieldName, fieldMap[fieldName].type);
+      const fieldOptions = getFieldParameters(
+        fieldName,
+        fieldMap[fieldName].type
+       );
       if (fieldName === primaryKey) {
         fieldOptions.primary = true;
       }
       return { [fieldName]: fieldOptions };
     })
+    .concat(relationships)
     .reduce((prev, current) => ({ ...prev, ...current }), {});
 
   generatedProperties._version = {
@@ -43,6 +58,8 @@ const getModelProperties = (model: ModelDefinition, primaryKey: string) => {
   return generatedProperties;
 };
 
+// TODO refactor use GraphQL type instead of model 
+// definition
 export const createJsonSchema = (model: ModelDefinition) => {
   const primaryKey = getPrimaryKey(model.graphqlType).name;
 

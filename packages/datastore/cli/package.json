@@ -30,7 +30,7 @@
     "typescript": "3.9.7"
   },
   "dependencies": {
-    "@graphback/core": "0.16.2",
+    "@graphback/core": "1.1.0-alpha1",
     "@graphql-tools/load-files": "6.2.5",
     "@graphql-tools/merge": "6.2.5",
     "graphql": "^15.3.0",
