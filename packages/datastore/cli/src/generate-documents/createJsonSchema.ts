@@ -6,7 +6,7 @@ import {
 } from "graphql";
 import { convertToTsType } from "../utils";
 
-const getFieldParameters = (fieldName: string, type: GraphQLOutputType ): any => {
+const getFieldParameters = (fieldName: string, type: GraphQLOutputType): any => {
   const options: any = {};
 
   options.key = fieldName;
