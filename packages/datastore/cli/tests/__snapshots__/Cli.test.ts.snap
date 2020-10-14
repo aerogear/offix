@@ -49,11 +49,6 @@ exports[`generate with defaults 2`] = `
         \\"key\\": \\"description\\",
         \\"isRequired\\": true
       },
-      \\"comments\\": {
-        \\"type\\": \\"string[]\\",
-        \\"key\\": \\"comments\\",
-        \\"isRequired\\": true
-      },
       \\"_version\\": {
         \\"type\\": \\"string\\",
         \\"key\\": \\"_version\\",
@@ -81,11 +76,6 @@ exports[`generate with defaults 2`] = `
       \\"description\\": {
         \\"type\\": \\"string\\",
         \\"key\\": \\"description\\",
-        \\"isRequired\\": true
-      },
-      \\"noteComment\\": {
-        \\"type\\": \\"string\\",
-        \\"key\\": \\"noteComment\\",
         \\"isRequired\\": true
       },
       \\"_version\\": {
@@ -157,11 +147,6 @@ exports[`generate with positional arguments 2`] = `
         \\"key\\": \\"description\\",
         \\"isRequired\\": true
       },
-      \\"comments\\": {
-        \\"type\\": \\"string[]\\",
-        \\"key\\": \\"comments\\",
-        \\"isRequired\\": true
-      },
       \\"_version\\": {
         \\"type\\": \\"string\\",
         \\"key\\": \\"_version\\",
@@ -189,11 +174,6 @@ exports[`generate with positional arguments 2`] = `
       \\"description\\": {
         \\"type\\": \\"string\\",
         \\"key\\": \\"description\\",
-        \\"isRequired\\": true
-      },
-      \\"noteComment\\": {
-        \\"type\\": \\"string\\",
-        \\"key\\": \\"noteComment\\",
         \\"isRequired\\": true
       },
       \\"_version\\": {
