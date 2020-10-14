@@ -6,7 +6,7 @@ import {
 } from "graphql";
 import { convertToTsType } from "../utils";
 
-const getFieldParameters = (fieldName: string, type: GraphQLOutputType, ): any => {
+const getFieldParameters = (fieldName: string, type: GraphQLOutputType ): any => {
   const options: any = {};
 
   options.key = fieldName;
@@ -58,7 +58,7 @@ const getModelProperties = (model: ModelDefinition, primaryKey: string) => {
   return generatedProperties;
 };
 
-// TODO refactor use GraphQL type instead of model 
+// TODO refactor use GraphQL type instead of model
 // definition
 export const createJsonSchema = (model: ModelDefinition) => {
   const primaryKey = getPrimaryKey(model.graphqlType).name;

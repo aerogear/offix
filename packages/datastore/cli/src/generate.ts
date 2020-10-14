@@ -1,5 +1,4 @@
 import { GraphbackPluginEngine } from "@graphback/core";
-import { DataSyncPlugin } from "@graphback/datasync"
 import { OffixDataStorePlugin } from "./OffixDataStorePlugin";
 import { loadSchema } from "./utils";
 
