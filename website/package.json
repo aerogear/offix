@@ -12,8 +12,8 @@
     "@docusaurus/core": "2.0.0-alpha.65",
     "@docusaurus/preset-classic": "2.0.0-alpha.65",
     "gsap": "3.5.1",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
+    "react": "16.14.0",
+    "react-dom": "16.14.0",
     "scrollmagic": "2.0.7",
     "scrollscene": "0.0.24",
     "styled-components": "5.2.0"
