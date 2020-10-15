@@ -15,7 +15,7 @@ const getModelProperties = (schema: any) => {
 
 export const createModelType = (schema: any) => {
     const { name: modelName, primaryKey } = schema;
- 
+
     return endent`
       export interface ${modelName} {
         ${getModelProperties(schema)}

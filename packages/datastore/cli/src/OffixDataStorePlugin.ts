@@ -44,7 +44,7 @@ export class OffixDataStorePlugin extends GraphbackPlugin {
         // concatenate all the json documents
         const jsonSchema = modelJsonSchemas
             .reduce((prev, cur) => ({ ...prev, [cur.name]: cur }), {});
-        
+
         const modelTypes = modelJsonSchemas
           .map(model => createModelType(model)).join("\n");
 
