@@ -2,27 +2,28 @@
 
 exports[`generate with defaults 1`] = `
 "export interface Note {
-    _id: string;
-    title: string;
-    description: string;
-    comments: string[]
-    _version: number;
+  _id: string;
+  title: string;
+  description: string;
+  _version: string;
+  _deleted: boolean;
+  _lastUpdatedAt: number
 }
 
 export type NoteCreate = Omit<Note, \\"_id\\">;
 export type NoteChange =  Pick<Note, \\"_id\\"> & Partial<NoteCreate>;
-
 export interface Comment {
-    _id: string;
-    title: string;
-    description: string;
-    noteComment: string
-    _version: number;
+  _id: string;
+  title: string;
+  description: string;
+  noteId?: string;
+  _version: string;
+  _deleted: boolean;
+  _lastUpdatedAt: number
 }
 
 export type CommentCreate = Omit<Comment, \\"_id\\">;
-export type CommentChange =  Pick<Comment, \\"_id\\"> & Partial<CommentCreate>;
-"
+export type CommentChange =  Pick<Comment, \\"_id\\"> & Partial<CommentCreate>;"
 `;
 
 exports[`generate with defaults 2`] = `
@@ -53,6 +54,16 @@ exports[`generate with defaults 2`] = `
         \\"type\\": \\"string\\",
         \\"key\\": \\"_version\\",
         \\"isRequired\\": true
+      },
+      \\"_deleted\\": {
+        \\"type\\": \\"boolean\\",
+        \\"key\\": \\"_deleted\\",
+        \\"isRequired\\": true
+      },
+      \\"_lastUpdatedAt\\": {
+        \\"type\\": \\"number\\",
+        \\"key\\": \\"_lastUpdatedAt\\",
+        \\"isRequired\\": true
       }
     }
   },
@@ -87,6 +98,16 @@ exports[`generate with defaults 2`] = `
         \\"type\\": \\"string\\",
         \\"key\\": \\"_version\\",
         \\"isRequired\\": true
+      },
+      \\"_deleted\\": {
+        \\"type\\": \\"boolean\\",
+        \\"key\\": \\"_deleted\\",
+        \\"isRequired\\": true
+      },
+      \\"_lastUpdatedAt\\": {
+        \\"type\\": \\"number\\",
+        \\"key\\": \\"_lastUpdatedAt\\",
+        \\"isRequired\\": true
       }
     }
   }
@@ -98,34 +119,33 @@ exports[`generate with defaults 3`] = `
 import jsonSchema from \\"./schema.json\\";
 
 export const schema = jsonSchema as GeneratedModelSchema;
-
-export * from \\"./types\\";
-"
+export * from \\"./types\\";"
 `;
 
 exports[`generate with positional arguments 1`] = `
 "export interface Note {
-    _id: string;
-    title: string;
-    description: string;
-    comments: string[]
-    _version: number;
+  _id: string;
+  title: string;
+  description: string;
+  _version: string;
+  _deleted: boolean;
+  _lastUpdatedAt: number
 }
 
 export type NoteCreate = Omit<Note, \\"_id\\">;
 export type NoteChange =  Pick<Note, \\"_id\\"> & Partial<NoteCreate>;
-
 export interface Comment {
-    _id: string;
-    title: string;
-    description: string;
-    noteComment: string
-    _version: number;
+  _id: string;
+  title: string;
+  description: string;
+  noteId?: string;
+  _version: string;
+  _deleted: boolean;
+  _lastUpdatedAt: number
 }
 
 export type CommentCreate = Omit<Comment, \\"_id\\">;
-export type CommentChange =  Pick<Comment, \\"_id\\"> & Partial<CommentCreate>;
-"
+export type CommentChange =  Pick<Comment, \\"_id\\"> & Partial<CommentCreate>;"
 `;
 
 exports[`generate with positional arguments 2`] = `
@@ -156,6 +176,16 @@ exports[`generate with positional arguments 2`] = `
         \\"type\\": \\"string\\",
         \\"key\\": \\"_version\\",
         \\"isRequired\\": true
+      },
+      \\"_deleted\\": {
+        \\"type\\": \\"boolean\\",
+        \\"key\\": \\"_deleted\\",
+        \\"isRequired\\": true
+      },
+      \\"_lastUpdatedAt\\": {
+        \\"type\\": \\"number\\",
+        \\"key\\": \\"_lastUpdatedAt\\",
+        \\"isRequired\\": true
       }
     }
   },
@@ -190,6 +220,16 @@ exports[`generate with positional arguments 2`] = `
         \\"type\\": \\"string\\",
         \\"key\\": \\"_version\\",
         \\"isRequired\\": true
+      },
+      \\"_deleted\\": {
+        \\"type\\": \\"boolean\\",
+        \\"key\\": \\"_deleted\\",
+        \\"isRequired\\": true
+      },
+      \\"_lastUpdatedAt\\": {
+        \\"type\\": \\"number\\",
+        \\"key\\": \\"_lastUpdatedAt\\",
+        \\"isRequired\\": true
       }
     }
   }
@@ -201,7 +241,5 @@ exports[`generate with positional arguments 3`] = `
 import jsonSchema from \\"./schema.json\\";
 
 export const schema = jsonSchema as GeneratedModelSchema;
-
-export * from \\"./types\\";
-"
+export * from \\"./types\\";"
 `;
