@@ -62,12 +62,6 @@ const getModelProperties = (model: ModelDefinition, primaryKey: string) => {
     isRequired: true
   };
 
-  generatedProperties._deleted = {
-    type: "boolean",
-    key: "_deleted",
-    isRequired: true
-  };
-
   generatedProperties._lastUpdatedAt = {
     type: "number",
     key: "_lastUpdatedAt",
