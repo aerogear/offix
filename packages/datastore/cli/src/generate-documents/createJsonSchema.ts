@@ -55,11 +55,22 @@ const getModelProperties = (model: ModelDefinition, primaryKey: string) => {
     key: "_version",
     isRequired: true
   };
+
+  generatedProperties._deleted = {
+    type: "boolean",
+    key: "_deleted",
+    isRequired: true
+  };
+
+  generatedProperties._lastUpdatedAt = {
+    type: "number",
+    key: "_lastUpdatedAt",
+    isRequired: true
+  };
+  
   return generatedProperties;
 };
 
-// TODO refactor use GraphQL type instead of model
-// definition
 export const createJsonSchema = (model: ModelDefinition) => {
   const primaryKey = getPrimaryKey(model.graphqlType).name;
 
