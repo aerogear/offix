@@ -2,44 +2,172 @@ import { GraphbackCoreMetadata, ModelDefinition } from "@graphback/core";
 import { buildSchema } from "graphql";
 import { createJsonSchema } from "../src/generate-documents/createJsonSchema";
 
-test("createJsonSchema", () => {
-  const modelSDL =
-`
-scalar GraphbackObjectID
+const noteFragment = (annotation: string, array: boolean = true) => (`
+  """
+  @model
+  @datasync
+  """
+  type Note {
+    _id: GraphbackObjectID!
+    title: String!
+    description: String!
+    ${annotation}
+    ${array ? 'comments: [Comment]!' : 'comment: Comment!'}
+  }
+`);
 
-"""
-@model
-@datasync
-"""
-type Note {
-  _id: GraphbackObjectID!
-  title: String!
-  description: String!
+const commentFragment = (annotation: string) => (`
   """
-  @oneToMany(field: 'noteComment', key: 'noteId')
+  @model
+  @datasync
   """
-  comments: [Comment]!
-}
+  type Comment {
+    _id: GraphbackObjectID!
+    title: String!
+    description: String!
+    ${annotation}
+    noteComment: Note!
+  }
+`);
 
-"""
-@model
-@datasync
-"""
-type Comment {
-  _id: GraphbackObjectID!
-  title: String!
-  description: String!
-  """
-  @manyToOne(field: 'comments', key: 'noteId')
-  """
-  noteComment: Note!
-}
-`;
+test("createJsonSchema (@oneToOne - default)", () => {
+  const modelSDL = `
+    scalar GraphbackObjectID
+    ${noteFragment(`
+      """
+      @oneToOne()
+      """
+    `, false)}
+    ${commentFragment("")}
+  `;
 
   const metadata = new GraphbackCoreMetadata({ crudMethods: {} }, buildSchema(modelSDL));
   const models = metadata.getModelDefinitions();
+  const note = models.find((m: ModelDefinition) => m.graphqlType.name === "Note");
   const comment = models.find((m: ModelDefinition) => m.graphqlType.name === "Comment");
 
+  const noteJsonSchema: any = createJsonSchema(note as ModelDefinition);
+  expect(noteJsonSchema.properties.commentId).toBeDefined();
+  const commentJsonSchema: any = createJsonSchema(comment as ModelDefinition);
+  expect(commentJsonSchema.properties.noteId).not.toBeDefined();
+});
+
+test("createJsonSchema (@oneToOne - key specified)", () => {
+  const modelSDL = `
+    scalar GraphbackObjectID
+    ${noteFragment(`
+      """
+      @oneToOne(key: 'commentId')
+      """
+    `, false)}
+    ${commentFragment("")}
+  `;
+
+  const metadata = new GraphbackCoreMetadata({ crudMethods: {} }, buildSchema(modelSDL));
+  const models = metadata.getModelDefinitions();
+  const note = models.find((m: ModelDefinition) => m.graphqlType.name === "Note");
+  const comment = models.find((m: ModelDefinition) => m.graphqlType.name === "Comment");
+
+  const noteJsonSchema: any = createJsonSchema(note as ModelDefinition);
+  expect(noteJsonSchema.properties.commentId).toBeDefined();
+  const commentJsonSchema: any = createJsonSchema(comment as ModelDefinition);
+  expect(commentJsonSchema.properties.noteId).not.toBeDefined();
+});
+
+test("createJsonSchema (@oneToMany - default key)", () => {
+  const modelSDL = `
+    scalar GraphbackObjectID
+    ${noteFragment(`
+      """
+      @oneToMany(field: 'noteComment')
+      """
+    `)}
+    ${commentFragment("")}
+  `;
+
+  const metadata = new GraphbackCoreMetadata({ crudMethods: {} }, buildSchema(modelSDL));
+  const models = metadata.getModelDefinitions();
+  const note = models.find((m: ModelDefinition) => m.graphqlType.name === "Note");
+  const comment = models.find((m: ModelDefinition) => m.graphqlType.name === "Comment");
+
+  const noteJsonSchema: any = createJsonSchema(note as ModelDefinition);
+  expect(noteJsonSchema.properties.comment).not.toBeDefined();
+  const commentJsonSchema: any = createJsonSchema(comment as ModelDefinition);
+  expect(commentJsonSchema.properties.noteComment).not.toBeDefined();
+  expect(commentJsonSchema.properties.noteCommentId).toBeDefined();
+});
+
+test("createJsonSchema (@oneToMany - key specified)", () => {
+  const modelSDL = `
+    scalar GraphbackObjectID
+    ${noteFragment(`
+      """
+      @oneToMany(field: 'noteComment', key: 'noteId')
+      """
+    `)}
+    ${commentFragment("")}
+  `;
+
+  const metadata = new GraphbackCoreMetadata({ crudMethods: {} }, buildSchema(modelSDL));
+  const models = metadata.getModelDefinitions();
+  const note = models.find((m: ModelDefinition) => m.graphqlType.name === "Note");
+  const comment = models.find((m: ModelDefinition) => m.graphqlType.name === "Comment");
+
+  const noteJsonSchema: any = createJsonSchema(note as ModelDefinition);
+  expect(noteJsonSchema.properties.comment).not.toBeDefined();
+  const commentJsonSchema: any = createJsonSchema(comment as ModelDefinition);
+  expect(commentJsonSchema.properties.noteId).toBeDefined();
+});
+
+test("createJsonSchema (@oneToMany & @manyToOne - default key)", () => {
+  const modelSDL = `
+    scalar GraphbackObjectID
+    ${noteFragment(`
+      """
+      @oneToMany(field: 'noteComment')
+      """
+    `)}
+    ${commentFragment(`
+      """
+      @manyToOne(field: 'comments')
+      """
+    `)}
+  `;
+
+  const metadata = new GraphbackCoreMetadata({ crudMethods: {} }, buildSchema(modelSDL));
+  const models = metadata.getModelDefinitions();
+  const note = models.find((m: ModelDefinition) => m.graphqlType.name === "Note");
+  const comment = models.find((m: ModelDefinition) => m.graphqlType.name === "Comment");
+
+  const noteJsonSchema: any = createJsonSchema(note as ModelDefinition);
+  expect(noteJsonSchema.properties.comment).not.toBeDefined();
+  const commentJsonSchema: any = createJsonSchema(comment as ModelDefinition);
+  expect(commentJsonSchema.properties.noteComment).not.toBeDefined();
+  expect(commentJsonSchema.properties.noteCommentId).toBeDefined();
+});
+
+test("createJsonSchema (@oneToMany & @manyToOne - key specified)", () => {
+  const modelSDL = `
+    scalar GraphbackObjectID
+    ${noteFragment(`
+      """
+      @oneToMany(field: 'noteComment', key: 'noteId')
+      """
+    `)}
+    ${commentFragment(`
+      """
+      @manyToOne(field: 'comments', key: 'noteId')
+      """
+    `)}
+  `;
+
+  const metadata = new GraphbackCoreMetadata({ crudMethods: {} }, buildSchema(modelSDL));
+  const models = metadata.getModelDefinitions();
+  const note = models.find((m: ModelDefinition) => m.graphqlType.name === "Note");
+  const comment = models.find((m: ModelDefinition) => m.graphqlType.name === "Comment");
+
+  const noteJsonSchema: any = createJsonSchema(note as ModelDefinition);
+  expect(noteJsonSchema.properties.comment).not.toBeDefined();
   const commentJsonSchema: any = createJsonSchema(comment as ModelDefinition);
   expect(commentJsonSchema.properties.noteId).toBeDefined();
 });
