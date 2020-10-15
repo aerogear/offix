@@ -1,15 +1,4 @@
-import { GraphQLOutputType, isNonNullType, getNullableType } from "graphql";
 import endent from "endent";
-
-const getField = (fieldName: string, type: GraphQLOutputType) => {
-    if (isNonNullType(type)) {
-        type = getNullableType(type);
-    } else {
-        fieldName = `${fieldName}?`;
-    }
-
-    return `${fieldName}: ${type}`;
-};
 
 const getModelProperties = (schema: any) => {
     const fieldMap = schema.properties;
