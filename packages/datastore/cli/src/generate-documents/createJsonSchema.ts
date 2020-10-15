@@ -24,7 +24,7 @@ const getModelProperties = (model: ModelDefinition, primaryKey: string) => {
   const keys = Object.keys(fieldMap);
 
   const relationships = model.relationships
-    .filter(r => !keys.includes(r.ownerField.name))
+    .filter(r => r.kind !== "oneToMany")
     .map(r => {
       const fieldOptions = getFieldParameters(
         r.relationForeignKey!,
