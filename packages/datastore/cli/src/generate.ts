@@ -7,7 +7,6 @@ export const generate = (schemaPath: string, outputPath: string) => {
     const pluginEngine = new GraphbackPluginEngine({
         schema,
         plugins: [
-            // new DataSyncPlugin(),
             new OffixDataStorePlugin({ modelOutputDir: outputPath })
         ]
     });
