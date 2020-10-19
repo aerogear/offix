@@ -70,8 +70,11 @@ test("createJsonSchema (@oneToOne - key specified)", () => {
 
   const noteJsonSchema: any = createJsonSchema(note as ModelDefinition);
   expect(noteJsonSchema.properties.commentId).toBeDefined();
+  expect(noteJsonSchema).toMatchSnapshot();
+
   const commentJsonSchema: any = createJsonSchema(comment as ModelDefinition);
   expect(commentJsonSchema.properties.noteId).not.toBeDefined();
+  expect(commentJsonSchema).toMatchSnapshot();
 });
 
 test("createJsonSchema (@oneToMany - default key)", () => {
@@ -92,9 +95,12 @@ test("createJsonSchema (@oneToMany - default key)", () => {
 
   const noteJsonSchema: any = createJsonSchema(note as ModelDefinition);
   expect(noteJsonSchema.properties.comment).not.toBeDefined();
+  expect(noteJsonSchema).toMatchSnapshot();
+
   const commentJsonSchema: any = createJsonSchema(comment as ModelDefinition);
   expect(commentJsonSchema.properties.noteComment).not.toBeDefined();
   expect(commentJsonSchema.properties.noteCommentId).toBeDefined();
+  expect(commentJsonSchema).toMatchSnapshot();
 });
 
 test("createJsonSchema (@oneToMany - key specified)", () => {
@@ -115,8 +121,11 @@ test("createJsonSchema (@oneToMany - key specified)", () => {
 
   const noteJsonSchema: any = createJsonSchema(note as ModelDefinition);
   expect(noteJsonSchema.properties.comment).not.toBeDefined();
+  expect(noteJsonSchema).toMatchSnapshot();
+
   const commentJsonSchema: any = createJsonSchema(comment as ModelDefinition);
   expect(commentJsonSchema.properties.noteId).toBeDefined();
+  expect(commentJsonSchema).toMatchSnapshot();
 });
 
 test("createJsonSchema (@oneToMany & @manyToOne - default key)", () => {
@@ -141,9 +150,12 @@ test("createJsonSchema (@oneToMany & @manyToOne - default key)", () => {
 
   const noteJsonSchema: any = createJsonSchema(note as ModelDefinition);
   expect(noteJsonSchema.properties.comment).not.toBeDefined();
+  expect(noteJsonSchema).toMatchSnapshot();
+
   const commentJsonSchema: any = createJsonSchema(comment as ModelDefinition);
   expect(commentJsonSchema.properties.noteComment).not.toBeDefined();
   expect(commentJsonSchema.properties.noteCommentId).toBeDefined();
+  expect(commentJsonSchema).toMatchSnapshot();
 });
 
 test("createJsonSchema (@oneToMany & @manyToOne - key specified)", () => {
@@ -168,6 +180,9 @@ test("createJsonSchema (@oneToMany & @manyToOne - key specified)", () => {
 
   const noteJsonSchema: any = createJsonSchema(note as ModelDefinition);
   expect(noteJsonSchema.properties.comment).not.toBeDefined();
+  expect(noteJsonSchema).toMatchSnapshot();
+
   const commentJsonSchema: any = createJsonSchema(comment as ModelDefinition);
   expect(commentJsonSchema.properties.noteId).toBeDefined();
+  expect(commentJsonSchema).toMatchSnapshot();
 });

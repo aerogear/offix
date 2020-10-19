@@ -1,0 +1,401 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createJsonSchema (@oneToMany & @manyToOne - default key) 1`] = `
+Object {
+  "name": "Note",
+  "primaryKey": "_id",
+  "properties": Object {
+    "_id": Object {
+      "isRequired": true,
+      "key": "_id",
+      "primary": true,
+      "type": "string",
+    },
+    "_lastUpdatedAt": Object {
+      "isRequired": true,
+      "key": "_lastUpdatedAt",
+      "type": "number",
+    },
+    "_version": Object {
+      "isRequired": true,
+      "key": "_version",
+      "type": "string",
+    },
+    "description": Object {
+      "isRequired": true,
+      "key": "description",
+      "type": "string",
+    },
+    "title": Object {
+      "isRequired": true,
+      "key": "title",
+      "type": "string",
+    },
+  },
+  "type": "object",
+  "version": 1,
+}
+`;
+
+exports[`createJsonSchema (@oneToMany & @manyToOne - default key) 2`] = `
+Object {
+  "name": "Comment",
+  "primaryKey": "_id",
+  "properties": Object {
+    "_id": Object {
+      "isRequired": true,
+      "key": "_id",
+      "primary": true,
+      "type": "string",
+    },
+    "_lastUpdatedAt": Object {
+      "isRequired": true,
+      "key": "_lastUpdatedAt",
+      "type": "number",
+    },
+    "_version": Object {
+      "isRequired": true,
+      "key": "_version",
+      "type": "string",
+    },
+    "description": Object {
+      "isRequired": true,
+      "key": "description",
+      "type": "string",
+    },
+    "noteCommentId": Object {
+      "key": "noteCommentId",
+      "relationship": "Note",
+      "type": "string",
+    },
+    "title": Object {
+      "isRequired": true,
+      "key": "title",
+      "type": "string",
+    },
+  },
+  "type": "object",
+  "version": 1,
+}
+`;
+
+exports[`createJsonSchema (@oneToMany & @manyToOne - key specified) 1`] = `
+Object {
+  "name": "Note",
+  "primaryKey": "_id",
+  "properties": Object {
+    "_id": Object {
+      "isRequired": true,
+      "key": "_id",
+      "primary": true,
+      "type": "string",
+    },
+    "_lastUpdatedAt": Object {
+      "isRequired": true,
+      "key": "_lastUpdatedAt",
+      "type": "number",
+    },
+    "_version": Object {
+      "isRequired": true,
+      "key": "_version",
+      "type": "string",
+    },
+    "description": Object {
+      "isRequired": true,
+      "key": "description",
+      "type": "string",
+    },
+    "title": Object {
+      "isRequired": true,
+      "key": "title",
+      "type": "string",
+    },
+  },
+  "type": "object",
+  "version": 1,
+}
+`;
+
+exports[`createJsonSchema (@oneToMany & @manyToOne - key specified) 2`] = `
+Object {
+  "name": "Comment",
+  "primaryKey": "_id",
+  "properties": Object {
+    "_id": Object {
+      "isRequired": true,
+      "key": "_id",
+      "primary": true,
+      "type": "string",
+    },
+    "_lastUpdatedAt": Object {
+      "isRequired": true,
+      "key": "_lastUpdatedAt",
+      "type": "number",
+    },
+    "_version": Object {
+      "isRequired": true,
+      "key": "_version",
+      "type": "string",
+    },
+    "description": Object {
+      "isRequired": true,
+      "key": "description",
+      "type": "string",
+    },
+    "noteId": Object {
+      "key": "noteId",
+      "relationship": "Note",
+      "type": "string",
+    },
+    "title": Object {
+      "isRequired": true,
+      "key": "title",
+      "type": "string",
+    },
+  },
+  "type": "object",
+  "version": 1,
+}
+`;
+
+exports[`createJsonSchema (@oneToMany - default key) 1`] = `
+Object {
+  "name": "Note",
+  "primaryKey": "_id",
+  "properties": Object {
+    "_id": Object {
+      "isRequired": true,
+      "key": "_id",
+      "primary": true,
+      "type": "string",
+    },
+    "_lastUpdatedAt": Object {
+      "isRequired": true,
+      "key": "_lastUpdatedAt",
+      "type": "number",
+    },
+    "_version": Object {
+      "isRequired": true,
+      "key": "_version",
+      "type": "string",
+    },
+    "description": Object {
+      "isRequired": true,
+      "key": "description",
+      "type": "string",
+    },
+    "title": Object {
+      "isRequired": true,
+      "key": "title",
+      "type": "string",
+    },
+  },
+  "type": "object",
+  "version": 1,
+}
+`;
+
+exports[`createJsonSchema (@oneToMany - default key) 2`] = `
+Object {
+  "name": "Comment",
+  "primaryKey": "_id",
+  "properties": Object {
+    "_id": Object {
+      "isRequired": true,
+      "key": "_id",
+      "primary": true,
+      "type": "string",
+    },
+    "_lastUpdatedAt": Object {
+      "isRequired": true,
+      "key": "_lastUpdatedAt",
+      "type": "number",
+    },
+    "_version": Object {
+      "isRequired": true,
+      "key": "_version",
+      "type": "string",
+    },
+    "description": Object {
+      "isRequired": true,
+      "key": "description",
+      "type": "string",
+    },
+    "noteCommentId": Object {
+      "key": "noteCommentId",
+      "relationship": "Note",
+      "type": "string",
+    },
+    "title": Object {
+      "isRequired": true,
+      "key": "title",
+      "type": "string",
+    },
+  },
+  "type": "object",
+  "version": 1,
+}
+`;
+
+exports[`createJsonSchema (@oneToMany - key specified) 1`] = `
+Object {
+  "name": "Note",
+  "primaryKey": "_id",
+  "properties": Object {
+    "_id": Object {
+      "isRequired": true,
+      "key": "_id",
+      "primary": true,
+      "type": "string",
+    },
+    "_lastUpdatedAt": Object {
+      "isRequired": true,
+      "key": "_lastUpdatedAt",
+      "type": "number",
+    },
+    "_version": Object {
+      "isRequired": true,
+      "key": "_version",
+      "type": "string",
+    },
+    "description": Object {
+      "isRequired": true,
+      "key": "description",
+      "type": "string",
+    },
+    "title": Object {
+      "isRequired": true,
+      "key": "title",
+      "type": "string",
+    },
+  },
+  "type": "object",
+  "version": 1,
+}
+`;
+
+exports[`createJsonSchema (@oneToMany - key specified) 2`] = `
+Object {
+  "name": "Comment",
+  "primaryKey": "_id",
+  "properties": Object {
+    "_id": Object {
+      "isRequired": true,
+      "key": "_id",
+      "primary": true,
+      "type": "string",
+    },
+    "_lastUpdatedAt": Object {
+      "isRequired": true,
+      "key": "_lastUpdatedAt",
+      "type": "number",
+    },
+    "_version": Object {
+      "isRequired": true,
+      "key": "_version",
+      "type": "string",
+    },
+    "description": Object {
+      "isRequired": true,
+      "key": "description",
+      "type": "string",
+    },
+    "noteId": Object {
+      "key": "noteId",
+      "relationship": "Note",
+      "type": "string",
+    },
+    "title": Object {
+      "isRequired": true,
+      "key": "title",
+      "type": "string",
+    },
+  },
+  "type": "object",
+  "version": 1,
+}
+`;
+
+exports[`createJsonSchema (@oneToOne - key specified) 1`] = `
+Object {
+  "name": "Note",
+  "primaryKey": "_id",
+  "properties": Object {
+    "_id": Object {
+      "isRequired": true,
+      "key": "_id",
+      "primary": true,
+      "type": "string",
+    },
+    "_lastUpdatedAt": Object {
+      "isRequired": true,
+      "key": "_lastUpdatedAt",
+      "type": "number",
+    },
+    "_version": Object {
+      "isRequired": true,
+      "key": "_version",
+      "type": "string",
+    },
+    "commentId": Object {
+      "key": "commentId",
+      "relationship": "Comment",
+      "type": "string",
+    },
+    "description": Object {
+      "isRequired": true,
+      "key": "description",
+      "type": "string",
+    },
+    "title": Object {
+      "isRequired": true,
+      "key": "title",
+      "type": "string",
+    },
+  },
+  "type": "object",
+  "version": 1,
+}
+`;
+
+exports[`createJsonSchema (@oneToOne - key specified) 2`] = `
+Object {
+  "name": "Comment",
+  "primaryKey": "_id",
+  "properties": Object {
+    "_id": Object {
+      "isRequired": true,
+      "key": "_id",
+      "primary": true,
+      "type": "string",
+    },
+    "_lastUpdatedAt": Object {
+      "isRequired": true,
+      "key": "_lastUpdatedAt",
+      "type": "number",
+    },
+    "_version": Object {
+      "isRequired": true,
+      "key": "_version",
+      "type": "string",
+    },
+    "description": Object {
+      "isRequired": true,
+      "key": "description",
+      "type": "string",
+    },
+    "noteComment": Object {
+      "isRequired": true,
+      "key": "noteComment",
+      "type": "string",
+    },
+    "title": Object {
+      "isRequired": true,
+      "key": "title",
+      "type": "string",
+    },
+  },
+  "type": "object",
+  "version": 1,
+}
+`;
