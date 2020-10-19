@@ -6,7 +6,6 @@ exports[`generate with defaults 1`] = `
   title: string;
   description: string;
   _version: string;
-  _deleted: boolean;
   _lastUpdatedAt: number
 }
 
@@ -18,7 +17,6 @@ export interface Comment {
   description: string;
   noteId?: string;
   _version: string;
-  _deleted: boolean;
   _lastUpdatedAt: number
 }
 
@@ -55,11 +53,6 @@ exports[`generate with defaults 2`] = `
         \\"key\\": \\"_version\\",
         \\"isRequired\\": true
       },
-      \\"_deleted\\": {
-        \\"type\\": \\"boolean\\",
-        \\"key\\": \\"_deleted\\",
-        \\"isRequired\\": true
-      },
       \\"_lastUpdatedAt\\": {
         \\"type\\": \\"number\\",
         \\"key\\": \\"_lastUpdatedAt\\",
@@ -99,11 +92,6 @@ exports[`generate with defaults 2`] = `
         \\"key\\": \\"_version\\",
         \\"isRequired\\": true
       },
-      \\"_deleted\\": {
-        \\"type\\": \\"boolean\\",
-        \\"key\\": \\"_deleted\\",
-        \\"isRequired\\": true
-      },
       \\"_lastUpdatedAt\\": {
         \\"type\\": \\"number\\",
         \\"key\\": \\"_lastUpdatedAt\\",
@@ -128,7 +116,6 @@ exports[`generate with positional arguments 1`] = `
   title: string;
   description: string;
   _version: string;
-  _deleted: boolean;
   _lastUpdatedAt: number
 }
 
@@ -140,7 +127,6 @@ export interface Comment {
   description: string;
   noteId?: string;
   _version: string;
-  _deleted: boolean;
   _lastUpdatedAt: number
 }
 
@@ -177,11 +163,6 @@ exports[`generate with positional arguments 2`] = `
         \\"key\\": \\"_version\\",
         \\"isRequired\\": true
       },
-      \\"_deleted\\": {
-        \\"type\\": \\"boolean\\",
-        \\"key\\": \\"_deleted\\",
-        \\"isRequired\\": true
-      },
       \\"_lastUpdatedAt\\": {
         \\"type\\": \\"number\\",
         \\"key\\": \\"_lastUpdatedAt\\",
@@ -219,11 +200,6 @@ exports[`generate with positional arguments 2`] = `
       \\"_version\\": {
         \\"type\\": \\"string\\",
         \\"key\\": \\"_version\\",
-        \\"isRequired\\": true
-      },
-      \\"_deleted\\": {
-        \\"type\\": \\"boolean\\",
-        \\"key\\": \\"_deleted\\",
         \\"isRequired\\": true
       },
       \\"_lastUpdatedAt\\": {
