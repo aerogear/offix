@@ -15,7 +15,7 @@
     "@size-limit/preset-small-lib": "4.6.0",
     "@types/fetch-mock": "7.3.3",
     "@types/graphql": "14.2.3",
-    "@types/jest": "26.0.14",
+    "@types/jest": "26.0.15",
     "@types/node": "12.12.68",
     "graphql": "15.3.0",
     "graphql-tag": "2.11.0",
