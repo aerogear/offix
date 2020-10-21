@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@types/mocha": "8.0.3",
-    "@types/node": "12.12.69"
+    "@types/node": "12.12.70"
   },
   "workspaces": [
     "packages/*/*"
