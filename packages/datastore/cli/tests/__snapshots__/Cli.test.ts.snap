@@ -21,7 +21,15 @@ export interface Comment {
 }
 
 export type CommentCreate = Omit<Comment, \\"_id\\">;
-export type CommentChange =  Pick<Comment, \\"_id\\"> & Partial<CommentCreate>;"
+export type CommentChange =  Pick<Comment, \\"_id\\"> & Partial<CommentCreate>;
+export interface Whatever {
+  _id: string;
+  _version: string;
+  _lastUpdatedAt: number
+}
+
+export type WhateverCreate = Omit<Whatever, \\"_id\\">;
+export type WhateverChange =  Pick<Whatever, \\"_id\\"> & Partial<WhateverCreate>;"
 `;
 
 exports[`generate with defaults 2`] = `
@@ -98,6 +106,30 @@ exports[`generate with defaults 2`] = `
         \\"isRequired\\": true
       }
     }
+  },
+  \\"Whatever\\": {
+    \\"name\\": \\"Whatever\\",
+    \\"version\\": 1,
+    \\"type\\": \\"object\\",
+    \\"primaryKey\\": \\"_id\\",
+    \\"properties\\": {
+      \\"_id\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"_id\\",
+        \\"isRequired\\": true,
+        \\"primary\\": true
+      },
+      \\"_version\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"_version\\",
+        \\"isRequired\\": true
+      },
+      \\"_lastUpdatedAt\\": {
+        \\"type\\": \\"number\\",
+        \\"key\\": \\"_lastUpdatedAt\\",
+        \\"isRequired\\": true
+      }
+    }
   }
 }"
 `;
@@ -131,7 +163,15 @@ export interface Comment {
 }
 
 export type CommentCreate = Omit<Comment, \\"_id\\">;
-export type CommentChange =  Pick<Comment, \\"_id\\"> & Partial<CommentCreate>;"
+export type CommentChange =  Pick<Comment, \\"_id\\"> & Partial<CommentCreate>;
+export interface Whatever {
+  _id: string;
+  _version: string;
+  _lastUpdatedAt: number
+}
+
+export type WhateverCreate = Omit<Whatever, \\"_id\\">;
+export type WhateverChange =  Pick<Whatever, \\"_id\\"> & Partial<WhateverCreate>;"
 `;
 
 exports[`generate with positional arguments 2`] = `
@@ -196,6 +236,30 @@ exports[`generate with positional arguments 2`] = `
         \\"type\\": \\"string\\",
         \\"key\\": \\"noteId\\",
         \\"relationship\\": \\"Note\\"
+      },
+      \\"_version\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"_version\\",
+        \\"isRequired\\": true
+      },
+      \\"_lastUpdatedAt\\": {
+        \\"type\\": \\"number\\",
+        \\"key\\": \\"_lastUpdatedAt\\",
+        \\"isRequired\\": true
+      }
+    }
+  },
+  \\"Whatever\\": {
+    \\"name\\": \\"Whatever\\",
+    \\"version\\": 1,
+    \\"type\\": \\"object\\",
+    \\"primaryKey\\": \\"_id\\",
+    \\"properties\\": {
+      \\"_id\\": {
+        \\"type\\": \\"string\\",
+        \\"key\\": \\"_id\\",
+        \\"isRequired\\": true,
+        \\"primary\\": true
       },
       \\"_version\\": {
         \\"type\\": \\"string\\",
