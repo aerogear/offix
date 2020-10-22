@@ -35,8 +35,8 @@ export class OffixDataStorePlugin extends GraphbackPlugin {
     }
 
     public getDocuments(metadata: GraphbackCoreMetadata) {
-        const models = metadata.getModelDefinitions()
-            .filter(model => isDataSyncClientModel(model));
+        const models = metadata.getModelDefinitions();
+            // .filter(model => isDataSyncClientModel(model));
 
         const modelJsonSchemas = models
             .map(model => (createJsonSchema(model)));
