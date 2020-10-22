@@ -2,7 +2,7 @@ import { GraphbackPlugin, GraphbackCoreMetadata } from "@graphback/core";
 import { writeFileSync } from "fs";
 import { IOffixDataStorePluginConfig } from "./OffixDataStoreConfig";
 import { createJsonSchema, createModelType } from "./generate-documents";
-import { isDataSyncClientModel, makeDirIfNotExists } from "./utils";
+import { makeDirIfNotExists } from "./utils";
 import { validateOffixDataStorePluginConfig } from "./OffixDataStorePluginValidator";
 import endent from "endent";
 
@@ -36,8 +36,6 @@ export class OffixDataStorePlugin extends GraphbackPlugin {
 
     public getDocuments(metadata: GraphbackCoreMetadata) {
         const models = metadata.getModelDefinitions();
-            // .filter(model => isDataSyncClientModel(model));
-
         const modelJsonSchemas = models
             .map(model => (createJsonSchema(model)));
 
