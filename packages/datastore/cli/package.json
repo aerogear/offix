@@ -32,7 +32,7 @@
   "dependencies": {
     "@graphback/core": "0.16.2",
     "@graphql-tools/load-files": "6.2.4",
-    "@graphql-tools/merge": "6.2.4",
+    "@graphql-tools/merge": "6.2.5",
     "graphql": "^15.3.0",
     "graphql-metadata": "0.7.6",
     "yargs": "15.4.1"
