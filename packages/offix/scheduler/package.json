@@ -30,7 +30,7 @@
     "json-server": "0.16.2",
     "node-fetch": "2.6.1",
     "size-limit": "4.6.2",
-    "ts-jest": "26.4.2",
+    "ts-jest": "26.4.3",
     "typescript": "3.9.7"
   },
   "dependencies": {
