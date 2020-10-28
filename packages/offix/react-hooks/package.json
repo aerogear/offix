@@ -28,7 +28,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@size-limit/preset-small-lib": "4.6.2",
+    "@size-limit/preset-small-lib": "4.7.0",
     "@testing-library/react-hooks": "3.4.2",
     "@types/jest": "26.0.15",
     "@types/react": "16.9.54",
@@ -43,7 +43,7 @@
     "graphql": "15.4.0",
     "jest": "26.6.1",
     "react-test-renderer": "16.14.0",
-    "size-limit": "4.6.2",
+    "size-limit": "4.7.0",
     "ts-jest": "26.4.3",
     "typescript": "3.9.7"
   },
