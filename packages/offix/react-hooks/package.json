@@ -41,7 +41,7 @@
     "cross-fetch": "3.0.6",
     "fake-indexeddb": "3.1.2",
     "graphql": "15.4.0",
-    "jest": "26.6.2",
+    "jest": "26.6.3",
     "react-test-renderer": "16.14.0",
     "size-limit": "4.7.0",
     "ts-jest": "26.4.3",
