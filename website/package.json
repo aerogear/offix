@@ -14,7 +14,7 @@
     "gsap": "3.5.1",
     "react": "16.14.0",
     "react-dom": "16.14.0",
-    "scrollmagic": "2.0.7",
+    "scrollmagic": "2.0.8",
     "scrollscene": "0.0.24",
     "styled-components": "5.2.1"
   }
