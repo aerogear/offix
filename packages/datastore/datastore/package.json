@@ -37,7 +37,7 @@
     "@types/uuid": "8.3.0",
     "@types/websql": "0.0.27",
     "apollo-server": "2.19.0",
-    "debug": "4.2.0",
+    "debug": "4.3.0",
     "fake-indexeddb": "3.1.2",
     "isomorphic-unfetch": "3.1.0",
     "jest": "26.6.3",
