@@ -2,8 +2,9 @@ import { GraphbackPlugin, GraphbackCoreMetadata } from "@graphback/core";
 import { writeFileSync } from "fs";
 import { IOffixDataStorePluginConfig } from "./OffixDataStoreConfig";
 import { createJsonSchema, createModelType } from "./generate-documents";
-import { isDataSyncClientModel, makeDirIfNotExists } from "./utils";
+import { makeDirIfNotExists } from "./utils";
 import { validateOffixDataStorePluginConfig } from "./OffixDataStorePluginValidator";
+import endent from "endent";
 
 export const OFFIX_DATASYNC_PLUGIN_NAME = "OffixDataStorePlugin";
 
@@ -34,25 +35,24 @@ export class OffixDataStorePlugin extends GraphbackPlugin {
     }
 
     public getDocuments(metadata: GraphbackCoreMetadata) {
-        const models = metadata.getModelDefinitions()
-            .filter(model => isDataSyncClientModel(model));
-
+        const models = metadata.getModelDefinitions();
         const modelJsonSchemas = models
             .map(model => (createJsonSchema(model)));
+
         // concatenate all the json documents
         const jsonSchema = modelJsonSchemas
             .reduce((prev, cur) => ({ ...prev, [cur.name]: cur }), {});
-        const modelTypes = models.map(model => createModelType(model)).join("\n");
 
-        // TODO use actual model type instead of any for ModelJsonSchema
-        const exports = `import { GeneratedModelSchema } from "offix-datastore";
-import jsonSchema from "./schema.json";
+        const modelTypes = modelJsonSchemas
+          .map(model => createModelType(model)).join("\n");
 
-export const schema = jsonSchema as GeneratedModelSchema;
+        const exports = endent`
+          import { GeneratedModelSchema } from "offix-datastore";
+          import jsonSchema from "./schema.json";
 
-export * from "./types";
-`;
-
+          export const schema = jsonSchema as GeneratedModelSchema;
+          export * from "./types";
+        `;
 
         return {
             json: jsonSchema,
