@@ -12,7 +12,6 @@ import { GlobalReplicationConfig, MutationsConfig } from "../api/ReplicationConf
 import { buildGraphQLCRUDMutations } from "./buildGraphQLCRUDMutations";
 import invariant from "tiny-invariant";
 import { getFirstOperationData } from "../utils/getFirstOperationData";
-import { QueueUpdateProcessor } from "./QueueUpdateProcessor";
 
 const logger = createLogger("replicator-mutationqueue");
 
@@ -300,11 +299,7 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
       // TODO handling for ADD works but it really convoluted
       const transaction = await this.options.storage.createTransaction();
       try {
-        const queueUpdateProcessor = new QueueUpdateProcessor(
-          this.modelMap, currentItem, returnedData, transaction);
-
         const items: MutationRequest[] = await this.getStoredMutations();
-        await queueUpdateProcessor.updateQueue(items);
 
         // persist queue. No need to await here since we will await trx.commit
         transaction.saveOrUpdate(
