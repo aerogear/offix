@@ -22,7 +22,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/bson": "4.0.3",
-    "@types/jest": "26.0.15",
+    "@types/jest": "26.0.16",
     "@types/yargs": "15.0.10",
     "endent": "2.0.1",
     "jest": "26.6.3",
