@@ -8,6 +8,7 @@ import { ReplicatorSubscriptions } from "./ReplicatorSubscriptions";
 import { convertFilterToGQLFilter } from "../utils/convertFilterToGQLFilter";
 import { pipe, subscribe } from "wonka";
 import { DocumentNode } from "graphql";
+import { subscriptionT } from "wonka/dist/types/src/Wonka_types.gen";
 
 const logger = createLogger("replicator-subscriptions");
 
@@ -27,6 +28,9 @@ export class SubscriptionReplicator {
   private options: SubscriptionReplicatorConfig;
   private filter: any;
   private wsConnected?: boolean;
+  private addSubscription?: subscriptionT;
+  private updateSubscription?: subscriptionT;
+  private deleteSubscription? : subscriptionT;
 
   constructor(options: SubscriptionReplicatorConfig) {
     this.options = options;
@@ -48,12 +52,21 @@ export class SubscriptionReplicator {
       }
 
       if (isConnected) {
-        this.subscribeToChanges(this.options.queries.new, CRUDEvents.ADD);
-        this.subscribeToChanges(this.options.queries.updated, CRUDEvents.UPDATE);
-        this.subscribeToChanges(this.options.queries.deleted, CRUDEvents.DELETE);
+        this.addSubscription = this.subscribeToChanges(this.options.queries.new, CRUDEvents.ADD);
+        this.updateSubscription = this.subscribeToChanges(this.options.queries.updated, CRUDEvents.UPDATE);
+        this.deleteSubscription = this.subscribeToChanges(this.options.queries.deleted, CRUDEvents.DELETE);
       }
-      // TODO Unsubscribe
+
+      return () => {
+        this.stop();
+      };
     });
+  }
+
+  public stop() {
+    this.addSubscription?.unsubscribe();
+    this.updateSubscription?.unsubscribe();
+    this.deleteSubscription?.unsubscribe();
   }
 
   private subscribeToChanges(query: DocumentNode, type: CRUDEvents) {
