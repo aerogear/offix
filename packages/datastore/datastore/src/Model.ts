@@ -8,6 +8,10 @@ import invariant from "tiny-invariant";
 import { ModelChangeReplication } from "./replication/mutations/MutationsQueue";
 import { v4 as uuidv4 } from "uuid";
 import { createLogger } from "./utils/logger";
+import { buildGraphQLCRUDQueries } from "./replication";
+import { buildGraphQLCRUDSubscriptions } from "./replication/subscriptions/buildGraphQLCRUDSubscriptions";
+import { ReplicatorSubscriptions } from "./replication/subscriptions/ReplicatorSubscriptions";
+import { ReplicatorQueries } from "./replication/queries/ReplicatorQueries";
 
 const logger = createLogger("model");
 
@@ -61,6 +65,8 @@ export class Model<T = unknown> {
   public replication?: ModelChangeReplication;
   public changeEventStream: PushStream<StoreChangeEvent>;
   private storage: LocalStorage;
+  public queries: ReplicatorQueries;
+  public subscriptionQueries: ReplicatorSubscriptions;
 
   constructor(
     schema: ModelSchema<T>,
@@ -72,6 +78,8 @@ export class Model<T = unknown> {
     this.storage = storage;
     this.replicationConfig = replicationConfig;
     this.storage.addStore(this.schema);
+    this.queries = buildGraphQLCRUDQueries(this);
+    this.subscriptionQueries = buildGraphQLCRUDSubscriptions(this);
   }
 
   public getFields() {
@@ -338,6 +346,45 @@ export class Model<T = unknown> {
     }
   }
 
+  /**
+   * Late binding method for adding replication filters
+   * after Model setup.
+   *
+   * i.e. setting a user filter after user login
+   *
+   * @param filter to be applied to replication config
+   */
+  public applyReplicationFilter(filter: Filter) {
+    if (!this.replicationConfig) {
+      return;
+    }
+
+    const deltaConfig = this.replicationConfig?.delta as DeltaQueriesConfig;
+    const liveConfig = this.replicationConfig?.liveupdates as LiveUpdatesConfig;
+
+    this.queries = buildGraphQLCRUDQueries(this);
+    this.subscriptionQueries = buildGraphQLCRUDSubscriptions(this);
+
+    this.replicationConfig = {
+      ...this.replicationConfig,
+      delta: {
+        ...deltaConfig,
+        filter
+      },
+      liveupdates: {
+        ...liveConfig,
+        filter
+      }
+    };
+  }
+
+  public startReplication() {
+
+  }
+
+  public stopReplication() {
+
+  }
 
   /**
    * Checks if model has client side id.
@@ -353,33 +400,6 @@ export class Model<T = unknown> {
       input[primaryKey] = CLIENT_ID_PREFIX + uuidv4();
     }
     return input;
-  }
-
-  /**
-   * Late binding method for adding replication filters
-   * after Model setup.
-   * 
-   * i.e. setting a user filter after user login
-   * 
-   * @param filter to be applied to replication config
-   */
-  public applyReplicationFilter(filter: Filter) {
-    if (!this.replicationConfig) return;
-    
-    const deltaConfig = this.replicationConfig?.delta as DeltaQueriesConfig;
-    const liveConfig = this.replicationConfig?.liveupdates as LiveUpdatesConfig;
-
-    this.replicationConfig = {
-      ...this.replicationConfig,
-      delta: {
-        ...deltaConfig,
-        filter
-      },
-      liveupdates: {
-        ...liveConfig,
-        filter
-      }
-    }
   }
 }
 
