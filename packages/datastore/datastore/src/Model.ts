@@ -362,9 +362,6 @@ export class Model<T = unknown> {
     const deltaConfig = this.replicationConfig?.delta as DeltaQueriesConfig;
     const liveConfig = this.replicationConfig?.liveupdates as LiveUpdatesConfig;
 
-    this.queries = buildGraphQLCRUDQueries(this);
-    this.subscriptionQueries = buildGraphQLCRUDSubscriptions(this);
-
     this.replicationConfig = {
       ...this.replicationConfig,
       delta: {
@@ -376,6 +373,9 @@ export class Model<T = unknown> {
         filter
       }
     };
+
+    this.queries = buildGraphQLCRUDQueries(this);
+    this.subscriptionQueries = buildGraphQLCRUDSubscriptions(this);
   }
 
   /**
