@@ -3,7 +3,7 @@ import { StoreChangeEvent } from "./storage";
 import { ModelSchema } from "./ModelSchema";
 import { PushStream, ObservablePushStream } from "./utils/PushStream";
 import { Filter } from "./filters";
-import { ModelReplicationConfig } from "./replication/api/ReplicationConfig";
+import { DeltaQueriesConfig, LiveUpdatesConfig, ModelReplicationConfig } from "./replication/api/ReplicationConfig";
 import invariant from "tiny-invariant";
 import { ModelChangeReplication } from "./replication/mutations/MutationsQueue";
 import { v4 as uuidv4 } from "uuid";
@@ -353,6 +353,33 @@ export class Model<T = unknown> {
       input[primaryKey] = CLIENT_ID_PREFIX + uuidv4();
     }
     return input;
+  }
+
+  /**
+   * Late binding method for adding replication filters
+   * after Model setup.
+   * 
+   * i.e. setting a user filter after user login
+   * 
+   * @param filter to be applied to replication config
+   */
+  public applyReplicationFilter(filter: Filter) {
+    if (!this.replicationConfig) return;
+    
+    const deltaConfig = this.replicationConfig?.delta as DeltaQueriesConfig;
+    const liveConfig = this.replicationConfig?.liveupdates as LiveUpdatesConfig;
+
+    this.replicationConfig = {
+      ...this.replicationConfig,
+      delta: {
+        ...deltaConfig,
+        filter
+      },
+      liveupdates: {
+        ...liveConfig,
+        filter
+      }
+    }
   }
 }
 
