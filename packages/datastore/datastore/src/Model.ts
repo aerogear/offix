@@ -64,9 +64,9 @@ export class Model<T = unknown> {
   public replicationConfig: ModelReplicationConfig | undefined;
   public replication?: ModelChangeReplication;
   public changeEventStream: PushStream<StoreChangeEvent>;
-  private storage: LocalStorage;
   public queries: ReplicatorQueries;
   public subscriptionQueries: ReplicatorSubscriptions;
+  private storage: LocalStorage;
 
   constructor(
     schema: ModelSchema<T>,
@@ -376,14 +376,6 @@ export class Model<T = unknown> {
         filter
       }
     };
-  }
-
-  public startReplication() {
-
-  }
-
-  public stopReplication() {
-
   }
 
   /**
