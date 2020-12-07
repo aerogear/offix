@@ -9,10 +9,7 @@ import { MutationsReplicationQueue } from "./mutations/MutationsQueue";
 import invariant from "tiny-invariant";
 import { createLogger } from "../utils/logger";
 import { DeltaReplicator, DeltaReplicatorConfig } from "./queries/DeltaReplicator";
-import { buildGraphQLCRUDQueries } from ".";
-import { buildGraphQLCRUDSubscriptions } from "./subscriptions/buildGraphQLCRUDSubscriptions";
 import { SubscriptionReplicator, SubscriptionReplicatorConfig } from "./subscriptions/SubscriptionReplicator";
-import { config } from "process";
 
 const logger = createLogger("replicator");
 
@@ -48,8 +45,8 @@ export class GraphQLReplicator {
   private models: Model[];
   private mutationQueue?: MutationsReplicationQueue;
   private storage?: LocalStorage;
-  private deltaReplicators: Map<String, DeltaReplicator>;
-  private liveUpdateReplicators: Map<String, SubscriptionReplicator>;
+  private deltaReplicators: Map<string, DeltaReplicator>;
+  private liveUpdateReplicators: Map<string, SubscriptionReplicator>;
 
   constructor(models: Model[], globalReplicationConfig: GlobalReplicationConfig) {
     this.models = models;
@@ -76,15 +73,15 @@ export class GraphQLReplicator {
     this.storage = storage;
     if (this.config.mutations?.enabled) {
       logger("Initializing mutation replication");
-      this.models.forEach(this.startModelMutationQueue);
+      this.models.forEach((model) => this.startModelMutationQueue(model));
     }
     if (this.config.delta?.enabled) {
       logger("Initializing delta replication");
-      this.models.forEach(this.startModelDeltaReplicator);
+      this.models.forEach((model) => this.startModelDeltaReplicator(model));
     }
     if (this.config.liveupdates?.enabled) {
       logger("Initializing subscription replication");
-      this.models.forEach(this.startModelSubscriptionReplicator);
+      this.models.forEach((model) => this.startModelSubscriptionReplicator(model));
     }
   }
 
@@ -114,9 +111,17 @@ export class GraphQLReplicator {
 
   public resartReplicators(model: Model) {
     if (this.config.delta?.enabled) {
+      if (this.deltaReplicators.has(model.getName())) {
+        const replicator = this.deltaReplicators.get(model.getName());
+        replicator?.stop();
+      }
       this.startModelDeltaReplicator(model);
     }
     if (this.config.liveupdates?.enabled) {
+      if (this.liveUpdateReplicators.has(model.getName())) {
+        const replicator = this.liveUpdateReplicators.get(model.getName());
+        replicator?.stop();
+      }
       this.startModelSubscriptionReplicator(model);
     }
   }
@@ -131,7 +136,7 @@ export class GraphQLReplicator {
       storage: this.storage,
       query: model.queries.sync,
       model: model
-    }
+    };
   }
 
   private getSubscriptionReplicatorOptions(model: Model): SubscriptionReplicatorConfig {
