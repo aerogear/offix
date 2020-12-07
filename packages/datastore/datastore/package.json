@@ -1,6 +1,6 @@
 {
   "name": "offix-datastore",
-  "version": "0.1.2",
+  "version": "0.3.6",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
   "repository": {
