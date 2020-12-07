@@ -8,10 +8,11 @@ import { Client } from "urql";
 import { MutationsReplicationQueue } from "./mutations/MutationsQueue";
 import invariant from "tiny-invariant";
 import { createLogger } from "../utils/logger";
-import { DeltaReplicator } from "./queries/DeltaReplicator";
+import { DeltaReplicator, DeltaReplicatorConfig } from "./queries/DeltaReplicator";
 import { buildGraphQLCRUDQueries } from ".";
 import { buildGraphQLCRUDSubscriptions } from "./subscriptions/buildGraphQLCRUDSubscriptions";
-import { SubscriptionReplicator } from "./subscriptions/SubscriptionReplicator";
+import { SubscriptionReplicator, SubscriptionReplicatorConfig } from "./subscriptions/SubscriptionReplicator";
+import { config } from "process";
 
 const logger = createLogger("replicator");
 
@@ -46,6 +47,9 @@ export class GraphQLReplicator {
   private networkIndicator: NetworkIndicator;
   private models: Model[];
   private mutationQueue?: MutationsReplicationQueue;
+  private storage?: LocalStorage;
+  private deltaReplicators: Map<String, DeltaReplicator>;
+  private liveUpdateReplicators: Map<String, SubscriptionReplicator>;
 
   constructor(models: Model[], globalReplicationConfig: GlobalReplicationConfig) {
     this.models = models;
@@ -63,53 +67,83 @@ export class GraphQLReplicator {
     }
     this.networkIndicator = new NetworkIndicator(systemNetworkStatus);
     this.networkIndicator.initialize(graphqlClient.subscriptionClient);
+    this.deltaReplicators = new Map();
+    this.liveUpdateReplicators = new Map();
   }
 
   public init(storage: LocalStorage) {
     invariant(this.models.length, "No models provided for replication");
-
+    this.storage = storage;
     if (this.config.mutations?.enabled) {
       logger("Initializing mutation replication");
-      this.mutationQueue = new MutationsReplicationQueue({
-        storage: storage,
-        client: this.client,
-        networkIndicator: this.networkIndicator
-      });
-      this.mutationQueue.init(this.models, this.config);
+      this.models.forEach(this.startModelMutationQueue);
     }
-
     if (this.config.delta?.enabled) {
       logger("Initializing delta replication");
-      for (const model of this.models) {
-        const queries = buildGraphQLCRUDQueries(model);
-        const deltaOptions = {
-          config: this.config.delta,
-          client: this.client,
-          networkIndicator: this.networkIndicator,
-          storage,
-          query: queries.sync,
-          model: model
-        };
-        const replicator = new DeltaReplicator(deltaOptions);
-        replicator.start();
-      }
+      this.models.forEach(this.startModelDeltaReplicator);
     }
-
     if (this.config.liveupdates?.enabled) {
       logger("Initializing subscription replication");
-      for (const model of this.models) {
-        const queries = buildGraphQLCRUDSubscriptions(model);
-        const subscrptionOptions = {
-          config: this.config.liveupdates,
-          client: this.client,
-          networkIndicator: this.networkIndicator,
-          storage,
-          queries: queries,
-          model: model
-        };
-        const replicator = new SubscriptionReplicator(subscrptionOptions);
-        replicator.start();
-      }
+      this.models.forEach(this.startModelSubscriptionReplicator);
     }
+  }
+
+  public startModelMutationQueue(model: Model) {
+    invariant(this.storage, "No storage engine provided, unable to start replication");
+    this.mutationQueue = new MutationsReplicationQueue({
+      storage: this.storage,
+      client: this.client,
+      networkIndicator: this.networkIndicator
+    });
+    this.mutationQueue.init(this.models, this.config);
+  }
+
+  public startModelDeltaReplicator(model: Model) {
+    const deltaOptions = this.getDeltaSyncOptions(model);
+    const replicator = new DeltaReplicator(deltaOptions);
+    this.deltaReplicators.set(model.getName(), replicator);
+    replicator.start();
+  }
+
+  public startModelSubscriptionReplicator(model: Model) {
+    const subscrptionOptions = this.getSubscriptionReplicatorOptions(model);
+    const replicator = new SubscriptionReplicator(subscrptionOptions);
+    this.liveUpdateReplicators.set(model.getName(), replicator);
+    replicator.start();
+  }
+
+  public resartReplicators(model: Model) {
+    if (this.config.delta?.enabled) {
+      this.startModelDeltaReplicator(model);
+    }
+    if (this.config.liveupdates?.enabled) {
+      this.startModelSubscriptionReplicator(model);
+    }
+  }
+
+  private getDeltaSyncOptions(model: Model): DeltaReplicatorConfig {
+    invariant(this.config.delta, "No delta replication config provided");
+    invariant(this.storage, "No storage engine provided, unable to start replication");
+    return {
+      config: this.config.delta,
+      client: this.client,
+      networkIndicator: this.networkIndicator,
+      storage: this.storage,
+      query: model.queries.sync,
+      model: model
+    }
+  }
+
+  private getSubscriptionReplicatorOptions(model: Model): SubscriptionReplicatorConfig {
+    invariant(this.config.liveupdates, "No subscription replication config provided");
+    invariant(this.storage, "No storage engine provided, unable to start replication");
+    return {
+      config: this.config.liveupdates,
+      client: this.client,
+      networkIndicator: this.networkIndicator,
+      storage: this.storage,
+      queries: model.subscriptionQueries,
+      model: model
+    };
   }
 }
