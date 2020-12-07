@@ -7,6 +7,7 @@ import { DataStoreConfig } from "./DataStoreConfig";
 import { createLogger, enableLogger } from "./utils/logger";
 import { ModelReplicationConfig } from "./replication/api/ReplicationConfig";
 import { mutationQueueModel, metadataModel } from "./replication/api/MetadataModels";
+import { Filter } from "./filters";
 
 const logger = createLogger("DataStore");
 // TODO disable logging before release
@@ -77,6 +78,13 @@ export class DataStore {
         this.storage.createStores();
         logger("Replication configuration was not provided. Replication will be disabled");
       }
+    }
+  }
+
+  public restartReplicator(model: Model, filter: Filter) {
+    if (this.replicator) {
+      model.applyReplicationFilter(filter);
+      this.replicator.resartReplicators(model);
     }
   }
 }
