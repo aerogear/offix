@@ -44,7 +44,7 @@
     "typescript": "3.9.7"
   },
   "dependencies": {
-    "@types/mocha": "8.0.4",
+    "@types/mocha": "8.2.0",
     "@types/node": "12.19.8"
   },
   "workspaces": [
