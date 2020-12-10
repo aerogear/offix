@@ -10,6 +10,9 @@ import invariant from "tiny-invariant";
 import { createLogger } from "../utils/logger";
 import { DeltaReplicator, DeltaReplicatorConfig } from "./queries/DeltaReplicator";
 import { SubscriptionReplicator, SubscriptionReplicatorConfig } from "./subscriptions/SubscriptionReplicator";
+import { buildGraphQLCRUDQueries } from "./queries/buildGraphQLCRUDQueries";
+import { buildGraphQLCRUDSubscriptions } from "./subscriptions/buildGraphQLCRUDSubscriptions";
+import { Filter } from "..";
 
 const logger = createLogger("replicator");
 
@@ -126,6 +129,13 @@ export class GraphQLReplicator {
     }
   }
 
+  public applyFilter(model: Model, filter: Filter) {
+    const deltaReplicator = this.deltaReplicators.get(model.getName());
+    deltaReplicator?.applyFilter(filter);
+    const subscriptionReplicator = this.liveUpdateReplicators.get(model.getName());
+    subscriptionReplicator?.applyFilter(filter);
+  }
+
   private getDeltaSyncOptions(model: Model): DeltaReplicatorConfig {
     invariant(this.config.delta, "No delta replication config provided");
     invariant(this.storage, "No storage engine provided, unable to start replication");
@@ -134,7 +144,7 @@ export class GraphQLReplicator {
       client: this.client,
       networkIndicator: this.networkIndicator,
       storage: this.storage,
-      query: model.queries.sync,
+      query: buildGraphQLCRUDQueries(model).sync,
       model: model
     };
   }
@@ -147,7 +157,7 @@ export class GraphQLReplicator {
       client: this.client,
       networkIndicator: this.networkIndicator,
       storage: this.storage,
-      queries: model.subscriptionQueries,
+      queries: buildGraphQLCRUDSubscriptions(model),
       model: model
     };
   }

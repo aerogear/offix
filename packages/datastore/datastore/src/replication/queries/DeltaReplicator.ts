@@ -8,6 +8,7 @@ import { LocalStorage } from "../../storage";
 import { Model } from "../../Model";
 import { NetworkIndicator } from "../network/NetworkIndicator";
 import { metadataModel, QueryMetadata } from "../api/MetadataModels";
+import { Filter } from "../..";
 
 
 const logger = createLogger("replicator-delta");
@@ -49,11 +50,15 @@ export class DeltaReplicator {
       }
     });
 
-    if (this.options.config.filter) {
-      this.filter = convertFilterToGQLFilter(this.options.config.filter);
-    } else {
+    this.applyFilter(this.options.config.filter);
+  }
+
+  public applyFilter(filter?: Filter) {
+    if (!filter) {
       this.filter = {};
+      return;
     }
+    this.filter = convertFilterToGQLFilter(filter);
   }
 
   public stop() {

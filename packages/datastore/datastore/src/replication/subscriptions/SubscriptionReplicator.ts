@@ -9,6 +9,7 @@ import { convertFilterToGQLFilter } from "../utils/convertFilterToGQLFilter";
 import { pipe, subscribe } from "wonka";
 import { DocumentNode } from "graphql";
 import { subscriptionT } from "wonka/dist/types/src/Wonka_types.gen";
+import { Filter } from "../..";
 
 const logger = createLogger("replicator-subscriptions");
 
@@ -34,11 +35,15 @@ export class SubscriptionReplicator {
 
   constructor(options: SubscriptionReplicatorConfig) {
     this.options = options;
-    if (this.options.config.filter) {
-      this.filter = convertFilterToGQLFilter(this.options.config.filter);
-    } else {
+    this.applyFilter(this.options.config.filter);
+  }
+  
+  public applyFilter(filter?: Filter) {
+    if (!filter) {
       this.filter = {};
+      return;
     }
+    this.filter = convertFilterToGQLFilter(filter);
   }
 
   public async start() {
