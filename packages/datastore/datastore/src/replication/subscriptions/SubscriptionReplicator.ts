@@ -37,7 +37,7 @@ export class SubscriptionReplicator {
     this.options = options;
     this.applyFilter(this.options.config.filter);
   }
-  
+
   public applyFilter(filter?: Filter) {
     if (!filter) {
       this.filter = {};
