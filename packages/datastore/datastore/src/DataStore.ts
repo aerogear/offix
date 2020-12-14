@@ -83,8 +83,7 @@ export class DataStore {
 
   public restartReplicator(model: Model, filter: Filter) {
     if (this.replicator) {
-      this.replicator.applyFilter(model, filter);
-      this.replicator.resartReplicators(model);
+      this.replicator.resartReplicators(model, filter);
     }
   }
 }

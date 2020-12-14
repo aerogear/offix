@@ -56,7 +56,6 @@ export class GraphQLReplicator {
     this.config = Object.assign({}, defaultConfig, globalReplicationConfig);
     const graphqlClient = createGraphQLClient(this.config.client);
     this.client = graphqlClient.client;
-
     let systemNetworkStatus;
     if (this.config.networkStatus) {
       systemNetworkStatus = this.config.networkStatus;
@@ -80,11 +79,19 @@ export class GraphQLReplicator {
     }
     if (this.config.delta?.enabled) {
       logger("Initializing delta replication");
-      this.models.forEach((model) => this.startModelDeltaReplicator(model));
+      this.models.forEach((model) => {
+        if (!model.isLateInit()) {
+          this.startModelDeltaReplicator(model);
+        }
+      });
     }
     if (this.config.liveupdates?.enabled) {
       logger("Initializing subscription replication");
-      this.models.forEach((model) => this.startModelSubscriptionReplicator(model));
+      this.models.forEach((model) => {
+        if (!model.isLateInit()) {
+          this.startModelSubscriptionReplicator(model);
+        }
+      });
     }
   }
 
@@ -98,42 +105,51 @@ export class GraphQLReplicator {
     this.mutationQueue.init(this.models, this.config);
   }
 
-  public startModelDeltaReplicator(model: Model) {
+  public startModelDeltaReplicator(model: Model, filter?: Filter) {
     const deltaOptions = this.getDeltaSyncOptions(model);
     const replicator = new DeltaReplicator(deltaOptions);
+    if (filter) {
+      logger("Applying delta replication filter");
+      replicator.applyFilter(filter);
+    }
     this.deltaReplicators.set(model.getName(), replicator);
     replicator.start();
   }
 
-  public startModelSubscriptionReplicator(model: Model) {
+  public startModelSubscriptionReplicator(model: Model, filter?: Filter) {
     const subscrptionOptions = this.getSubscriptionReplicatorOptions(model);
     const replicator = new SubscriptionReplicator(subscrptionOptions);
+    if (filter) {
+      logger("Applying live update replication filter");
+      replicator.applyFilter(filter);
+    }
     this.liveUpdateReplicators.set(model.getName(), replicator);
     replicator.start();
   }
 
-  public resartReplicators(model: Model) {
+  public resartReplicators(model: Model, filter?: Filter) {
     if (this.config.delta?.enabled) {
       if (this.deltaReplicators.has(model.getName())) {
         const replicator = this.deltaReplicators.get(model.getName());
+        logger("Stopping delta replicator");
         replicator?.stop();
+        logger("Restarting delta replicator");
+        replicator?.start();
+      } else {
+        this.startModelDeltaReplicator(model, filter);
       }
-      this.startModelDeltaReplicator(model);
     }
     if (this.config.liveupdates?.enabled) {
       if (this.liveUpdateReplicators.has(model.getName())) {
         const replicator = this.liveUpdateReplicators.get(model.getName());
+        logger("Stopping live update replicator");
         replicator?.stop();
+        logger("Restarting live update replicator");
+        replicator?.start();
+      } else {
+        this.startModelSubscriptionReplicator(model, filter);
       }
-      this.startModelSubscriptionReplicator(model);
     }
-  }
-
-  public applyFilter(model: Model, filter: Filter) {
-    const deltaReplicator = this.deltaReplicators.get(model.getName());
-    deltaReplicator?.applyFilter(filter);
-    const subscriptionReplicator = this.liveUpdateReplicators.get(model.getName());
-    subscriptionReplicator?.applyFilter(filter);
   }
 
   private getDeltaSyncOptions(model: Model): DeltaReplicatorConfig {
