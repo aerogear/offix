@@ -49,7 +49,6 @@ export class DeltaReplicator {
         }
       }
     });
-
     this.applyFilter(this.options.config.filter);
   }
 
@@ -58,10 +57,14 @@ export class DeltaReplicator {
       this.filter = {};
       return;
     }
+    logger("Applying filter");
+    logger(filter);
     this.filter = convertFilterToGQLFilter(filter);
+    logger(this.filter);
   }
 
   public stop() {
+    logger("Stopping replicator")
     clearInterval(this.activePullInterval);
     this.activePullInterval = undefined;
   }
@@ -104,7 +107,10 @@ export class DeltaReplicator {
         if (!lastSync) {
           lastSync = "0";
         }
-        const filter = Object.assign({}, this.filter, { lastSync });
+        const filter = { ...this.filter, lastSync };
+        logger("filter", filter);
+        
+        // const filter = Object.assign({}, this.filter, { lastSync });
         const result = await this.options.client.query(this.options.query, filter).toPromise();
         await this.processResult(result);
       } catch (error) {

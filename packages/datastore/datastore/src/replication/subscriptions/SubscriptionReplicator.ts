@@ -43,7 +43,10 @@ export class SubscriptionReplicator {
       this.filter = {};
       return;
     }
+    logger("Applying filter");
+    logger(filter);
     this.filter = convertFilterToGQLFilter(filter);
+    logger(this.filter);
   }
 
   public async start() {
@@ -69,6 +72,7 @@ export class SubscriptionReplicator {
   }
 
   public stop() {
+    logger("Stopping subscriptions");
     this.addSubscription?.unsubscribe();
     this.updateSubscription?.unsubscribe();
     this.deleteSubscription?.unsubscribe();
