@@ -64,7 +64,7 @@ export class DeltaReplicator {
   }
 
   public stop() {
-    logger("Stopping replicator")
+    logger("Stopping replicator");
     clearInterval(this.activePullInterval);
     this.activePullInterval = undefined;
   }
@@ -109,7 +109,7 @@ export class DeltaReplicator {
         }
         const filter = { ...this.filter, lastSync };
         logger("filter", filter);
-        
+
         // const filter = Object.assign({}, this.filter, { lastSync });
         const result = await this.options.client.query(this.options.query, filter).toPromise();
         await this.processResult(result);
