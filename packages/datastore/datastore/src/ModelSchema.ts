@@ -49,6 +49,11 @@ export declare class ModelJsonSchema<T> {
    */
   namespace?: string;
   /**
+   * Flag for whether or not model replication
+   * should be initialised at a later point
+   */
+  lateInit?: boolean;
+  /**
    * Model version number
    */
   version?: number;
@@ -89,6 +94,7 @@ export declare class ModelJsonSchema<T> {
 export class ModelSchema<T = any>{
   private name: string;
   private namespace: string;
+  private lateInit: boolean;
   private primaryKey: string;
   private fields: Fields<T>;
   private encrypted: string[];
@@ -100,6 +106,7 @@ export class ModelSchema<T = any>{
     this.version = schema.version || 0;
     this.name = schema.name;
     this.namespace = schema.namespace || "user";
+    this.lateInit = schema.lateInit || false;
     this.fields = extractFields(schema);
     this.primaryKey = extractPrimary(this.fields, schema.primaryKey);
     this.indexes = extractIndexes(this.fields, schema.indexes);
@@ -138,6 +145,14 @@ export class ModelSchema<T = any>{
    */
   public getIndexes(): string[] {
     return this.indexes;
+  }
+
+  /**
+   * Indicator for if the replication should start
+   * at a later point
+   */
+  public isLateInit(): boolean {
+    return this.lateInit;
   }
 
   /**

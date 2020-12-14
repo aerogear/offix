@@ -98,6 +98,10 @@ export class Model<T = unknown> {
     return this.schema;
   }
 
+  public isLateInit(): boolean {
+    return this.schema.isLateInit();
+  }
+
   public query(filter?: Filter<T>) {
     if (!filter) { return this.storage.query(this.schema.getStoreName()); }
 
