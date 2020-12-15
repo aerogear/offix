@@ -23,7 +23,7 @@
   "devDependencies": {
     "@types/bson": "4.0.3",
     "@types/jest": "26.0.19",
-    "@types/yargs": "15.0.11",
+    "@types/yargs": "15.0.12",
     "endent": "2.0.1",
     "jest": "26.6.3",
     "rimraf": "3.0.2",
