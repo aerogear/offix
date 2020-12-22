@@ -36,7 +36,7 @@
     "@types/traverse": "0.6.32",
     "@types/uuid": "8.3.0",
     "@types/websql": "0.0.27",
-    "apollo-server": "2.19.0",
+    "apollo-server": "2.19.1",
     "debug": "4.3.1",
     "fake-indexeddb": "3.1.2",
     "isomorphic-unfetch": "3.1.0",
