@@ -42,17 +42,17 @@
     "fake-indexeddb": "3.1.2",
     "graphql": "15.4.0",
     "jest": "26.6.3",
-    "react-test-renderer": "16.14.0",
+    "react-test-renderer": "17.0.1",
     "size-limit": "4.9.1",
     "ts-jest": "26.4.4",
     "typescript": "3.9.7"
   },
   "dependencies": {
     "offix-client": "0.15.5",
-    "react": "16.14.0"
+    "react": "17.0.1"
   },
   "peerDependencies": {
     "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0",
-    "react": "16.14.0"
+    "react": "17.0.1"
   }
 }
