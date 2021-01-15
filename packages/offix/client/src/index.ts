@@ -7,6 +7,7 @@ export * from "offix-conflicts-client";
 export * from "offix-cache";
 export { createDefaultCacheStorage } from "./cache";
 export * from "./apollo/helpers";
+export { ApolloQueryResult } from "apollo-client";
 
 export {
   PersistentStore,
