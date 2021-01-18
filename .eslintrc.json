@@ -149,12 +149,6 @@
         "no-invalid-this": "off",
         "no-multiple-empty-lines": "error",
         "no-new-wrappers": "error",
-        "no-shadow": [
-            "error",
-            {
-                "hoist": "all"
-            }
-        ],
         "no-throw-literal": "error",
         "no-trailing-spaces": "error",
         "no-undef-init": "error",
@@ -220,14 +214,30 @@
         "@typescript-eslint/adjacent-overload-signatures": [
             "error"
         ],
-        "@typescript-eslint/ban-types": [
-            "error"
-        ],
-        "@typescript-eslint/camelcase": [
-            "error"
-        ],
-        "@typescript-eslint/class-name-casing": [
-            "error"
+        "@typescript-eslint/ban-types": "off",
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "default",
+            "format": ["camelCase", "UPPER_CASE"],
+            "leadingUnderscore": "allowSingleOrDouble"
+          },
+          {
+            "selector": "variable",
+            "format": ["camelCase", "UPPER_CASE", "PascalCase"],
+            "leadingUnderscore": "allowSingleOrDouble"
+          },
+          {
+            "selector": "typeLike",
+            "format": ["PascalCase"]
+          },
+          {
+            "selector": [
+              "objectLiteralProperty"
+            ],
+            "format": null,
+            "modifiers": ["requiresQuotes"]
+          }
         ],
         "@typescript-eslint/consistent-type-assertions": [
             "error"
@@ -273,7 +283,17 @@
         ],
         "@typescript-eslint/type-annotation-spacing": [
             "error"
-        ]
+        ],
+        "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/restrict-template-expressions": "off",
+        "@typescript-eslint/no-unsafe-return": "off",
+        "@typescript-eslint/no-floating-promises": "off",
+        "@typescript-eslint/no-extra-semi": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/restrict-plus-operands": "off"
     },
     "settings": {}
 }
