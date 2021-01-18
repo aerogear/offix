@@ -50,7 +50,7 @@ beforeEach(() => {
 });
 
 afterEach(async () => {
-  await new Promise((resolve, reject) => {
+  await new Promise((resolve: (value?: any) => void, reject) => {
     const del = indexedDB.deleteDatabase(DB_NAME);
     del.onsuccess = event => resolve();
     del.onblocked = event => resolve();
