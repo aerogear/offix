@@ -11,14 +11,14 @@ export class MockStore {
   }
 
   public setItem(key: string, data: any): Promise<any> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve: (value?: any) => void, reject) => {
       this.data[key] = data;
       resolve();
     });
   }
 
   public removeItem(key: string): Promise<any> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve: (value?: any) => void, reject) => {
       delete this.data[key];
       resolve();
     });
