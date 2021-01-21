@@ -31,7 +31,7 @@
     "node-fetch": "2.6.1",
     "size-limit": "4.9.1",
     "ts-jest": "26.4.4",
-    "typescript": "3.9.7"
+    "typescript": "4.1.3"
   },
   "dependencies": {
     "offix-offline": "0.15.5"
