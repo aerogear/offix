@@ -128,8 +128,8 @@ export class Model<T = unknown> {
 
   /**
    * Apply filters to the model's fetch replicator
-   * 
-   * @param filter 
+   *
+   * @param filter
    */
   public applyFilter(filter: Filter) {
     this.replicator?.applyFilter({ filter });

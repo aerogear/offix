@@ -82,7 +82,7 @@ export class DataStore {
 
   /**
    * Start fetch replication for the entire datastore
-   * 
+   *
    */
   public startReplication() {
     this.replicator?.startReplication();
@@ -90,7 +90,7 @@ export class DataStore {
 
   /**
    * Stop replication for the entire datastore
-   * 
+   *
    */
   public stopReplication() {
     this.replicator?.stopReplication();

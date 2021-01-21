@@ -78,8 +78,8 @@ export class GraphQLReplicator {
 
     for (const model of this.models) {
       new FetchReplicator(
-        model, 
-        this.config, 
+        model,
+        this.config,
         storage,
         this.client,
         this.networkIndicator
@@ -90,7 +90,7 @@ export class GraphQLReplicator {
   /**
    * Loop through all the models and start
    * fetch replication at a global level
-   * 
+   *
    */
   public startReplication() {
     this.models.forEach(model => model.getReplicator()?.startReplication());

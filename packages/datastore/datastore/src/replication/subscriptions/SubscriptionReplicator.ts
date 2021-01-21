@@ -65,9 +65,9 @@ export class SubscriptionReplicator {
   }
 
   /**
-   * Stop subscriptions from the 
+   * Stop subscriptions from the
    * server and unsubscribe
-   * 
+   *
    */
   public stop() {
     logger("Stopping subscriptions");

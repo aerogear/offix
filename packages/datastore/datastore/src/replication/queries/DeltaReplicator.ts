@@ -115,8 +115,8 @@ export class DeltaReplicator {
 
   /**
    * Apply filter to the delta query replication
-   * 
-   * @param filter 
+   *
+   * @param filter
    */
   public applyFilter(filter: Filter) {
     this.filter = convertFilterToGQLFilter(filter);

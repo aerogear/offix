@@ -24,9 +24,9 @@ export class FetchReplicator {
   private replicationFlag: Boolean = false;
 
   constructor(
-    model: Model, 
-    config: GlobalReplicationConfig, 
-    storage: LocalStorage, 
+    model: Model,
+    config: GlobalReplicationConfig,
+    storage: LocalStorage,
     client: Client,
     networkIndicator: NetworkIndicator
   ) {
@@ -62,7 +62,7 @@ export class FetchReplicator {
 
   /**
    * Start replication for a single model
-   * 
+   *
    */
   public startReplication() {
     if (!this.replicationFlag) {
@@ -79,7 +79,7 @@ export class FetchReplicator {
 
   /**
    * Stop replication for a single model
-   * 
+   *
    */
   public stopReplication() {
     if (this.replicationFlag) {
@@ -97,8 +97,8 @@ export class FetchReplicator {
   /**
    * Apply user defined filter to each
    * of the model's replicators
-   * 
-   * @param filter 
+   *
+   * @param filter
    */
   public applyFilter(filter: Filter) {
     this.deltaReplicator?.applyFilter(filter);
