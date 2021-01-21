@@ -8,10 +8,7 @@ import { Client } from "urql";
 import { MutationsReplicationQueue } from "./mutations/MutationsQueue";
 import invariant from "tiny-invariant";
 import { createLogger } from "../utils/logger";
-import { DeltaReplicator } from "./queries/DeltaReplicator";
-import { buildGraphQLCRUDQueries } from ".";
-import { buildGraphQLCRUDSubscriptions } from "./subscriptions/buildGraphQLCRUDSubscriptions";
-import { SubscriptionReplicator } from "./subscriptions/SubscriptionReplicator";
+import { FetchReplicator } from "./fetch/FetchReplicator";
 
 const logger = createLogger("replicator");
 
@@ -47,6 +44,7 @@ export class GraphQLReplicator {
   private models: Model[];
   private mutationQueue?: MutationsReplicationQueue;
 
+
   constructor(models: Model[], globalReplicationConfig: GlobalReplicationConfig) {
     this.models = models;
     this.config = Object.assign({}, defaultConfig, globalReplicationConfig);
@@ -78,38 +76,31 @@ export class GraphQLReplicator {
       this.mutationQueue.init(this.models, this.config);
     }
 
-    if (this.config.delta?.enabled) {
-      logger("Initializing delta replication");
-      for (const model of this.models) {
-        const queries = buildGraphQLCRUDQueries(model);
-        const deltaOptions = {
-          config: this.config.delta,
-          client: this.client,
-          networkIndicator: this.networkIndicator,
-          storage,
-          query: queries.sync,
-          model: model
-        };
-        const replicator = new DeltaReplicator(deltaOptions);
-        replicator.start();
-      }
+    for (const model of this.models) {
+      new FetchReplicator(
+        model, 
+        this.config, 
+        storage,
+        this.client,
+        this.networkIndicator
+      );
     }
+  }
 
-    if (this.config.liveupdates?.enabled) {
-      logger("Initializing subscription replication");
-      for (const model of this.models) {
-        const queries = buildGraphQLCRUDSubscriptions(model);
-        const subscrptionOptions = {
-          config: this.config.liveupdates,
-          client: this.client,
-          networkIndicator: this.networkIndicator,
-          storage,
-          queries: queries,
-          model: model
-        };
-        const replicator = new SubscriptionReplicator(subscrptionOptions);
-        replicator.start();
-      }
-    }
+  /**
+   * Loop through all the models and start
+   * fetch replication at a global level
+   * 
+   */
+  public startReplication() {
+    this.models.forEach(model => model.getReplicator()?.startReplication());
+  }
+
+  /**
+   * Cycle through all the models and
+   * stop fetch replication at a global level
+   */
+  public stopReplication() {
+    this.models.forEach(model => model.getReplicator()?.stopReplication());
   }
 }
