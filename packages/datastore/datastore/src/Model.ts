@@ -129,8 +129,8 @@ export class Model<T = unknown> {
   /**
    * Provide a single method to apply optional filter
    * to model replicator and then start replication
-   * 
-   * @param filter 
+   *
+   * @param filter
    */
   public startReplication(filter?: Filter) {
     if (filter) {
