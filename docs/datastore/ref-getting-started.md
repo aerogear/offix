@@ -71,6 +71,10 @@ export const TaskModel = datastore.setupModel<Task>(schema.Task);
 datastore.init();
 ```
 
+:::info
+Once the `DataStore` has been configured we need to start [replication manually](replication.md).
+:::
+
 ## Schema Upgrades
 
 The DataStore creates a table on the device for each model. 

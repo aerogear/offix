@@ -4,11 +4,23 @@ import 'antd/dist/antd.css';
 
 import { useFindTodos } from './datastore/hooks';
 import { TodoList, AddTodo, Loading, Error, Header } from './components';
+import { TodoModel, UserModel } from './datastore/config';
 
 function App() {
 
   const [addView, setAddView] = useState<boolean>(false);
   const  { loading, error, data, subscribeToUpdates } = useFindTodos();
+
+  useEffect(() => {
+    // We can start replication on a per model basis
+    // or for the entire store with:
+    // datastore.startReplication
+    // the `startReplication` method accepts an
+    // optional filter
+    TodoModel.startReplication()
+    UserModel.startReplication()
+  });
+
   useEffect(() => {
     const subscription = subscribeToUpdates();
     return () => subscription.unsubscribe();

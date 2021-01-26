@@ -79,4 +79,20 @@ export class DataStore {
       }
     }
   }
+
+  /**
+   * Start fetch replication for the entire datastore
+   *
+   */
+  public startReplication() {
+    this.replicator?.startReplication();
+  }
+
+  /**
+   * Stop replication for the entire datastore
+   *
+   */
+  public stopReplication() {
+    this.replicator?.stopReplication();
+  }
 }

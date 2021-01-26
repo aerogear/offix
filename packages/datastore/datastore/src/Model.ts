@@ -8,6 +8,7 @@ import invariant from "tiny-invariant";
 import { ModelChangeReplication } from "./replication/mutations/MutationsQueue";
 import { v4 as uuidv4 } from "uuid";
 import { createLogger } from "./utils/logger";
+import { FetchReplicator } from "./replication/fetch/FetchReplicator";
 
 const logger = createLogger("model");
 
@@ -61,6 +62,7 @@ export class Model<T = unknown> {
   public replication?: ModelChangeReplication;
   public changeEventStream: PushStream<StoreChangeEvent>;
   private storage: LocalStorage;
+  private replicator?: FetchReplicator;
 
   constructor(
     schema: ModelSchema<T>,
@@ -116,6 +118,35 @@ export class Model<T = unknown> {
     }
   }
 
+  public setReplicator(replicator: FetchReplicator) {
+    this.replicator = replicator;
+  }
+
+  public getReplicator(): FetchReplicator | undefined {
+    return this.replicator;
+  }
+
+  /**
+   * Provide a single method to apply optional filter
+   * to model replicator and then start replication
+   *
+   * @param filter
+   */
+  public startReplication(filter?: Filter) {
+    if (filter) {
+      this.replicator?.applyFilter(filter);
+    }
+    this.replicator?.startReplication();
+  }
+
+  /**
+   * Apply filters to the model's fetch replicator
+   *
+   * @param filter
+   */
+  public applyFilter(filter: Filter) {
+    this.replicator?.applyFilter({ filter });
+  }
 
   /**
    * Save changes (if it doesn't exist or update records with partial input

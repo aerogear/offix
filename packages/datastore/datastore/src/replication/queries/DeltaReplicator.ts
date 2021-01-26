@@ -8,6 +8,7 @@ import { LocalStorage } from "../../storage";
 import { Model } from "../../Model";
 import { NetworkIndicator } from "../network/NetworkIndicator";
 import { metadataModel, QueryMetadata } from "../api/MetadataModels";
+import { Filter } from "../..";
 
 
 const logger = createLogger("replicator-delta");
@@ -110,6 +111,15 @@ export class DeltaReplicator {
     } else {
       logger("Delta already processing. Interval suspended");
     }
+  }
+
+  /**
+   * Apply filter to the delta query replication
+   *
+   * @param filter
+   */
+  public applyFilter(filter: Filter) {
+    this.filter = convertFilterToGQLFilter(filter);
   }
 
   // TODO extract to separate result processor
