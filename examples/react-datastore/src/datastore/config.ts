@@ -19,7 +19,11 @@ export const UserModel = datastore.setupModel<User>(schema.User);
 
 datastore.init();
 
-// After init we can execute operations frely using hooks in components and plain js.
+// After init we can start replication immediately with:
+// datastore.startReplication()
+// Or we can start replication at a later stage.
+// 
+// we can also execute operations freely using hooks in components and plain js.
 // const user = { name: "User" + new Date().getTime() };
 // UserModel.save(user).then(async (result) => {
 //   result.name = "NewUser";
