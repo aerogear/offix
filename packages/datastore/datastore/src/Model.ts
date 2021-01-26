@@ -127,6 +127,19 @@ export class Model<T = unknown> {
   }
 
   /**
+   * Provide a single method to apply optional filter
+   * to model replicator and then start replication
+   * 
+   * @param filter 
+   */
+  public startReplication(filter?: Filter) {
+    if (filter) {
+      this.replicator?.applyFilter(filter);
+    }
+    this.replicator?.startReplication();
+  }
+
+  /**
    * Apply filters to the model's fetch replicator
    *
    * @param filter
