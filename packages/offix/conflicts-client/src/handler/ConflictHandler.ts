@@ -55,7 +55,7 @@ export class ConflictHandler {
     // Filter to send only original data from client
     const filteredData: any = {};
     for (const key of Object.keys(resolvedData)) {
-      if (this.options.client[key]) {
+      if (typeof(this.options.client[key])) {
         filteredData[key] = resolvedData[key];
       }
     }
@@ -71,7 +71,7 @@ export class ConflictHandler {
     }
     // calculate client diff
     for (const key of Object.keys(client)) {
-      if (base[key] && base[key] !== client[key]) {
+      if (typeof(base[key]) && base[key] !== client[key]) {
         if (!this.ignoredKeys.includes(key)) {
           this.clientDiff[key] = client[key];
         }
@@ -80,7 +80,7 @@ export class ConflictHandler {
 
     // calculate server diff
     for (const key of Object.keys(this.options.client)) {
-      if (base[key] && base[key] !== server[key]) {
+      if (typeof(base[key]) && base[key] !== server[key]) {
         if (!this.ignoredKeys.includes(key)) {
           this.serverDiff[key] = server[key];
           if (this.clientDiff[key]) {
