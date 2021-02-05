@@ -32,6 +32,6 @@
     "webpack": "5.20.2"
   },
   "devDependencies": {
-    "graphback": "1.1.0"
+    "graphback": "1.1.1"
   }
 }
