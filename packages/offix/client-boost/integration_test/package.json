@@ -28,7 +28,7 @@
     "offix-cache": "0.15.5",
     "offix-server-conflicts": "0.6.0",
     "subscriptions-transport-ws": "0.9.18",
-    "webpack": "5.21.1"
+    "webpack": "5.21.2"
   },
   "devDependencies": {}
 }
