@@ -29,7 +29,7 @@
     "mocha": "8.2.1",
     "offix-server-conflicts": "0.6.0",
     "subscriptions-transport-ws": "0.9.18",
-    "webpack": "5.21.1"
+    "webpack": "5.21.2"
   },
   "devDependencies": {
     "graphback": "1.1.1"
