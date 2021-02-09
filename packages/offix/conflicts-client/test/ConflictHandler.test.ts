@@ -58,6 +58,21 @@ const conflictedSet = {
   }
 };
 
+const nullNonConflictSet = {
+  base: {
+    title:"a title",
+    description: null
+  },
+  client: {
+    title: "client updated title",
+    description: null
+  },
+  server: {
+    title: "a title",
+    description: "server updated description"
+  }
+};
+
 it("ensure conflicted is set to false", () => {
   const handler = new ConflictHandler({...nonConflictedSet, strategy, listener, objectState, operationName: "test"});
   expect(handler.conflicted).toBe(false);
@@ -88,6 +103,14 @@ it("ensure client data is persisted properly", () => {
   const handler = new ConflictHandler({...conflictedTitle, strategy, listener, objectState, operationName: "test"});
   const mergedData = handler.executeStrategy();
   expect(handler.conflicted).toBe(true);
+  expect(mergedData.title).toBe("client updated title");
+  expect(mergedData.description).toBe("server updated description");
+});
+
+it("ensure merged data is persisted properly with null attribute", () => {
+  const handler = new ConflictHandler({...nullNonConflictSet, strategy, listener, objectState, operationName: "test"});
+  const mergedData = handler.executeStrategy();
+  expect(handler.conflicted).toBe(false);
   expect(mergedData.title).toBe("client updated title");
   expect(mergedData.description).toBe("server updated description");
 });
