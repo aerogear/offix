@@ -29,7 +29,7 @@
     "rimraf": "3.0.2",
     "safe-eval": "0.4.1",
     "ts-jest": "26.5.1",
-    "typescript": "4.1.4"
+    "typescript": "4.1.5"
   },
   "dependencies": {
     "@graphback/core": "1.1.1",
