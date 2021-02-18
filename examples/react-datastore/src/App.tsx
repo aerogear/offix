@@ -4,7 +4,7 @@ import 'antd/dist/antd.css';
 
 import { useFindTodos } from './datastore/hooks';
 import { TodoList, AddTodo, Loading, Error, Header } from './components';
-import { datastore, TodoModel, UserModel } from './datastore/config';
+import { datastore } from './datastore/config';
 
 function App() {
 
@@ -19,8 +19,7 @@ function App() {
     // the `startReplication` method accepts an
     // optional filter
     if (replicating) {
-      TodoModel.startReplication()
-      UserModel.startReplication()
+      datastore.startReplication()
     }
   }, [replicating]);
 

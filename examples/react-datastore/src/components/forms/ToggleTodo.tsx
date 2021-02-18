@@ -12,6 +12,7 @@ export function ToggleTodo({ todo }: ToggleTodoProps) {
   const handleUpdate = () => {
     editTodo({
       ...todo,
+      _version: todo._version ?? 2,
       completed: !todo.completed,
     })
       .then((res: any) => console.log("response", res))
