@@ -12,6 +12,7 @@ import { GlobalReplicationConfig, MutationsConfig } from "../api/ReplicationConf
 import { buildGraphQLCRUDMutations } from "./buildGraphQLCRUDMutations";
 import invariant from "tiny-invariant";
 import { getFirstOperationData } from "../utils/getFirstOperationData";
+import Observable from "zen-observable";
 
 const logger = createLogger("replicator-mutationqueue");
 
@@ -56,11 +57,13 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
   private open?: boolean;
   // Queue is currently procesisng requests (used as semaphore to avoid processing multiple times)
   private processing: boolean;
+  private replicating: boolean;
   private options: MutationReplicationOptions;
-
+  
   constructor(options: MutationReplicationOptions) {
     this.options = options;
     this.processing = false;
+    this.replicating = false;
     this.modelMap = {};
   }
 
@@ -173,7 +176,7 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
     }
 
     this.processing = true;
-    while (this.open) {
+    while (this.open && this.replicating) {
       const storedMutations = await this.getStoredMutations();
       if (!storedMutations) {
         logger("Mutation Queue is empty - nothing to replicate");
@@ -284,36 +287,42 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
     return false;
   }
 
-  private async resultProcessor(currentItem: MutationRequest, data: OperationResult<any>) {
+  private async resultProcessor(item: MutationRequest, data: OperationResult<any>, storage: LocalStorage = this.options.storage) {
     logger("Processing result from server");
     if (data.error) {
       throw data.error;
     }
+
+    const model = this.modelMap[item.storeName].model;
+    const primaryKey = model.schema.getPrimaryKey();
 
     const returnedData = getFirstOperationData(data);
     if (!returnedData) {
       // Should not happen for valid queries/server
       throw new Error("Missing data from query.");
     }
-    if (currentItem.eventType === CRUDEvents.ADD) {
-      // TODO handling for ADD works but it really convoluted
-      const transaction = await this.options.storage.createTransaction();
+    if (item.eventType === CRUDEvents.ADD) {
       try {
-        const items: MutationRequest[] = await this.getStoredMutations();
-
-        // persist queue. No need to await here since we will await trx.commit
-        transaction.saveOrUpdate(
-          mutationQueueModel.getStoreName(),
-          "id",
-          { id: MUTATION_ROW_ID, items }
-        );
-
-        await transaction.commit();
-      } catch (error) {
-        await transaction.rollback();
+        await this.options.storage.removeById(item.storeName, primaryKey, item.data);
+        await this.options.storage.save(model.getStoreName(), returnedData);
+        model.changeEventStream.publish({
+          eventType: CRUDEvents.ID_SWAP,
+          data: [
+            {
+              previous: item.data,
+              current: returnedData
+            }
+          ]
+        });
+      } catch (e) {
+        // if key already exists then live update has already saved the result
+        // in this case, emit a delete event for the old document
+        model.changeEventStream.publish({
+          eventType: CRUDEvents.DELETE,
+          data: [item.data]
+        });
+        logger("Error occured while swapping client id: ", e.message)
       }
     }
-    // No need for handling for deletes and updates
-    // TODO handle conflicts
   }
 }
