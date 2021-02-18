@@ -304,6 +304,25 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
     return false;
   }
 
+  private async swapIdsInQueue(clientId: string, serverId: string, primaryKey: string) {
+    logger("Replacing ids in queue");
+    const items = await this.getStoredMutations();
+    if (items && items instanceof Array) {
+      const newItems: any[] = [];
+      items.forEach(item => {
+        if (item.data ) {
+          if (item.data[primaryKey] === clientId) {
+            item.data[primaryKey] = serverId;
+          }
+          newItems.push(item);
+        }
+      });
+      const storeName = mutationQueueModel.getStoreName();
+      const saved = await this.options.storage.saveOrUpdate(storeName, "id", { id: MUTATION_ROW_ID, items: newItems });
+      invariant(saved, "Store should be saved after mutation is rejected");
+    }
+  }
+
   private async resultProcessor(item: MutationRequest, data: OperationResult<any>, storage: LocalStorage = this.options.storage) {
     logger("Processing result from server");
     if (data.error) {
@@ -321,6 +340,7 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
     if (item.eventType === CRUDEvents.ADD) {
       try {
         await this.options.storage.removeById(item.storeName, primaryKey, item.data);
+        await this.swapIdsInQueue(item.data[primaryKey], returnedData[primaryKey], primaryKey);
         await this.options.storage.save(model.getStoreName(), returnedData);
         model.changeEventStream.publish({
           eventType: CRUDEvents.ID_SWAP,
