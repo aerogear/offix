@@ -218,6 +218,24 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
     this.processing = false;
   }
 
+  /**
+   * Helper method to flag that replication and start
+   * processing the mutation queue.
+   * 
+   */
+  public startReplication() {
+    this.replicating = true;
+    this.process();
+  }
+
+  /**
+   * Helper method to stop replication and stop the
+   * processing of the mutation queue.
+   */
+  public stopReplication() {
+    this.replicating = false;
+  }
+  
   private async getStoredMutations() {
     const data = await this.options.storage.queryById(mutationQueueModel.getStoreName(), "id", MUTATION_ROW_ID);
     if (data) {
