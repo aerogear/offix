@@ -12,7 +12,6 @@ import { GlobalReplicationConfig, MutationsConfig } from "../api/ReplicationConf
 import { buildGraphQLCRUDMutations } from "./buildGraphQLCRUDMutations";
 import invariant from "tiny-invariant";
 import { getFirstOperationData } from "../utils/getFirstOperationData";
-import Observable from "zen-observable";
 
 const logger = createLogger("replicator-mutationqueue");
 
@@ -59,7 +58,7 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
   private processing: boolean;
   private replicating: boolean;
   private options: MutationReplicationOptions;
-  
+
   constructor(options: MutationReplicationOptions) {
     this.options = options;
     this.processing = false;
@@ -221,7 +220,7 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
   /**
    * Helper method to flag that replication and start
    * processing the mutation queue.
-   * 
+   *
    */
   public startReplication() {
     this.replicating = true;
@@ -235,7 +234,7 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
   public stopReplication() {
     this.replicating = false;
   }
-  
+
   private async getStoredMutations() {
     const data = await this.options.storage.queryById(mutationQueueModel.getStoreName(), "id", MUTATION_ROW_ID);
     if (data) {
@@ -339,7 +338,7 @@ export class MutationsReplicationQueue implements ModelChangeReplication {
           eventType: CRUDEvents.DELETE,
           data: [item.data]
         });
-        logger("Error occured while swapping client id: ", e.message)
+        logger("Error occured while swapping client id: ", e.message);
       }
     }
   }
