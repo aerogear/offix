@@ -93,6 +93,7 @@ export class GraphQLReplicator {
    *
    */
   public startReplication() {
+    this.mutationQueue?.startReplication();
     this.models.forEach(model => model.getReplicator()?.startReplication());
   }
 
@@ -101,6 +102,7 @@ export class GraphQLReplicator {
    * stop fetch replication at a global level
    */
   public stopReplication() {
+    this.mutationQueue?.stopReplication();
     this.models.forEach(model => model.getReplicator()?.stopReplication());
   }
 }

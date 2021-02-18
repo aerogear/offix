@@ -16,6 +16,7 @@ export const EditTodo = ({ todo, toggleEdit }: EditTodoProps) => {
       ...todo,
       title: todo.title,
       description: todo.description,
+      _version: todo._version ?? 1,
     })
     .then(() => toggleEdit())
     .catch((error: any) => {

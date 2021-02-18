@@ -20,7 +20,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
-    "typescript": "~3.7.2",
+    "typescript": "4.1.5",
     "uniforms": "3.0.0-alpha.5",
     "uniforms-antd": "3.0.0-alpha.5",
     "uniforms-bridge-graphql": "3.0.0-alpha.5",
@@ -55,7 +55,7 @@
   "devDependencies": {
     "@capacitor/cli": "^2.4.0",
     "@offix/cli": "0.2.1",
-    "graphback-cli": "0.16.0-beta1",
-    "graphql-serve": "0.16.0-beta1"
+    "graphback-cli": "1.1.1",
+    "graphql-serve": "1.1.1"
   }
 }

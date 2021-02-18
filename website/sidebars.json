@@ -59,7 +59,9 @@
       {
         "type": "category",
         "label": "Replication",
-        "items": []
+        "items": [
+          "datastore/replication"
+        ]
       },
       {
         "type": "category",
