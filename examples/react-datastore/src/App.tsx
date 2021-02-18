@@ -4,10 +4,11 @@ import 'antd/dist/antd.css';
 
 import { useFindTodos } from './datastore/hooks';
 import { TodoList, AddTodo, Loading, Error, Header } from './components';
-import { TodoModel, UserModel } from './datastore/config';
+import { datastore, TodoModel, UserModel } from './datastore/config';
 
 function App() {
 
+  const [replicating, setReplicating] = useState<boolean>(true);
   const [addView, setAddView] = useState<boolean>(false);
   const  { loading, error, data, subscribeToUpdates } = useFindTodos();
 
@@ -17,9 +18,18 @@ function App() {
     // datastore.startReplication
     // the `startReplication` method accepts an
     // optional filter
-    TodoModel.startReplication()
-    UserModel.startReplication()
-  });
+    if (replicating) {
+      TodoModel.startReplication()
+      UserModel.startReplication()
+    }
+  }, [replicating]);
+
+  const toggleReplication = () => {
+    if (replicating) {
+      datastore.stopReplication()
+    } 
+    setReplicating(!replicating)
+  }
 
   useEffect(() => {
     const subscription = subscribeToUpdates();
@@ -47,6 +57,16 @@ function App() {
                   ghost
                 >
                   Add Todo
+                </Button>
+                <Button
+                  type="primary"
+                  onClick={() => toggleReplication()}
+                  danger
+                  ghost
+                >
+                  {
+                    replicating ? "Go Offline" : "Go Online"
+                  }
                 </Button>
               </>
             )
