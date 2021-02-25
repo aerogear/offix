@@ -95,4 +95,12 @@ export class DataStore {
   public stopReplication() {
     this.replicator?.stopReplication();
   }
+
+  /**
+   * Expose the Datastore network indicator to
+   * the client.
+   */
+  public getNetworkIndicator() {
+    return this.replicator?.getNetworkIndicator();
+  }
 }

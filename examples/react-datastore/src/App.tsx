@@ -5,6 +5,7 @@ import 'antd/dist/antd.css';
 import { useFindTodos } from './datastore/hooks';
 import { TodoList, AddTodo, Loading, Error, Header } from './components';
 import { datastore } from './datastore/config';
+import { NetworkStatusEvent } from 'offix-datastore/types/replication/network/NetworkStatus';
 
 function App() {
 
@@ -13,22 +14,27 @@ function App() {
   const  { loading, error, data, subscribeToUpdates } = useFindTodos();
 
   useEffect(() => {
+    datastore.getNetworkIndicator()?.subscribe({
+      next: (event: NetworkStatusEvent) => {
+        if (event.isOnline) {
+          datastore.startReplication();
+          setReplicating(true);
+        } else {
+          datastore.stopReplication();
+          setReplicating(false);
+        }
+      }
+    })
+  })
+
+  useEffect(() => {
     // We can start replication on a per model basis
     // or for the entire store with:
     // datastore.startReplication
     // the `startReplication` method accepts an
     // optional filter
-    if (replicating) {
-      datastore.startReplication()
-    }
-  }, [replicating]);
-
-  const toggleReplication = () => {
-    if (replicating) {
-      datastore.stopReplication()
-    } 
-    setReplicating(!replicating)
-  }
+    datastore.startReplication()
+  });
 
   useEffect(() => {
     const subscription = subscribeToUpdates();
@@ -59,12 +65,11 @@ function App() {
                 </Button>
                 <Button
                   type="primary"
-                  onClick={() => toggleReplication()}
                   danger
                   ghost
                 >
                   {
-                    replicating ? "Go Offline" : "Go Online"
+                    replicating ? "Online" : "Offline"
                   }
                 </Button>
               </>

@@ -105,4 +105,12 @@ export class GraphQLReplicator {
     this.mutationQueue?.stopReplication();
     this.models.forEach(model => model.getReplicator()?.stopReplication());
   }
+
+  /**
+   * Getter method for replicator
+   * network status indicator
+   */
+  public getNetworkIndicator() {
+    return this.networkIndicator;
+  }
 }
