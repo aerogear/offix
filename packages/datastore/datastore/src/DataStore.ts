@@ -7,7 +7,6 @@ import { DataStoreConfig } from "./DataStoreConfig";
 import { createLogger, enableLogger } from "./utils/logger";
 import { ModelReplicationConfig } from "./replication/api/ReplicationConfig";
 import { mutationQueueModel, metadataModel } from "./replication/api/MetadataModels";
-import { NetworkStatus } from "./replication/network/NetworkStatus";
 
 const logger = createLogger("DataStore");
 // TODO disable logging before release
