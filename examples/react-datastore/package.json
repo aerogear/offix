@@ -16,7 +16,7 @@
     "@types/react-dom": "^16.9.0",
     "antd": "~4.4.1",
     "graphql.macro": "^1.4.2",
-    "offix-datastore": "0.3.17",
+    "offix-datastore": "0.3.19",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
