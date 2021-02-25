@@ -7,6 +7,7 @@ import { DataStoreConfig } from "./DataStoreConfig";
 import { createLogger, enableLogger } from "./utils/logger";
 import { ModelReplicationConfig } from "./replication/api/ReplicationConfig";
 import { mutationQueueModel, metadataModel } from "./replication/api/MetadataModels";
+import { NetworkStatus } from "./replication/network/NetworkStatus";
 
 const logger = createLogger("DataStore");
 // TODO disable logging before release
@@ -94,5 +95,13 @@ export class DataStore {
    */
   public stopReplication() {
     this.replicator?.stopReplication();
+  }
+
+  /**
+   * Expose the Datastore network indicator to
+   * the client.
+   */
+  public getNetworkIndicator() {
+    return this.replicator?.getNetworkIndicator();
   }
 }
