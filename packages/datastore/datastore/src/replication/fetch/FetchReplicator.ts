@@ -46,7 +46,7 @@ export class FetchReplicator {
     if (config.liveupdates?.enabled) {
       logger("Initializing subscription replication");
       const queries = buildGraphQLCRUDSubscriptions(model);
-      const subscrptionOptions = {
+      const subscriptionOptions = {
         config: config.liveupdates,
         client: client,
         networkIndicator: networkIndicator,
@@ -54,7 +54,7 @@ export class FetchReplicator {
         queries: queries,
         model: model
       };
-      this.subscriptionReplicator  = new SubscriptionReplicator(subscrptionOptions);
+      this.subscriptionReplicator  = new SubscriptionReplicator(subscriptionOptions);
     }
     // provide the model with a reference to the replicator
     model.setReplicator(this);
@@ -70,9 +70,6 @@ export class FetchReplicator {
     }
     if (this.deltaReplicator) {
       this.deltaReplicator.start();
-    }
-    if (this.subscriptionReplicator) {
-      this.subscriptionReplicator.start();
     }
     this.replicationFlag = true;
   }
