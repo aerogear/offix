@@ -36,13 +36,6 @@ function App() {
     datastore.startReplication()
   });
 
-  // const toggleReplication = () => {
-  //   if (replicating) {
-  //     datastore.stopReplication()
-  //   } 
-  //   setReplicating(!replicating)
-  // }
-
   useEffect(() => {
     const subscription = subscribeToUpdates();
     return () => subscription.unsubscribe();
