@@ -45,8 +45,7 @@
   },
   "dependencies": {
     "@types/mocha": "8.2.1",
-    "@types/node": "12.20.1",
-    "vue": "^3.0.6"
+    "@types/node": "12.20.1"
   },
   "workspaces": [
     "packages/*/*"

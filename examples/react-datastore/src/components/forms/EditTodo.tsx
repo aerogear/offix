@@ -1,12 +1,14 @@
-import { Button } from "antd";
-import React from "react";
-import { AutoForm, LongTextField, SubmitField, TextField } from "uniforms-antd";
-import { Todo } from "../../datastore/generated";
-import { useEditTodo } from "../../datastore/hooks";
-import { EditTodoProps } from "../../types";
-import { schema } from "./formSchema";
+import React from 'react';
+import { Button } from 'antd';
+import { AutoForm, TextField, LongTextField, SubmitField } from 'uniforms-antd';
+
+import { schema } from './formSchema';
+import { EditTodoProps } from '../../types';
+import { useEditTodo } from '../../datastore/hooks';
+import { Todo } from '../../datastore/generated';
 
 export const EditTodo = ({ todo, toggleEdit }: EditTodoProps) => {
+
   const { update: editTodo } = useEditTodo();
 
   const handleUpdate = (todo: Todo) => {
@@ -16,12 +18,10 @@ export const EditTodo = ({ todo, toggleEdit }: EditTodoProps) => {
       description: todo.description,
       _version: todo._version ?? 1,
     })
-      .then(() => {
-        toggleEdit();
-      })
-      .catch((error: any) => {
-        console.log(error);
-      });
+    .then(() => toggleEdit())
+    .catch((error: any) => {
+      console.log(error);
+    });
   };
 
   return (
@@ -33,8 +33,8 @@ export const EditTodo = ({ todo, toggleEdit }: EditTodoProps) => {
     >
       <TextField name="title" />
       <LongTextField name="description" />
-      <Button onClick={toggleEdit}>Cancel</Button>
-      <SubmitField style={{ float: "right" }} />
+      <Button onClick={toggleEdit} >Cancel</Button>
+      <SubmitField style={{ float: 'right' }} />
     </AutoForm>
   );
 };
