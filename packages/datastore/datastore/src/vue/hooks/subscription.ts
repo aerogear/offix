@@ -1,17 +1,40 @@
-import { useEffect, useReducer } from "react";
-import { Model } from "../../Model";
+import { onMounted, onUnmounted, ref, Ref, watch } from "@vue/runtime-core";
+import { Maybe } from "graphql/jsutils/Maybe";
+import { Subscription } from "wonka";
 import { CRUDEvents } from "../..";
-import { InitialState, reducer, ActionType } from "../ReducerUtils";
+import { Model } from "../../Model";
+import { ActionType } from "../../utils/ActionsTypes";
+import { changeState, initialState } from "../StateUtils";
 
-export const useSubscription = (model: Model, eventTypes: CRUDEvents[]) => {
-  const [state, dispatch] = useReducer(reducer, InitialState);
+export const useSubscription = <TModel>(
+  model: Ref<Model<TModel>>,
+  eventTypes: CRUDEvents[]
+) => {
+  const state = initialState<TModel>();
+  let subscription = ref<Maybe<Subscription>>();
 
-  useEffect(() => {
-    const subscription = model.subscribe((event) => {
-      dispatch({ type: ActionType.REQUEST_COMPLETE, data: event.data });
+  const subscribe = () => {
+    subscription.value = model.value.subscribe((event) => {
+      changeState({
+        state,
+        action: { type: ActionType.REQUEST_COMPLETE, data: event.data },
+      });
     }, eventTypes);
-    return () => subscription.unsubscribe();
-  }, [model, eventTypes]);
+  };
+  const unsubscribe = () => {
+    subscription.value?.unsubscribe();
+  };
 
+  watch(
+    model,
+    () => {
+      unsubscribe();
+      subscribe();
+    },
+    { deep: true, immediate: true }
+  );
+
+  onMounted(subscribe);
+  onUnmounted(unsubscribe);
   return state;
 };

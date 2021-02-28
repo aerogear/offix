@@ -1,24 +1,33 @@
-import { useReducer } from "react";
 import { Model } from "../../Model";
-import { reducer, InitialState, ActionType } from "../ReducerUtils";
+import { ActionType } from "../../utils/ActionsTypes";
+import { changeState, initialState } from "../StateUtils";
 
-export const useUpdate = <T>(model: Model<T>) => {
-    const [state, dispatch] = useReducer(reducer, InitialState);
+export const useUpdate = <TInput, TModel>(model: Model<TModel>) => {
+  const state = initialState<TModel>();
 
-    const update = async (input: any, upsert: boolean = false) => {
-        if (state.loading) { return; }
-        if (state.data) { return; }
+  const update = async (input: TInput, upsert: boolean = false) => {
+    if (state.loading) return;
 
-        dispatch({ type: ActionType.INITIATE_REQUEST });
-        try {
-            const results = await (upsert ?
-                model.saveOrUpdate(input): model.updateById(input));
-            dispatch({ type: ActionType.REQUEST_COMPLETE, data: results });
-            return results;
-        } catch (error) {
-            dispatch({ type: ActionType.REQUEST_COMPLETE, error });
-        }
-    };
+    changeState<TModel>({
+      state,
+      action: { type: ActionType.INITIATE_REQUEST },
+    });
+    try {
+      const results = await (upsert
+        ? model.saveOrUpdate(input)
+        : model.updateById(input));
+      changeState<TModel>({
+        state,
+        action: { type: ActionType.REQUEST_COMPLETE, data: results },
+      });
+      return results;
+    } catch (error) {
+      changeState<TModel>({
+        state,
+        action: { type: ActionType.REQUEST_COMPLETE, error },
+      });
+    }
+  };
 
-    return { ...state, update };
+  return { state, update };
 };
