@@ -1,6 +1,36 @@
-# Offix - React Todo Example App
+# vue-datastore
 
-This example demonstrates how to get started using Offix in a React project. The app is a simple
+## Project setup
+
+```
+yarn install
+```
+
+### Compiles and hot-reloads for development
+
+```
+yarn serve
+```
+
+### Compiles and minifies for production
+
+```
+yarn build
+```
+
+### Lints and fixes files
+
+```
+yarn lint
+```
+
+### Customize configuration
+
+See [Configuration Reference](https://cli.vuejs.org/config/).
+
+# Offix - Vue3 Todo Example App
+
+This example demonstrates how to get started using Offix in a Vue project. The app is a simple
 todo app making use of the `offix-client` and can be used as launch pad to getting started
 with Offix and make use of the features in the library.
 
@@ -58,15 +88,12 @@ yarn start
 2. Generate models yarn generate
 3. Review new models
 
-
 ## Running as native capacitor application
-
 
 yarn build
 yarn cap add ios
 yarn cap copy ios
 yarn cap open ios
-
 
 yarn build
 yarn cap add android
