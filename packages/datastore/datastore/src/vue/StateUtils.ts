@@ -1,25 +1,28 @@
 import { Maybe } from "graphql/jsutils/Maybe";
-import { reactive, UnwrapRef } from "vue";
+import { reactive } from "vue";
 import { ActionType } from "../utils/ActionsTypes";
 
 export interface Action<TModel> {
   type: ActionType;
-  data?: Maybe<TModel>;
+  data?: Maybe<Maybe<TModel>[] | TModel>;
   error?: Maybe<unknown>;
 }
 
-export interface ResultState<TModel> {
-  loading: boolean;
-  data?: Maybe<TModel>;
-  error?: Maybe<unknown>;
+export interface IdSwap<TModel> {
+  previous: TModel;
+  current: TModel;
 }
 export interface ReactiveState<TModel> {
   loading: boolean;
-  data?: Maybe<UnwrapRef<TModel>>;
-  error?: Maybe<unknown>;
+  data: Maybe<TModel>[];
+  error: Maybe<unknown>;
 }
-export const initialState = <TModel>() =>
-  reactive<ResultState<TModel>>({ loading: false });
+export const initialState = <TModel>(): ReactiveState<TModel> =>
+  reactive<ReactiveState<TModel>>({
+    loading: false,
+    data: [],
+    error: null,
+  }) as ReactiveState<TModel>;
 
 export const changeState = <TModel>({
   action,
@@ -28,26 +31,27 @@ export const changeState = <TModel>({
   state: ReactiveState<TModel>;
   action: Action<TModel>;
 }) => {
+  const data = (() => {
+    if (action.data == null) return [];
+    if (Array.isArray(action.data)) return action.data;
+    return [action.data];
+  })();
   switch (action.type) {
     case ActionType.INITIATE_REQUEST:
-      return { state, loading: true, error: null };
-
+      state.loading = true;
+      state.error = null;
+      break;
     case ActionType.REQUEST_COMPLETE:
-      return {
-        state,
-        loading: false,
-        data: action.data,
-        error: action.error,
-      };
-
+      state.loading = false;
+      state.data = data;
+      state.error = action.error;
+      break;
     case ActionType.UPDATE_RESULT:
       // Don't update result when request is loading
-      if (state.loading) {
-        return state;
+      if (!state.loading) {
+        state.data = data;
       }
-      return { state, data: action.data };
-
-    default:
-      return state;
+      break;
   }
+  return state;
 };

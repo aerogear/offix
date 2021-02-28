@@ -1,3 +1,4 @@
+import { readonly } from "vue";
 import { Model } from "../../Model";
 import { ActionType } from "../../utils/ActionsTypes";
 import { changeState, initialState } from "../StateUtils";
@@ -27,5 +28,5 @@ export const useSave = <TInput, TModel>(model: Model<TModel>) => {
     }
   };
 
-  return { state, save };
+  return { state: readonly(state), save };
 };

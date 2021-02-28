@@ -1,4 +1,11 @@
-import { onMounted, onUnmounted, ref, Ref, watch } from "@vue/runtime-core";
+import {
+  onMounted,
+  onUnmounted,
+  readonly,
+  ref,
+  Ref,
+  watch,
+} from "@vue/runtime-core";
 import { Maybe } from "graphql/jsutils/Maybe";
 import { Subscription } from "wonka";
 import { CRUDEvents } from "../..";
@@ -36,5 +43,5 @@ export const useSubscription = <TModel>(
 
   onMounted(subscribe);
   onUnmounted(unsubscribe);
-  return state;
+  return { state: readonly(state) };
 };

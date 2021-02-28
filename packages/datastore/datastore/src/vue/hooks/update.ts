@@ -1,3 +1,4 @@
+import { readonly } from "vue";
 import { Model } from "../../Model";
 import { ActionType } from "../../utils/ActionsTypes";
 import { changeState, initialState } from "../StateUtils";
@@ -29,5 +30,5 @@ export const useUpdate = <TInput, TModel>(model: Model<TModel>) => {
     }
   };
 
-  return { state, update };
+  return { state: readonly(state), update };
 };

@@ -1,3 +1,4 @@
+import { readonly } from "@vue/reactivity";
 import { Filter } from "../../filters";
 import { Model } from "../../Model";
 import { ActionType } from "../../utils/ActionsTypes";
@@ -28,5 +29,5 @@ export const useRemove = <TModel>(model: Model<TModel>) => {
     }
   };
 
-  return { state, remove };
+  return { state: readonly(state), remove };
 };
