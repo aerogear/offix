@@ -1,0 +1,23 @@
+scalar GraphbackObjectID
+
+"""
+@model
+@datasync
+"""
+type Todo {
+  _id: GraphbackObjectID!
+  title: String
+  description: String
+  completed: Boolean
+}
+
+"""
+@model
+@datasync
+"""
+type User {
+  _id: GraphbackObjectID!
+  name: String!
+  # TODO
+  # todos: [Todo!]!
+}
