@@ -1,16 +1,9 @@
-import {
-  onMounted,
-  onUnmounted,
-  readonly,
-  ref,
-  Ref,
-  watch,
-} from "@vue/runtime-core";
 import { Maybe } from "graphql/jsutils/Maybe";
-import { Subscription } from "wonka";
+import { onMounted, onUnmounted, ref, Ref, watch } from "vue";
 import { CRUDEvents } from "../..";
 import { Model } from "../../Model";
 import { ActionType } from "../../utils/ActionsTypes";
+import { Subscription } from "../../utils/PushStream";
 import { changeState, initialState } from "../StateUtils";
 
 export const useSubscription = <TModel>(
@@ -43,5 +36,5 @@ export const useSubscription = <TModel>(
 
   onMounted(subscribe);
   onUnmounted(unsubscribe);
-  return { state: readonly(state) };
+  return { state: state };
 };

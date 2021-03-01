@@ -1,6 +1,5 @@
-import { readonly } from "@vue/reactivity";
 import { Maybe } from "graphql/jsutils/Maybe";
-import { Ref, watch } from "vue";
+import { ref, Ref, watch } from "vue";
 import { Filter } from "../../filters";
 import { Model } from "../../Model";
 import { CRUDEvents, StoreChangeEvent } from "../../storage";
@@ -11,42 +10,61 @@ import {
   initialState,
   ReactiveState,
 } from "../StateUtils";
+interface UpdateArr<T> {
+  oldArr: T[];
+  newArr: T[];
+  primaryKeyName: string;
+}
 
-const onAdded = <TModel>(state: ReactiveState<TModel>, newData: TModel[]) => {
-  const changedData = [...state.data, ...newData];
-  return changedData;
-};
-
-const onChanged = <TModel>(
-  state: ReactiveState<TModel>,
-  newData: TModel[],
-  primaryKeyName: string
-) => {
-  if (state.data.length == 0) return state.data;
-
-  // What happens to data that get's updated and falls outside original query filter?
-  const changedData = state.data.map((d) => {
-    const dPrimaryKey = (d as Record<string, unknown>)[primaryKeyName];
-    const index = newData.findIndex(
-      (newD) =>
-        (newD as Record<string, unknown>)[primaryKeyName] === dPrimaryKey
-    );
-    if (index === -1) {
-      return d;
+const updateArr = <T>({ oldArr, newArr, primaryKeyName }: UpdateArr<T>) => {
+  const finalArr = [...oldArr];
+  const map = new Map(
+    oldArr.map((el, i) => [(el as Record<string, unknown>)[primaryKeyName], i])
+  );
+  for (const newItem of newArr) {
+    const newItemKey = (newItem as Record<string, unknown>)[primaryKeyName];
+    const i = map.get(newItemKey);
+    if (i != null && i >= 0) {
+      finalArr.splice(i, 1, newItem);
+    } else {
+      finalArr.push(newItem);
     }
-    return newData[index];
-  });
-  return changedData;
+  }
+  return finalArr;
 };
 
-const onIdSwapped = <TModel>(
-  state: ReactiveState<TModel>,
-  newData: IdSwap<TModel>[],
+const onAdded = <TItem>(
+  state: Ref<ReactiveState<TItem>>,
+  newData: TItem[],
+  primaryKeyName: string
+) =>
+  updateArr({
+    newArr: newData,
+    oldArr: state.value.data,
+    primaryKeyName,
+  });
+
+const onChanged = <TItem>(
+  state: Ref<ReactiveState<TItem>>,
+  newData: TItem[],
   primaryKeyName: string
 ) => {
-  if (state.data.length == 0) return state.data;
+  if (state.value.data.length === 0) return state.value.data;
+  return updateArr({
+    newArr: newData,
+    oldArr: state.value.data,
+    primaryKeyName,
+  });
+};
 
-  const changedData = state.data.map((d) => {
+const onIdSwapped = <TItem>(
+  state: Ref<ReactiveState<TItem>>,
+  newData: IdSwap<TItem>[],
+  primaryKeyName: string
+) => {
+  if (state.value.data.length === 0) return state.value.data;
+
+  const changedData = state.value.data.map((d) => {
     const dPrimaryKey = (d as Record<string, unknown>)[primaryKeyName];
     const index = newData.findIndex(
       (newD) =>
@@ -61,13 +79,13 @@ const onIdSwapped = <TModel>(
   return changedData;
 };
 
-const onRemoved = <TModel>(
-  state: ReactiveState<TModel>,
-  removedData: TModel[],
+const onRemoved = <TItem>(
+  state: Ref<ReactiveState<TItem>>,
+  removedData: TItem[],
   primaryKeyName: string
 ) => {
-  if (state.data.length == 0) return state.data;
-  const changedData = state.data.filter((d) => {
+  if (state.value.data.length === 0) return state.value.data;
+  const changedData = state.value.data.filter((d) => {
     const dPrimaryKey = (d as Record<string, unknown>)[primaryKeyName];
     return removedData.findIndex(
       (newD) =>
@@ -77,15 +95,15 @@ const onRemoved = <TModel>(
   return changedData;
 };
 
-export const updateResult = <TModel>(
-  state: ReactiveState<TModel>,
+export const updateResult = <TItem>(
+  state: Ref<ReactiveState<TItem>>,
   event: StoreChangeEvent,
   primaryKeyName: string
 ) => {
   const data = event.data;
   switch (event.eventType) {
     case CRUDEvents.ADD:
-      return onAdded(state, data);
+      return onAdded(state, data, primaryKeyName);
     case CRUDEvents.UPDATE:
       return onChanged(state, data, primaryKeyName);
     case CRUDEvents.ID_SWAP:
@@ -97,17 +115,17 @@ export const updateResult = <TModel>(
   }
 };
 
-const createSubscribeToUpdates = <TModel>(
-  state: ReactiveState<TModel>,
-  model: Model<TModel>
+const createSubscribeToUpdates = <TItem>(
+  state: Ref<ReactiveState<TItem>>,
+  model: Model<TItem>
 ) => {
   return (
     eventsToWatch?: CRUDEvents[],
     customEventHandler?: (
-      state: ReactiveState<TModel>,
+      state: Ref<ReactiveState<TItem>>,
       // FIXME: investigate type
-      data: Maybe<TModel | Maybe<TModel>[]>
-    ) => Maybe<TModel | Maybe<TModel>[]>
+      data: Maybe<TItem | Maybe<TItem>[]>
+    ) => Maybe<TItem | Maybe<TItem>[]>
   ) => {
     const subscription = model.subscribe((event) => {
       let newData;
@@ -130,26 +148,24 @@ const createSubscribeToUpdates = <TModel>(
   };
 };
 
-interface QueryResults<TModel> extends UseQuery<TModel> {
-  state: ReactiveState<TModel>;
+interface QueryResults<TItem> extends UseQuery<TItem> {
+  state: Ref<ReactiveState<TItem>>;
 }
-const queryResults = async <TModel>({
+const queryResults = async <TItem>({
   state,
-  selector,
+  filter,
   model,
-}: QueryResults<TModel>) => {
-  if (state.loading) {
-    return;
-  }
+}: QueryResults<TItem>) => {
+  if (state.value.loading) return;
 
   changeState({ state, action: { type: ActionType.INITIATE_REQUEST } });
   try {
     let results;
-    const selectorValue = selector.value;
-    if (typeof selectorValue === "string") {
-      results = await model.value.queryById(selectorValue);
+    const filterValue = filter;
+    if (typeof filterValue === "string") {
+      results = await model.queryById(filterValue);
     } else {
-      results = await model.value.query(selectorValue);
+      results = await model.query(filterValue);
     }
     changeState({
       state,
@@ -163,56 +179,64 @@ const queryResults = async <TModel>({
   }
 };
 
-interface UseQuery<TModel> {
-  model: Ref<Model<TModel>>;
-  selector: Ref<Filter<TModel> | string | undefined>;
+interface UseQuery<TItem> {
+  model: Model<TItem>;
+  filter: Filter<TItem> | string | undefined;
 }
-const subscribeQueryToUpdates = <TModel>({
+const subscribeQueryToUpdates = <TItem>({
   state,
   model,
 }: {
-  state: ReactiveState<TModel>;
-  model: Ref<Model<TModel>>;
-}) => () => {
+  state: Ref<ReactiveState<TItem>>;
+  model: Ref<Model<TItem>>;
+}) => {
+  let subscriptionFn = createSubscribeToUpdates(state, model.value);
   watch(
     model,
     () => {
-      createSubscribeToUpdates(state, model.value);
+      subscriptionFn = createSubscribeToUpdates(state, model.value);
     },
     { deep: true, immediate: true }
   );
+  return subscriptionFn;
 };
 
-export const useQuery = <TModel>({ model, selector }: UseQuery<TModel>) => {
-  const state = initialState<TModel>();
-  const subscribeToUpdates = subscribeQueryToUpdates({ model, state });
-  const runQuery = () =>
-    queryResults({
-      model,
-      state,
-      selector,
-    });
-  watch(selector, runQuery, { deep: true, immediate: true });
-  watch(model, runQuery, { deep: true, immediate: true });
-  return { state: readonly(state), subscribeToUpdates };
-};
+export const useQuery = <TItem>(arg: UseQuery<TItem>) => {
+  const argRef = ref(arg);
+  const modelRef = ref(arg.model) as Ref<Model<TItem>>;
 
-export const useLazyQuery = <TModel>({
-  model,
-}: {
-  model: Ref<Model<TModel>>;
-}) => {
-  const state = initialState<TModel>();
-  const subscribeToUpdates = subscribeQueryToUpdates({ model, state });
-  const query = async ({
-    selector,
-  }: {
-    selector: Ref<Filter<TModel> | string | undefined>;
-  }) =>
+  const state = initialState<TItem>();
+  const subscribeToUpdates = subscribeQueryToUpdates({
+    model: modelRef,
+    state,
+  });
+  const runQuery = async () =>
     await queryResults({
+      model: arg.model,
+      state,
+      filter: arg.filter,
+    });
+  watch(argRef, runQuery, { deep: true, immediate: true });
+  return { state: state, subscribeToUpdates };
+};
+
+export const useLazyQuery = <TItem>({ model }: { model: Model<TItem> }) => {
+  const modelRef = ref(model) as Ref<Model<TItem>>;
+
+  const state = initialState<TItem>();
+  const subscribeToUpdates = subscribeQueryToUpdates({
+    model: modelRef,
+    state,
+  });
+  const query = async ({
+    filter,
+  }: {
+    filter: Filter<TItem> | string | undefined;
+  }) =>
+    await queryResults<TItem>({
       model,
-      selector,
+      filter,
       state,
     });
-  return { state: readonly(state), query, subscribeToUpdates };
+  return { state: state, query, subscribeToUpdates };
 };

@@ -1,8 +1,0 @@
-schema: './src/schema.graphql'
-extensions:
-  graphback:
-    # path to data model file(s)
-    model: './src/model/runtime.graphql'
-    plugins:
-      offix-datasync-client-plugin:
-        modelOutputDir: './src/datasync'

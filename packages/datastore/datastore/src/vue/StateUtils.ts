@@ -1,5 +1,5 @@
 import { Maybe } from "graphql/jsutils/Maybe";
-import { reactive } from "vue";
+import { Ref, ref } from "vue";
 import { ActionType } from "../utils/ActionsTypes";
 
 export interface Action<TModel> {
@@ -17,18 +17,17 @@ export interface ReactiveState<TModel> {
   data: Maybe<TModel>[];
   error: Maybe<unknown>;
 }
-export const initialState = <TModel>(): ReactiveState<TModel> =>
-  reactive<ReactiveState<TModel>>({
+export const initialState = <TModel>(): Ref<ReactiveState<TModel>> =>
+  ref<ReactiveState<TModel>>({
     loading: false,
     data: [],
     error: null,
-  }) as ReactiveState<TModel>;
-
+  }) as Ref<ReactiveState<TModel>>;
 export const changeState = <TModel>({
   action,
   state,
 }: {
-  state: ReactiveState<TModel>;
+  state: Ref<ReactiveState<TModel>>;
   action: Action<TModel>;
 }) => {
   const data = (() => {
@@ -38,18 +37,18 @@ export const changeState = <TModel>({
   })();
   switch (action.type) {
     case ActionType.INITIATE_REQUEST:
-      state.loading = true;
-      state.error = null;
+      state.value.loading = true;
+      state.value.error = null;
       break;
     case ActionType.REQUEST_COMPLETE:
-      state.loading = false;
-      state.data = data;
-      state.error = action.error;
+      state.value.loading = false;
+      state.value.data = data;
+      state.value.error = action.error;
       break;
     case ActionType.UPDATE_RESULT:
       // Don't update result when request is loading
-      if (!state.loading) {
-        state.data = data;
+      if (!state.value.loading) {
+        state.value.data = data;
       }
       break;
   }

@@ -1,4 +1,3 @@
-import { readonly } from "vue";
 import { Model } from "../../Model";
 import { ActionType } from "../../utils/ActionsTypes";
 import { changeState, initialState } from "../StateUtils";
@@ -7,14 +6,13 @@ export const useSave = <TInput, TModel>(model: Model<TModel>) => {
   const state = initialState<TModel>();
 
   const save = async (input: TInput) => {
-    if (state.loading) return;
-
+    if (state.value.loading) return;
     changeState<TModel>({
       state,
       action: { type: ActionType.INITIATE_REQUEST },
     });
     try {
-      const results = await model.save(input);
+      const results = (await model.save(input)) as TModel;
       changeState<TModel>({
         state,
         action: { type: ActionType.REQUEST_COMPLETE, data: results },
@@ -28,5 +26,5 @@ export const useSave = <TInput, TModel>(model: Model<TModel>) => {
     }
   };
 
-  return { state: readonly(state), save };
+  return { state: state, save };
 };

@@ -27,6 +27,11 @@
         "type": "string",
         "key": "_version",
         "isRequired": true
+      },
+      "_lastUpdatedAt": {
+        "type": "number",
+        "key": "_lastUpdatedAt",
+        "isRequired": true
       }
     }
   },
@@ -50,6 +55,11 @@
       "_version": {
         "type": "string",
         "key": "_version",
+        "isRequired": true
+      },
+      "_lastUpdatedAt": {
+        "type": "number",
+        "key": "_lastUpdatedAt",
         "isRequired": true
       }
     }
