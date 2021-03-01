@@ -46,18 +46,22 @@ export default defineComponent({
       width: "100vw",
       padding: "2em 0",
     };
-    const replicating = ref(true);
+    const replicating = ref(false);
     const isToAddView = ref(false);
     const isNotToAddView = computed(() => !isToAddView.value);
     const { state, subscribeToUpdates } = useFindTodos();
     const { loading, data, error } = toRefs(state.value);
     console.log({ loading, data, error, state });
+    const startReplication = () => {
+      datastore.startReplication();
+      replicating.value = true;
+    };
     onMounted(() => {
+      startReplication();
       datastore.getNetworkIndicator()?.subscribe({
         next: (event: NetworkStatusEvent) => {
           if (event.isOnline) {
-            datastore.startReplication();
-            replicating.value = true;
+            startReplication();
           } else {
             datastore.stopReplication();
             replicating.value = false;

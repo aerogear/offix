@@ -3,6 +3,7 @@ scalar GraphbackObjectID
 """
 @model
 @datasync
+@versioned
 """
 type Todo {
   _id: GraphbackObjectID!
@@ -14,6 +15,7 @@ type Todo {
 """
 @model
 @datasync
+@versioned
 """
 type User {
   _id: GraphbackObjectID!
