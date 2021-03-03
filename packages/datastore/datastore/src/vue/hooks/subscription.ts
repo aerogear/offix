@@ -11,13 +11,13 @@ export const useSubscription = <TModel>(
   eventTypes: CRUDEvents[]
 ) => {
   const state = initialState<TModel>();
-  let subscription = ref<Maybe<Subscription>>();
+  const subscription = ref<Maybe<Subscription>>();
 
   const subscribe = () => {
     subscription.value = model.value.subscribe((event) => {
       changeState({
         state,
-        action: { type: ActionType.REQUEST_COMPLETE, data: event.data },
+        action: { type: ActionType.REQUEST_COMPLETE, data: event.data }
       });
     }, eventTypes);
   };

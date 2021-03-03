@@ -8,7 +8,7 @@ import {
   changeState,
   IdSwap,
   initialState,
-  ReactiveState,
+  ReactiveState
 } from "../StateUtils";
 interface UpdateArr<T> {
   oldArr: T[];
@@ -41,7 +41,7 @@ const onAdded = <TItem>(
   updateArr({
     newArr: newData,
     oldArr: state.value.data,
-    primaryKeyName,
+    primaryKeyName
   });
 
 const onChanged = <TItem>(
@@ -49,11 +49,11 @@ const onChanged = <TItem>(
   newData: TItem[],
   primaryKeyName: string
 ) => {
-  if (state.value.data.length === 0) return state.value.data;
+  if (state.value.data.length === 0) {return state.value.data;}
   return updateArr({
     newArr: newData,
     oldArr: state.value.data,
-    primaryKeyName,
+    primaryKeyName
   });
 };
 
@@ -62,7 +62,7 @@ const onIdSwapped = <TItem>(
   newData: IdSwap<TItem>[],
   primaryKeyName: string
 ) => {
-  if (state.value.data.length === 0) return state.value.data;
+  if (state.value.data.length === 0) {return state.value.data;}
 
   const changedData = state.value.data.map((d) => {
     const dPrimaryKey = (d as Record<string, unknown>)[primaryKeyName];
@@ -84,7 +84,7 @@ const onRemoved = <TItem>(
   removedData: TItem[],
   primaryKeyName: string
 ) => {
-  if (state.value.data.length === 0) return state.value.data;
+  if (state.value.data.length === 0) {return state.value.data;}
   const changedData = state.value.data.filter((d) => {
     const dPrimaryKey = (d as Record<string, unknown>)[primaryKeyName];
     return removedData.findIndex(
@@ -140,7 +140,7 @@ const createSubscribeToUpdates = <TItem>(
         // Important to check beacuse Componnent could be unmounted
         changeState({
           state,
-          action: { type: ActionType.UPDATE_RESULT, data: newData },
+          action: { type: ActionType.UPDATE_RESULT, data: newData }
         });
       }
     }, eventsToWatch);
@@ -154,9 +154,9 @@ interface QueryResults<TItem> extends UseQuery<TItem> {
 const queryResults = async <TItem>({
   state,
   filter,
-  model,
+  model
 }: QueryResults<TItem>) => {
-  if (state.value.loading) return;
+  if (state.value.loading) {return;}
 
   changeState({ state, action: { type: ActionType.INITIATE_REQUEST } });
   try {
@@ -169,12 +169,12 @@ const queryResults = async <TItem>({
     }
     changeState({
       state,
-      action: { type: ActionType.REQUEST_COMPLETE, data: results },
+      action: { type: ActionType.REQUEST_COMPLETE, data: results }
     });
   } catch (error) {
     changeState({
       state,
-      action: { type: ActionType.REQUEST_COMPLETE, error },
+      action: { type: ActionType.REQUEST_COMPLETE, error }
     });
   }
 };
@@ -185,7 +185,7 @@ interface UseQuery<TItem> {
 }
 const subscribeQueryToUpdates = <TItem>({
   state,
-  model,
+  model
 }: {
   state: Ref<ReactiveState<TItem>>;
   model: Ref<Model<TItem>>;
@@ -208,13 +208,13 @@ export const useQuery = <TItem>(arg: UseQuery<TItem>) => {
   const state = initialState<TItem>();
   const subscribeToUpdates = subscribeQueryToUpdates({
     model: modelRef,
-    state,
+    state
   });
   const runQuery = async () =>
     await queryResults({
       model: arg.model,
       state,
-      filter: arg.filter,
+      filter: arg.filter
     });
   watch(argRef, runQuery, { deep: true, immediate: true });
   return { state: state, subscribeToUpdates };
@@ -226,17 +226,17 @@ export const useLazyQuery = <TItem>({ model }: { model: Model<TItem> }) => {
   const state = initialState<TItem>();
   const subscribeToUpdates = subscribeQueryToUpdates({
     model: modelRef,
-    state,
+    state
   });
   const query = async ({
-    filter,
+    filter
   }: {
     filter: Filter<TItem> | string | undefined;
   }) =>
     await queryResults<TItem>({
       model,
       filter,
-      state,
+      state
     });
   return { state: state, query, subscribeToUpdates };
 };

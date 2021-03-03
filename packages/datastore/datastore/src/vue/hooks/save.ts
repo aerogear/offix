@@ -6,10 +6,10 @@ export const useSave = <TInput, TModel>(model: Model<TModel>) => {
   const state = initialState<TModel>();
 
   const save = async (input: Omit<TInput, "_version" | "_lastUpdatedAt">) => {
-    if (state.value.loading) return;
+    if (state.value.loading) {return;}
     changeState<TModel>({
       state,
-      action: { type: ActionType.INITIATE_REQUEST },
+      action: { type: ActionType.INITIATE_REQUEST }
     });
     try {
       const results = (await model.save(
@@ -17,13 +17,13 @@ export const useSave = <TInput, TModel>(model: Model<TModel>) => {
       )) as TModel;
       changeState<TModel>({
         state,
-        action: { type: ActionType.REQUEST_COMPLETE, data: results },
+        action: { type: ActionType.REQUEST_COMPLETE, data: results }
       });
       return results;
     } catch (error) {
       changeState<TModel>({
         state,
-        action: { type: ActionType.REQUEST_COMPLETE, error },
+        action: { type: ActionType.REQUEST_COMPLETE, error }
       });
     }
   };

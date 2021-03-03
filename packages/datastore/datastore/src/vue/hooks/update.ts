@@ -6,11 +6,11 @@ export const useUpdate = <TInput, TModel>(model: Model<TModel>) => {
   const state = initialState<TModel>();
 
   const update = async (input: TInput, upsert: boolean = false) => {
-    if (state.value.loading) return;
+    if (state.value.loading) {return;}
 
     changeState<TModel>({
       state,
-      action: { type: ActionType.INITIATE_REQUEST },
+      action: { type: ActionType.INITIATE_REQUEST }
     });
     try {
       const results = (await (upsert
@@ -18,13 +18,13 @@ export const useUpdate = <TInput, TModel>(model: Model<TModel>) => {
         : model.updateById(input))) as TModel;
       changeState<TModel>({
         state,
-        action: { type: ActionType.REQUEST_COMPLETE, data: results },
+        action: { type: ActionType.REQUEST_COMPLETE, data: results }
       });
       return results;
     } catch (error) {
       changeState<TModel>({
         state,
-        action: { type: ActionType.REQUEST_COMPLETE, error },
+        action: { type: ActionType.REQUEST_COMPLETE, error }
       });
     }
   };

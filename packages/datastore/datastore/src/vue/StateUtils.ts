@@ -21,18 +21,18 @@ export const initialState = <TModel>(): Ref<ReactiveState<TModel>> =>
   ref<ReactiveState<TModel>>({
     loading: false,
     data: [],
-    error: null,
+    error: null
   }) as Ref<ReactiveState<TModel>>;
 export const changeState = <TModel>({
   action,
-  state,
+  state
 }: {
   state: Ref<ReactiveState<TModel>>;
   action: Action<TModel>;
 }) => {
   const data = (() => {
-    if (action.data == null) return [];
-    if (Array.isArray(action.data)) return action.data;
+    if (action.data == null) {return [];}
+    if (Array.isArray(action.data)) {return action.data;}
     return [action.data];
   })();
   switch (action.type) {

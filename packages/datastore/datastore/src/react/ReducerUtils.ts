@@ -24,7 +24,7 @@ export const reducer = (state: ResultState, action: Action) => {
         ...state,
         loading: false,
         data: action.data,
-        error: action.error,
+        error: action.error
       };
 
     case ActionType.UPDATE_RESULT:

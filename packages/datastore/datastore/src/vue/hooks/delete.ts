@@ -9,11 +9,11 @@ export const useRemove = <TModel>(model: Model<TModel>) => {
   const remove = async (
     filter: Filter<Omit<TModel, "_lastUpdatedAt" | "__typename" | "_version">>
   ) => {
-    if (state.value.loading) return;
+    if (state.value.loading) {return;}
 
     changeState<TModel>({
       state,
-      action: { type: ActionType.INITIATE_REQUEST },
+      action: { type: ActionType.INITIATE_REQUEST }
     });
     try {
       const results = (await model.remove(
@@ -21,13 +21,13 @@ export const useRemove = <TModel>(model: Model<TModel>) => {
       )) as TModel[];
       changeState<TModel>({
         state,
-        action: { type: ActionType.REQUEST_COMPLETE, data: results },
+        action: { type: ActionType.REQUEST_COMPLETE, data: results }
       });
       return results;
     } catch (error) {
       changeState<TModel>({
         state,
-        action: { type: ActionType.REQUEST_COMPLETE, error },
+        action: { type: ActionType.REQUEST_COMPLETE, error }
       });
     }
   };
