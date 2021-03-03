@@ -1,17 +1,17 @@
 import { DataStore } from "offix-datastore";
-import { schema, User, Todo } from "./generated";
+import { schema, Todo, User } from "./generated";
 
 export const datastore = new DataStore({
   dbName: "offix-datasync",
   replicationConfig: {
     client: {
       url: "http://localhost:5400/graphql",
-      wsUrl: "ws://localhost:5400/graphql"
+      wsUrl: "ws://localhost:5400/graphql",
     },
     delta: { enabled: true, pullInterval: 20000 },
     mutations: { enabled: true },
-    liveupdates: { enabled: true }
-  }
+    liveupdates: { enabled: true },
+  },
 });
 
 export const TodoModel = datastore.setupModel<Todo>(schema.Todo);

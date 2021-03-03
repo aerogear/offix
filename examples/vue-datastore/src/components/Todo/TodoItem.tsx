@@ -20,7 +20,7 @@ export const TodoItem = defineComponent({
     const { remove: deleteTodo } = useDeleteTodo();
     const edit = ref(false);
     const handleDelete = () => {
-      deleteTodo(props.todo)
+      deleteTodo({ _id: props.todo._id })
         .then((res) => console.log("response", res))
         .catch((error: any) => console.log(error));
     };
