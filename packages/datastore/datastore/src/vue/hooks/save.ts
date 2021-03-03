@@ -5,14 +5,16 @@ import { changeState, initialState } from "../StateUtils";
 export const useSave = <TInput, TModel>(model: Model<TModel>) => {
   const state = initialState<TModel>();
 
-  const save = async (input: TInput) => {
+  const save = async (input: Omit<TInput, "_version" | "_lastUpdatedAt">) => {
     if (state.value.loading) return;
     changeState<TModel>({
       state,
       action: { type: ActionType.INITIATE_REQUEST },
     });
     try {
-      const results = (await model.save(input)) as TModel;
+      const results = (await model.save(
+        (input as unknown) as Partial<TModel>
+      )) as TModel;
       changeState<TModel>({
         state,
         action: { type: ActionType.REQUEST_COMPLETE, data: results },

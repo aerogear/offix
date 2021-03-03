@@ -29,8 +29,6 @@ export default defineComponent({
         title: title.value,
         description: description.value,
         completed: false,
-        _version: "1",
-        _lastUpdatedAt: Date.now(),
       })
         .then(() => props.cancel())
         .catch((error: any) => console.log(error));
