@@ -49,7 +49,9 @@ const onChanged = <TItem>(
   newData: TItem[],
   primaryKeyName: string
 ) => {
-  if (state.value.data.length === 0) {return state.value.data;}
+  if (state.value.data.length === 0) {
+    return state.value.data;
+  }
   return updateArr({
     newArr: newData,
     oldArr: state.value.data,
@@ -62,7 +64,9 @@ const onIdSwapped = <TItem>(
   newData: IdSwap<TItem>[],
   primaryKeyName: string
 ) => {
-  if (state.value.data.length === 0) {return state.value.data;}
+  if (state.value.data.length === 0) {
+    return state.value.data;
+  }
 
   const changedData = state.value.data.map((d) => {
     const dPrimaryKey = (d as Record<string, unknown>)[primaryKeyName];
@@ -84,7 +88,9 @@ const onRemoved = <TItem>(
   removedData: TItem[],
   primaryKeyName: string
 ) => {
-  if (state.value.data.length === 0) {return state.value.data;}
+  if (state.value.data.length === 0) {
+    return state.value.data;
+  }
   const changedData = state.value.data.filter((d) => {
     const dPrimaryKey = (d as Record<string, unknown>)[primaryKeyName];
     return removedData.findIndex(
@@ -156,7 +162,9 @@ const queryResults = async <TItem>({
   filter,
   model
 }: QueryResults<TItem>) => {
-  if (state.value.loading) {return;}
+  if (state.value.loading) {
+    return;
+  }
 
   changeState({ state, action: { type: ActionType.INITIATE_REQUEST } });
   try {
@@ -171,6 +179,7 @@ const queryResults = async <TItem>({
       state,
       action: { type: ActionType.REQUEST_COMPLETE, data: results }
     });
+    return state;
   } catch (error) {
     changeState({
       state,
