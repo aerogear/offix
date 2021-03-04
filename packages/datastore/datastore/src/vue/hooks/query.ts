@@ -179,12 +179,13 @@ const queryResults = async <TItem>({
       state,
       action: { type: ActionType.REQUEST_COMPLETE, data: results }
     });
-    return state;
   } catch (error) {
     changeState({
       state,
       action: { type: ActionType.REQUEST_COMPLETE, error }
     });
+  } finally {
+    return state;
   }
 };
 
