@@ -9,8 +9,8 @@
     "docs": "docusaurus docs:version"
   },
   "dependencies": {
-    "@docusaurus/core": "2.0.0-alpha.fd17476c3",
-    "@docusaurus/preset-classic": "2.0.0-alpha.fd17476c3",
+    "@docusaurus/core": "2.0.0-alpha.ffe8b6106",
+    "@docusaurus/preset-classic": "2.0.0-alpha.ffe8b6106",
     "gsap": "3.6.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
