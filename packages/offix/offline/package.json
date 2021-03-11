@@ -1,6 +1,6 @@
 {
   "name": "offix-offline",
-  "version": "0.15.5",
+  "version": "0.15.6",
   "description": "Offix package that exposes network interfaces",
   "main": "dist/index.js",
   "types": "types/index.d.ts",

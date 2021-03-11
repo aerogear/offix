@@ -1,6 +1,6 @@
 {
   "name": "offix-client",
-  "version": "0.15.5",
+  "version": "0.15.6",
   "description": "Offix GraphQL Offline Client",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -50,10 +50,10 @@
     "apollo-link-error": "1.1.13",
     "apollo-link-http": "1.5.17",
     "apollo-link-retry": "2.2.16",
-    "offix-cache": "0.15.5",
-    "offix-conflicts-client": "0.15.5",
-    "offix-offline": "0.15.5",
-    "offix-scheduler": "0.15.5",
+    "offix-cache": "0.15.6",
+    "offix-conflicts-client": "0.15.6",
+    "offix-offline": "0.15.6",
+    "offix-scheduler": "0.15.6",
     "traverse": "0.6.6"
   },
   "peerDependencies": {
