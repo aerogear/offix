@@ -25,7 +25,7 @@
     "karma-mocha-reporter": "2.2.5",
     "karma-webpack": "4.0.2",
     "mocha": "8.3.0",
-    "offix-cache": "0.15.6",
+    "offix-cache": "0.15.5",
     "offix-server-conflicts": "0.6.0",
     "subscriptions-transport-ws": "0.9.18",
     "webpack": "5.22.0"
