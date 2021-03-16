@@ -117,7 +117,7 @@ try {
 }
 ```
 
-## Non Offline realated API
+## Non Offline related API
 
 `ApolloOfflineClient` is an extension of the Apollo GraphQL client and can be used with various web and mobile frameworks.
 For basic concepts about Apollo GraphQL please refer to the documentation for your own platform.
