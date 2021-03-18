@@ -1,5 +1,5 @@
 /* eslint-disable */
-const baseConfig = require("../../../jest.config");
+const baseConfig = require("../../jest.config");
 const packageName = "cli";
 
 module.exports = {
