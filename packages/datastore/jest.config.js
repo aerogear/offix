@@ -1,10 +1,10 @@
 /* eslint-disable */
-const baseConfig = require("../../../jest.config");
+const baseConfig = require("../../jest.config");
 const packageName = "datastore";
 
 module.exports = {
   ...baseConfig,
-  rootDir: '../../..',
+  rootDir: '../..',
   moduleFileExtensions: [
     "ts",
     "js",
@@ -14,21 +14,21 @@ module.exports = {
     "node"
   ],
   roots: [
-    `<rootDir>/packages/datastore/${packageName}`,
+    `<rootDir>/packages/${packageName}`,
   ],
   collectCoverageFrom: [
       'src/**/*.{ts,tsx}',
   ],
-  testRegex: `(packages/datastore/${packageName}/.*/__tests__/.*|\\.(test|spec))\\.tsx?$`,
+  testRegex: `(packages/${packageName}/.*/__tests__/.*|\\.(test|spec))\\.tsx?$`,
   testURL: 'http://localhost/',
   moduleDirectories: [
       'node_modules',
   ],
   modulePaths: [
-      `<rootDir>/packages/datastore/${packageName}/src/`,
+      `<rootDir>/packages/${packageName}/src/`,
   ],
-  projects: [`<rootDir>/packages/datastore/${packageName}/jest.config.js`],
+  projects: [`<rootDir>/packages/${packageName}/jest.config.js`],
   name: packageName,
   displayName: packageName,
-  rootDir: '../../..',
+  rootDir: '../..',
 };
