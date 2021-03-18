@@ -1,6 +1,6 @@
 {
   "name": "offix-scheduler",
-  "version": "0.15.6",
+  "version": "0.15.7",
   "description": "",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -10,7 +10,8 @@
     "watch": "tsc --watch",
     "test": "jest --verbose --detectOpenHandles",
     "size": "size-limit",
-    "size:why": "size-limit --why"
+    "size:why": "size-limit --why",
+    "postinstall": "node postinstall.js"
   },
   "license": "Apache-2.0",
   "repository": {
@@ -34,7 +35,7 @@
     "typescript": "4.1.5"
   },
   "dependencies": {
-    "offix-offline": "0.15.6"
+    "offix-offline": "0.15.7"
   },
   "peerDependencies": {
     "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"

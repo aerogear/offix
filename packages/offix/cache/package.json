@@ -1,6 +1,6 @@
 {
   "name": "offix-cache",
-  "version": "0.15.6",
+  "version": "0.15.7",
   "description": "GraphQL Mutation and Subscription Helpers",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -9,7 +9,8 @@
     "watch": "tsc --watch",
     "test": "jest",
     "size": "size-limit",
-    "size:why": "size-limit --why"
+    "size:why": "size-limit --why",
+    "postinstall": "node postinstall.js"
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "4.9.2",

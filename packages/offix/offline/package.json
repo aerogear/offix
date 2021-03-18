@@ -1,6 +1,6 @@
 {
   "name": "offix-offline",
-  "version": "0.15.6",
+  "version": "0.15.7",
   "description": "Offix package that exposes network interfaces",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -12,7 +12,8 @@
     "preintegration-test": "cd integration_test && npm install",
     "integration-test": "cd integration_test && npm test",
     "size": "size-limit",
-    "size:why": "size-limit --why"
+    "size:why": "size-limit --why",
+    "postinstall": "node postinstall.js"
   },
   "license": "Apache-2.0",
   "repository": {

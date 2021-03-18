@@ -1,6 +1,6 @@
 {
   "name": "offix-client",
-  "version": "0.15.6",
+  "version": "0.15.7",
   "description": "Offix GraphQL Offline Client",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -12,7 +12,8 @@
     "size": "size-limit",
     "size:why": "size-limit --why",
     "preintegration-test": "cd integration_test && yarn install",
-    "integration-test": "cd integration_test && yarn run test"
+    "integration-test": "cd integration_test && yarn run test",
+    "postinstall": "node postinstall.js"
   },
   "license": "Apache-2.0",
   "repository": {
@@ -50,10 +51,10 @@
     "apollo-link-error": "1.1.13",
     "apollo-link-http": "1.5.17",
     "apollo-link-retry": "2.2.16",
-    "offix-cache": "0.15.6",
-    "offix-conflicts-client": "0.15.6",
-    "offix-offline": "0.15.6",
-    "offix-scheduler": "0.15.6",
+    "offix-cache": "0.15.7",
+    "offix-conflicts-client": "0.15.7",
+    "offix-offline": "0.15.7",
+    "offix-scheduler": "0.15.7",
     "traverse": "0.6.6"
   },
   "peerDependencies": {

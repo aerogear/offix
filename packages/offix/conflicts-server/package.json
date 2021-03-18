@@ -1,6 +1,6 @@
 {
     "name": "offix-conflicts-server",
-    "version": "0.15.6",
+    "version": "0.15.7",
     "description": "Offix GraphQL server",
     "main": "dist/index.js",
     "scripts": {
@@ -9,7 +9,8 @@
         "test": "jest",
         "compile:clean": "tsc --build tsconfig.json --clean",
         "size": "size-limit",
-        "size:why": "size-limit --why"
+        "size:why": "size-limit --why",
+        "postinstall": "node postinstall.js"
     },
     "license": "Apache-2.0",
     "repository": {

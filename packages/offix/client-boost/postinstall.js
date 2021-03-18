@@ -1,0 +1,1 @@
+console.warn('Thanks for using Offix. This package is no longer maintained! Please consider using the Offix datastore instead http://offix.dev')
