@@ -1,7 +1,0 @@
-""" @model """
-type Todo {
-  id: ID!
-  title: String
-  description: String
-  completed: Boolean
-}
