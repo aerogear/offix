@@ -23,7 +23,7 @@ window.openDatabase = (name: string, version: string, description: string, size:
 };
 
 // const setupTest = async () => {
-  
+
 // };
 
 // const removeStore = async () => {

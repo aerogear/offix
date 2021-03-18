@@ -12,7 +12,7 @@ const noteFragment = (annotation: string, array: boolean = true) => (`
     title: String!
     description: String!
     ${annotation}
-    ${array ? 'comments: [Comment]!' : 'comment: Comment!'}
+    ${array ? "comments: [Comment]!" : "comment: Comment!"}
   }
 `);
 

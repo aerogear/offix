@@ -2,11 +2,12 @@
  * @jest-environment jsdom
  */
 
-import { getPredicate } from '../src/storage/adapters/indexedDB/Predicate';
-import { filterToSQL } from '../src/storage/adapters/sqlite/filterToSQL';
-import { WebSQLAdapter } from '../src/storage/adapters/sqlite/WebSQLAdapter';
-import { LocalStorage, ModelSchema } from '../src';
+import { getPredicate } from "../src/storage/adapters/indexedDB/Predicate";
+import { filterToSQL } from "../src/storage/adapters/sqlite/filterToSQL";
+import { WebSQLAdapter } from "../src/storage/adapters/sqlite/WebSQLAdapter";
+import { LocalStorage, ModelSchema } from "../src";
 
+// eslint-disable-next-line
 const openDatabase = require("websql");
 let sqlDb: any;
 window.openDatabase = (name: string, version: string, description: string, size: number, callback: any) => {
@@ -57,21 +58,21 @@ describe("Test SQL filters", () => {
     test("Filter using object fields", () => {
         const filter = {
             clickCount: { eq: 5 },
-            title: { eq: 'Test' }
+            title: { eq: "Test" }
         };
         let expectedSQL = "WHERE (clickCount = 5 AND title = 'Test')";
         let actualSQL = filterToSQL(filter);
         expect(actualSQL).toEqual(expectedSQL);
 
         expectedSQL = "WHERE (title LIKE 'Test%')";
-        actualSQL = filterToSQL({ title: { startsWith: 'Test' } });
+        actualSQL = filterToSQL({ title: { startsWith: "Test" } });
         expect(actualSQL).toEqual(expectedSQL);
     });
 
     test("Assume 'eq' operation", () => {
         const filter = {
             clickCount: 5,
-            title: 'Test'
+            title: "Test"
         };
         const expectedSQL = "WHERE (clickCount = 5 AND title = 'Test')";
         const actualSQL = filterToSQL(filter);
@@ -83,7 +84,7 @@ describe("Test SQL filters", () => {
             clickCount: {
                 gt: 9,
                 ne: 15
-            },
+            }
         };
         const expectedSQL = "WHERE (clickCount > 9 AND clickCount != 15)";
         const actualSQL = filterToSQL(filter);
@@ -93,10 +94,10 @@ describe("Test SQL filters", () => {
     test("Filter using expressions", () => {
         const filter = {
             or: {
-                title: 'Fun',
+                title: "Fun",
                 not: {
                     clickCount: 5,
-                    title: 'Test'
+                    title: "Test"
                 }
             }
         };

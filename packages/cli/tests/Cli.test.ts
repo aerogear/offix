@@ -1,14 +1,14 @@
-import * as util from 'util';
+import * as util from "util";
 import { rmdirSync, readFileSync, writeFileSync } from "fs";
-import { join } from 'path';
+import { join } from "path";
 import { makeDirIfNotExists } from "../src/utils";
 
 const defaultSchemaPath = "./src/models";
 const defaultOutputPath = "./src/datasync/generated";
 
 beforeEach(() => {
-  makeDirIfNotExists("./output/")
-  const schemaPath = join(__dirname, './mock.graphql');
+  makeDirIfNotExists("./output/");
+  const schemaPath = join(__dirname, "./mock.graphql");
   const graphqlSchema = readFileSync(schemaPath);
 
   makeDirIfNotExists(defaultSchemaPath);
@@ -22,9 +22,10 @@ afterEach(() => {
 });
 
 test("generate with positional arguments", async () => {
-  const exec = util.promisify(require('child_process').exec);
-  const cliExec = join(__dirname, '../bin/offix.js');
-  const schemaPath = join(__dirname, './mock.graphql');
+  // eslint-disable-next-line
+  const exec = util.promisify(require("child_process").exec);
+  const cliExec = join(__dirname, "../bin/offix.js");
+  const schemaPath = join(__dirname, "./mock.graphql");
 
   await exec(`node ${cliExec} generate ${schemaPath} output/`);
   const schema = readFileSync("./output/schema.json").toString();
@@ -37,8 +38,9 @@ test("generate with positional arguments", async () => {
 });
 
 test("generate with defaults", async () => {
-  const exec = util.promisify(require('child_process').exec);
-  const cliExec = join(__dirname, '../bin/offix.js');
+  // eslint-disable-next-line
+  const exec = util.promisify(require("child_process").exec);
+  const cliExec = join(__dirname, "../bin/offix.js");
 
   await exec(`node ${cliExec} generate`);
   const schema = readFileSync(`${defaultOutputPath}/schema.json`).toString();

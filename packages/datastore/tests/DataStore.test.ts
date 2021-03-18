@@ -93,9 +93,9 @@ test("Save or Update should update local store", async () => {
     title: "test",
     description: "description"
   });
-  const updated = await NoteModel.saveOrUpdate({ ...saved, title: 'updated' });
+  const updated = await NoteModel.saveOrUpdate({ ...saved, title: "updated" });
   expect(saved.id).toBe(updated.id);
-  expect(updated.title).toBe('updated');
+  expect(updated.title).toBe("updated");
 });
 
 test("Query from local store", async () => {
@@ -147,7 +147,7 @@ test("Observe local store events", async () => {
   await NoteModel.update({ title: "changed" }, { title: "test" });
 });
 
-
+// eslint-disable-next-line
 const typeDefs = `
   type Note {
     id: ID
