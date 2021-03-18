@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://offix.dev/blog</id>
+    <title>Offix Blog</title>
+    <updated>2015-10-25T23:29:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://offix.dev/blog"/>
+    <subtitle>Offix Blog</subtitle>
+    <icon>https://offix.dev/img/offix-logo.png</icon>
+</feed>
