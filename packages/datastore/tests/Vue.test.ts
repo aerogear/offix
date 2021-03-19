@@ -7,13 +7,13 @@ describe("vue hooks test suite", () => {
   const originState: ReactiveState<Record<string, unknown>> = {
     data: [],
     error: null,
-    loading: false,
+    loading: false
   };
   const stateCopy = (title?: Maybe<string>) => {
     const copy = JSON.parse(JSON.stringify(originState)) as ReactiveState<
       Record<string, unknown>
     >;
-    if (title) copy.data.push({ title });
+    if (title) {copy.data.push({ title });}
     return copy;
   };
 
@@ -21,7 +21,7 @@ describe("vue hooks test suite", () => {
     const state = ref(stateCopy());
     const event = {
       eventType: CRUDEvents.ADD,
-      data: [{ title: "Test" }],
+      data: [{ title: "Test" }]
     };
     const result = useDatastoreHooks.updateResult(state, event, "title");
 
@@ -32,7 +32,7 @@ describe("vue hooks test suite", () => {
     const state = ref(stateCopy("Test"));
     const event = {
       eventType: CRUDEvents.UPDATE,
-      data: [{ title: "Test", pass: true }],
+      data: [{ title: "Test", pass: true }]
     };
     const result = useDatastoreHooks.updateResult(state, event, "title");
 
@@ -46,9 +46,9 @@ describe("vue hooks test suite", () => {
       data: [
         {
           previous: { title: "Test", pass: true },
-          current: { title: "NewTest", pass: true },
-        },
-      ],
+          current: { title: "NewTest", pass: true }
+        }
+      ]
     };
     const result = useDatastoreHooks.updateResult(state, event, "title");
 
@@ -60,7 +60,7 @@ describe("vue hooks test suite", () => {
     const state = ref(stateCopy());
     const event = {
       eventType: CRUDEvents.DELETE,
-      data: [{ title: "Test" }],
+      data: [{ title: "Test" }]
     };
     const result = useDatastoreHooks.updateResult(state, event, "title");
 
