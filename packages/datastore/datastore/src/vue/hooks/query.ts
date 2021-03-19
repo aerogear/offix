@@ -184,9 +184,8 @@ const queryResults = async <TItem>({
       state,
       action: { type: ActionType.REQUEST_COMPLETE, error }
     });
-  } finally {
-    return state;
   }
+  return state;
 };
 
 interface UseQuery<TItem> {
