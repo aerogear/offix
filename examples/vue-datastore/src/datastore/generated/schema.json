@@ -1,0 +1,67 @@
+{
+  "Todo": {
+    "name": "Todo",
+    "version": 1,
+    "type": "object",
+    "primaryKey": "_id",
+    "properties": {
+      "_id": {
+        "type": "string",
+        "key": "_id",
+        "isRequired": true,
+        "primary": true
+      },
+      "title": {
+        "type": "string",
+        "key": "title"
+      },
+      "description": {
+        "type": "string",
+        "key": "description"
+      },
+      "completed": {
+        "type": "boolean",
+        "key": "completed"
+      },
+      "_version": {
+        "type": "string",
+        "key": "_version",
+        "isRequired": true
+      },
+      "_lastUpdatedAt": {
+        "type": "number",
+        "key": "_lastUpdatedAt",
+        "isRequired": true
+      }
+    }
+  },
+  "User": {
+    "name": "User",
+    "version": 1,
+    "type": "object",
+    "primaryKey": "_id",
+    "properties": {
+      "_id": {
+        "type": "string",
+        "key": "_id",
+        "isRequired": true,
+        "primary": true
+      },
+      "name": {
+        "type": "string",
+        "key": "name",
+        "isRequired": true
+      },
+      "_version": {
+        "type": "string",
+        "key": "_version",
+        "isRequired": true
+      },
+      "_lastUpdatedAt": {
+        "type": "number",
+        "key": "_lastUpdatedAt",
+        "isRequired": true
+      }
+    }
+  }
+}

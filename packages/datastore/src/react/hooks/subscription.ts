@@ -1,7 +1,8 @@
 import { useEffect, useReducer } from "react";
-import { Model } from "../../Model";
 import { CRUDEvents } from "../..";
-import { InitialState, reducer, ActionType } from "../ReducerUtils";
+import { Model } from "../../Model";
+import { ActionType } from "../../utils/ActionsTypes";
+import { InitialState, reducer } from "../ReducerUtils";
 
 export const useSubscription = (model: Model, eventTypes: CRUDEvents[]) => {
   const [state, dispatch] = useReducer(reducer, InitialState);
