@@ -4,8 +4,8 @@ import {
   useQuery,
   useRemove,
   useSave,
-  useUpdate
-} from "../../../../packages/datastore/datastore/src/vue";
+  useUpdate,
+} from "../../../../packages/datastore/src/vue";
 import { TodoModel } from "./config";
 import { Todo, TodoChange, TodoCreate } from "./generated";
 // FIXME: how to handle wrong model type from package and from monorepo?
