@@ -1,7 +1,7 @@
 <p align="center">
   <img width="400" src="https://github.com/aerogear/offix/raw/master/resources/logo.png">
   <br/>
-  Offix extends Apollo GraphQL for building fully featured offline experiences.
+  Offix client-side database for building fully featured offline experiences.
 </p>
 
 [![Discord Chat](https://img.shields.io/discord/625400653321076807)](https://discord.gg/mJ7j84m)
@@ -13,9 +13,8 @@
 - Flexible, out of the box Conflict Resolution implementations
 - Subscriptions and Binary Upload that works offline.
 - Multi platform support.
-    - Works with Web, Cordova, Capacitor and React Native.
+    - Works with Web, Capacitor and React Native.
 - Framework agnostic (works with React, Angular and Vue)
-- Works with Apollo GraphQL Server and Prisma (Yoga)
 
 ## Documentation
 
@@ -23,7 +22,8 @@ https://offix.dev
 
 ## Offix demo
 
-[![Offix](http://img.youtube.com/vi/CrYinCtTHds/0.jpg)](http://www.youtube.com/watch?v=CrYinCtTHds "Offix")
+<!-- [![Offix](http://img.youtube.com/vi/CrYinCtTHds/0.jpg)](http://www.youtube.com/watch?v=CrYinCtTHds "Offix") -->
+![Offix](/resources/offix-web.gif)
 
 ## How to get involved
 
