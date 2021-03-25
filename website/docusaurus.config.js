@@ -3,12 +3,13 @@ const versions = require('./versions.json');
 
 module.exports = {
   title: 'Offix',
-  tagline: 'Offix extends Apollo GraphQL for building fully featured offline experiences.',
+  tagline: 'Offix client-side database for building fully featured offline experiences.',
   url: 'https://offix.dev',
   baseUrl: '/',
   favicon: 'img/offix-logo.png',
   organizationName: 'aerogear', // Usually your GitHub org/user name.
   projectName: 'offix', // Usually your repo name.
+  onBrokenLinks: 'warn',
   themeConfig: {
     colorMode: {
       disableSwitch: true
@@ -66,8 +67,8 @@ module.exports = {
               to: 'docs/getting-started',
             },
             {
-              label: 'Offix Client',
-              to: 'docs/offline-client',
+              label: 'Offix Datastore',
+              to: 'docs/introduction',
             },
             {
               label: 'Platforms',
@@ -75,7 +76,7 @@ module.exports = {
             },
             {
               label: 'Advanced Topics',
-              to: 'docs/cookbooks',
+              to: 'docs/replication',
             },
             {
               label: 'Releases',
