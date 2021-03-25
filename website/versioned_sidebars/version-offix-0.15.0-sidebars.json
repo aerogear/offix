@@ -1,0 +1,28 @@
+{
+  "version-offix-0.15.0/docs": {
+    "Getting Started": [
+      "version-offix-0.15.0/getting-started",
+      "version-offix-0.15.0/client-configuration"
+    ],
+    "Offix Client": [
+      "version-offix-0.15.0/offline-client",
+      "version-offix-0.15.0/offix-cache",
+      "version-offix-0.15.0/conflict-client",
+      "version-offix-0.15.0/conflict-server"
+    ],
+    "Platforms": [
+      "version-offix-0.15.0/react",
+      "version-offix-0.15.0/react-native",
+      "version-offix-0.15.0/angular",
+      "version-offix-0.15.0/ionic",
+      "version-offix-0.15.0/android"
+    ],
+    "Advanced topics": [
+      "version-offix-0.15.0/cookbooks",
+      "version-offix-0.15.0/offix-scheduler-introduction"
+    ],
+    "Releases": [
+      "version-offix-0.15.0/release-notes"
+    ]
+  }
+}

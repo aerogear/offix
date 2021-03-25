@@ -1,0 +1,91 @@
+{
+  "version-datastore-0.5.0/docs": [
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Introduction",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-datastore-0.5.0/introduction"
+        },
+        {
+          "type": "doc",
+          "id": "version-datastore-0.5.0/getting-started"
+        },
+        {
+          "type": "doc",
+          "id": "version-datastore-0.5.0/concepts"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Local Operations",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-datastore-0.5.0/queries"
+        },
+        {
+          "type": "doc",
+          "id": "version-datastore-0.5.0/edits"
+        },
+        {
+          "type": "doc",
+          "id": "version-datastore-0.5.0/subscriptions"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Replication",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-datastore-0.5.0/replication"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Platforms",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-datastore-0.5.0/react"
+        },
+        {
+          "type": "doc",
+          "id": "version-datastore-0.5.0/react-native"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Server",
+      "items": []
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "CLI",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-datastore-0.5.0/cli"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Advanced Concepts",
+      "items": []
+    }
+  ]
+}
