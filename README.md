@@ -6,6 +6,10 @@
 
 [![Discord Chat](https://img.shields.io/discord/625400653321076807)](https://discord.gg/mJ7j84m)
 
+> NOTE: GraphQL ecosystem evolved since creation of offix.
+If you are planning to start new project with offline support please consider
+https://github.com/tannerlinsley/react-query
+
 ## Features
 
 - Offline support. Mutations are persisted when Offline.
