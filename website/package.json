@@ -11,11 +11,11 @@
   "dependencies": {
     "@docusaurus/core": "2.0.0-alpha.fd17476c3",
     "@docusaurus/preset-classic": "2.0.0-alpha.fd17476c3",
-    "gsap": "3.6.0",
+    "gsap": "3.11.5",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "scrollmagic": "2.0.8",
     "scrollscene": "0.0.24",
-    "styled-components": "5.2.1"
+    "styled-components": "5.3.9"
   }
 }
