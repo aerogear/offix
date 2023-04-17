@@ -30,25 +30,25 @@
     }
   },
   "devDependencies": {
-    "@size-limit/preset-small-lib": "4.9.2",
+    "@size-limit/preset-small-lib": "8.2.4",
     "@types/debug": "4.1.5",
     "@types/jest": "26.0.20",
     "@types/json-schema": "7.0.7",
     "@types/react-dom": "17.0.1",
     "@types/traverse": "0.6.32",
-    "@types/uuid": "8.3.0",
+    "@types/uuid": "9.0.1",
     "@types/websql": "0.0.27",
     "@types/zen-observable": "0.8.2",
     "apollo-server": "2.21.0",
     "debug": "4.3.1",
-    "fake-indexeddb": "3.1.2",
-    "isomorphic-unfetch": "3.1.0",
+    "fake-indexeddb": "4.0.1",
+    "isomorphic-unfetch": "4.0.2",
     "jest": "26.6.3",
     "react": "17.0.1",
-    "size-limit": "4.9.2",
-    "supports-color": "8.1.1",
+    "size-limit": "8.2.4",
+    "supports-color": "9.3.1",
     "ts-jest": "26.5.1",
-    "typescript": "4.1.5",
+    "typescript": "5.0.4",
     "vue": "3.0.6"
   },
   "dependencies": {
@@ -57,10 +57,10 @@
     "subscriptions-transport-ws": "0.9.18",
     "tiny-invariant": "1.1.0",
     "traverse": "0.6.6",
-    "urql": "1.11.6",
-    "uuid": "8.3.2",
-    "websql": "1.0.0",
-    "wonka": "4.0.15",
+    "urql": "4.0.0",
+    "uuid": "9.0.0",
+    "websql": "2.0.3",
+    "wonka": "6.3.1",
     "zen-observable": "0.8.15"
   }
 }
